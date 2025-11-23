@@ -663,3 +663,88 @@
 .dark .sidebar-swipe-hint {
   background: var(--surface-6);
 }
+
+/* ==================== Resize Handle ==================== */
+
+.sidebar-resize-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  background: transparent;
+  cursor: ew-resize;
+  z-index: 10;
+  transition: background-color var(--duration-fast, 150ms) ease;
+}
+
+/* Left sidebar - handle on right edge */
+.sidebar.left .sidebar-resize-handle {
+  right: -3px;
+}
+
+/* Right sidebar - handle on left edge */
+.sidebar.right .sidebar-resize-handle {
+  left: -3px;
+}
+
+.sidebar-resize-handle:hover {
+  background: var(--accent-200, rgba(99, 102, 241, 0.2));
+}
+
+.sidebar-resize-handle:active,
+.sidebar.resizing .sidebar-resize-handle {
+  background: var(--accent, #6366f1);
+}
+
+/* Visual indicator line */
+.sidebar-resize-handle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 2px;
+  height: 40px;
+  background: var(--border);
+  border-radius: 1px;
+  opacity: 0;
+  transition: opacity var(--duration-fast, 150ms) ease;
+}
+
+.sidebar-resize-handle:hover::after,
+.sidebar.resizing .sidebar-resize-handle::after {
+  opacity: 1;
+}
+
+/* Resizing state */
+.sidebar.resizing {
+  user-select: none;
+  transition: none;
+}
+
+/* Size constraints */
+.sidebar.resizable {
+  min-width: 200px;
+  max-width: 500px;
+}
+
+/* Dark theme */
+.dark .sidebar-resize-handle:hover {
+  background: var(--primary-600-alpha, rgba(99, 102, 241, 0.3));
+}
+
+.dark .sidebar-resize-handle:active,
+.dark .sidebar.resizing .sidebar-resize-handle {
+  background: var(--primary-500);
+}
+
+.dark .sidebar-resize-handle::after {
+  background: var(--surface-6);
+}
+
+/* Hide resize handle on mobile - touch devices use swipe */
+@media (max-width: 767px) {
+  .sidebar-resize-handle {
+    display: none;
+  }
+}

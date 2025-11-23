@@ -49,6 +49,65 @@
   transform: translateX(0);
 }
 
+/* === Sidebar Resize === */
+.app-sidebar.resizable {
+  min-width: 200px;
+  max-width: 500px;
+}
+
+.app-sidebar .sidebar-resize-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  background: transparent;
+  cursor: ew-resize;
+  z-index: 10;
+  transition: background-color 150ms ease;
+}
+
+.app-sidebar.left .sidebar-resize-handle {
+  right: -3px;
+}
+
+.app-sidebar.right .sidebar-resize-handle {
+  left: -3px;
+}
+
+.app-sidebar .sidebar-resize-handle:hover {
+  background: var(--accent-100, rgba(99, 102, 241, 0.15));
+}
+
+.app-sidebar .sidebar-resize-handle:active,
+.app-sidebar.resizing .sidebar-resize-handle {
+  background: var(--accent, #6366f1);
+}
+
+/* Resize handle indicator */
+.app-sidebar .sidebar-resize-handle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 2px;
+  height: 40px;
+  background: var(--border);
+  border-radius: 1px;
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.app-sidebar .sidebar-resize-handle:hover::after,
+.app-sidebar.resizing .sidebar-resize-handle::after {
+  opacity: 1;
+}
+
+.app-sidebar.resizing {
+  user-select: none;
+  transition: none;
+}
+
 /* Sidebar overlay - visual only, does NOT block interaction */
 .sidebar-overlay {
   position: fixed;
@@ -498,6 +557,11 @@ body.width-full .main.container {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
+  }
+
+  /* Hide resize handle on mobile - touch devices use swipe */
+  .app-sidebar .sidebar-resize-handle {
+    display: none;
   }
 
   .width-control {

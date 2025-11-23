@@ -1208,3 +1208,677 @@
 .force-animations .animate-pop-in {
   animation: pop-in var(--duration-moderate) var(--ease-spring) forwards !important;
 }
+
+/* =============================================
+   24. Micro-Interaction Animations
+   ============================================= */
+
+/* --- Checkbox Tick Animation --- */
+/* Simulates SVG stroke-dashoffset using clip-path and transform */
+
+@keyframes checkbox-tick {
+  0% {
+    clip-path: inset(0 100% 0 0);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+}
+
+@keyframes checkbox-tick-scale {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-checkbox-tick {
+  animation: checkbox-tick var(--duration-normal) var(--ease-decelerate) forwards;
+}
+
+.animate-checkbox-tick-scale {
+  animation: checkbox-tick-scale var(--duration-normal) var(--ease-spring) forwards;
+}
+
+/* Checkbox container with background transition */
+.checkbox-animate {
+  transition: background-color var(--duration-fast) var(--ease-standard),
+              border-color var(--duration-fast) var(--ease-standard);
+}
+
+.checkbox-animate .tick {
+  opacity: 0;
+  transform: scale(0.5);
+  transition: opacity var(--duration-fast) var(--ease-standard),
+              transform var(--duration-normal) var(--ease-spring);
+}
+
+.checkbox-animate.checked .tick {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* --- Radio Dot Scale Animation --- */
+
+@keyframes radio-dot-scale {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes radio-dot-unscale {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+.animate-radio-dot {
+  animation: radio-dot-scale var(--duration-fast) var(--ease-spring) forwards;
+}
+
+.animate-radio-dot-out {
+  animation: radio-dot-unscale var(--duration-fast) var(--ease-accelerate) forwards;
+}
+
+/* --- Switch Slide Animation --- */
+
+@keyframes switch-slide-on {
+  0% {
+    transform: translateX(0);
+  }
+  60% {
+    transform: translateX(calc(100% + 2px));
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes switch-slide-off {
+  0% {
+    transform: translateX(100%);
+  }
+  60% {
+    transform: translateX(-2px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-switch-on {
+  animation: switch-slide-on var(--duration-normal) var(--ease-spring) forwards;
+}
+
+.animate-switch-off {
+  animation: switch-slide-off var(--duration-normal) var(--ease-spring) forwards;
+}
+
+/* Switch component base styles */
+.switch-track {
+  transition: background-color var(--duration-normal) var(--ease-standard);
+}
+
+.switch-thumb {
+  transition: transform var(--duration-normal) var(--ease-spring);
+  will-change: transform;
+}
+
+.switch-track.active .switch-thumb {
+  transform: translateX(100%);
+}
+
+/* --- Input Focus Ring Animation --- */
+
+@keyframes focus-ring-expand {
+  0% {
+    box-shadow: 0 0 0 0 var(--accent-100, rgba(46, 138, 60, 0.2));
+    opacity: 0;
+  }
+  100% {
+    box-shadow: 0 0 0 4px var(--accent-100, rgba(46, 138, 60, 0.2));
+    opacity: 1;
+  }
+}
+
+@keyframes focus-ring-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 2px var(--accent-100, rgba(46, 138, 60, 0.2));
+  }
+  50% {
+    box-shadow: 0 0 0 4px var(--accent-100, rgba(46, 138, 60, 0.15));
+  }
+}
+
+.animate-focus-ring {
+  animation: focus-ring-expand var(--duration-fast) var(--ease-decelerate) forwards;
+}
+
+.input-focus-ring {
+  transition: box-shadow var(--duration-fast) var(--ease-standard),
+              border-color var(--duration-fast) var(--ease-standard);
+}
+
+.input-focus-ring:focus {
+  box-shadow: 0 0 0 3px var(--accent-100, rgba(46, 138, 60, 0.2));
+}
+
+/* =============================================
+   25. Loading State Animations
+   ============================================= */
+
+/* --- Skeleton Wave Animation --- */
+
+@keyframes skeleton-wave {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes skeleton-shimmer-wave {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-wave {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-muted, #e5e5e5);
+}
+
+.skeleton-wave::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 100%
+  );
+  animation: skeleton-wave 1.5s var(--ease-standard) infinite;
+  will-change: transform;
+}
+
+/* Alternative: gradient-based skeleton shimmer */
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--bg-muted, #e5e5e5) 0%,
+    var(--bg-muted, #e5e5e5) 40%,
+    var(--bg, #f5f5f5) 50%,
+    var(--bg-muted, #e5e5e5) 60%,
+    var(--bg-muted, #e5e5e5) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer-wave 1.5s linear infinite;
+  will-change: background-position;
+}
+
+/* Skeleton shapes */
+.skeleton-text {
+  height: 1em;
+  border-radius: 4px;
+}
+
+.skeleton-avatar {
+  border-radius: 50%;
+}
+
+.skeleton-card {
+  border-radius: 8px;
+}
+
+/* --- Dots Bounce Loading --- */
+
+@keyframes dots-bounce {
+  0%, 80%, 100% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.dots-loading {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.dots-loading .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: dots-bounce 1.4s var(--ease-standard) infinite both;
+}
+
+.dots-loading .dot:nth-child(1) { animation-delay: 0ms; }
+.dots-loading .dot:nth-child(2) { animation-delay: 160ms; }
+.dots-loading .dot:nth-child(3) { animation-delay: 320ms; }
+
+/* --- Button Submit Loading --- */
+
+@keyframes button-loading-shrink {
+  0% {
+    width: 100%;
+  }
+  100% {
+    width: 44px;
+    border-radius: 50%;
+  }
+}
+
+@keyframes button-spinner-appear {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.btn-loading {
+  position: relative;
+  overflow: hidden;
+  transition: width var(--duration-moderate) var(--ease-standard),
+              border-radius var(--duration-moderate) var(--ease-standard);
+}
+
+.btn-loading.loading {
+  pointer-events: none;
+}
+
+.btn-loading.loading .btn-text {
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-standard);
+}
+
+.btn-loading.loading .btn-spinner {
+  opacity: 1;
+  animation: button-spinner-appear var(--duration-normal) var(--ease-decelerate) forwards;
+}
+
+.btn-spinner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+}
+
+/* =============================================
+   26. Feedback Animations
+   ============================================= */
+
+/* --- Success Checkmark Animation --- */
+
+@keyframes success-circle-scale {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes success-check-draw {
+  0% {
+    clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+  }
+  50% {
+    clip-path: polygon(0 0, 50% 100%, 50% 100%, 0 100%);
+  }
+  100% {
+    clip-path: polygon(0 0, 50% 100%, 100% 0, 0 100%);
+  }
+}
+
+@keyframes success-checkmark {
+  0% {
+    transform: scale(0) rotate(-45deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2) rotate(-45deg);
+  }
+  100% {
+    transform: scale(1) rotate(-45deg);
+    opacity: 1;
+  }
+}
+
+.animate-success-circle {
+  animation: success-circle-scale var(--duration-moderate) var(--ease-spring) forwards;
+}
+
+.animate-success-check {
+  animation: success-checkmark var(--duration-slower) var(--ease-spring) forwards;
+  animation-delay: var(--duration-fast);
+}
+
+/* Success checkmark component */
+.success-checkmark {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.success-checkmark .circle {
+  opacity: 0;
+  transform: scale(0);
+  animation: success-circle-scale var(--duration-moderate) var(--ease-spring) forwards;
+}
+
+.success-checkmark .check {
+  position: absolute;
+  opacity: 0;
+  transform: scale(0) rotate(-45deg);
+  animation: success-checkmark var(--duration-slow) var(--ease-spring) forwards;
+  animation-delay: 150ms;
+}
+
+/* --- Error Shake Animation (Enhanced) --- */
+
+@keyframes error-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-4px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(4px);
+  }
+}
+
+@keyframes error-shake-intense {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-6px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(6px);
+  }
+}
+
+@keyframes error-shake-with-color {
+  0%, 100% {
+    transform: translateX(0);
+    border-color: var(--error, #dc2626);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-4px);
+    border-color: var(--error-dark, #b91c1c);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(4px);
+    border-color: var(--error, #dc2626);
+  }
+}
+
+.animate-error-shake {
+  animation: error-shake var(--duration-slow) var(--ease-standard);
+}
+
+.animate-error-shake-intense {
+  animation: error-shake-intense var(--duration-slow) var(--ease-standard);
+}
+
+.animate-error-shake-color {
+  animation: error-shake-with-color var(--duration-slow) var(--ease-standard);
+}
+
+/* Input error state with shake */
+.input-error {
+  border-color: var(--error, #dc2626);
+  animation: error-shake var(--duration-slow) var(--ease-standard);
+}
+
+/* --- Toast Slide In Animation --- */
+
+@keyframes toast-slide-in-right {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes toast-slide-out-right {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes toast-slide-in-top {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes toast-slide-out-top {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+.animate-toast-in {
+  animation: toast-slide-in-right var(--duration-moderate) var(--ease-decelerate) forwards;
+}
+
+.animate-toast-out {
+  animation: toast-slide-out-right var(--duration-normal) var(--ease-accelerate) forwards;
+}
+
+.animate-toast-in-top {
+  animation: toast-slide-in-top var(--duration-moderate) var(--ease-decelerate) forwards;
+}
+
+.animate-toast-out-top {
+  animation: toast-slide-out-top var(--duration-normal) var(--ease-accelerate) forwards;
+}
+
+/* =============================================
+   27. Reduced Motion Support - New Animations
+   ============================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Micro-interactions - instant state change */
+  .animate-checkbox-tick,
+  .animate-checkbox-tick-scale,
+  .animate-radio-dot,
+  .animate-radio-dot-out,
+  .animate-switch-on,
+  .animate-switch-off,
+  .animate-focus-ring {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+
+  .checkbox-animate .tick,
+  .switch-thumb {
+    transition: none !important;
+  }
+
+  /* Loading states - static appearance */
+  .skeleton-wave::after {
+    animation: none !important;
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .skeleton-shimmer {
+    animation: none !important;
+    background: var(--bg-muted, #e5e5e5);
+  }
+
+  .dots-loading .dot {
+    animation: none !important;
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Feedback - instant */
+  .animate-success-circle,
+  .animate-success-check,
+  .success-checkmark .circle,
+  .success-checkmark .check {
+    animation: none !important;
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .success-checkmark .check {
+    transform: rotate(-45deg);
+  }
+
+  .animate-error-shake,
+  .animate-error-shake-intense,
+  .animate-error-shake-color,
+  .input-error {
+    animation: none !important;
+  }
+
+  .animate-toast-in,
+  .animate-toast-out,
+  .animate-toast-in-top,
+  .animate-toast-out-top {
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* =============================================
+   28. Force Animations Override - New Animations
+   ============================================= */
+
+/* Micro-interactions */
+.force-animations .animate-checkbox-tick {
+  animation: checkbox-tick var(--duration-normal) var(--ease-decelerate) forwards !important;
+}
+
+.force-animations .animate-checkbox-tick-scale {
+  animation: checkbox-tick-scale var(--duration-normal) var(--ease-spring) forwards !important;
+}
+
+.force-animations .animate-radio-dot {
+  animation: radio-dot-scale var(--duration-fast) var(--ease-spring) forwards !important;
+}
+
+.force-animations .animate-switch-on {
+  animation: switch-slide-on var(--duration-normal) var(--ease-spring) forwards !important;
+}
+
+.force-animations .animate-switch-off {
+  animation: switch-slide-off var(--duration-normal) var(--ease-spring) forwards !important;
+}
+
+.force-animations .checkbox-animate .tick,
+.force-animations .switch-thumb {
+  transition: opacity var(--duration-fast) var(--ease-standard),
+              transform var(--duration-normal) var(--ease-spring) !important;
+}
+
+/* Loading states */
+.force-animations .skeleton-wave::after {
+  animation: skeleton-wave 1.5s var(--ease-standard) infinite !important;
+}
+
+.force-animations .skeleton-shimmer {
+  animation: skeleton-shimmer-wave 1.5s linear infinite !important;
+}
+
+.force-animations .dots-loading .dot {
+  animation: dots-bounce 1.4s var(--ease-standard) infinite both !important;
+}
+
+/* Feedback */
+.force-animations .animate-success-circle,
+.force-animations .success-checkmark .circle {
+  animation: success-circle-scale var(--duration-moderate) var(--ease-spring) forwards !important;
+}
+
+.force-animations .animate-success-check,
+.force-animations .success-checkmark .check {
+  animation: success-checkmark var(--duration-slow) var(--ease-spring) forwards !important;
+}
+
+.force-animations .animate-error-shake {
+  animation: error-shake var(--duration-slow) var(--ease-standard) !important;
+}
+
+.force-animations .animate-error-shake-intense {
+  animation: error-shake-intense var(--duration-slow) var(--ease-standard) !important;
+}
+
+.force-animations .animate-toast-in {
+  animation: toast-slide-in-right var(--duration-moderate) var(--ease-decelerate) forwards !important;
+}
+
+.force-animations .animate-toast-out {
+  animation: toast-slide-out-right var(--duration-normal) var(--ease-accelerate) forwards !important;
+}

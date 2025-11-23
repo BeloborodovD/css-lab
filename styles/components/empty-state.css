@@ -1,0 +1,307 @@
+/* ==================== Empty State ==================== */
+/* Placeholder UI for empty lists, no results, errors */
+
+/* Base Empty State */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+/* ==================== Empty State Sizes ==================== */
+
+/* Small - inline/compact */
+.empty-state-sm {
+  padding: 24px 16px;
+}
+
+.empty-state-sm .empty-state-illustration {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 12px;
+}
+
+.empty-state-sm .empty-state-title {
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.empty-state-sm .empty-state-description {
+  font-size: 0.8125rem;
+  margin-bottom: 12px;
+}
+
+/* Medium - default */
+.empty-state-md {
+  padding: 48px 24px;
+}
+
+/* Large - full page */
+.empty-state-lg {
+  padding: 80px 32px;
+  min-height: 400px;
+}
+
+.empty-state-lg .empty-state-illustration {
+  width: 180px;
+  height: 180px;
+  margin-bottom: 32px;
+}
+
+.empty-state-lg .empty-state-title {
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+}
+
+.empty-state-lg .empty-state-description {
+  font-size: 1rem;
+  max-width: 480px;
+  margin-bottom: 24px;
+}
+
+/* ==================== Empty State Elements ==================== */
+
+.empty-state-illustration {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 24px;
+  color: var(--muted);
+  opacity: 0.6;
+}
+
+.empty-state-illustration svg {
+  width: 100%;
+  height: 100%;
+}
+
+.empty-state-illustration img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.empty-state-title {
+  margin: 0 0 8px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.empty-state-description {
+  margin: 0 0 20px;
+  font-size: 0.875rem;
+  color: var(--muted);
+  line-height: 1.6;
+  max-width: 360px;
+}
+
+.empty-state-action {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+/* ==================== Empty State Variants ==================== */
+
+/* Bordered container */
+.empty-state-bordered {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-lg);
+  background: transparent;
+}
+
+/* Card style */
+.empty-state-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* Subtle background */
+.empty-state-subtle {
+  background: var(--accent-100);
+  border-radius: var(--radius-lg);
+}
+
+/* ==================== Empty State Types ==================== */
+
+/* No data */
+.empty-state-no-data .empty-state-illustration {
+  color: var(--muted);
+}
+
+/* No results (search) */
+.empty-state-no-results .empty-state-illustration {
+  color: var(--accent);
+}
+
+/* Error state */
+.empty-state-error .empty-state-illustration {
+  color: #ef4444;
+}
+
+.empty-state-error .empty-state-title {
+  color: #ef4444;
+}
+
+/* Success state (e.g., all tasks done) */
+.empty-state-success .empty-state-illustration {
+  color: #22c55e;
+}
+
+/* ==================== Empty State Animations ==================== */
+
+.empty-state-animated {
+  animation: empty-state-fade-in 0.4s ease-out;
+}
+
+@keyframes empty-state-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Illustration float animation */
+.empty-state-float .empty-state-illustration {
+  animation: empty-state-float 3s ease-in-out infinite;
+}
+
+@keyframes empty-state-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* ==================== Empty State Inline ==================== */
+
+.empty-state-inline {
+  flex-direction: row;
+  text-align: left;
+  padding: 16px;
+  gap: 16px;
+}
+
+.empty-state-inline .empty-state-illustration {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+.empty-state-inline .empty-state-content {
+  flex: 1;
+}
+
+.empty-state-inline .empty-state-title {
+  font-size: 0.9375rem;
+  margin-bottom: 4px;
+}
+
+.empty-state-inline .empty-state-description {
+  font-size: 0.8125rem;
+  margin-bottom: 0;
+  max-width: none;
+}
+
+.empty-state-inline .empty-state-action {
+  flex-shrink: 0;
+}
+
+/* ==================== Dark Theme ==================== */
+
+.dark .empty-state-illustration {
+  color: var(--dark-muted);
+}
+
+.dark .empty-state-title {
+  color: var(--dark-text);
+}
+
+.dark .empty-state-description {
+  color: var(--dark-muted);
+}
+
+.dark .empty-state-bordered {
+  border-color: var(--dark-border);
+}
+
+.dark .empty-state-card {
+  background: var(--dark-panel);
+  border-color: var(--dark-border);
+}
+
+.dark .empty-state-subtle {
+  background: rgba(33, 150, 243, 0.08);
+}
+
+.dark .empty-state-no-results .empty-state-illustration {
+  color: var(--dark-accent);
+}
+
+.dark .empty-state-error .empty-state-illustration {
+  color: #f87171;
+}
+
+.dark .empty-state-error .empty-state-title {
+  color: #f87171;
+}
+
+.dark .empty-state-success .empty-state-illustration {
+  color: #4ade80;
+}
+
+/* ==================== Responsive ==================== */
+
+@media (max-width: 768px) {
+  .empty-state {
+    padding: 32px 16px;
+  }
+
+  .empty-state-lg {
+    padding: 48px 24px;
+    min-height: 300px;
+  }
+
+  .empty-state-lg .empty-state-illustration {
+    width: 120px;
+    height: 120px;
+  }
+
+  .empty-state-lg .empty-state-title {
+    font-size: 1.25rem;
+  }
+
+  .empty-state-inline {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .empty-state-inline .empty-state-illustration {
+    margin-bottom: 12px;
+  }
+}
+
+/* ==================== Reduced Motion ==================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .empty-state-animated {
+    animation: none;
+  }
+
+  .empty-state-float .empty-state-illustration {
+    animation: none;
+  }
+}

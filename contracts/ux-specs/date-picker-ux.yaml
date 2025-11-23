@@ -1,0 +1,408 @@
+# UX Specification: Date Picker Component
+# Component: Date Picker with Calendar View and Range Selection
+# Version: 1.0.0
+# Created: 2025-11-23
+# Agent: ux-ergonomics-specialist
+
+component_id: "date-picker"
+component_name: "Date Picker"
+category: "form-elements"
+
+# User Flows
+user_flows:
+  single_date_flow:
+    name: "Single Date Selection"
+    steps:
+      - step: 1
+        action: "User clicks input or calendar icon"
+        system_response: "Calendar popup opens"
+        feedback: "Current month shown, today highlighted"
+      - step: 2
+        action: "User navigates months/years"
+        system_response: "Calendar updates"
+        feedback: "Month/year header changes, dates update"
+      - step: 3
+        action: "User clicks date"
+        system_response: "Date selected, popup closes"
+        feedback: "Selected date shown in input field"
+
+  range_selection_flow:
+    name: "Date Range Selection"
+    steps:
+      - step: 1
+        action: "User clicks start date input"
+        system_response: "Calendar opens in range mode"
+        feedback: "Prompt to select start date"
+      - step: 2
+        action: "User clicks first date"
+        system_response: "Start date set"
+        feedback: "Start date highlighted, awaiting end date"
+      - step: 3
+        action: "User hovers over dates"
+        system_response: "Preview range shown"
+        feedback: "Dates between start and hover highlighted"
+      - step: 4
+        action: "User clicks second date"
+        system_response: "Range complete, popup closes"
+        feedback: "Range shown in input: start - end"
+
+  keyboard_input_flow:
+    name: "Manual Date Entry"
+    steps:
+      - step: 1
+        action: "User types date in input"
+        system_response: "Date parsed and validated"
+        feedback: "Real-time validation, format hint"
+      - step: 2
+        action: "User presses Enter or tabs out"
+        system_response: "Date confirmed if valid"
+        feedback: "Calendar syncs to entered date"
+
+# Interaction Patterns
+interaction_patterns:
+  input_field:
+    display: "formatted date or placeholder"
+    format:
+      ru: "ДД.ММ.ГГГГ"
+      en: "MM/DD/YYYY"
+      iso: "YYYY-MM-DD"
+    icons:
+      calendar: "right side, opens picker"
+      clear: "right side, clears value (on hover/focus)"
+    mask: "auto-format as user types"
+
+  calendar_popup:
+    position: "below input, flip if no space"
+    width: "280px (single) or 560px (range with two months)"
+    shadow: "elevated (8px blur)"
+    animation: "scale + fade (150ms)"
+
+  calendar_header:
+    elements:
+      - prev_month_button: "left arrow"
+      - month_year_display: "clickable for quick select"
+      - next_month_button: "right arrow"
+    month_year_click:
+      action: "Opens month/year selector"
+
+  day_grid:
+    layout: "7 columns (Su-Sa or Mo-Su)"
+    week_header:
+      labels: "localized abbreviations"
+      font_weight: "600"
+      color: "var(--text-muted)"
+
+  day_cell:
+    size: "36x36px"
+    shape: "circle on hover/select"
+    states:
+      default:
+        cursor: "pointer"
+      today:
+        border: "1px solid var(--primary-color)"
+        font_weight: "600"
+      selected:
+        background: "var(--primary-color)"
+        color: "white"
+      in_range:
+        background: "var(--primary-color-alpha-15)"
+      range_start:
+        background: "var(--primary-color)"
+        border_radius: "50% 0 0 50%"
+      range_end:
+        background: "var(--primary-color)"
+        border_radius: "0 50% 50% 0"
+      hover:
+        background: "var(--neutral-100)"
+      disabled:
+        cursor: "not-allowed"
+        opacity: "0.4"
+      outside_month:
+        color: "var(--text-muted)"
+        opacity: "0.5"
+
+  month_year_selector:
+    mode: "grid view"
+    months:
+      layout: "4x3 grid"
+      selection: "single click"
+    years:
+      layout: "4x3 grid or scrollable list"
+      range: "current year +/- 100"
+
+  footer:
+    elements:
+      - today_button: "Jump to today"
+      - clear_button: "Clear selection"
+      - apply_button: "Confirm (range mode)"
+      - cancel_button: "Cancel (range mode)"
+
+# States
+states:
+  closed:
+    description: "Input only, no popup"
+    input_display: "selected date or placeholder"
+    aria_expanded: "false"
+
+  open:
+    description: "Calendar popup visible"
+    aria_expanded: "true"
+    focus: "on selected date or today"
+
+  selecting_start:
+    description: "Range mode, awaiting first date"
+    visual: "highlight prompt"
+    announcement: "Select start date"
+
+  selecting_end:
+    description: "Range mode, start selected"
+    visual: "start highlighted, preview on hover"
+    announcement: "Select end date"
+
+  range_complete:
+    description: "Both dates selected"
+    visual: "range highlighted"
+    auto_close: "optional"
+
+  invalid:
+    description: "Invalid date entered"
+    visual: "red border, error message"
+    aria_invalid: "true"
+
+  disabled:
+    description: "Non-interactive"
+    visual: "grayed out"
+    cursor: "not-allowed"
+
+# Keyboard Navigation
+keyboard:
+  input:
+    enter:
+      action: "Open calendar"
+    escape:
+      action: "Close calendar"
+    tab:
+      action: "Move to next field"
+
+  calendar:
+    arrow_left:
+      action: "Previous day"
+    arrow_right:
+      action: "Next day"
+    arrow_up:
+      action: "Previous week (same day)"
+    arrow_down:
+      action: "Next week (same day)"
+    page_up:
+      action: "Previous month"
+    page_down:
+      action: "Next month"
+    shift_page_up:
+      action: "Previous year"
+    shift_page_down:
+      action: "Next year"
+    home:
+      action: "First day of month"
+    end:
+      action: "Last day of month"
+    enter:
+      action: "Select focused date"
+    space:
+      action: "Select focused date"
+    escape:
+      action: "Close calendar"
+    tab:
+      action: "Move focus to footer buttons"
+
+  month_year_selector:
+    arrow_keys:
+      action: "Navigate grid"
+    enter:
+      action: "Select and return to day view"
+    escape:
+      action: "Return to day view without change"
+
+# Accessibility Requirements (WCAG 2.1 AA)
+accessibility:
+  aria_roles:
+    input: "combobox"
+    calendar: "dialog"
+    day_grid: "grid"
+    day_cell: "gridcell"
+    month_year_selector: "listbox"
+
+  aria_attributes:
+    input:
+      - "aria-haspopup: dialog"
+      - "aria-expanded: true/false"
+      - "aria-describedby: format hint id"
+    calendar:
+      - "aria-modal: true"
+      - "aria-label: Choose date"
+    day_cell:
+      - "aria-selected: true/false"
+      - "aria-disabled: true (if unavailable)"
+      - "aria-label: full date (e.g., November 23, 2025)"
+    navigation_buttons:
+      - "aria-label: Previous month / Next month"
+
+  focus_management:
+    open: "Focus on selected date or today"
+    close: "Return focus to input"
+    month_change: "Maintain day focus or move to closest valid"
+    trap_focus: "Tab cycles within calendar"
+
+  announcements:
+    live_region: "aria-live='polite'"
+    events:
+      - open: "Calendar open. {current month year}"
+      - month_change: "{new month year}"
+      - date_focus: "{full date}"
+      - select: "{full date} selected"
+      - range_start: "Start date: {date}"
+      - range_end: "End date: {date}. Range: {n} days"
+
+  reduced_motion:
+    preference: "prefers-reduced-motion: reduce"
+    changes:
+      - no_popup_animation: true
+      - instant_month_transitions: true
+      - no_hover_effects: true
+
+  color_contrast:
+    text: "4.5:1 minimum"
+    selected_date: "4.5:1 white on primary"
+    today_indicator: "not color-only (border)"
+    disabled_dates: "3:1 minimum"
+
+# Validation Rules
+validation:
+  format:
+    pattern: "locale-based regex"
+    message: "Please enter date in {format} format"
+    real_time: true
+
+  min_date:
+    config: "minDate prop"
+    message: "Date must be after {minDate}"
+    visual: "dates before disabled"
+
+  max_date:
+    config: "maxDate prop"
+    message: "Date must be before {maxDate}"
+    visual: "dates after disabled"
+
+  disabled_dates:
+    config: "disabledDates array or function"
+    message: "This date is not available"
+    visual: "specific dates disabled"
+
+  range_validation:
+    max_range: "maxRange in days"
+    min_range: "minRange in days"
+    message: "Range must be between {min} and {max} days"
+
+# Localization
+localization:
+  supported_locales:
+    - "ru-RU"
+    - "en-US"
+    - "en-GB"
+
+  locale_settings:
+    ru-RU:
+      first_day_of_week: 1  # Monday
+      date_format: "DD.MM.YYYY"
+      months:
+        - "Январь"
+        - "Февраль"
+        - "Март"
+        - "Апрель"
+        - "Май"
+        - "Июнь"
+        - "Июль"
+        - "Август"
+        - "Сентябрь"
+        - "Октябрь"
+        - "Ноябрь"
+        - "Декабрь"
+      weekdays_short:
+        - "Пн"
+        - "Вт"
+        - "Ср"
+        - "Чт"
+        - "Пт"
+        - "Сб"
+        - "Вс"
+
+    en-US:
+      first_day_of_week: 0  # Sunday
+      date_format: "MM/DD/YYYY"
+      months:
+        - "January"
+        - "February"
+        - "March"
+        - "April"
+        - "May"
+        - "June"
+        - "July"
+        - "August"
+        - "September"
+        - "October"
+        - "November"
+        - "December"
+      weekdays_short:
+        - "Su"
+        - "Mo"
+        - "Tu"
+        - "We"
+        - "Th"
+        - "Fr"
+        - "Sa"
+
+# Responsive Behavior
+responsive:
+  desktop:
+    min_width: "1024px"
+    popup_position: "below input"
+    range_view: "two months side by side"
+
+  tablet:
+    min_width: "768px"
+    max_width: "1023px"
+    popup_position: "below input"
+    range_view: "single month with arrows"
+
+  mobile:
+    max_width: "767px"
+    changes:
+      - full_screen_modal: true
+      - swipe_navigation: "swipe left/right for months"
+      - larger_touch_targets: "44x44px minimum"
+      - sticky_header: true
+      - footer_actions: "fixed at bottom"
+
+# Animation Timings
+animations:
+  popup_open:
+    duration: "150ms"
+    easing: "ease-out"
+    style: "scale from 95% + fade"
+
+  popup_close:
+    duration: "100ms"
+    easing: "ease-in"
+    style: "scale to 95% + fade"
+
+  month_transition:
+    duration: "200ms"
+    easing: "ease-in-out"
+    style: "slide left/right + fade"
+
+  day_hover:
+    duration: "100ms"
+    style: "background fade"
+
+  selection:
+    duration: "150ms"
+    style: "scale pop + color"

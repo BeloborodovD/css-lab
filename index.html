@@ -104,6 +104,10 @@
           <li class="sidebar-nav-item"><a href="#animations" class="sidebar-nav-link">Animations</a></li>
           <li class="sidebar-nav-item"><a href="#modal" class="sidebar-nav-link">Modal</a></li>
           <li class="sidebar-nav-item"><a href="#tooltip" class="sidebar-nav-link">Tooltip</a></li>
+          <li class="sidebar-nav-item"><a href="#avatar" class="sidebar-nav-link">Avatar</a></li>
+          <li class="sidebar-nav-item"><a href="#divider" class="sidebar-nav-link">Divider</a></li>
+          <li class="sidebar-nav-item"><a href="#chip" class="sidebar-nav-link">Chip</a></li>
+          <li class="sidebar-nav-item"><a href="#empty-state" class="sidebar-nav-link">Empty State</a></li>
         </ul>
       </div>
     </aside>
@@ -1420,6 +1424,324 @@
       </div>
     </section>
 
+    <!-- Avatar Section -->
+    <section id="avatar" class="mb-4">
+      <h2 class="mb-2">Avatar</h2>
+      <p class="text-muted mb-2">Аватары пользователей с размерами, статусами и группами</p>
+
+      <!-- Sizes -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Размеры</h3>
+        </div>
+        <div class="card-body">
+          <div class="flex gap-4 items-end">
+            <div class="avatar avatar-xs">
+              <img src="https://i.pravatar.cc/32?img=1" alt="User">
+            </div>
+            <div class="avatar avatar-sm">
+              <img src="https://i.pravatar.cc/40?img=2" alt="User">
+            </div>
+            <div class="avatar avatar-md">
+              <img src="https://i.pravatar.cc/48?img=3" alt="User">
+            </div>
+            <div class="avatar avatar-lg">
+              <img src="https://i.pravatar.cc/64?img=4" alt="User">
+            </div>
+            <div class="avatar avatar-xl">
+              <img src="https://i.pravatar.cc/80?img=5" alt="User">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- With Status -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Со статусом</h3>
+        </div>
+        <div class="card-body">
+          <div class="flex gap-4">
+            <div class="avatar avatar-md avatar-online">
+              <img src="https://i.pravatar.cc/48?img=10" alt="Online">
+            </div>
+            <div class="avatar avatar-md avatar-offline">
+              <img src="https://i.pravatar.cc/48?img=11" alt="Offline">
+            </div>
+            <div class="avatar avatar-md avatar-busy">
+              <img src="https://i.pravatar.cc/48?img=12" alt="Busy">
+            </div>
+            <div class="avatar avatar-md avatar-away">
+              <img src="https://i.pravatar.cc/48?img=13" alt="Away">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Initials Fallback -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Инициалы (fallback)</h3>
+        </div>
+        <div class="card-body">
+          <div class="flex gap-4">
+            <div class="avatar avatar-md">
+              <span class="avatar-initials">JD</span>
+            </div>
+            <div class="avatar avatar-md" style="--avatar-bg: var(--success);">
+              <span class="avatar-initials">AS</span>
+            </div>
+            <div class="avatar avatar-md" style="--avatar-bg: var(--warning);">
+              <span class="avatar-initials">MK</span>
+            </div>
+            <div class="avatar avatar-md" style="--avatar-bg: var(--error);">
+              <span class="avatar-initials">PT</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Avatar Group -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Группа аватаров</h3>
+        </div>
+        <div class="card-body">
+          <div class="avatar-group">
+            <div class="avatar avatar-md">
+              <img src="https://i.pravatar.cc/48?img=20" alt="User 1">
+            </div>
+            <div class="avatar avatar-md">
+              <img src="https://i.pravatar.cc/48?img=21" alt="User 2">
+            </div>
+            <div class="avatar avatar-md">
+              <img src="https://i.pravatar.cc/48?img=22" alt="User 3">
+            </div>
+            <div class="avatar avatar-md avatar-more">
+              <span class="avatar-initials">+5</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Divider Section -->
+    <section id="divider" class="mb-4">
+      <h2 class="mb-2">Divider</h2>
+      <p class="text-muted mb-2">Разделители для контента</p>
+
+      <!-- Horizontal -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Горизонтальный</h3>
+        </div>
+        <div class="card-body">
+          <p>Контент до разделителя</p>
+          <div class="divider"></div>
+          <p>Контент после разделителя</p>
+        </div>
+      </div>
+
+      <!-- With Text -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">С текстом</h3>
+        </div>
+        <div class="card-body">
+          <p>Секция 1</p>
+          <div class="divider divider-text" data-text="ИЛИ"></div>
+          <p>Секция 2</p>
+          <div class="divider divider-text" data-text="Продолжение"></div>
+          <p>Секция 3</p>
+        </div>
+      </div>
+
+      <!-- Styles -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Стили</h3>
+        </div>
+        <div class="card-body">
+          <p>Сплошной (default)</p>
+          <div class="divider"></div>
+          <p>Пунктирный</p>
+          <div class="divider divider-dashed"></div>
+          <p>Точечный</p>
+          <div class="divider divider-dotted"></div>
+        </div>
+      </div>
+
+      <!-- Vertical -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Вертикальный</h3>
+        </div>
+        <div class="card-body">
+          <div class="flex items-center gap-4" style="height: 40px;">
+            <span>Элемент 1</span>
+            <div class="divider-vertical"></div>
+            <span>Элемент 2</span>
+            <div class="divider-vertical"></div>
+            <span>Элемент 3</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chip Section -->
+    <section id="chip" class="mb-4">
+      <h2 class="mb-2">Chip / Tag</h2>
+      <p class="text-muted mb-2">Чипы и теги для категорий, фильтров и выбора</p>
+
+      <!-- Basic -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Базовые</h3>
+        </div>
+        <div class="card-body">
+          <div class="flex gap-2 flex-wrap">
+            <span class="chip">Tag 1</span>
+            <span class="chip">Tag 2</span>
+            <span class="chip">Tag 3</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Colors -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Цвета</h3>
+        </div>
+        <div class="card-body">
+          <div class="flex gap-2 flex-wrap">
+            <span class="chip chip-primary">Primary</span>
+            <span class="chip chip-success">Success</span>
+            <span class="chip chip-warning">Warning</span>
+            <span class="chip chip-error">Error</span>
+            <span class="chip chip-info">Info</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Outlined -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Outlined</h3>
+        </div>
+        <div class="card-body">
+          <div class="flex gap-2 flex-wrap">
+            <span class="chip chip-outlined">Default</span>
+            <span class="chip chip-outlined chip-primary">Primary</span>
+            <span class="chip chip-outlined chip-success">Success</span>
+            <span class="chip chip-outlined chip-warning">Warning</span>
+            <span class="chip chip-outlined chip-error">Error</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Removable -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">С удалением</h3>
+        </div>
+        <div class="card-body">
+          <div class="flex gap-2 flex-wrap" id="removable-chips">
+            <span class="chip chip-removable">
+              JavaScript
+              <button class="chip-remove" aria-label="Remove">×</button>
+            </span>
+            <span class="chip chip-removable chip-primary">
+              TypeScript
+              <button class="chip-remove" aria-label="Remove">×</button>
+            </span>
+            <span class="chip chip-removable chip-success">
+              Python
+              <button class="chip-remove" aria-label="Remove">×</button>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Clickable -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Кликабельные (фильтры)</h3>
+        </div>
+        <div class="card-body">
+          <div class="flex gap-2 flex-wrap">
+            <button class="chip chip-clickable chip-active">Все</button>
+            <button class="chip chip-clickable">Активные</button>
+            <button class="chip chip-clickable">Завершённые</button>
+            <button class="chip chip-clickable">Архив</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Empty State Section -->
+    <section id="empty-state" class="mb-4">
+      <h2 class="mb-2">Empty State</h2>
+      <p class="text-muted mb-2">Состояния пустых страниц и ошибок</p>
+
+      <!-- No Data -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Нет данных</h3>
+        </div>
+        <div class="card-body">
+          <div class="empty-state">
+            <div class="empty-state-icon">📊</div>
+            <h3 class="empty-state-title">Нет данных для отображения</h3>
+            <p class="empty-state-description">Добавьте первую запись, чтобы начать работу</p>
+            <button class="btn btn-primary">Добавить данные</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- No Results -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Ничего не найдено</h3>
+        </div>
+        <div class="card-body">
+          <div class="empty-state">
+            <div class="empty-state-icon">🔍</div>
+            <h3 class="empty-state-title">Результаты не найдены</h3>
+            <p class="empty-state-description">Попробуйте изменить параметры поиска или сбросить фильтры</p>
+            <button class="btn btn-outline">Сбросить фильтры</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Ошибка</h3>
+        </div>
+        <div class="card-body">
+          <div class="empty-state empty-state-error">
+            <div class="empty-state-icon">⚠️</div>
+            <h3 class="empty-state-title">Что-то пошло не так</h3>
+            <p class="empty-state-description">Произошла ошибка при загрузке данных. Попробуйте обновить страницу.</p>
+            <button class="btn btn-primary">Повторить</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Compact -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Компактный вариант</h3>
+        </div>
+        <div class="card-body">
+          <div class="empty-state empty-state-compact">
+            <div class="empty-state-icon">📁</div>
+            <p class="empty-state-description">Папка пуста</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
       </div><!-- /.container -->
     </main><!-- /.app-content -->
 
@@ -1436,7 +1758,7 @@
           <div class="sidebar-widget-title">Статистика</div>
           <div class="sidebar-stats">
             <div class="sidebar-stat">
-              <div class="sidebar-stat-value">20</div>
+              <div class="sidebar-stat-value">24</div>
               <div class="sidebar-stat-label">Компонентов</div>
             </div>
             <div class="sidebar-stat">

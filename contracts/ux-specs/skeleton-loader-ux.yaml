@@ -1,0 +1,302 @@
+# UX Specification: Skeleton Loader Component
+# Component: Skeleton Loader with Shimmer Animation
+# Version: 1.0.0
+# Created: 2025-11-23
+# Agent: ux-ergonomics-specialist
+
+component_id: "skeleton-loader"
+component_name: "Skeleton Loader"
+category: "feedback"
+
+# User Flows
+user_flows:
+  content_loading_flow:
+    name: "Content Loading"
+    steps:
+      - step: 1
+        action: "User navigates to page"
+        system_response: "Skeleton displayed immediately"
+        feedback: "Layout preserved, shimmer animation"
+      - step: 2
+        action: "Data loads"
+        system_response: "Content replaces skeleton"
+        feedback: "Smooth fade transition"
+
+  lazy_loading_flow:
+    name: "Lazy Loading"
+    steps:
+      - step: 1
+        action: "User scrolls near unloaded content"
+        system_response: "Skeleton appears in viewport"
+        feedback: "Placeholder visible"
+      - step: 2
+        action: "Content loads asynchronously"
+        system_response: "Real content fades in"
+        feedback: "Seamless replacement"
+
+# Interaction Patterns
+interaction_patterns:
+  skeleton_element:
+    background: "var(--neutral-200)"
+    border_radius: "4px"
+    animation: "shimmer (gradient sweep)"
+
+  shimmer_animation:
+    type: "linear gradient sweep"
+    direction: "left to right"
+    colors:
+      base: "var(--neutral-200)"
+      highlight: "var(--neutral-100)"
+    duration: "1.5s"
+    timing: "ease-in-out"
+    iteration: "infinite"
+
+  element_types:
+    text_line:
+      height: "16px (body) or 24px (heading)"
+      width: "varies (60%-100%)"
+      margin_bottom: "8px"
+
+    avatar:
+      shape: "circle"
+      sizes:
+        sm: "32px"
+        md: "40px"
+        lg: "48px"
+
+    image:
+      aspect_ratio: "match expected image"
+      border_radius: "4px"
+
+    button:
+      height: "36px"
+      width: "100px-150px"
+      border_radius: "4px"
+
+    card:
+      padding: "16px"
+      border_radius: "8px"
+      shadow: "optional"
+
+  layout_matching:
+    principle: "Skeleton should match real content layout"
+    spacing: "same as real content"
+    structure: "same hierarchy as real content"
+
+# Variants
+variants:
+  text_block:
+    description: "Multiple text lines"
+    structure:
+      - line_1: "width: 100%"
+      - line_2: "width: 100%"
+      - line_3: "width: 75%"
+
+  card_skeleton:
+    description: "Card with image and text"
+    structure:
+      - image: "aspect-ratio: 16/9"
+      - title: "width: 80%, height: 24px"
+      - description: "2 lines, width: 100%, 60%"
+      - meta: "width: 40%"
+
+  list_item_skeleton:
+    description: "List item with avatar"
+    structure:
+      - avatar: "40px circle"
+      - title: "width: 60%"
+      - subtitle: "width: 40%"
+
+  table_skeleton:
+    description: "Table rows"
+    structure:
+      - row_height: "48px"
+      - cells: "match column widths"
+
+  profile_skeleton:
+    description: "User profile"
+    structure:
+      - avatar: "80px circle"
+      - name: "width: 150px"
+      - bio: "3 lines"
+      - stats: "3 boxes"
+
+# States
+states:
+  loading:
+    description: "Skeleton visible"
+    animation: "shimmer active"
+    aria_busy: "true"
+
+  loaded:
+    description: "Content ready"
+    transition: "fade out skeleton, fade in content"
+    duration: "200ms"
+
+  error:
+    description: "Load failed"
+    behavior: "skeleton replaced with error state"
+
+# Accessibility Requirements (WCAG 2.1 AA)
+accessibility:
+  aria_attributes:
+    container:
+      - "aria-busy: true"
+      - "aria-live: polite"
+      - "aria-label: Loading content"
+    skeleton_elements:
+      - "aria-hidden: true"
+
+  screen_reader:
+    announcement: "Loading {context description}"
+    completion: "Content loaded"
+
+  reduced_motion:
+    preference: "prefers-reduced-motion: reduce"
+    changes:
+      - no_shimmer: true
+      - static_gray: "solid var(--neutral-200)"
+      - optional_pulse: "subtle opacity change"
+
+  color_contrast:
+    not_required: "decorative element"
+    recommendation: "visible against background"
+
+# Animation Specifications
+animation_specs:
+  shimmer:
+    keyframes: |
+      @keyframes shimmer {
+        0% {
+          background-position: -200% 0;
+        }
+        100% {
+          background-position: 200% 0;
+        }
+      }
+    gradient: |
+      linear-gradient(
+        90deg,
+        var(--neutral-200) 0%,
+        var(--neutral-100) 50%,
+        var(--neutral-200) 100%
+      )
+    background_size: "200% 100%"
+    duration: "1.5s"
+    timing: "ease-in-out"
+    iteration: "infinite"
+
+  pulse_alternative:
+    keyframes: |
+      @keyframes pulse {
+        0%, 100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+    duration: "2s"
+    timing: "ease-in-out"
+    iteration: "infinite"
+    use_case: "reduced motion preference"
+
+  content_transition:
+    skeleton_out:
+      duration: "150ms"
+      style: "fade out"
+    content_in:
+      duration: "200ms"
+      style: "fade in"
+      delay: "50ms"
+
+# Responsive Behavior
+responsive:
+  desktop:
+    min_width: "1024px"
+    shimmer_speed: "1.5s"
+
+  tablet:
+    min_width: "768px"
+    max_width: "1023px"
+    shimmer_speed: "1.5s"
+
+  mobile:
+    max_width: "767px"
+    changes:
+      - simplified_skeletons: "fewer elements"
+      - reduced_animation: "optional, save battery"
+      - match_mobile_layout: true
+
+# Performance
+performance:
+  guidelines:
+    - "Use CSS animations (GPU accelerated)"
+    - "Avoid animating layout properties"
+    - "Limit DOM elements (combine skeletons)"
+    - "Use will-change: transform, opacity"
+
+  animation_optimization:
+    use: "transform and opacity"
+    avoid: "width, height, margin, padding"
+
+  element_count:
+    recommendation: "Match expected items, max 20"
+    virtualization: "For long lists, use virtual skeleton"
+
+# Best Practices
+best_practices:
+  do:
+    - "Match real content layout exactly"
+    - "Use consistent skeleton styles"
+    - "Show skeleton immediately (no delay)"
+    - "Animate smoothly to content"
+    - "Respect reduced motion preferences"
+
+  dont:
+    - "Show spinner then skeleton (pick one)"
+    - "Use different layout than content"
+    - "Animate skeleton for too long"
+    - "Show skeleton for <200ms loads"
+    - "Use skeleton for error states"
+
+  timing_recommendations:
+    instant_loads: "Skip skeleton (<100ms)"
+    short_loads: "Show skeleton (100ms-2s)"
+    long_loads: "Skeleton + progress indicator (>2s)"
+
+# CSS Implementation Notes
+css_notes:
+  base_styles: |
+    .skeleton {
+      background: linear-gradient(
+        90deg,
+        var(--neutral-200) 0%,
+        var(--neutral-100) 50%,
+        var(--neutral-200) 100%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.5s ease-in-out infinite;
+      border-radius: 4px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .skeleton {
+        animation: none;
+        background: var(--neutral-200);
+      }
+    }
+
+  variants: |
+    .skeleton-text {
+      height: 1em;
+      margin-bottom: 0.5em;
+    }
+
+    .skeleton-avatar {
+      border-radius: 50%;
+    }
+
+    .skeleton-image {
+      aspect-ratio: 16/9;
+    }

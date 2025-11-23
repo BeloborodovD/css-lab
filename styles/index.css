@@ -36,6 +36,10 @@
 @import './components/footer.css';
 @import './components/app-layout.css';
 @import './components/autotrassir.css';
+@import './components/avatar.css';
+@import './components/divider.css';
+@import './components/chip.css';
+@import './components/empty-state.css';
 
 /* Themes */
 @import './themes/dark.css';

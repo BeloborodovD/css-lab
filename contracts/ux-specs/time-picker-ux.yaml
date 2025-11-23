@@ -1,0 +1,340 @@
+# UX Specification: Time Picker Component
+# Component: Time Picker with Hours, Minutes, AM/PM
+# Version: 1.0.0
+# Created: 2025-11-23
+# Agent: ux-ergonomics-specialist
+
+component_id: "time-picker"
+component_name: "Time Picker"
+category: "form-elements"
+
+# User Flows
+user_flows:
+  dropdown_selection_flow:
+    name: "Select Time from Dropdown"
+    steps:
+      - step: 1
+        action: "User clicks input or clock icon"
+        system_response: "Time dropdown opens"
+        feedback: "Scrollable time list, current time highlighted"
+      - step: 2
+        action: "User scrolls to desired time"
+        system_response: "Options scroll"
+        feedback: "Smooth scroll with snap points"
+      - step: 3
+        action: "User clicks time option"
+        system_response: "Time selected, dropdown closes"
+        feedback: "Input shows selected time"
+
+  keyboard_input_flow:
+    name: "Type Time Directly"
+    steps:
+      - step: 1
+        action: "User focuses input"
+        system_response: "Input ready for typing"
+        feedback: "Cursor in input, format hint shown"
+      - step: 2
+        action: "User types time (e.g., '1430' or '2:30pm')"
+        system_response: "Time parsed and formatted"
+        feedback: "Auto-format to HH:MM, validation"
+      - step: 3
+        action: "User tabs out or presses Enter"
+        system_response: "Time confirmed"
+        feedback: "Valid time displayed, dropdown synced"
+
+  spinner_adjustment_flow:
+    name: "Adjust with Spinners"
+    steps:
+      - step: 1
+        action: "User clicks hour up/down spinner"
+        system_response: "Hour increments/decrements"
+        feedback: "Immediate update, wrap at limits"
+      - step: 2
+        action: "User holds spinner button"
+        system_response: "Continuous increment"
+        feedback: "Accelerating changes"
+      - step: 3
+        action: "User adjusts minutes similarly"
+        system_response: "Minutes change by step"
+        feedback: "Step interval respected (e.g., 15 min)"
+
+# Interaction Patterns
+interaction_patterns:
+  input_field:
+    display: "formatted time or placeholder"
+    formats:
+      24h: "HH:MM"
+      12h: "h:MM AM/PM"
+    icons:
+      clock: "right side, opens picker"
+      clear: "right side (on hover/focus)"
+    mask: "auto-format as user types"
+    placeholder:
+      24h: "00:00"
+      12h: "12:00 AM"
+
+  dropdown_list:
+    position: "below input, flip if no space"
+    width: "match input or min 120px"
+    max_height: "200px"
+    scroll: "enabled with snap"
+    highlight_current: true
+
+  time_option:
+    height: "36px"
+    padding: "8px 12px"
+    states:
+      default:
+        background: "transparent"
+      hover:
+        background: "var(--neutral-100)"
+      selected:
+        background: "var(--primary-color)"
+        color: "white"
+      current:
+        border: "1px solid var(--primary-color)"
+      disabled:
+        opacity: "0.4"
+        cursor: "not-allowed"
+
+  spinner_variant:
+    layout: "hour spinner | separator | minute spinner | AM/PM toggle"
+    spinner:
+      width: "60px"
+      height: "100px"
+      buttons:
+        up: "chevron-up"
+        down: "chevron-down"
+      display: "current value centered"
+    separator:
+      content: ":"
+      font_weight: "600"
+    am_pm_toggle:
+      type: "segmented control"
+      options: ["AM", "PM"]
+
+  step_intervals:
+    options:
+      - 1: "every minute"
+      - 5: "5-minute intervals"
+      - 15: "15-minute intervals"
+      - 30: "30-minute intervals"
+      - 60: "hourly"
+    default: 15
+
+# States
+states:
+  idle:
+    description: "Input ready, no value"
+    display: "placeholder"
+
+  focused:
+    description: "Input focused"
+    visual: "focus ring"
+    dropdown: "may auto-open"
+
+  open:
+    description: "Dropdown visible"
+    aria_expanded: "true"
+    scroll_position: "to selected or current time"
+
+  selected:
+    description: "Time value set"
+    display: "formatted time"
+    validation: "valid"
+
+  invalid:
+    description: "Invalid time entered"
+    visual: "red border, error message"
+    aria_invalid: "true"
+
+  disabled:
+    description: "Non-interactive"
+    cursor: "not-allowed"
+    opacity: "0.5"
+
+# Keyboard Navigation
+keyboard:
+  input:
+    enter:
+      action: "Open dropdown or confirm typed value"
+    escape:
+      action: "Close dropdown, clear typed changes"
+    tab:
+      action: "Move to next field"
+    arrow_up:
+      action: "Increment time by step"
+    arrow_down:
+      action: "Decrement time by step"
+    page_up:
+      action: "Increment hour"
+    page_down:
+      action: "Decrement hour"
+
+  dropdown:
+    arrow_down:
+      action: "Move to next time option"
+    arrow_up:
+      action: "Move to previous time option"
+    enter:
+      action: "Select highlighted option"
+    escape:
+      action: "Close dropdown"
+    home:
+      action: "Jump to first option"
+    end:
+      action: "Jump to last option"
+
+  spinner:
+    arrow_up:
+      action: "Increment value"
+    arrow_down:
+      action: "Decrement value"
+    page_up:
+      action: "Increment by larger step"
+    page_down:
+      action: "Decrement by larger step"
+    tab:
+      action: "Move between hour/minute/AM-PM"
+
+# Accessibility Requirements (WCAG 2.1 AA)
+accessibility:
+  aria_roles:
+    input: "combobox"
+    dropdown: "listbox"
+    time_option: "option"
+    spinner: "spinbutton"
+    am_pm_toggle: "radiogroup"
+
+  aria_attributes:
+    input:
+      - "aria-haspopup: listbox"
+      - "aria-expanded: true/false"
+      - "aria-controls: dropdown id"
+      - "aria-describedby: format hint id"
+    dropdown:
+      - "aria-label: Select time"
+    time_option:
+      - "aria-selected: true/false"
+    spinner:
+      - "aria-valuenow: current value"
+      - "aria-valuemin: 0"
+      - "aria-valuemax: 23 (hours) or 59 (minutes)"
+      - "aria-label: Hours / Minutes"
+
+  focus_management:
+    open: "Focus first option or selected"
+    close: "Return focus to input"
+    spinner: "Focus moves between spinners on Tab"
+
+  announcements:
+    live_region: "aria-live='polite'"
+    events:
+      - open: "Time picker open. {current value or 'no time selected'}"
+      - navigation: "{time value}"
+      - select: "Time set to {formatted time}"
+      - change: "{new time value}"
+
+  reduced_motion:
+    preference: "prefers-reduced-motion: reduce"
+    changes:
+      - no_scroll_animation: true
+      - instant_dropdown: true
+
+  color_contrast:
+    text: "4.5:1 minimum"
+    selected_option: "4.5:1 white on primary"
+    placeholder: "4.5:1 minimum"
+
+# Validation Rules
+validation:
+  format:
+    pattern: "HH:MM or h:MM AM/PM"
+    message: "Please enter a valid time"
+
+  min_time:
+    config: "minTime string"
+    message: "Time must be after {minTime}"
+    visual: "times before disabled"
+
+  max_time:
+    config: "maxTime string"
+    message: "Time must be before {maxTime}"
+    visual: "times after disabled"
+
+  disabled_times:
+    config: "disabledTimes array"
+    message: "This time is not available"
+    visual: "specific times disabled"
+
+  required:
+    message: "Please select a time"
+
+# Format Options
+format_options:
+  display_formats:
+    24h:
+      format: "HH:MM"
+      examples: ["00:00", "13:45", "23:59"]
+    12h:
+      format: "h:MM A"
+      examples: ["12:00 AM", "1:45 PM", "11:59 PM"]
+    12h_lowercase:
+      format: "h:MM a"
+      examples: ["12:00 am", "1:45 pm"]
+
+  parsing:
+    accepted_inputs:
+      - "1430" -> "14:30"
+      - "230pm" -> "2:30 PM"
+      - "2:30 pm" -> "2:30 PM"
+      - "14:30" -> "14:30"
+      - "2:30" -> "02:30" (24h) or "2:30 AM" (12h)
+
+  locale_defaults:
+    en-US: "12h"
+    en-GB: "24h"
+    ru-RU: "24h"
+    de-DE: "24h"
+
+# Responsive Behavior
+responsive:
+  desktop:
+    min_width: "1024px"
+    dropdown_position: "below input"
+    show_spinner_variant: "optional"
+
+  tablet:
+    min_width: "768px"
+    max_width: "1023px"
+    dropdown_position: "below input"
+
+  mobile:
+    max_width: "767px"
+    changes:
+      - native_time_input: "optional fallback"
+      - bottom_sheet: "full-width from bottom"
+      - larger_touch_targets: "44px minimum"
+      - wheel_picker: "iOS-style wheel"
+
+# Animation Timings
+animations:
+  dropdown_open:
+    duration: "150ms"
+    easing: "ease-out"
+    style: "scale from 95% + fade"
+
+  dropdown_close:
+    duration: "100ms"
+    easing: "ease-in"
+
+  scroll_snap:
+    duration: "200ms"
+    easing: "ease-out"
+
+  option_highlight:
+    duration: "100ms"
+
+  spinner_change:
+    duration: "100ms"
+    style: "slide + fade"

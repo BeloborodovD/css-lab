@@ -432,13 +432,23 @@ body.width-full .main.container {
 
 /* === Responsive === */
 @media (max-width: 767px) {
+  /* Mobile header is smaller (56px vs 64px) */
+  .app-layout {
+    min-height: calc(100vh - 56px);
+  }
+
   /* CRITICAL: On mobile, sidebars must be hidden by default and overlay content */
   .app-sidebar {
     position: fixed;
+    top: 56px; /* Mobile header height */
     width: 280px;
     max-width: 85vw;
     z-index: 1000;
     box-shadow: var(--shadow-xl, 0 25px 50px -12px rgba(0, 0, 0, 0.25));
+  }
+
+  .sidebar-overlay {
+    top: 56px; /* Mobile header height */
   }
 
   /* Left sidebar: hidden off-screen by default */
@@ -524,9 +534,18 @@ body.width-full .main.container {
 
 /* Extra small screens (iPhone SE, etc.) */
 @media (max-width: 374px) {
+  .app-layout {
+    min-height: calc(100vh - 52px);
+  }
+
   .app-sidebar {
+    top: 52px; /* Extra small header height */
     width: 100%;
     max-width: 100%;
+  }
+
+  .sidebar-overlay {
+    top: 52px;
   }
 
   .app-content {

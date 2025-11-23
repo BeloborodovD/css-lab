@@ -1,0 +1,290 @@
+/* ==================== Tables ==================== */
+/* Собрано из: datasheet_electric_motor, mdm_terms */
+
+/* Base Table */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+  background: var(--panel);
+}
+
+.table th,
+.table td {
+  padding: 10px 12px;
+  text-align: left;
+  border: 1px solid var(--border);
+}
+
+.table th {
+  background: var(--bg);
+  font-weight: 600;
+  color: var(--text);
+}
+
+.table td {
+  color: var(--text);
+}
+
+/* Striped rows */
+.table-striped tbody tr:nth-child(even) {
+  background: var(--bg);
+}
+
+/* Hover effect */
+.table-hover tbody tr:hover {
+  background: var(--accent-100);
+}
+
+/* Bordered table */
+.table-bordered {
+  border: 1px solid var(--border);
+}
+
+/* Compact table */
+.table-compact th,
+.table-compact td {
+  padding: 6px 8px;
+  font-size: 0.85rem;
+}
+
+/* Highlighted row */
+.table tbody tr.highlighted {
+  background: var(--highlight-bg, #fff9c4);
+  font-weight: 600;
+}
+
+/* Parameter table (from datasheet) */
+.table-params {
+  font-size: 0.85rem;
+}
+
+.table-params th {
+  width: 60%;
+  text-align: left;
+  font-weight: normal;
+  color: var(--muted);
+}
+
+.table-params td {
+  text-align: right;
+  font-weight: 600;
+}
+
+.table-params .unit {
+  font-weight: normal;
+  color: var(--muted);
+  margin-left: 4px;
+}
+
+/* VEZA style table (dashed borders) */
+.table-dashed,
+.table-dashed th,
+.table-dashed td {
+  border-style: dashed;
+  border-color: #374a51;
+}
+
+.table-dashed th {
+  background: #eaf7ed;
+  color: #374a51;
+}
+
+/* Responsive table wrapper */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Alignment utilities */
+.table th.align-center,
+.table td.align-center {
+  text-align: center;
+}
+
+.table th.align-left,
+.table td.align-left {
+  text-align: left;
+}
+
+.table th.align-right,
+.table td.align-right {
+  text-align: right;
+}
+
+/* Vertical headers */
+.table th.vertical-header {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  text-align: right;
+  vertical-align: middle;
+  white-space: nowrap;
+  padding: 4px;
+}
+
+/* ==================== VEZA Header (from datasheet_electric_motor) ==================== */
+
+.veza-header {
+  width: 100%;
+  padding: 8px 0 10px;
+  margin-bottom: 15px;
+  font-family: "Roboto", Arial, sans-serif;
+  color: #333;
+  box-sizing: border-box;
+  border-bottom: 1px solid #374a51;
+}
+
+.veza-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  font-size: 10pt;
+}
+
+.veza-header-top > div:first-child {
+  flex: 0 0 20%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.veza-header-top img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  max-height: 50px;
+}
+
+.veza-header-title {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11pt;
+  font-weight: 700;
+  color: #374a51;
+  text-align: center;
+}
+
+.veza-header-contacts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.veza-header-box {
+  flex: 1 1 22%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 10px;
+  border: 2px solid #374a51;
+  border-radius: 6px;
+  font-size: 9.5pt;
+  line-height: 1.4;
+  color: #374a51;
+  text-align: center;
+}
+
+.veza-header-box a,
+.veza-header-box a:visited {
+  color: inherit !important;
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .veza-header-top {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .veza-header-top > div:first-child,
+  .veza-header-title {
+    flex: 1 1 100%;
+  }
+}
+
+/* Print styles */
+@media print {
+  .table {
+    border: 0.5pt solid #333;
+    font-size: 9pt;
+  }
+
+  .table th,
+  .table td {
+    border: 0.5pt solid #333;
+    padding: 4pt 6pt;
+  }
+
+  .table th {
+    background: #f5f5f5 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tr {
+    page-break-inside: avoid;
+  }
+
+  /* VEZA header print */
+  .veza-header {
+    border-bottom: 0.5pt solid #374a51;
+    margin-bottom: 8pt;
+    padding: 4pt 0 6pt;
+    font-size: 9pt;
+    color: #000;
+    break-inside: avoid;
+  }
+
+  .veza-header-top {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 10pt !important;
+    font-size: 9pt !important;
+  }
+
+  .veza-header-title {
+    font-size: 10pt !important;
+    font-weight: 700 !important;
+    color: #374a51 !important;
+  }
+
+  .veza-header a {
+    color: #374a51 !important;
+    text-decoration: none !important;
+  }
+
+  /* DIP tables print */
+  .table-dashed {
+    border: 0.5pt dashed #374a51 !important;
+    font-size: 9pt !important;
+    table-layout: fixed;
+    line-height: 1.45 !important;
+  }
+
+  .table-dashed th,
+  .table-dashed td {
+    border: 0.5pt dashed #374a51 !important;
+    padding: 2pt 2pt 2pt 7pt !important;
+    line-height: 1.2 !important;
+    color: #000 !important;
+  }
+
+  .table-dashed th {
+    background: #eaf7ed !important;
+    font-weight: 600 !important;
+  }
+
+  /* Fix empty cells borders */
+  .table-dashed th::before,
+  .table-dashed td::before {
+    content: "\200b";
+  }
+}

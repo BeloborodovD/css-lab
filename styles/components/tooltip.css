@@ -1,0 +1,608 @@
+/* ==================== Tooltip ==================== */
+/* Собрано из: mdm_terms (selection-tooltip), autoTrassir */
+
+/* =============================================
+   1. CSS-Only Tooltip (data-tooltip attribute)
+   Usage: <span data-tooltip="Подсказка">Hover me</span>
+   ============================================= */
+
+[data-tooltip] {
+  position: relative;
+  cursor: help;
+}
+
+/* Tooltip content via ::before */
+[data-tooltip]::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  padding: 6px 10px;
+  background: var(--text);
+  color: var(--panel);
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 400;
+  white-space: nowrap;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition), transform var(--transition), visibility var(--transition);
+}
+
+/* Arrow via ::after */
+[data-tooltip]::after {
+  content: '';
+  position: absolute;
+  border: 5px solid transparent;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition), transform var(--transition), visibility var(--transition);
+}
+
+/* Show on hover */
+[data-tooltip]:hover::before,
+[data-tooltip]:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* --- Position: Top (default, class or attribute) --- */
+[data-tooltip]::before,
+[data-tooltip].tooltip-top::before,
+[data-tooltip][data-tooltip-position="top"]::before {
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+  margin-bottom: 8px;
+}
+
+[data-tooltip]:hover::before,
+[data-tooltip].tooltip-top:hover::before,
+[data-tooltip][data-tooltip-position="top"]:hover::before {
+  transform: translateX(-50%) translateY(0);
+}
+
+[data-tooltip]::after,
+[data-tooltip].tooltip-top::after,
+[data-tooltip][data-tooltip-position="top"]::after {
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: -2px;
+  border-top-color: var(--text);
+}
+
+/* --- Position: Bottom (class or attribute) --- */
+[data-tooltip].tooltip-bottom::before,
+[data-tooltip][data-tooltip-position="bottom"]::before {
+  bottom: auto;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  margin-bottom: 0;
+  margin-top: 8px;
+}
+
+[data-tooltip].tooltip-bottom:hover::before,
+[data-tooltip][data-tooltip-position="bottom"]:hover::before {
+  transform: translateX(-50%) translateY(0);
+}
+
+[data-tooltip].tooltip-bottom::after,
+[data-tooltip][data-tooltip-position="bottom"]::after {
+  bottom: auto;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 0;
+  margin-top: -2px;
+  border-top-color: transparent;
+  border-bottom-color: var(--text);
+}
+
+/* --- Position: Left (class or attribute) --- */
+[data-tooltip].tooltip-left::before,
+[data-tooltip][data-tooltip-position="left"]::before {
+  bottom: auto;
+  top: 50%;
+  left: auto;
+  right: 100%;
+  transform: translateY(-50%) translateX(-4px);
+  margin-bottom: 0;
+  margin-right: 8px;
+}
+
+[data-tooltip].tooltip-left:hover::before,
+[data-tooltip][data-tooltip-position="left"]:hover::before {
+  transform: translateY(-50%) translateX(0);
+}
+
+[data-tooltip].tooltip-left::after,
+[data-tooltip][data-tooltip-position="left"]::after {
+  bottom: auto;
+  top: 50%;
+  left: auto;
+  right: 100%;
+  transform: translateY(-50%);
+  margin-bottom: 0;
+  margin-right: -2px;
+  border-top-color: transparent;
+  border-left-color: var(--text);
+}
+
+/* --- Position: Right (class or attribute) --- */
+[data-tooltip].tooltip-right::before,
+[data-tooltip][data-tooltip-position="right"]::before {
+  bottom: auto;
+  top: 50%;
+  left: 100%;
+  right: auto;
+  transform: translateY(-50%) translateX(4px);
+  margin-bottom: 0;
+  margin-left: 8px;
+}
+
+[data-tooltip].tooltip-right:hover::before,
+[data-tooltip][data-tooltip-position="right"]:hover::before {
+  transform: translateY(-50%) translateX(0);
+}
+
+[data-tooltip].tooltip-right::after,
+[data-tooltip][data-tooltip-position="right"]::after {
+  bottom: auto;
+  top: 50%;
+  left: 100%;
+  right: auto;
+  transform: translateY(-50%);
+  margin-bottom: 0;
+  margin-left: -2px;
+  border-top-color: transparent;
+  border-right-color: var(--text);
+}
+
+/* --- Sizes --- */
+
+/* Small */
+[data-tooltip].tooltip-sm::before {
+  padding: 4px 8px;
+  font-size: 0.75rem;
+}
+
+[data-tooltip].tooltip-sm::after {
+  border-width: 4px;
+}
+
+/* Large */
+[data-tooltip].tooltip-lg::before {
+  padding: 10px 14px;
+  font-size: 0.9rem;
+}
+
+[data-tooltip].tooltip-lg::after {
+  border-width: 6px;
+}
+
+/* --- Variants --- */
+
+/* Light variant */
+[data-tooltip].tooltip-light::before {
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+[data-tooltip].tooltip-light::after {
+  border-top-color: var(--panel);
+}
+
+[data-tooltip].tooltip-light.tooltip-bottom::after {
+  border-top-color: transparent;
+  border-bottom-color: var(--panel);
+}
+
+[data-tooltip].tooltip-light.tooltip-left::after {
+  border-top-color: transparent;
+  border-left-color: var(--panel);
+}
+
+[data-tooltip].tooltip-light.tooltip-right::after {
+  border-top-color: transparent;
+  border-right-color: var(--panel);
+}
+
+/* Primary variant */
+[data-tooltip].tooltip-primary::before {
+  background: var(--accent);
+  color: #fff;
+}
+
+[data-tooltip].tooltip-primary::after {
+  border-top-color: var(--accent);
+}
+
+[data-tooltip].tooltip-primary.tooltip-bottom::after {
+  border-top-color: transparent;
+  border-bottom-color: var(--accent);
+}
+
+[data-tooltip].tooltip-primary.tooltip-left::after {
+  border-top-color: transparent;
+  border-left-color: var(--accent);
+}
+
+[data-tooltip].tooltip-primary.tooltip-right::after {
+  border-top-color: transparent;
+  border-right-color: var(--accent);
+}
+
+/* Multiline tooltip (allow wrapping) */
+[data-tooltip].tooltip-multiline::before {
+  white-space: normal;
+  max-width: 250px;
+  text-align: center;
+}
+
+/* =============================================
+   2. Wrapper-based Tooltip (has-tooltip)
+   Usage:
+   <div class="has-tooltip">
+     <button>Hover</button>
+     <div class="tooltip-content">Подсказка</div>
+   </div>
+   ============================================= */
+
+.has-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-content {
+  position: absolute;
+  padding: 6px 10px;
+  background: var(--text);
+  color: var(--panel);
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition), transform var(--transition), visibility var(--transition);
+
+  /* Default position: top */
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+  margin-bottom: 8px;
+}
+
+.has-tooltip:hover .tooltip-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Wrapper positions */
+.has-tooltip.tooltip-bottom .tooltip-content {
+  bottom: auto;
+  top: 100%;
+  transform: translateX(-50%) translateY(4px);
+  margin-bottom: 0;
+  margin-top: 8px;
+}
+
+.has-tooltip.tooltip-bottom:hover .tooltip-content {
+  transform: translateX(-50%) translateY(0);
+}
+
+.has-tooltip.tooltip-left .tooltip-content {
+  bottom: auto;
+  top: 50%;
+  left: auto;
+  right: 100%;
+  transform: translateY(-50%) translateX(-4px);
+  margin-bottom: 0;
+  margin-right: 8px;
+}
+
+.has-tooltip.tooltip-left:hover .tooltip-content {
+  transform: translateY(-50%) translateX(0);
+}
+
+.has-tooltip.tooltip-right .tooltip-content {
+  bottom: auto;
+  top: 50%;
+  left: 100%;
+  right: auto;
+  transform: translateY(-50%) translateX(4px);
+  margin-bottom: 0;
+  margin-left: 8px;
+}
+
+.has-tooltip.tooltip-right:hover .tooltip-content {
+  transform: translateY(-50%) translateX(0);
+}
+
+/* Wrapper sizes */
+.has-tooltip.tooltip-sm .tooltip-content {
+  padding: 4px 8px;
+  font-size: 0.75rem;
+}
+
+.has-tooltip.tooltip-lg .tooltip-content {
+  padding: 10px 14px;
+  font-size: 0.9rem;
+}
+
+/* Wrapper variants */
+.has-tooltip.tooltip-light .tooltip-content {
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.has-tooltip.tooltip-primary .tooltip-content {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* =============================================
+   3. Tooltip trigger class (for elements with data-tooltip)
+   Usage: <button class="tooltip" data-tooltip="Hint">Text</button>
+   ============================================= */
+
+/* .tooltip class just marks element as tooltip trigger - inherits [data-tooltip] styles */
+.tooltip {
+  position: relative;
+  cursor: help;
+}
+
+/* =============================================
+   3a. Fix for overflow:hidden parents (buttons, cards)
+   Buttons and cards with overflow:hidden clip tooltips.
+   Override overflow for elements that have tooltips.
+   ============================================= */
+
+/* Fix: Buttons with tooltips need overflow visible */
+.btn[data-tooltip],
+.btn.tooltip,
+button[data-tooltip] {
+  overflow: visible;
+}
+
+/* Fix: Cards with tooltips need overflow visible */
+.card[data-tooltip],
+.card.tooltip {
+  overflow: visible;
+}
+
+/* Fix: Any element with data-tooltip should allow overflow */
+[data-tooltip] {
+  overflow: visible;
+}
+
+/* Fix: Card loading state (has overflow:hidden) - ensure tooltips inside work */
+.card-loading [data-tooltip]::before,
+.card-loading [data-tooltip]::after {
+  z-index: 1001;
+}
+
+/* =============================================
+   3b. Programmatic Tooltip (for JS positioning)
+   Usage: Create element with .tooltip-popup class via JS
+   ============================================= */
+
+.tooltip-popup {
+  position: absolute;
+  background: var(--text);
+  color: var(--panel);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  z-index: 1000;
+  pointer-events: none;
+  animation: tooltipFadeIn 0.2s ease;
+}
+
+.tooltip-interactive {
+  pointer-events: auto;
+}
+
+/* Arrow for programmatic tooltip */
+.tooltip-popup::after {
+  content: '';
+  position: absolute;
+  border: 5px solid transparent;
+}
+
+/* Programmatic positions */
+.tooltip-popup.tooltip-top::after {
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-top-color: var(--text);
+}
+
+.tooltip-popup.tooltip-bottom::after {
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-bottom-color: var(--text);
+}
+
+.tooltip-popup.tooltip-left::after {
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border-left-color: var(--text);
+}
+
+.tooltip-popup.tooltip-right::after {
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border-right-color: var(--text);
+}
+
+/* Programmatic variants */
+.tooltip-popup.tooltip-light {
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.tooltip-popup.tooltip-light.tooltip-top::after {
+  border-top-color: var(--panel);
+}
+
+.tooltip-popup.tooltip-light.tooltip-bottom::after {
+  border-bottom-color: var(--panel);
+}
+
+.tooltip-popup.tooltip-light.tooltip-left::after {
+  border-left-color: var(--panel);
+}
+
+.tooltip-popup.tooltip-light.tooltip-right::after {
+  border-right-color: var(--panel);
+}
+
+.tooltip-popup.tooltip-primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.tooltip-popup.tooltip-primary.tooltip-top::after {
+  border-top-color: var(--accent);
+}
+
+.tooltip-popup.tooltip-primary.tooltip-bottom::after {
+  border-bottom-color: var(--accent);
+}
+
+.tooltip-popup.tooltip-primary.tooltip-left::after {
+  border-left-color: var(--accent);
+}
+
+.tooltip-popup.tooltip-primary.tooltip-right::after {
+  border-right-color: var(--accent);
+}
+
+/* Selection tooltip (with buttons) */
+.selection-tooltip {
+  padding: 4px;
+  display: flex;
+  gap: 4px;
+}
+
+/* =============================================
+   4. Animation Keyframes
+   ============================================= */
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =============================================
+   5. Dark Theme Support
+   ============================================= */
+
+.dark [data-tooltip]::before,
+.dark .tooltip-content,
+.dark .tooltip-popup {
+  background: var(--dark-panel);
+  color: var(--dark-text);
+  border-color: var(--dark-border);
+}
+
+.dark [data-tooltip]::after {
+  border-top-color: var(--dark-panel);
+}
+
+.dark [data-tooltip].tooltip-bottom::after {
+  border-top-color: transparent;
+  border-bottom-color: var(--dark-panel);
+}
+
+.dark [data-tooltip].tooltip-left::after {
+  border-top-color: transparent;
+  border-left-color: var(--dark-panel);
+}
+
+.dark [data-tooltip].tooltip-right::after {
+  border-top-color: transparent;
+  border-right-color: var(--dark-panel);
+}
+
+.dark .tooltip-popup.tooltip-top::after {
+  border-top-color: var(--dark-panel);
+}
+
+.dark .tooltip-popup.tooltip-bottom::after {
+  border-bottom-color: var(--dark-panel);
+}
+
+.dark .tooltip-popup.tooltip-left::after {
+  border-left-color: var(--dark-panel);
+}
+
+.dark .tooltip-popup.tooltip-right::after {
+  border-right-color: var(--dark-panel);
+}
+
+/* Dark theme light variant */
+.dark [data-tooltip].tooltip-light::before,
+.dark .has-tooltip.tooltip-light .tooltip-content,
+.dark .tooltip-popup.tooltip-light {
+  background: var(--dark-bg);
+  color: var(--dark-text);
+  border-color: var(--dark-border);
+}
+
+/* Dark theme primary variant (uses accent, no change needed) */
+
+/* =============================================
+   6. Accessibility & States
+   ============================================= */
+
+/* Focus trigger shows tooltip */
+[data-tooltip]:focus::before,
+[data-tooltip]:focus::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+[data-tooltip]:focus::before {
+  transform: translateX(-50%) translateY(0);
+}
+
+.has-tooltip:focus-within .tooltip-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Disable tooltip animation for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  [data-tooltip]::before,
+  [data-tooltip]::after,
+  .tooltip-content,
+  .tooltip-popup {
+    transition: none;
+    animation: none;
+  }
+}

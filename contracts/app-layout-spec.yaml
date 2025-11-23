@@ -1,0 +1,679 @@
+# App Layout Specification
+# Full-page application layout with fixed footer, collapsible sidebars, and width control
+# Version: 1.0.0
+
+metadata:
+  name: app-layout
+  description: Full-page application layout with fixed footer, collapsible sidebars, and width toggle
+  version: 1.0.0
+  author: UX Ergonomics Specialist
+  created: 2025-11-23
+
+# =============================================================================
+# LAYOUT STRUCTURE
+# =============================================================================
+
+layout:
+  type: full-page-application
+  display: grid
+  grid_template:
+    areas: |
+      "sidebar-left main sidebar-right"
+      "footer footer footer"
+    columns: auto 1fr auto
+    rows: 1fr auto
+
+  viewport:
+    min_height: 100vh
+    overflow: hidden
+
+# =============================================================================
+# FOOTER COMPONENT
+# =============================================================================
+
+footer:
+  selector: .app-footer
+  description: Fixed footer always visible at bottom of viewport
+
+  positioning:
+    type: sticky
+    bottom: 0
+    left: 0
+    right: 0
+    z_index: 1000
+
+  dimensions:
+    width: 100%
+    height: 56px
+    min_height: 48px
+    max_height: 72px
+
+  styling:
+    background: var(--footer-bg, #1a1a2e)
+    border_top: 1px solid var(--footer-border, rgba(255, 255, 255, 0.1))
+    box_shadow: 0 -2px 10px rgba(0, 0, 0, 0.15)
+
+  layout:
+    display: flex
+    align_items: center
+    justify_content: space-between
+    padding: 0 24px
+    gap: 16px
+
+  content_areas:
+    left:
+      selector: .app-footer__left
+      flex: 0 0 auto
+      content: status_indicators
+
+    center:
+      selector: .app-footer__center
+      flex: 1 1 auto
+      text_align: center
+      content: breadcrumbs_or_info
+
+    right:
+      selector: .app-footer__right
+      flex: 0 0 auto
+      content: width_control_indicator
+
+# =============================================================================
+# LEFT SIDEBAR
+# =============================================================================
+
+sidebar_left:
+  selector: .sidebar--left
+  description: Fixed left sidebar with independent scroll and collapse
+
+  positioning:
+    grid_area: sidebar-left
+    position: relative
+    z_index: 100
+
+  dimensions:
+    width:
+      expanded: 280px
+      collapsed: 56px
+    min_width: 56px
+    max_width: 400px
+    height: 100%
+
+  transitions:
+    width:
+      duration: 300ms
+      easing: cubic-bezier(0.4, 0, 0.2, 1)
+    transform:
+      duration: 300ms
+      easing: cubic-bezier(0.4, 0, 0.2, 1)
+
+  styling:
+    background: var(--sidebar-bg, #16162a)
+    border_right: 1px solid var(--sidebar-border, rgba(255, 255, 255, 0.08))
+
+  scroll:
+    overflow_y: auto
+    overflow_x: hidden
+    scrollbar:
+      width: 6px
+      track_color: transparent
+      thumb_color: rgba(255, 255, 255, 0.2)
+      thumb_hover_color: rgba(255, 255, 255, 0.3)
+
+  collapse:
+    trigger:
+      selector: .sidebar__collapse-btn--left
+      position: absolute
+      top: 12px
+      right: -12px
+      width: 24px
+      height: 24px
+      border_radius: 50%
+      background: var(--sidebar-bg, #16162a)
+      border: 1px solid var(--sidebar-border, rgba(255, 255, 255, 0.08))
+      z_index: 101
+      icon:
+        expanded: chevron-left
+        collapsed: chevron-right
+
+    states:
+      expanded:
+        class: sidebar--expanded
+        width: 280px
+        content_visibility: visible
+        labels_opacity: 1
+
+      collapsed:
+        class: sidebar--collapsed
+        width: 56px
+        content_visibility: hidden
+        labels_opacity: 0
+        tooltip_on_hover: true
+
+  content:
+    header:
+      selector: .sidebar__header
+      height: 64px
+      padding: 16px
+      border_bottom: 1px solid var(--sidebar-border, rgba(255, 255, 255, 0.08))
+
+    navigation:
+      selector: .sidebar__nav
+      padding: 16px 8px
+      flex: 1
+
+    footer:
+      selector: .sidebar__footer
+      padding: 16px
+      margin_top: auto
+      border_top: 1px solid var(--sidebar-border, rgba(255, 255, 255, 0.08))
+
+# =============================================================================
+# RIGHT SIDEBAR
+# =============================================================================
+
+sidebar_right:
+  selector: .sidebar--right
+  description: Fixed right sidebar with independent scroll and collapse
+
+  positioning:
+    grid_area: sidebar-right
+    position: relative
+    z_index: 100
+
+  dimensions:
+    width:
+      expanded: 320px
+      collapsed: 56px
+    min_width: 56px
+    max_width: 480px
+    height: 100%
+
+  transitions:
+    width:
+      duration: 300ms
+      easing: cubic-bezier(0.4, 0, 0.2, 1)
+    transform:
+      duration: 300ms
+      easing: cubic-bezier(0.4, 0, 0.2, 1)
+
+  styling:
+    background: var(--sidebar-bg, #16162a)
+    border_left: 1px solid var(--sidebar-border, rgba(255, 255, 255, 0.08))
+
+  scroll:
+    overflow_y: auto
+    overflow_x: hidden
+    scrollbar:
+      width: 6px
+      track_color: transparent
+      thumb_color: rgba(255, 255, 255, 0.2)
+      thumb_hover_color: rgba(255, 255, 255, 0.3)
+
+  collapse:
+    trigger:
+      selector: .sidebar__collapse-btn--right
+      position: absolute
+      top: 12px
+      left: -12px
+      width: 24px
+      height: 24px
+      border_radius: 50%
+      background: var(--sidebar-bg, #16162a)
+      border: 1px solid var(--sidebar-border, rgba(255, 255, 255, 0.08))
+      z_index: 101
+      icon:
+        expanded: chevron-right
+        collapsed: chevron-left
+
+    states:
+      expanded:
+        class: sidebar--expanded
+        width: 320px
+        content_visibility: visible
+        labels_opacity: 1
+
+      collapsed:
+        class: sidebar--collapsed
+        width: 56px
+        content_visibility: hidden
+        labels_opacity: 0
+        tooltip_on_hover: true
+
+  content:
+    header:
+      selector: .sidebar__header
+      height: 64px
+      padding: 16px
+      border_bottom: 1px solid var(--sidebar-border, rgba(255, 255, 255, 0.08))
+
+    panels:
+      selector: .sidebar__panels
+      padding: 16px
+      flex: 1
+      display: flex
+      flex_direction: column
+      gap: 16px
+
+    footer:
+      selector: .sidebar__footer
+      padding: 16px
+      margin_top: auto
+      border_top: 1px solid var(--sidebar-border, rgba(255, 255, 255, 0.08))
+
+# =============================================================================
+# MAIN CONTENT AREA
+# =============================================================================
+
+main_content:
+  selector: .main-content
+  description: Central content area between sidebars
+
+  positioning:
+    grid_area: main
+    position: relative
+    z_index: 1
+
+  dimensions:
+    width: 100%
+    height: 100%
+    min_width: 320px
+
+  scroll:
+    overflow_y: auto
+    overflow_x: hidden
+    scroll_behavior: smooth
+
+  layout:
+    display: flex
+    flex_direction: column
+
+  content_wrapper:
+    selector: .main-content__wrapper
+    flex: 1
+    padding: 24px
+
+    width_modes:
+      fixed:
+        max_width: 1920px
+        margin: 0 auto
+
+      percentage:
+        max_width: 90%
+        margin: 0 auto
+
+      full:
+        max_width: 100%
+        margin: 0
+
+# =============================================================================
+# WIDTH CONTROL BUTTON
+# =============================================================================
+
+width_control:
+  selector: .width-control
+  description: Fixed button to toggle content width modes
+
+  positioning:
+    position: fixed
+    bottom: 72px  # Above footer (56px) + gap (16px)
+    right: 24px
+    z_index: 1001
+
+  button:
+    selector: .width-control__button
+
+    dimensions:
+      width: 48px
+      height: 48px
+      border_radius: 12px
+
+    styling:
+      background: var(--width-control-bg, rgba(99, 102, 241, 0.9))
+      backdrop_filter: blur(8px)
+      border: 1px solid rgba(255, 255, 255, 0.1)
+      box_shadow: |
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.05) inset
+      cursor: pointer
+
+    hover:
+      background: var(--width-control-bg-hover, rgba(99, 102, 241, 1))
+      transform: scale(1.05)
+      box_shadow: |
+        0 6px 16px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.1) inset
+
+    active:
+      transform: scale(0.95)
+
+    focus:
+      outline: 2px solid var(--focus-ring, #818cf8)
+      outline_offset: 2px
+
+    transition:
+      all:
+        duration: 200ms
+        easing: ease-out
+
+  modes:
+    - id: fixed
+      label: "Fixed Width"
+      short_label: "1920"
+      icon: arrows-horizontal-contract
+      value: 1920px
+      css_class: width-mode--fixed
+
+    - id: percentage
+      label: "90% Width"
+      short_label: "90%"
+      icon: arrows-horizontal
+      value: 90%
+      css_class: width-mode--percentage
+
+    - id: full
+      label: "Full Width"
+      short_label: "100%"
+      icon: arrows-horizontal-expand
+      value: 100%
+      css_class: width-mode--full
+
+  cycling_order:
+    - fixed
+    - percentage
+    - full
+
+  indicator:
+    selector: .width-control__indicator
+    description: Visual indicator showing current width mode
+
+    positioning:
+      position: absolute
+      top: -8px
+      right: -8px
+
+    badge:
+      min_width: 32px
+      height: 20px
+      padding: 0 6px
+      border_radius: 10px
+      font_size: 10px
+      font_weight: 600
+      text_transform: uppercase
+      background: var(--indicator-bg, #10b981)
+      color: var(--indicator-text, #ffffff)
+      display: flex
+      align_items: center
+      justify_content: center
+
+    tooltip:
+      position: left
+      offset: 8px
+      content: "Current: {mode_label} ({shortcut})"
+      delay_show: 500ms
+
+# =============================================================================
+# KEYBOARD SHORTCUTS
+# =============================================================================
+
+keyboard_shortcuts:
+  width_toggle:
+    primary:
+      keys: ["Ctrl", "Shift", "W"]
+      mac_keys: ["Cmd", "Shift", "W"]
+      action: cycle_width_mode
+      description: "Cycle through width modes"
+
+    direct_fixed:
+      keys: ["Ctrl", "Shift", "1"]
+      mac_keys: ["Cmd", "Shift", "1"]
+      action: set_width_fixed
+      description: "Set fixed width (1920px)"
+
+    direct_percentage:
+      keys: ["Ctrl", "Shift", "2"]
+      mac_keys: ["Cmd", "Shift", "2"]
+      action: set_width_percentage
+      description: "Set percentage width (90%)"
+
+    direct_full:
+      keys: ["Ctrl", "Shift", "3"]
+      mac_keys: ["Cmd", "Shift", "3"]
+      action: set_width_full
+      description: "Set full width (100%)"
+
+  sidebar_toggle:
+    left:
+      keys: ["Ctrl", "["]
+      mac_keys: ["Cmd", "["]
+      action: toggle_left_sidebar
+      description: "Toggle left sidebar"
+
+    right:
+      keys: ["Ctrl", "]"]
+      mac_keys: ["Cmd", "]"]
+      action: toggle_right_sidebar
+      description: "Toggle right sidebar"
+
+    both:
+      keys: ["Ctrl", "\\"]
+      mac_keys: ["Cmd", "\\"]
+      action: toggle_both_sidebars
+      description: "Toggle both sidebars"
+
+# =============================================================================
+# RESPONSIVE BEHAVIOR
+# =============================================================================
+
+responsive:
+  breakpoints:
+    mobile:
+      max_width: 767px
+    tablet:
+      min_width: 768px
+      max_width: 1023px
+    desktop:
+      min_width: 1024px
+      max_width: 1439px
+    large_desktop:
+      min_width: 1440px
+
+  mobile:
+    layout:
+      grid_template:
+        areas: |
+          "main"
+          "footer"
+        columns: 1fr
+        rows: 1fr auto
+
+    sidebars:
+      behavior: overlay
+      trigger: hamburger_menu
+
+      left:
+        transform_collapsed: translateX(-100%)
+        transform_expanded: translateX(0)
+        width: 280px
+        max_width: 85vw
+        z_index: 1002
+
+      right:
+        transform_collapsed: translateX(100%)
+        transform_expanded: translateX(0)
+        width: 320px
+        max_width: 85vw
+        z_index: 1002
+
+      backdrop:
+        selector: .sidebar-backdrop
+        background: rgba(0, 0, 0, 0.5)
+        z_index: 1001
+        click_to_close: true
+
+    footer:
+      height: 48px
+      padding: 0 16px
+
+    width_control:
+      position:
+        bottom: 64px
+        right: 16px
+      button:
+        width: 44px
+        height: 44px
+
+    width_modes:
+      available:
+        - full
+      default: full
+      disable_toggle: true
+
+  tablet:
+    sidebars:
+      left:
+        default_state: collapsed
+        width_expanded: 240px
+      right:
+        default_state: collapsed
+        width_expanded: 280px
+
+    width_modes:
+      available:
+        - percentage
+        - full
+      default: percentage
+
+  desktop:
+    sidebars:
+      left:
+        default_state: expanded
+        width_expanded: 280px
+      right:
+        default_state: collapsed
+        width_expanded: 320px
+
+    width_modes:
+      available:
+        - fixed
+        - percentage
+        - full
+      default: fixed
+
+  large_desktop:
+    sidebars:
+      left:
+        default_state: expanded
+        width_expanded: 280px
+      right:
+        default_state: expanded
+        width_expanded: 320px
+
+    width_modes:
+      available:
+        - fixed
+        - percentage
+        - full
+      default: fixed
+
+# =============================================================================
+# ACCESSIBILITY
+# =============================================================================
+
+accessibility:
+  aria_labels:
+    footer: "Application footer"
+    sidebar_left: "Main navigation sidebar"
+    sidebar_right: "Secondary panel sidebar"
+    main_content: "Main content area"
+    width_control: "Toggle content width"
+    collapse_left: "Collapse left sidebar"
+    collapse_right: "Collapse right sidebar"
+
+  focus_management:
+    trap_focus_in_mobile_sidebar: true
+    restore_focus_on_close: true
+    skip_links:
+      - target: main
+        label: "Skip to main content"
+      - target: sidebar-left
+        label: "Skip to navigation"
+
+  reduced_motion:
+    transitions:
+      duration: 0ms
+    animations:
+      disabled: true
+
+  high_contrast:
+    sidebar_border: 2px solid currentColor
+    focus_ring: 3px solid currentColor
+
+# =============================================================================
+# STATE PERSISTENCE
+# =============================================================================
+
+persistence:
+  storage: localStorage
+  key_prefix: "app-layout"
+
+  persisted_states:
+    - key: width_mode
+      default: fixed
+
+    - key: sidebar_left_collapsed
+      default: false
+
+    - key: sidebar_right_collapsed
+      default: true
+
+  sync_across_tabs: true
+
+# =============================================================================
+# CSS CUSTOM PROPERTIES (THEMING)
+# =============================================================================
+
+css_variables:
+  # Footer
+  --footer-bg: "#1a1a2e"
+  --footer-border: "rgba(255, 255, 255, 0.1)"
+  --footer-text: "#ffffff"
+
+  # Sidebars
+  --sidebar-bg: "#16162a"
+  --sidebar-border: "rgba(255, 255, 255, 0.08)"
+  --sidebar-text: "#e2e8f0"
+
+  # Width Control
+  --width-control-bg: "rgba(99, 102, 241, 0.9)"
+  --width-control-bg-hover: "rgba(99, 102, 241, 1)"
+  --width-control-text: "#ffffff"
+
+  # Indicator
+  --indicator-bg: "#10b981"
+  --indicator-text: "#ffffff"
+
+  # Focus
+  --focus-ring: "#818cf8"
+
+  # Scrollbar
+  --scrollbar-width: "6px"
+  --scrollbar-thumb: "rgba(255, 255, 255, 0.2)"
+  --scrollbar-thumb-hover: "rgba(255, 255, 255, 0.3)"
+  --scrollbar-track: "transparent"
+
+# =============================================================================
+# Z-INDEX LAYERS
+# =============================================================================
+
+z_index_layers:
+  base: 1
+  main_content: 1
+  sidebars: 100
+  sidebar_collapse_button: 101
+  footer: 1000
+  mobile_backdrop: 1001
+  mobile_sidebar: 1002
+  width_control: 1001
+  tooltip: 1100
+  modal: 2000
+  notification: 3000

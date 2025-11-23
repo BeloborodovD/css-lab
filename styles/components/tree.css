@@ -1,0 +1,357 @@
+/* ==================== Tree View ==================== */
+/* Собрано из: mdm_terms (sidebar tree), autoTrassir */
+
+.tree {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tree ul {
+  list-style: none;
+  margin: 0;
+  padding-left: 18px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--transition-slow);
+}
+
+.tree li {
+  margin: 3px 0;
+}
+
+.tree li.open > ul {
+  max-height: none;
+  overflow: visible;
+}
+
+.tree-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.9rem;
+  transition: var(--transition);
+}
+
+.tree-item:hover {
+  background: var(--accent-100);
+}
+
+.tree-item.selected {
+  background: var(--accent-100);
+  outline: 2px solid var(--accent);
+  outline-offset: 0;
+}
+
+.tree-item .icon {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: var(--muted);
+}
+
+.tree-item .label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Folder specific */
+.tree-folder > .tree-item .icon {
+  color: var(--accent);
+}
+
+/* Expand/collapse indicator */
+.tree-toggle {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  transition: transform var(--transition);
+}
+
+.tree li.open > .tree-item .tree-toggle {
+  transform: rotate(90deg);
+}
+
+/* Filter input for tree */
+.tree-filter {
+  margin-bottom: 10px;
+}
+
+/* Tree tools */
+.tree-tools {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+/* ==================== AutoTrassir Tree (Folder Sidebar) ==================== */
+/* Современное дерево с amber иконками */
+
+.tree-modern {
+  list-style: none;
+  margin: 0;
+  padding: 8px;
+}
+
+.tree-modern ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tree-modern-item {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-size: 0.875rem;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tree-modern-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+}
+
+.tree-modern-item.selected {
+  background: var(--accent-100);
+  color: var(--accent);
+}
+
+/* Chevron */
+.tree-modern-chevron {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: var(--muted);
+  transition: transform 0.2s ease;
+}
+
+.tree-modern-item.expanded .tree-modern-chevron {
+  transform: rotate(90deg);
+}
+
+/* Folder icon - amber */
+.tree-modern-icon {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: #fbbf24; /* amber */
+}
+
+/* Label */
+.tree-modern-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Nested levels */
+.tree-modern-nested {
+  padding-left: 12px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.tree-modern-item.expanded + .tree-modern-nested {
+  max-height: 1000px;
+}
+
+/* Badge count */
+.tree-modern-count {
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 10px;
+  background: var(--panel);
+  color: var(--muted);
+}
+
+/* Sidebar container */
+.tree-sidebar {
+  padding: 8px;
+  overflow-y: auto;
+}
+
+.tree-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tree-sidebar-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.tree-sidebar-title .icon {
+  color: #fbbf24; /* amber */
+}
+
+.tree-sidebar-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tree-sidebar-btn {
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tree-sidebar-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+}
+
+/* Empty state */
+.tree-empty {
+  padding: 32px 16px;
+  text-align: center;
+}
+
+.tree-empty-icon {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 12px;
+  color: var(--muted);
+  opacity: 0.5;
+}
+
+.tree-empty-text {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.tree-empty-hint {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* Loading state */
+.tree-loading {
+  padding: 8px;
+}
+
+.tree-loading-item {
+  height: 32px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  background: var(--panel);
+  animation: skeleton-shimmer 1.5s infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+/* ==================== Dark Theme ==================== */
+
+.dark .tree-item:hover {
+  background: rgba(33, 150, 243, 0.1);
+}
+
+.dark .tree-item.selected {
+  background: var(--accent-100);
+  outline-color: var(--primary-500);
+}
+
+.dark .tree-item .icon {
+  color: var(--text-tertiary);
+}
+
+.dark .tree-folder > .tree-item .icon {
+  color: var(--primary-400);
+}
+
+.dark .tree-toggle {
+  color: var(--text-tertiary);
+}
+
+/* Modern tree dark */
+.dark .tree-modern-item {
+  color: var(--text-secondary);
+}
+
+.dark .tree-modern-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+.dark .tree-modern-item.selected {
+  background: var(--primary-900);
+  color: var(--primary-300);
+}
+
+.dark .tree-modern-chevron {
+  color: var(--text-tertiary);
+}
+
+/* Keep amber for folder icons in dark theme */
+.dark .tree-modern-icon {
+  color: var(--amber, #fbbf24);
+}
+
+.dark .tree-modern-count {
+  background: var(--surface-4);
+  color: var(--text-secondary);
+}
+
+.dark .tree-sidebar-header {
+  border-bottom-color: var(--surface-6);
+}
+
+.dark .tree-sidebar-title {
+  color: var(--text-primary);
+}
+
+.dark .tree-sidebar-btn {
+  color: var(--text-tertiary);
+}
+
+.dark .tree-sidebar-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+.dark .tree-empty-icon,
+.dark .tree-empty-text,
+.dark .tree-empty-hint {
+  color: var(--text-tertiary);
+}
+
+.dark .tree-loading-item {
+  background: var(--surface-3);
+}

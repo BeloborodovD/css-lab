@@ -1,0 +1,483 @@
+/* ==================== Log Viewer ==================== */
+/* Собрано из: autoTrassir (logs page) */
+
+/* Log level badges - base styles */
+.log-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.log-badge.info {
+  color: #2563eb;
+  background: rgba(37, 99, 235, 0.1);
+}
+
+.log-badge.warning {
+  color: #d97706;
+  background: rgba(217, 119, 6, 0.1);
+}
+
+.log-badge.error {
+  color: #dc2626;
+  background: rgba(220, 38, 38, 0.1);
+}
+
+.log-badge.debug {
+  color: #6b7280;
+  background: rgba(107, 114, 128, 0.1);
+}
+
+.log-badge.success {
+  color: #059669;
+  background: rgba(5, 150, 105, 0.1);
+}
+
+.log-badge svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Alert/Message boxes - base styles */
+.alert-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid;
+}
+
+.alert-box.info {
+  border-color: rgba(37, 99, 235, 0.3);
+  background: rgba(37, 99, 235, 0.05);
+  color: #2563eb;
+}
+
+.alert-box.warning {
+  border-color: rgba(217, 119, 6, 0.3);
+  background: rgba(217, 119, 6, 0.05);
+  color: #d97706;
+}
+
+.alert-box.error {
+  border-color: rgba(220, 38, 38, 0.3);
+  background: rgba(220, 38, 38, 0.05);
+  color: #dc2626;
+}
+
+.alert-box.success {
+  border-color: rgba(5, 150, 105, 0.3);
+  background: rgba(5, 150, 105, 0.05);
+  color: #059669;
+}
+
+.alert-box svg {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
+.alert-box-content {
+  flex: 1;
+  font-size: 0.875rem;
+}
+
+.alert-box-close {
+  padding: 4px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  opacity: 0.7;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.alert-box-close:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Log entry row */
+.log-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.2s ease;
+}
+
+.log-entry:hover {
+  background: var(--accent-100);
+}
+
+.log-entry-toggle {
+  flex-shrink: 0;
+  padding: 2px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.log-entry-toggle:hover {
+  color: var(--text);
+}
+
+.log-entry-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.log-entry-timestamp {
+  flex-shrink: 0;
+  min-width: 180px;
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.log-entry-level {
+  flex-shrink: 0;
+  min-width: 80px;
+}
+
+.log-entry-message {
+  flex: 1;
+  font-size: 0.875rem;
+  color: var(--text);
+}
+
+/* Log entry expanded content */
+.log-entry-details {
+  padding: 12px 16px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.log-entry-details pre {
+  margin: 0;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--log-pre-bg, #f3f4f6);
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: var(--text);
+  overflow-x: auto;
+}
+
+.log-entry-grid {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 8px;
+  font-size: 0.875rem;
+}
+
+.log-entry-label {
+  color: var(--muted);
+}
+
+.log-entry-value {
+  color: var(--text);
+  font-family: monospace;
+}
+
+/* Log controls toolbar */
+.log-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+}
+
+.log-controls-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.log-controls-label {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.log-controls-select {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.log-controls-select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-100);
+}
+
+/* View mode toggle */
+.view-mode-toggle {
+  display: flex;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.view-mode-btn {
+  padding: 6px 12px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.view-mode-btn:hover {
+  color: var(--text);
+}
+
+.view-mode-btn.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* Refresh button */
+.log-refresh-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.log-refresh-btn:hover {
+  background: var(--accent-700);
+}
+
+.log-refresh-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.log-refresh-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.log-refresh-btn svg.spinning {
+  animation: log-spin 1s linear infinite;
+}
+
+@keyframes log-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Empty state */
+.log-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+  text-align: center;
+}
+
+.log-empty-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 12px;
+  color: var(--muted);
+  opacity: 0.5;
+}
+
+.log-empty-text {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+/* Icon color demo (for light theme) */
+.icon-color-demo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--bg);
+  font-size: 0.875rem;
+}
+
+.icon-color-demo svg {
+  flex-shrink: 0;
+}
+
+/* ==================== Dark Theme ==================== */
+
+.dark .log-badge.info {
+  color: #60a5fa;
+  background: rgba(59, 130, 246, 0.2);
+}
+
+.dark .log-badge.warning {
+  color: #fbbf24;
+  background: rgba(245, 158, 11, 0.2);
+}
+
+.dark .log-badge.error {
+  color: #f87171;
+  background: rgba(239, 68, 68, 0.2);
+}
+
+.dark .log-badge.debug {
+  color: #9ca3af;
+  background: rgba(107, 114, 128, 0.2);
+}
+
+.dark .log-badge.success {
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.2);
+}
+
+.dark .alert-box.info {
+  border-color: rgba(59, 130, 246, 0.3);
+  background: rgba(59, 130, 246, 0.1);
+  color: #60a5fa;
+}
+
+.dark .alert-box.warning {
+  border-color: rgba(245, 158, 11, 0.3);
+  background: rgba(245, 158, 11, 0.1);
+  color: #fbbf24;
+}
+
+.dark .alert-box.error {
+  border-color: rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+}
+
+.dark .alert-box.success {
+  border-color: rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.1);
+  color: #34d399;
+}
+
+.dark .alert-box-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dark .log-entry {
+  border-bottom-color: var(--surface-6);
+}
+
+.dark .log-entry:hover {
+  background: var(--surface-2);
+}
+
+.dark .log-entry-toggle {
+  color: var(--text-tertiary);
+}
+
+.dark .log-entry-toggle:hover {
+  color: var(--text-primary);
+}
+
+.dark .log-entry-timestamp {
+  color: var(--text-tertiary);
+}
+
+.dark .log-entry-message {
+  color: var(--text-primary);
+}
+
+.dark .log-entry-details {
+  background: var(--surface-2);
+  border-bottom-color: var(--surface-6);
+}
+
+.dark .log-entry-details pre {
+  --log-pre-bg: var(--surface-3);
+  color: var(--text-secondary);
+}
+
+.dark .log-entry-label {
+  color: var(--text-tertiary);
+}
+
+.dark .log-entry-value {
+  color: var(--text-primary);
+}
+
+.dark .log-controls {
+  background: var(--surface-2);
+  border-color: var(--surface-6);
+}
+
+.dark .log-controls-label {
+  color: var(--text-secondary);
+}
+
+.dark .log-controls-select {
+  background: var(--surface-3);
+  border-color: var(--surface-6);
+  color: var(--text-primary);
+}
+
+.dark .log-controls-select:focus {
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+}
+
+.dark .view-mode-toggle {
+  background: var(--surface-3);
+  border-color: var(--surface-6);
+}
+
+.dark .view-mode-btn {
+  color: var(--text-secondary);
+}
+
+.dark .view-mode-btn:hover {
+  color: var(--text-primary);
+}
+
+.dark .view-mode-btn.active {
+  background: var(--primary-600);
+}
+
+.dark .log-refresh-btn {
+  background: var(--primary-600);
+}
+
+.dark .log-refresh-btn:hover {
+  background: var(--primary-500);
+}
+
+.dark .log-empty-icon,
+.dark .log-empty-text {
+  color: var(--text-tertiary);
+}
+
+.dark .icon-color-demo {
+  background: var(--surface-3);
+}

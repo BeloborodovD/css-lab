@@ -1,0 +1,420 @@
+/* ==================== Modal / Dialog ==================== */
+/* Модальные окна и диалоги */
+
+/* Затемнение фона (overlay) */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+/* Контейнер модалки */
+.modal {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 500px;
+  max-height: calc(100vh - 32px);
+  background: var(--panel);
+  border: 1px solid var(--card-border, #d1d5db);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+/* ==================== Размеры ==================== */
+
+/* Маленький */
+.modal-sm {
+  max-width: 360px;
+}
+
+/* Средний (default) */
+.modal-md {
+  max-width: 500px;
+}
+
+/* Большой */
+.modal-lg {
+  max-width: 720px;
+}
+
+/* Очень большой */
+.modal-xl {
+  max-width: 960px;
+}
+
+/* Fullscreen */
+.modal-fullscreen {
+  max-width: none;
+  width: 100%;
+  height: 100%;
+  max-height: 100vh;
+  border-radius: 0;
+}
+
+/* ==================== Header ==================== */
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.modal-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+}
+
+/* Кнопка закрытия */
+.modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.modal-close:hover {
+  background: var(--accent-100);
+  color: var(--text);
+}
+
+.modal-close svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ==================== Body ==================== */
+
+.modal-body {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+/* Скроллбар в модалке */
+.modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+/* ==================== Footer ==================== */
+
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+/* Footer слева */
+.modal-footer-left {
+  justify-content: flex-start;
+}
+
+/* Footer по центру */
+.modal-footer-center {
+  justify-content: center;
+}
+
+/* Footer space-between */
+.modal-footer-between {
+  justify-content: space-between;
+}
+
+/* ==================== Варианты ==================== */
+
+/* Без header */
+.modal-no-header .modal-body {
+  padding-top: 24px;
+}
+
+/* Без footer */
+.modal-no-footer .modal-body {
+  padding-bottom: 24px;
+}
+
+/* Центрированный контент */
+.modal-centered .modal-body {
+  text-align: center;
+}
+
+/* Иконка предупреждения/подтверждения */
+.modal-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: var(--accent-100);
+  color: var(--accent);
+}
+
+.modal-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.modal-icon.success {
+  background: rgba(76, 175, 80, 0.1);
+  color: #4caf50;
+}
+
+.modal-icon.warning {
+  background: rgba(255, 152, 0, 0.1);
+  color: #ff9800;
+}
+
+.modal-icon.error {
+  background: rgba(244, 67, 54, 0.1);
+  color: #f44336;
+}
+
+.modal-icon.info {
+  background: rgba(33, 150, 243, 0.1);
+  color: #2196f3;
+}
+
+/* ==================== Анимации ==================== */
+
+/* Overlay анимация */
+.modal-overlay.modal-enter {
+  animation: modal-overlay-in 0.2s ease forwards;
+}
+
+.modal-overlay.modal-exit {
+  animation: modal-overlay-out 0.2s ease forwards;
+}
+
+@keyframes modal-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-overlay-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Modal анимация */
+.modal-enter .modal,
+.modal.modal-enter {
+  animation: modal-scale-in 0.2s ease forwards;
+}
+
+.modal-exit .modal,
+.modal.modal-exit {
+  animation: modal-scale-out 0.2s ease forwards;
+}
+
+@keyframes modal-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes modal-scale-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+/* Slide from top */
+.modal-slide-down .modal,
+.modal.modal-slide-down {
+  animation: modal-slide-down 0.3s ease forwards;
+}
+
+@keyframes modal-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slide from bottom */
+.modal-slide-up .modal,
+.modal.modal-slide-up {
+  animation: modal-slide-up 0.3s ease forwards;
+}
+
+@keyframes modal-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==================== Drawer (боковая панель) ==================== */
+
+.modal-drawer {
+  max-width: 400px;
+  height: 100vh;
+  max-height: 100vh;
+  border-radius: 0;
+  margin: 0;
+}
+
+.modal-overlay.modal-drawer-right {
+  justify-content: flex-end;
+}
+
+.modal-overlay.modal-drawer-left {
+  justify-content: flex-start;
+}
+
+.modal-drawer-right .modal-drawer {
+  animation: modal-slide-left 0.3s ease forwards;
+}
+
+.modal-drawer-left .modal-drawer {
+  animation: modal-slide-right 0.3s ease forwards;
+}
+
+@keyframes modal-slide-left {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes modal-slide-right {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* ==================== Dark Theme ==================== */
+
+.dark .modal-overlay {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.dark .modal {
+  background: var(--surface-2);
+  border: 1px solid var(--surface-6);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+}
+
+.dark .modal-header {
+  border-bottom-color: var(--surface-6);
+}
+
+.dark .modal-title {
+  color: var(--text-primary);
+}
+
+.dark .modal-close {
+  color: var(--text-tertiary);
+}
+
+.dark .modal-close:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+.dark .modal-body {
+  color: var(--text-secondary);
+}
+
+.dark .modal-body::-webkit-scrollbar-thumb {
+  background: var(--surface-6);
+}
+
+.dark .modal-footer {
+  border-top-color: var(--surface-6);
+}
+
+/* Icons dark */
+.dark .modal-icon {
+  background: rgba(33, 150, 243, 0.15);
+  color: var(--primary-400);
+}
+
+.dark .modal-icon.success {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--success);
+}
+
+.dark .modal-icon.warning {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--warning);
+}
+
+.dark .modal-icon.error {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--error);
+}
+
+.dark .modal-icon.info {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--info);
+}

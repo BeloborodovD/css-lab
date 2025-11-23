@@ -1,0 +1,177 @@
+/* ==================== Breadcrumbs ==================== */
+/* Хлебные крошки для навигации */
+
+/* Container */
+.breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  font-size: 0.875rem;
+}
+
+/* Элемент крошки */
+.breadcrumb-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+/* Ссылка */
+.breadcrumb-item a,
+a.breadcrumb-item {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.breadcrumb-item a:hover,
+a.breadcrumb-item:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* Текущий (не ссылка) */
+.breadcrumb-item.current,
+.breadcrumb-item:last-child {
+  color: var(--text);
+  font-weight: 500;
+  pointer-events: none;
+}
+
+/* Разделитель */
+.breadcrumb-separator {
+  color: var(--muted);
+  opacity: 0.5;
+  user-select: none;
+}
+
+/* Иконка в элементе */
+.breadcrumb-item svg,
+.breadcrumb-item .breadcrumb-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* Иконка Home */
+.breadcrumb-home {
+  color: var(--muted);
+  transition: var(--transition);
+}
+
+.breadcrumb-home:hover {
+  color: var(--accent);
+}
+
+/* ==================== Стили разделителей ==================== */
+
+/* Слеш (по умолчанию) */
+.breadcrumbs-slash .breadcrumb-separator::before {
+  content: '/';
+}
+
+/* Стрелка */
+.breadcrumbs-arrow .breadcrumb-separator::before {
+  content: '›';
+}
+
+/* Chevron */
+.breadcrumbs-chevron .breadcrumb-separator::before {
+  content: '>';
+}
+
+/* Точка */
+.breadcrumbs-dot .breadcrumb-separator::before {
+  content: '•';
+}
+
+/* ==================== Варианты ==================== */
+
+/* С фоном */
+.breadcrumbs-boxed {
+  background: var(--bg);
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+/* Маленькие */
+.breadcrumbs-sm {
+  font-size: 0.75rem;
+  gap: 6px;
+}
+
+.breadcrumbs-sm .breadcrumb-item svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* Большие */
+.breadcrumbs-lg {
+  font-size: 1rem;
+  gap: 12px;
+}
+
+/* ==================== Collapsed (для длинных путей) ==================== */
+
+.breadcrumb-ellipsis {
+  color: var(--muted);
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+
+.breadcrumb-ellipsis:hover {
+  background: var(--accent-100);
+  color: var(--accent);
+}
+
+/* ==================== Dark Theme ==================== */
+
+.dark .breadcrumb-item {
+  color: var(--text-tertiary);
+}
+
+.dark .breadcrumb-item a,
+.dark a.breadcrumb-item {
+  color: var(--text-tertiary);
+}
+
+.dark .breadcrumb-item a:hover,
+.dark a.breadcrumb-item:hover {
+  color: var(--primary-400);
+}
+
+.dark .breadcrumb-item.current,
+.dark .breadcrumb-item:last-child {
+  color: var(--text-primary);
+}
+
+.dark .breadcrumb-separator {
+  color: var(--text-disabled);
+}
+
+.dark .breadcrumb-home {
+  color: var(--text-tertiary);
+}
+
+.dark .breadcrumb-home:hover {
+  color: var(--primary-400);
+}
+
+/* Boxed dark */
+.dark .breadcrumbs-boxed {
+  background: var(--surface-2);
+  border-color: var(--border);
+}
+
+/* Ellipsis dark */
+.dark .breadcrumb-ellipsis:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--primary-400);
+}

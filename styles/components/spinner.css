@@ -1,0 +1,446 @@
+/* ==================== Loading Spinner ==================== */
+/* Индикаторы загрузки */
+
+/* Базовый спиннер */
+.spinner {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spinner-rotate 0.75s linear infinite;
+}
+
+@keyframes spinner-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Smooth spinner variant */
+.spinner-smooth {
+  border: 2px solid transparent;
+  border-top-color: var(--accent);
+  border-right-color: var(--accent);
+  animation: spinner-rotate 0.6s ease-in-out infinite;
+}
+
+/* Gradient spinner */
+.spinner-gradient {
+  border: none;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0%,
+    var(--accent) 100%
+  );
+  mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px));
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px));
+  animation: spinner-rotate 0.9s linear infinite;
+}
+
+/* ==================== Размеры ==================== */
+
+/* Очень маленький */
+.spinner-xs {
+  width: 14px;
+  height: 14px;
+  border-width: 1.5px;
+}
+
+/* Маленький */
+.spinner-sm {
+  width: 18px;
+  height: 18px;
+  border-width: 2px;
+}
+
+/* Средний (default) */
+.spinner-md {
+  width: 24px;
+  height: 24px;
+}
+
+/* Большой */
+.spinner-lg {
+  width: 36px;
+  height: 36px;
+  border-width: 3px;
+}
+
+/* Очень большой */
+.spinner-xl {
+  width: 48px;
+  height: 48px;
+  border-width: 4px;
+}
+
+/* ==================== Цвета ==================== */
+
+/* Primary */
+.spinner-primary {
+  border-color: var(--accent-100);
+  border-top-color: var(--accent);
+}
+
+/* White (для тёмного фона) */
+.spinner-white {
+  border-color: rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+}
+
+/* Success */
+.spinner-success {
+  border-color: rgba(76, 175, 80, 0.2);
+  border-top-color: #4caf50;
+}
+
+/* Warning */
+.spinner-warning {
+  border-color: rgba(255, 152, 0, 0.2);
+  border-top-color: #ff9800;
+}
+
+/* Error */
+.spinner-error {
+  border-color: rgba(244, 67, 54, 0.2);
+  border-top-color: #f44336;
+}
+
+/* Info */
+.spinner-info {
+  border-color: rgba(33, 150, 243, 0.2);
+  border-top-color: #2196f3;
+}
+
+/* ==================== Альтернативные стили ==================== */
+
+/* Dots spinner */
+.spinner-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  width: auto;
+  height: auto;
+  border: none;
+  animation: none;
+}
+
+.spinner-dots::before,
+.spinner-dots::after,
+.spinner-dots span {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: spinner-dots-bounce 1.4s ease-in-out infinite;
+}
+
+.spinner-dots span {
+  animation-delay: 0.16s;
+}
+
+.spinner-dots::after {
+  animation-delay: 0.32s;
+}
+
+@keyframes spinner-dots-bounce {
+  0%, 80%, 100% {
+    transform: scale(0.6);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Pulse spinner */
+.spinner-pulse {
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: spinner-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes spinner-pulse {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+/* Bars spinner */
+.spinner-bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  width: auto;
+  height: 24px;
+  border: none;
+  animation: none;
+}
+
+.spinner-bars span {
+  width: 3px;
+  height: 100%;
+  background: var(--accent);
+  animation: spinner-bars-stretch 1.2s ease-in-out infinite;
+}
+
+.spinner-bars span:nth-child(1) { animation-delay: 0s; }
+.spinner-bars span:nth-child(2) { animation-delay: 0.1s; }
+.spinner-bars span:nth-child(3) { animation-delay: 0.2s; }
+.spinner-bars span:nth-child(4) { animation-delay: 0.3s; }
+
+@keyframes spinner-bars-stretch {
+  0%, 40%, 100% {
+    transform: scaleY(0.4);
+  }
+  20% {
+    transform: scaleY(1);
+  }
+}
+
+/* Ring spinner (двойной) */
+.spinner-ring {
+  width: 24px;
+  height: 24px;
+  border: none;
+  position: relative;
+  animation: none;
+}
+
+.spinner-ring::before,
+.spinner-ring::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2px solid transparent;
+  border-radius: 50%;
+}
+
+.spinner-ring::before {
+  border-top-color: var(--accent);
+  animation: spinner-rotate 1s linear infinite;
+}
+
+.spinner-ring::after {
+  border-bottom-color: var(--accent-700);
+  animation: spinner-rotate 0.5s linear infinite reverse;
+}
+
+/* ==================== Loading контейнер ==================== */
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px;
+}
+
+.loading-text {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+/* Overlay loading */
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(2px);
+  z-index: 10;
+}
+
+/* Inline loading (рядом с текстом) */
+.loading-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Button loading state - defined in buttons.css */
+/* This file only handles standalone spinners */
+
+/* ==================== Skeleton Loading ==================== */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--border) 25%,
+    var(--bg) 50%,
+    var(--border) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-text {
+  height: 1em;
+  margin-bottom: 0.5em;
+}
+
+.skeleton-text:last-child {
+  width: 60%;
+}
+
+.skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.skeleton-image {
+  height: 200px;
+  border-radius: var(--radius);
+}
+
+.skeleton-button {
+  height: 36px;
+  width: 100px;
+  border-radius: var(--radius);
+}
+
+/* ==================== Dark Theme ==================== */
+
+.dark .spinner {
+  border-color: var(--surface-6);
+  border-top-color: var(--primary-500);
+}
+
+.dark .spinner-primary {
+  border-color: rgba(33, 150, 243, 0.2);
+  border-top-color: var(--primary-500);
+}
+
+.dark .spinner-success {
+  border-color: rgba(16, 185, 129, 0.2);
+  border-top-color: var(--success);
+}
+
+.dark .spinner-warning {
+  border-color: rgba(245, 158, 11, 0.2);
+  border-top-color: var(--warning);
+}
+
+.dark .spinner-error {
+  border-color: rgba(239, 68, 68, 0.2);
+  border-top-color: var(--error);
+}
+
+.dark .spinner-info {
+  border-color: rgba(59, 130, 246, 0.2);
+  border-top-color: var(--info);
+}
+
+/* Dots dark */
+.dark .spinner-dots::before,
+.dark .spinner-dots::after,
+.dark .spinner-dots span {
+  background: var(--primary-500);
+}
+
+/* Pulse dark */
+.dark .spinner-pulse {
+  background: var(--primary-500);
+}
+
+/* Bars dark */
+.dark .spinner-bars span {
+  background: var(--primary-500);
+}
+
+/* Ring dark */
+.dark .spinner-ring::before {
+  border-top-color: var(--primary-500);
+}
+
+.dark .spinner-ring::after {
+  border-bottom-color: var(--primary-700);
+}
+
+/* Loading overlay dark */
+.dark .loading-overlay {
+  background: rgba(15, 17, 23, 0.8);
+}
+
+.dark .loading-text {
+  color: var(--text-tertiary);
+}
+
+/* Skeleton dark */
+.dark .skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface-3) 25%,
+    var(--surface-4) 50%,
+    var(--surface-3) 75%
+  );
+  background-size: 200% 100%;
+}
+
+/* ==================== Reduced Motion ==================== */
+/* Note: Spinners are functional indicators, so we keep animations
+   but use slower, less jarring motion for accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Spinners: Keep animation but slow down for accessibility */
+  .spinner,
+  .spinner-smooth,
+  .spinner-gradient {
+    animation-duration: 1.5s;
+  }
+
+  .spinner-dots::before,
+  .spinner-dots::after,
+  .spinner-dots span {
+    animation-duration: 2s;
+  }
+
+  .spinner-pulse {
+    animation-duration: 2.5s;
+  }
+
+  .spinner-bars span {
+    animation-duration: 2s;
+  }
+
+  .spinner-ring::before {
+    animation-duration: 2s;
+  }
+
+  .spinner-ring::after {
+    animation-duration: 1s;
+  }
+
+  .skeleton {
+    animation: none;
+    background: var(--border);
+  }
+}

@@ -1,0 +1,1767 @@
+# ==================== New Components Specification ====================
+# CSS Lab - UX/Ergonomics Component Library
+# Version: 1.0.0
+# Date: 2025-11-23
+
+# Основано на существующих переменных:
+# Base Theme: #2E8A3C (green accent)
+# Dark Theme: AutoTrassir Design System (primary-500: #2196f3)
+
+variables:
+  base_theme:
+    accent: "#2E8A3C"
+    accent_700: "#236B2E"
+    accent_100: "rgba(46, 138, 60, 0.12)"
+    bg: "#fafafa"
+    panel: "#fff"
+    text: "#222"
+    muted: "#666"
+    border: "#e1e1e1"
+    radius: "10px"
+    radius_sm: "6px"
+    transition: "0.2s ease"
+    transition_fast: "0.15s ease"
+
+  dark_theme:
+    accent: "var(--primary-500)"
+    accent_700: "var(--primary-700)"
+    accent_100: "rgba(33, 150, 243, 0.15)"
+    surface_2: "#151822"
+    surface_3: "#1a1f2e"
+    surface_6: "#343f56"
+    text_primary: "#e8eaed"
+    text_secondary: "#9aa0a6"
+    text_tertiary: "#6b7280"
+    success: "#10b981"
+    warning: "#f59e0b"
+    error: "#ef4444"
+    info: "#3b82f6"
+
+# ==================== ГРУППА 1: НАВИГАЦИЯ ====================
+
+components:
+
+  # ---------- TABS ----------
+  tabs:
+    description: "Горизонтальные вкладки для переключения между панелями контента"
+    variants:
+      - name: underline
+        description: "Минималистичные вкладки с подчёркиванием активной"
+      - name: pills
+        description: "Вкладки в виде капсул с заливкой"
+      - name: boxed
+        description: "Вкладки в виде карточек с границей"
+
+    sizes:
+      - sm: "padding: 8px 12px; font-size: 0.8rem"
+      - md: "padding: 10px 16px; font-size: 0.875rem"
+      - lg: "padding: 12px 20px; font-size: 1rem"
+
+    states:
+      - default: "Неактивная вкладка"
+      - active: "Текущая выбранная вкладка"
+      - hover: "При наведении курсора"
+      - focus: "При фокусе клавиатурой"
+      - disabled: "Недоступная вкладка"
+
+    anatomy:
+      container:
+        element: ".tabs"
+        styles:
+          display: "flex"
+          gap: "4px"
+          border_bottom: "1px solid var(--border)"  # для underline
+
+      item:
+        element: ".tab-item"
+        styles:
+          padding: "10px 16px"
+          cursor: "pointer"
+          transition: "var(--transition)"
+          white_space: "nowrap"
+
+      indicator:
+        element: ".tab-indicator"
+        description: "Animated bottom border for underline variant"
+        styles:
+          height: "2px"
+          background: "var(--accent)"
+          transition: "transform 0.2s ease, width 0.2s ease"
+
+      icon:
+        element: ".tab-icon"
+        styles:
+          width: "16px"
+          height: "16px"
+          margin_right: "6px"
+
+      badge:
+        element: ".tab-badge"
+        styles:
+          margin_left: "8px"
+          padding: "2px 6px"
+          font_size: "0.7rem"
+          border_radius: "10px"
+
+    colors:
+      base_theme:
+        container_border: "var(--border)"
+        inactive_text: "var(--muted)"
+        inactive_bg: "transparent"
+        active_text: "var(--accent)"
+        active_border: "var(--accent)"
+        active_bg_pills: "var(--accent-100)"
+        hover_text: "var(--text)"
+        hover_bg: "rgba(0, 0, 0, 0.04)"
+        disabled_text: "rgba(0, 0, 0, 0.3)"
+
+      dark_theme:
+        container_border: "var(--surface-6)"
+        inactive_text: "var(--text-tertiary)"
+        inactive_bg: "transparent"
+        active_text: "var(--primary-500)"
+        active_border: "var(--primary-500)"
+        active_bg_pills: "rgba(33, 150, 243, 0.15)"
+        hover_text: "var(--text-primary)"
+        hover_bg: "rgba(255, 255, 255, 0.05)"
+        disabled_text: "var(--text-disabled)"
+
+    accessibility:
+      role: "tablist (container), tab (item), tabpanel (content)"
+      aria_attributes:
+        - "aria-selected: true/false на tab"
+        - "aria-controls: id связанной панели"
+        - "aria-labelledby: id вкладки на tabpanel"
+        - "tabindex: 0 для активной, -1 для остальных"
+      keyboard:
+        - "Arrow Left/Right: переключение между вкладками"
+        - "Home: первая вкладка"
+        - "End: последняя вкладка"
+        - "Enter/Space: активация вкладки"
+      focus_visible: "outline: 2px solid var(--accent); outline-offset: 2px"
+
+    spacing:
+      gap: "4px"
+      padding_item: "10px 16px"
+      margin_indicator: "-1px"
+
+    css_classes:
+      - ".tabs"
+      - ".tabs-underline"
+      - ".tabs-pills"
+      - ".tabs-boxed"
+      - ".tab-item"
+      - ".tab-item.active"
+      - ".tab-item:disabled"
+      - ".tab-indicator"
+      - ".tab-icon"
+      - ".tab-badge"
+      - ".tab-panel"
+
+  # ---------- BREADCRUMBS ----------
+  breadcrumbs:
+    description: "Навигационные хлебные крошки для отображения иерархии страниц"
+    variants:
+      - name: default
+        description: "Стандартные с разделителем /"
+      - name: chevron
+        description: "С разделителем > (шеврон)"
+      - name: arrow
+        description: "С разделителем стрелка"
+
+    states:
+      - default: "Обычная ссылка в цепочке"
+      - hover: "При наведении (кроме текущей)"
+      - current: "Текущая страница (не кликабельная)"
+      - truncated: "Скрытые элементы (...)"
+
+    anatomy:
+      container:
+        element: ".breadcrumbs"
+        styles:
+          display: "flex"
+          flex_wrap: "wrap"
+          align_items: "center"
+          gap: "0"
+          font_size: "0.875rem"
+
+      item:
+        element: ".breadcrumb-item"
+        styles:
+          display: "inline-flex"
+          align_items: "center"
+
+      link:
+        element: ".breadcrumb-link"
+        styles:
+          color: "var(--muted)"
+          text_decoration: "none"
+          transition: "color var(--transition-fast)"
+          padding: "4px 0"
+
+      separator:
+        element: ".breadcrumb-separator"
+        styles:
+          margin: "0 8px"
+          color: "var(--muted)"
+          opacity: "0.5"
+          user_select: "none"
+
+      current:
+        element: ".breadcrumb-current"
+        styles:
+          color: "var(--text)"
+          font_weight: "500"
+          pointer_events: "none"
+
+      icon:
+        element: ".breadcrumb-icon"
+        styles:
+          width: "16px"
+          height: "16px"
+          margin_right: "6px"
+
+    colors:
+      base_theme:
+        link: "var(--muted)"
+        link_hover: "var(--accent)"
+        separator: "var(--muted)"
+        current: "var(--text)"
+
+      dark_theme:
+        link: "var(--text-tertiary)"
+        link_hover: "var(--primary-400)"
+        separator: "var(--text-tertiary)"
+        current: "var(--text-primary)"
+
+    accessibility:
+      role: "navigation (container с aria-label='Breadcrumb')"
+      aria_attributes:
+        - "aria-label='Breadcrumb' на nav"
+        - "aria-current='page' на текущем элементе"
+      keyboard:
+        - "Tab: переход по ссылкам"
+      semantic_html: "Использовать <nav><ol><li> структуру"
+
+    spacing:
+      separator_margin: "0 8px"
+      item_padding: "4px 0"
+
+    truncation:
+      max_items: 4
+      ellipsis_behavior: "Показывать первый, ..., последние 2 элемента"
+      dropdown_on_ellipsis: true
+
+    css_classes:
+      - ".breadcrumbs"
+      - ".breadcrumb-item"
+      - ".breadcrumb-link"
+      - ".breadcrumb-separator"
+      - ".breadcrumb-current"
+      - ".breadcrumb-icon"
+      - ".breadcrumb-ellipsis"
+
+  # ---------- STEPS/WIZARD ----------
+  steps:
+    description: "Пошаговый индикатор прогресса для многошаговых процессов"
+    variants:
+      - name: horizontal
+        description: "Горизонтальное расположение шагов"
+      - name: vertical
+        description: "Вертикальное расположение с описаниями"
+      - name: compact
+        description: "Компактный вид (только номера)"
+
+    sizes:
+      - sm: "icon: 24px; font-size: 0.75rem"
+      - md: "icon: 32px; font-size: 0.875rem"
+      - lg: "icon: 40px; font-size: 1rem"
+
+    states:
+      - pending: "Ожидающий шаг (серый)"
+      - active: "Текущий шаг (акцентный)"
+      - completed: "Завершённый шаг (зелёный с галочкой)"
+      - error: "Шаг с ошибкой (красный с крестиком)"
+      - disabled: "Недоступный шаг"
+
+    anatomy:
+      container:
+        element: ".steps"
+        styles:
+          display: "flex"
+          justify_content: "space-between"
+          align_items: "flex-start"
+
+      step:
+        element: ".step"
+        styles:
+          display: "flex"
+          flex_direction: "column"
+          align_items: "center"
+          flex: "1"
+          position: "relative"
+
+      indicator:
+        element: ".step-indicator"
+        description: "Круг с номером или иконкой"
+        styles:
+          width: "32px"
+          height: "32px"
+          border_radius: "50%"
+          display: "flex"
+          align_items: "center"
+          justify_content: "center"
+          font_weight: "600"
+          transition: "all var(--transition)"
+          z_index: "1"
+
+      connector:
+        element: ".step-connector"
+        description: "Линия между шагами"
+        styles:
+          position: "absolute"
+          top: "16px"
+          left: "calc(50% + 20px)"
+          right: "calc(-50% + 20px)"
+          height: "2px"
+          background: "var(--border)"
+
+      connector_active:
+        element: ".step-connector.active"
+        styles:
+          background: "var(--accent)"
+
+      title:
+        element: ".step-title"
+        styles:
+          margin_top: "8px"
+          font_size: "0.875rem"
+          font_weight: "500"
+          text_align: "center"
+
+      description:
+        element: ".step-description"
+        styles:
+          margin_top: "4px"
+          font_size: "0.75rem"
+          color: "var(--muted)"
+          text_align: "center"
+          max_width: "150px"
+
+    colors:
+      base_theme:
+        pending_bg: "var(--border)"
+        pending_text: "var(--muted)"
+        pending_number: "var(--muted)"
+        active_bg: "var(--accent)"
+        active_text: "#fff"
+        active_title: "var(--text)"
+        completed_bg: "var(--accent)"
+        completed_icon: "#fff"
+        error_bg: "#ef4444"
+        error_icon: "#fff"
+        connector_pending: "var(--border)"
+        connector_completed: "var(--accent)"
+
+      dark_theme:
+        pending_bg: "var(--surface-4)"
+        pending_text: "var(--text-tertiary)"
+        pending_number: "var(--text-tertiary)"
+        active_bg: "var(--primary-500)"
+        active_text: "#fff"
+        active_title: "var(--text-primary)"
+        completed_bg: "var(--success)"
+        completed_icon: "#fff"
+        error_bg: "var(--error)"
+        error_icon: "#fff"
+        connector_pending: "var(--surface-6)"
+        connector_completed: "var(--primary-500)"
+
+    accessibility:
+      role: "navigation с aria-label='Progress'"
+      aria_attributes:
+        - "aria-current='step' на активном шаге"
+        - "aria-label с описанием шага"
+      keyboard:
+        - "Tab: переход по интерактивным шагам"
+      screen_reader: "Озвучивать 'Шаг X из Y: название, статус'"
+
+    spacing:
+      gap: "0"
+      indicator_size: "32px"
+      connector_height: "2px"
+      title_margin: "8px"
+
+    icons:
+      completed: "checkmark (галочка)"
+      error: "x-mark (крестик)"
+      pending: "номер шага"
+
+    css_classes:
+      - ".steps"
+      - ".steps-horizontal"
+      - ".steps-vertical"
+      - ".steps-compact"
+      - ".step"
+      - ".step.pending"
+      - ".step.active"
+      - ".step.completed"
+      - ".step.error"
+      - ".step-indicator"
+      - ".step-connector"
+      - ".step-title"
+      - ".step-description"
+
+# ==================== ГРУППА 2: ОБРАТНАЯ СВЯЗЬ ====================
+
+  # ---------- TOAST/SNACKBAR ----------
+  toast:
+    description: "Всплывающие уведомления для краткой обратной связи"
+    variants:
+      - name: info
+        description: "Информационное уведомление (синий)"
+      - name: success
+        description: "Успешное действие (зелёный)"
+      - name: warning
+        description: "Предупреждение (жёлтый)"
+      - name: error
+        description: "Ошибка (красный)"
+
+    positions:
+      - top_right: "top: 16px; right: 16px"
+      - top_left: "top: 16px; left: 16px"
+      - top_center: "top: 16px; left: 50%; transform: translateX(-50%)"
+      - bottom_right: "bottom: 16px; right: 16px"
+      - bottom_left: "bottom: 16px; left: 16px"
+      - bottom_center: "bottom: 16px; left: 50%; transform: translateX(-50%)"
+
+    states:
+      - entering: "Появление (slide + fade)"
+      - visible: "Отображается"
+      - exiting: "Исчезновение"
+      - paused: "При hover таймер останавливается"
+
+    anatomy:
+      container:
+        element: ".toast-container"
+        description: "Fixed контейнер для группировки тостов"
+        styles:
+          position: "fixed"
+          z_index: "9999"
+          display: "flex"
+          flex_direction: "column"
+          gap: "8px"
+          max_width: "400px"
+          pointer_events: "none"
+
+      toast:
+        element: ".toast"
+        styles:
+          display: "flex"
+          align_items: "flex-start"
+          gap: "12px"
+          padding: "12px 16px"
+          border_radius: "var(--radius)"
+          background: "var(--panel)"
+          box_shadow: "var(--shadow-lg)"
+          pointer_events: "auto"
+          animation: "toast-enter 0.3s ease"
+
+      icon:
+        element: ".toast-icon"
+        styles:
+          flex_shrink: "0"
+          width: "20px"
+          height: "20px"
+
+      content:
+        element: ".toast-content"
+        styles:
+          flex: "1"
+          min_width: "0"
+
+      title:
+        element: ".toast-title"
+        styles:
+          font_weight: "600"
+          font_size: "0.875rem"
+          margin_bottom: "4px"
+
+      message:
+        element: ".toast-message"
+        styles:
+          font_size: "0.8rem"
+          color: "var(--muted)"
+          line_height: "1.4"
+
+      close:
+        element: ".toast-close"
+        styles:
+          flex_shrink: "0"
+          padding: "4px"
+          background: "transparent"
+          border: "none"
+          cursor: "pointer"
+          opacity: "0.6"
+          transition: "opacity var(--transition-fast)"
+
+      progress:
+        element: ".toast-progress"
+        description: "Полоса автозакрытия"
+        styles:
+          position: "absolute"
+          bottom: "0"
+          left: "0"
+          height: "3px"
+          border_radius: "0 0 var(--radius) var(--radius)"
+          animation: "toast-progress linear forwards"
+
+    colors:
+      info:
+        base: { icon: "#2196f3", bg: "#e3f2fd", border: "rgba(33, 150, 243, 0.3)", text: "#1565c0" }
+        dark: { icon: "#60a5fa", bg: "rgba(59, 130, 246, 0.15)", border: "rgba(59, 130, 246, 0.3)", text: "#93c5fd" }
+      success:
+        base: { icon: "#4caf50", bg: "#e8f5e9", border: "rgba(76, 175, 80, 0.3)", text: "#2e7d32" }
+        dark: { icon: "#34d399", bg: "rgba(16, 185, 129, 0.15)", border: "rgba(16, 185, 129, 0.3)", text: "#6ee7b7" }
+      warning:
+        base: { icon: "#ff9800", bg: "#fff3e0", border: "rgba(255, 152, 0, 0.3)", text: "#e65100" }
+        dark: { icon: "#fbbf24", bg: "rgba(245, 158, 11, 0.15)", border: "rgba(245, 158, 11, 0.3)", text: "#fcd34d" }
+      error:
+        base: { icon: "#f44336", bg: "#ffebee", border: "rgba(244, 67, 54, 0.3)", text: "#c62828" }
+        dark: { icon: "#f87171", bg: "rgba(239, 68, 68, 0.15)", border: "rgba(239, 68, 68, 0.3)", text: "#fca5a5" }
+
+    accessibility:
+      role: "alert (для важных), status (для информационных)"
+      aria_attributes:
+        - "aria-live='polite' или 'assertive'"
+        - "aria-atomic='true'"
+      keyboard:
+        - "Escape: закрыть все тосты"
+        - "Tab: переход к кнопке закрытия"
+      focus_management: "Не забирать фокус у текущего элемента"
+
+    timing:
+      default_duration: "5000ms"
+      auto_dismiss: true
+      pause_on_hover: true
+      stack_limit: 5
+
+    animations:
+      enter:
+        name: "toast-enter"
+        keyframes: "from { opacity: 0; transform: translateX(100%); } to { opacity: 1; transform: translateX(0); }"
+      exit:
+        name: "toast-exit"
+        keyframes: "from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(100%); }"
+      progress:
+        name: "toast-progress"
+        keyframes: "from { width: 100%; } to { width: 0; }"
+
+    css_classes:
+      - ".toast-container"
+      - ".toast-container.top-right"
+      - ".toast-container.bottom-right"
+      - ".toast"
+      - ".toast.info"
+      - ".toast.success"
+      - ".toast.warning"
+      - ".toast.error"
+      - ".toast-icon"
+      - ".toast-content"
+      - ".toast-title"
+      - ".toast-message"
+      - ".toast-close"
+      - ".toast-progress"
+
+  # ---------- MODAL/DIALOG ----------
+  modal:
+    description: "Модальное окно для важного контента или подтверждения действий"
+    variants:
+      - name: default
+        description: "Стандартное модальное окно"
+      - name: confirm
+        description: "Диалог подтверждения (да/нет)"
+      - name: alert
+        description: "Алерт с одной кнопкой"
+      - name: fullscreen
+        description: "Полноэкранный режим на мобильных"
+
+    sizes:
+      - sm: "max-width: 400px"
+      - md: "max-width: 560px"
+      - lg: "max-width: 800px"
+      - xl: "max-width: 1140px"
+      - full: "width: 100%; height: 100%"
+
+    states:
+      - closed: "Скрыто (display: none или visibility)"
+      - opening: "Анимация появления"
+      - open: "Открыто"
+      - closing: "Анимация закрытия"
+
+    anatomy:
+      overlay:
+        element: ".modal-overlay"
+        description: "Полупрозрачный фон"
+        styles:
+          position: "fixed"
+          inset: "0"
+          background: "rgba(0, 0, 0, 0.5)"
+          backdrop_filter: "blur(4px)"
+          z_index: "1000"
+          display: "flex"
+          align_items: "center"
+          justify_content: "center"
+          animation: "modal-overlay-enter 0.2s ease"
+
+      dialog:
+        element: ".modal"
+        styles:
+          position: "relative"
+          background: "var(--panel)"
+          border_radius: "var(--radius-lg)"
+          box_shadow: "var(--shadow-lg)"
+          max_height: "90vh"
+          display: "flex"
+          flex_direction: "column"
+          animation: "modal-enter 0.3s ease"
+
+      header:
+        element: ".modal-header"
+        styles:
+          display: "flex"
+          align_items: "center"
+          justify_content: "space-between"
+          padding: "16px 20px"
+          border_bottom: "1px solid var(--border)"
+
+      title:
+        element: ".modal-title"
+        styles:
+          font_size: "1.125rem"
+          font_weight: "600"
+          color: "var(--text)"
+          margin: "0"
+
+      close_btn:
+        element: ".modal-close"
+        styles:
+          width: "32px"
+          height: "32px"
+          display: "flex"
+          align_items: "center"
+          justify_content: "center"
+          border_radius: "var(--radius-sm)"
+          background: "transparent"
+          border: "none"
+          cursor: "pointer"
+          color: "var(--muted)"
+          transition: "all var(--transition-fast)"
+
+      body:
+        element: ".modal-body"
+        styles:
+          padding: "20px"
+          overflow_y: "auto"
+          flex: "1"
+
+      footer:
+        element: ".modal-footer"
+        styles:
+          display: "flex"
+          justify_content: "flex-end"
+          gap: "12px"
+          padding: "16px 20px"
+          border_top: "1px solid var(--border)"
+
+    colors:
+      base_theme:
+        overlay: "rgba(0, 0, 0, 0.5)"
+        background: "var(--panel)"
+        border: "var(--border)"
+        title: "var(--text)"
+        close_hover: "var(--accent-100)"
+
+      dark_theme:
+        overlay: "rgba(0, 0, 0, 0.7)"
+        background: "var(--surface-3)"
+        border: "var(--surface-6)"
+        title: "var(--text-primary)"
+        close_hover: "rgba(255, 255, 255, 0.1)"
+
+    accessibility:
+      role: "dialog"
+      aria_attributes:
+        - "aria-modal='true'"
+        - "aria-labelledby: id заголовка"
+        - "aria-describedby: id контента (опционально)"
+      keyboard:
+        - "Escape: закрыть модальное окно"
+        - "Tab: циклическая навигация внутри модалки"
+      focus_management:
+        on_open: "Фокус на первый focusable элемент"
+        on_close: "Вернуть фокус на элемент, открывший модалку"
+      focus_trap: "Удерживать фокус внутри модального окна"
+
+    animations:
+      overlay_enter:
+        name: "modal-overlay-enter"
+        keyframes: "from { opacity: 0; } to { opacity: 1; }"
+      modal_enter:
+        name: "modal-enter"
+        keyframes: "from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); }"
+      overlay_exit:
+        name: "modal-overlay-exit"
+        keyframes: "from { opacity: 1; } to { opacity: 0; }"
+      modal_exit:
+        name: "modal-exit"
+        keyframes: "from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.95); }"
+
+    behavior:
+      close_on_overlay_click: true
+      close_on_escape: true
+      prevent_body_scroll: true
+
+    css_classes:
+      - ".modal-overlay"
+      - ".modal"
+      - ".modal-sm"
+      - ".modal-md"
+      - ".modal-lg"
+      - ".modal-xl"
+      - ".modal-fullscreen"
+      - ".modal-header"
+      - ".modal-title"
+      - ".modal-close"
+      - ".modal-body"
+      - ".modal-footer"
+
+  # ---------- LOADING SPINNER ----------
+  spinner:
+    description: "Индикатор загрузки для асинхронных операций"
+    variants:
+      - name: spin
+        description: "Вращающийся круг (по умолчанию)"
+      - name: dots
+        description: "Три пульсирующие точки"
+      - name: pulse
+        description: "Пульсирующий круг"
+      - name: bars
+        description: "Колеблющиеся полоски"
+
+    sizes:
+      - xs: "16px"
+      - sm: "20px"
+      - md: "32px"
+      - lg: "48px"
+      - xl: "64px"
+
+    states:
+      - spinning: "Активная анимация"
+      - paused: "Остановлен (animation-play-state: paused)"
+
+    anatomy:
+      spinner:
+        element: ".spinner"
+        styles:
+          display: "inline-block"
+          width: "32px"
+          height: "32px"
+          border: "3px solid var(--border)"
+          border_top_color: "var(--accent)"
+          border_radius: "50%"
+          animation: "spin 0.8s linear infinite"
+
+      dots:
+        element: ".spinner-dots"
+        styles:
+          display: "inline-flex"
+          gap: "4px"
+
+      dot:
+        element: ".spinner-dot"
+        styles:
+          width: "8px"
+          height: "8px"
+          border_radius: "50%"
+          background: "var(--accent)"
+          animation: "bounce 1.4s ease-in-out infinite both"
+
+      text:
+        element: ".spinner-text"
+        description: "Текст под спиннером"
+        styles:
+          margin_top: "12px"
+          font_size: "0.875rem"
+          color: "var(--muted)"
+
+      overlay:
+        element: ".spinner-overlay"
+        description: "Полноэкранный/блочный оверлей с спиннером"
+        styles:
+          position: "absolute"
+          inset: "0"
+          display: "flex"
+          flex_direction: "column"
+          align_items: "center"
+          justify_content: "center"
+          background: "rgba(255, 255, 255, 0.8)"
+          z_index: "10"
+
+    colors:
+      base_theme:
+        track: "var(--border)"
+        indicator: "var(--accent)"
+        text: "var(--muted)"
+        overlay_bg: "rgba(255, 255, 255, 0.8)"
+
+      dark_theme:
+        track: "var(--surface-6)"
+        indicator: "var(--primary-500)"
+        text: "var(--text-tertiary)"
+        overlay_bg: "rgba(15, 17, 23, 0.8)"
+
+    accessibility:
+      role: "status"
+      aria_attributes:
+        - "aria-live='polite'"
+        - "aria-label='Loading' или aria-labelledby"
+        - "aria-busy='true' на контейнере контента"
+      screen_reader: "Озвучивать 'Загрузка...' или кастомное сообщение"
+
+    animations:
+      spin:
+        name: "spin"
+        keyframes: "from { transform: rotate(0deg); } to { transform: rotate(360deg); }"
+        duration: "0.8s"
+        timing: "linear"
+      bounce:
+        name: "bounce"
+        keyframes: |
+          0%, 80%, 100% { transform: scale(0); }
+          40% { transform: scale(1); }
+        duration: "1.4s"
+        timing: "ease-in-out"
+      pulse:
+        name: "pulse"
+        keyframes: |
+          0% { transform: scale(0.8); opacity: 1; }
+          50% { transform: scale(1); opacity: 0.5; }
+          100% { transform: scale(0.8); opacity: 1; }
+        duration: "1.5s"
+
+    css_classes:
+      - ".spinner"
+      - ".spinner-xs"
+      - ".spinner-sm"
+      - ".spinner-md"
+      - ".spinner-lg"
+      - ".spinner-xl"
+      - ".spinner-dots"
+      - ".spinner-pulse"
+      - ".spinner-bars"
+      - ".spinner-text"
+      - ".spinner-overlay"
+
+# ==================== ГРУППА 3: ДАННЫЕ ====================
+
+  # ---------- PROGRESS BAR ----------
+  progress:
+    description: "Линейный индикатор прогресса для отображения выполнения операций"
+    variants:
+      - name: default
+        description: "Стандартная полоса прогресса"
+      - name: striped
+        description: "Полосатая с диагональными линиями"
+      - name: animated
+        description: "Анимированные полосы"
+      - name: indeterminate
+        description: "Неопределённый прогресс (бегущая полоса)"
+
+    sizes:
+      - xs: "height: 4px"
+      - sm: "height: 6px"
+      - md: "height: 8px"
+      - lg: "height: 12px"
+
+    states:
+      - empty: "0%"
+      - partial: "1-99%"
+      - complete: "100%"
+      - indeterminate: "Неизвестный прогресс"
+
+    semantic_colors:
+      - default: "Акцентный цвет"
+      - success: "Зелёный (завершено)"
+      - warning: "Жёлтый (внимание)"
+      - error: "Красный (проблема)"
+
+    anatomy:
+      container:
+        element: ".progress"
+        styles:
+          position: "relative"
+          width: "100%"
+          height: "8px"
+          background: "var(--border)"
+          border_radius: "var(--radius-sm)"
+          overflow: "hidden"
+
+      bar:
+        element: ".progress-bar"
+        styles:
+          height: "100%"
+          background: "var(--accent)"
+          border_radius: "var(--radius-sm)"
+          transition: "width 0.3s ease"
+
+      label:
+        element: ".progress-label"
+        description: "Текст с процентом"
+        styles:
+          position: "absolute"
+          right: "0"
+          top: "-20px"
+          font_size: "0.75rem"
+          font_weight: "500"
+          color: "var(--text)"
+
+      label_inside:
+        element: ".progress-label-inside"
+        styles:
+          position: "absolute"
+          left: "50%"
+          top: "50%"
+          transform: "translate(-50%, -50%)"
+          font_size: "0.7rem"
+          font_weight: "600"
+          color: "#fff"
+
+      stripes:
+        element: ".progress-bar.striped"
+        styles:
+          background_image: "linear-gradient(45deg, rgba(255,255,255,0.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.15) 75%, transparent 75%)"
+          background_size: "1rem 1rem"
+
+    colors:
+      base_theme:
+        track: "var(--border)"
+        bar_default: "var(--accent)"
+        bar_success: "#4caf50"
+        bar_warning: "#ff9800"
+        bar_error: "#f44336"
+        label: "var(--text)"
+
+      dark_theme:
+        track: "var(--surface-4)"
+        bar_default: "var(--primary-500)"
+        bar_success: "var(--success)"
+        bar_warning: "var(--warning)"
+        bar_error: "var(--error)"
+        label: "var(--text-primary)"
+
+    accessibility:
+      role: "progressbar"
+      aria_attributes:
+        - "aria-valuenow: текущее значение"
+        - "aria-valuemin: 0"
+        - "aria-valuemax: 100"
+        - "aria-label: описание процесса"
+      indeterminate:
+        - "Убрать aria-valuenow"
+        - "aria-valuetext='Loading...'"
+
+    animations:
+      stripe:
+        name: "progress-stripe"
+        keyframes: "from { background-position: 1rem 0; } to { background-position: 0 0; }"
+        duration: "1s"
+        timing: "linear"
+      indeterminate:
+        name: "progress-indeterminate"
+        keyframes: |
+          0% { left: -35%; right: 100%; }
+          60% { left: 100%; right: -90%; }
+          100% { left: 100%; right: -90%; }
+        duration: "2.1s"
+
+    css_classes:
+      - ".progress"
+      - ".progress-xs"
+      - ".progress-sm"
+      - ".progress-md"
+      - ".progress-lg"
+      - ".progress-bar"
+      - ".progress-bar.success"
+      - ".progress-bar.warning"
+      - ".progress-bar.error"
+      - ".progress-bar.striped"
+      - ".progress-bar.animated"
+      - ".progress-indeterminate"
+      - ".progress-label"
+      - ".progress-label-inside"
+
+  # ---------- STATS CARD ----------
+  stats_card:
+    description: "KPI карточка для отображения метрик с трендом"
+    variants:
+      - name: default
+        description: "Стандартная карточка"
+      - name: compact
+        description: "Компактная (inline)"
+      - name: horizontal
+        description: "Горизонтальное расположение"
+
+    states:
+      - default: "Нормальное состояние"
+      - loading: "Загрузка данных (skeleton)"
+      - trend_up: "Рост (зелёная стрелка вверх)"
+      - trend_down: "Падение (красная стрелка вниз)"
+      - trend_neutral: "Без изменений (серый)"
+
+    anatomy:
+      container:
+        element: ".stats-card"
+        styles:
+          padding: "20px"
+          border_radius: "var(--radius)"
+          background: "var(--panel)"
+          border: "1px solid var(--border)"
+
+      icon:
+        element: ".stats-icon"
+        description: "Иконка категории метрики"
+        styles:
+          width: "40px"
+          height: "40px"
+          display: "flex"
+          align_items: "center"
+          justify_content: "center"
+          border_radius: "var(--radius-sm)"
+          background: "var(--accent-100)"
+          color: "var(--accent)"
+          margin_bottom: "12px"
+
+      label:
+        element: ".stats-label"
+        styles:
+          font_size: "0.8rem"
+          font_weight: "500"
+          color: "var(--muted)"
+          text_transform: "uppercase"
+          letter_spacing: "0.05em"
+          margin_bottom: "4px"
+
+      value:
+        element: ".stats-value"
+        styles:
+          font_size: "2rem"
+          font_weight: "700"
+          color: "var(--text)"
+          line_height: "1.2"
+
+      unit:
+        element: ".stats-unit"
+        styles:
+          font_size: "0.875rem"
+          font_weight: "400"
+          color: "var(--muted)"
+          margin_left: "4px"
+
+      trend:
+        element: ".stats-trend"
+        styles:
+          display: "inline-flex"
+          align_items: "center"
+          gap: "4px"
+          margin_top: "8px"
+          font_size: "0.8rem"
+          font_weight: "500"
+
+      trend_arrow:
+        element: ".stats-trend-arrow"
+        styles:
+          width: "16px"
+          height: "16px"
+
+      delta:
+        element: ".stats-delta"
+        description: "Изменение значения (+12%, -5%)"
+        styles:
+          font_weight: "600"
+
+      period:
+        element: ".stats-period"
+        description: "Период сравнения (vs last week)"
+        styles:
+          color: "var(--muted)"
+          margin_left: "4px"
+
+      sparkline:
+        element: ".stats-sparkline"
+        description: "Мини-график тренда"
+        styles:
+          margin_top: "16px"
+          height: "40px"
+
+    colors:
+      base_theme:
+        background: "var(--panel)"
+        border: "var(--border)"
+        label: "var(--muted)"
+        value: "var(--text)"
+        icon_bg: "var(--accent-100)"
+        icon: "var(--accent)"
+        trend_up: "#4caf50"
+        trend_down: "#f44336"
+        trend_neutral: "var(--muted)"
+
+      dark_theme:
+        background: "var(--surface-3)"
+        border: "var(--surface-6)"
+        label: "var(--text-tertiary)"
+        value: "var(--text-primary)"
+        icon_bg: "rgba(33, 150, 243, 0.15)"
+        icon: "var(--primary-400)"
+        trend_up: "var(--success)"
+        trend_down: "var(--error)"
+        trend_neutral: "var(--text-tertiary)"
+
+    accessibility:
+      role: "region с aria-label"
+      aria_attributes:
+        - "aria-label: название метрики"
+      screen_reader: "Читать: 'Метрика: значение, изменение за период'"
+
+    formatting:
+      numbers:
+        - "Автоматическое форматирование (1,234.56)"
+        - "Сокращение больших чисел (1.2K, 3.5M)"
+      percentages: "Форматировать с + или - знаком"
+      currencies: "Поддержка символов валют"
+
+    css_classes:
+      - ".stats-card"
+      - ".stats-card-compact"
+      - ".stats-card-horizontal"
+      - ".stats-icon"
+      - ".stats-label"
+      - ".stats-value"
+      - ".stats-unit"
+      - ".stats-trend"
+      - ".stats-trend.up"
+      - ".stats-trend.down"
+      - ".stats-trend.neutral"
+      - ".stats-trend-arrow"
+      - ".stats-delta"
+      - ".stats-period"
+      - ".stats-sparkline"
+
+  # ---------- TIMELINE ----------
+  timeline:
+    description: "Вертикальная лента событий для отображения хронологии"
+    variants:
+      - name: default
+        description: "Стандартная вертикальная лента"
+      - name: alternating
+        description: "Чередующиеся стороны (left/right)"
+      - name: compact
+        description: "Компактный вид без карточек"
+
+    states:
+      - default: "Обычное событие"
+      - active: "Текущее/выделенное событие"
+      - completed: "Завершённое событие"
+      - pending: "Ожидаемое событие"
+
+    semantic_types:
+      - info: "Информационное событие"
+      - success: "Успешное действие"
+      - warning: "Предупреждение"
+      - error: "Ошибка"
+
+    anatomy:
+      container:
+        element: ".timeline"
+        styles:
+          position: "relative"
+          padding_left: "32px"
+
+      line:
+        element: ".timeline-line"
+        description: "Вертикальная линия"
+        styles:
+          position: "absolute"
+          left: "11px"
+          top: "0"
+          bottom: "0"
+          width: "2px"
+          background: "var(--border)"
+
+      item:
+        element: ".timeline-item"
+        styles:
+          position: "relative"
+          padding_bottom: "24px"
+
+      dot:
+        element: ".timeline-dot"
+        description: "Точка на линии"
+        styles:
+          position: "absolute"
+          left: "-26px"
+          top: "4px"
+          width: "12px"
+          height: "12px"
+          border_radius: "50%"
+          background: "var(--panel)"
+          border: "2px solid var(--accent)"
+          z_index: "1"
+
+      dot_icon:
+        element: ".timeline-dot-icon"
+        description: "Точка с иконкой внутри"
+        styles:
+          width: "24px"
+          height: "24px"
+          left: "-32px"
+          top: "0"
+          display: "flex"
+          align_items: "center"
+          justify_content: "center"
+          background: "var(--accent)"
+          color: "#fff"
+
+      content:
+        element: ".timeline-content"
+        styles:
+          background: "var(--panel)"
+          border: "1px solid var(--border)"
+          border_radius: "var(--radius)"
+          padding: "16px"
+
+      timestamp:
+        element: ".timeline-timestamp"
+        styles:
+          font_size: "0.75rem"
+          font_weight: "500"
+          color: "var(--muted)"
+          margin_bottom: "4px"
+
+      title:
+        element: ".timeline-title"
+        styles:
+          font_size: "0.9rem"
+          font_weight: "600"
+          color: "var(--text)"
+          margin_bottom: "4px"
+
+      description:
+        element: ".timeline-description"
+        styles:
+          font_size: "0.85rem"
+          color: "var(--muted)"
+          line_height: "1.5"
+
+      meta:
+        element: ".timeline-meta"
+        description: "Дополнительная информация (автор, теги)"
+        styles:
+          margin_top: "8px"
+          font_size: "0.75rem"
+          color: "var(--muted)"
+
+    colors:
+      base_theme:
+        line: "var(--border)"
+        dot_border: "var(--accent)"
+        dot_bg: "var(--panel)"
+        dot_active: "var(--accent)"
+        content_bg: "var(--panel)"
+        content_border: "var(--border)"
+        timestamp: "var(--muted)"
+        title: "var(--text)"
+        info_dot: "#2196f3"
+        success_dot: "#4caf50"
+        warning_dot: "#ff9800"
+        error_dot: "#f44336"
+
+      dark_theme:
+        line: "var(--surface-6)"
+        dot_border: "var(--primary-500)"
+        dot_bg: "var(--surface-2)"
+        dot_active: "var(--primary-500)"
+        content_bg: "var(--surface-3)"
+        content_border: "var(--surface-6)"
+        timestamp: "var(--text-tertiary)"
+        title: "var(--text-primary)"
+        info_dot: "var(--info)"
+        success_dot: "var(--success)"
+        warning_dot: "var(--warning)"
+        error_dot: "var(--error)"
+
+    accessibility:
+      role: "feed или list"
+      aria_attributes:
+        - "aria-label на контейнере"
+        - "article role на каждом item"
+        - "time element для дат"
+      keyboard:
+        - "Tab: навигация по элементам"
+      semantic_html: "Использовать <ol> или <ul> с <li>"
+
+    spacing:
+      line_width: "2px"
+      dot_size: "12px"
+      dot_size_icon: "24px"
+      item_gap: "24px"
+      content_padding: "16px"
+
+    css_classes:
+      - ".timeline"
+      - ".timeline-alternating"
+      - ".timeline-compact"
+      - ".timeline-line"
+      - ".timeline-item"
+      - ".timeline-item.active"
+      - ".timeline-item.completed"
+      - ".timeline-item.pending"
+      - ".timeline-dot"
+      - ".timeline-dot.info"
+      - ".timeline-dot.success"
+      - ".timeline-dot.warning"
+      - ".timeline-dot.error"
+      - ".timeline-dot-icon"
+      - ".timeline-content"
+      - ".timeline-timestamp"
+      - ".timeline-title"
+      - ".timeline-description"
+      - ".timeline-meta"
+
+# ==================== ГРУППА 4: ФОРМЫ (РАСШИРЕНИЕ) ====================
+
+  # ---------- TOGGLE/SWITCH ----------
+  toggle:
+    description: "Переключатель on/off для бинарных настроек"
+    variants:
+      - name: default
+        description: "Стандартный переключатель"
+      - name: labeled
+        description: "С текстом On/Off внутри"
+      - name: icon
+        description: "С иконками (sun/moon для темы)"
+
+    sizes:
+      - sm: "width: 32px; height: 18px; thumb: 14px"
+      - md: "width: 44px; height: 24px; thumb: 20px"
+      - lg: "width: 56px; height: 30px; thumb: 26px"
+
+    states:
+      - off: "Выключен"
+      - on: "Включён"
+      - hover: "При наведении"
+      - focus: "При фокусе"
+      - disabled: "Недоступен"
+      - loading: "В процессе переключения"
+
+    anatomy:
+      container:
+        element: ".toggle"
+        styles:
+          position: "relative"
+          display: "inline-flex"
+          align_items: "center"
+          cursor: "pointer"
+
+      track:
+        element: ".toggle-track"
+        styles:
+          width: "44px"
+          height: "24px"
+          border_radius: "12px"
+          background: "var(--border)"
+          transition: "background var(--transition)"
+
+      thumb:
+        element: ".toggle-thumb"
+        styles:
+          position: "absolute"
+          top: "2px"
+          left: "2px"
+          width: "20px"
+          height: "20px"
+          border_radius: "50%"
+          background: "#fff"
+          box_shadow: "0 1px 3px rgba(0,0,0,0.2)"
+          transition: "transform var(--transition)"
+
+      input:
+        element: ".toggle-input"
+        description: "Скрытый checkbox"
+        styles:
+          position: "absolute"
+          opacity: "0"
+          width: "0"
+          height: "0"
+
+      label:
+        element: ".toggle-label"
+        styles:
+          margin_left: "12px"
+          font_size: "0.875rem"
+          color: "var(--text)"
+          user_select: "none"
+
+      icon:
+        element: ".toggle-icon"
+        styles:
+          position: "absolute"
+          width: "14px"
+          height: "14px"
+          transition: "opacity var(--transition-fast)"
+
+    colors:
+      base_theme:
+        track_off: "var(--border)"
+        track_on: "var(--accent)"
+        thumb: "#fff"
+        thumb_shadow: "0 1px 3px rgba(0,0,0,0.2)"
+        label: "var(--text)"
+        disabled_track: "rgba(0,0,0,0.12)"
+        disabled_thumb: "rgba(0,0,0,0.26)"
+
+      dark_theme:
+        track_off: "var(--surface-5)"
+        track_on: "var(--primary-500)"
+        thumb: "#fff"
+        thumb_shadow: "0 1px 3px rgba(0,0,0,0.4)"
+        label: "var(--text-primary)"
+        disabled_track: "var(--surface-4)"
+        disabled_thumb: "var(--surface-6)"
+
+    accessibility:
+      role: "switch"
+      aria_attributes:
+        - "aria-checked: true/false"
+        - "aria-label или aria-labelledby"
+        - "aria-disabled: true (если disabled)"
+      keyboard:
+        - "Space: переключение"
+        - "Enter: переключение"
+      focus_visible: "ring: 2px solid var(--accent); offset: 2px"
+      labeling: "Связать с label через for/id или обёртку"
+
+    animations:
+      thumb_transition:
+        property: "transform"
+        duration: "0.2s"
+        timing: "ease"
+        on_value: "translateX(20px)"
+      track_transition:
+        property: "background-color"
+        duration: "0.2s"
+        timing: "ease"
+
+    css_classes:
+      - ".toggle"
+      - ".toggle-sm"
+      - ".toggle-md"
+      - ".toggle-lg"
+      - ".toggle-track"
+      - ".toggle-thumb"
+      - ".toggle-input"
+      - ".toggle-input:checked + .toggle-track"
+      - ".toggle-input:disabled + .toggle-track"
+      - ".toggle-label"
+      - ".toggle-icon"
+      - ".toggle-labeled"
+      - ".toggle-icon-theme"
+
+  # ---------- SEARCH INPUT ----------
+  search_input:
+    description: "Поле поиска с иконкой и кнопкой очистки"
+    variants:
+      - name: default
+        description: "Стандартное поле поиска"
+      - name: expandable
+        description: "Разворачивающееся по клику на иконку"
+      - name: with_dropdown
+        description: "С выпадающим списком подсказок"
+
+    sizes:
+      - sm: "height: 32px; font-size: 0.8rem; icon: 16px"
+      - md: "height: 40px; font-size: 0.875rem; icon: 20px"
+      - lg: "height: 48px; font-size: 1rem; icon: 24px"
+
+    states:
+      - empty: "Пустое поле с placeholder"
+      - typing: "Ввод текста"
+      - filled: "Есть значение (показать clear)"
+      - focus: "В фокусе"
+      - loading: "Поиск в процессе (spinner)"
+      - disabled: "Недоступно"
+
+    anatomy:
+      container:
+        element: ".search"
+        styles:
+          position: "relative"
+          display: "inline-flex"
+          align_items: "center"
+          width: "100%"
+          max_width: "400px"
+
+      input:
+        element: ".search-input"
+        styles:
+          width: "100%"
+          height: "40px"
+          padding: "0 40px 0 40px"
+          border: "1px solid var(--border)"
+          border_radius: "var(--radius)"
+          background: "var(--panel)"
+          color: "var(--text)"
+          font_size: "0.875rem"
+          transition: "all var(--transition)"
+
+      icon:
+        element: ".search-icon"
+        description: "Иконка лупы слева"
+        styles:
+          position: "absolute"
+          left: "12px"
+          width: "20px"
+          height: "20px"
+          color: "var(--muted)"
+          pointer_events: "none"
+
+      clear:
+        element: ".search-clear"
+        description: "Кнопка очистки справа"
+        styles:
+          position: "absolute"
+          right: "12px"
+          width: "20px"
+          height: "20px"
+          display: "flex"
+          align_items: "center"
+          justify_content: "center"
+          background: "transparent"
+          border: "none"
+          color: "var(--muted)"
+          cursor: "pointer"
+          opacity: "0"
+          visibility: "hidden"
+          transition: "all var(--transition-fast)"
+
+      clear_visible:
+        element: ".search.has-value .search-clear"
+        styles:
+          opacity: "1"
+          visibility: "visible"
+
+      spinner:
+        element: ".search-spinner"
+        description: "Индикатор загрузки вместо clear"
+        styles:
+          position: "absolute"
+          right: "12px"
+          width: "16px"
+          height: "16px"
+
+      dropdown:
+        element: ".search-dropdown"
+        description: "Выпадающий список подсказок"
+        styles:
+          position: "absolute"
+          top: "calc(100% + 4px)"
+          left: "0"
+          right: "0"
+          background: "var(--panel)"
+          border: "1px solid var(--border)"
+          border_radius: "var(--radius)"
+          box_shadow: "var(--shadow-lg)"
+          max_height: "300px"
+          overflow_y: "auto"
+          z_index: "100"
+
+      suggestion:
+        element: ".search-suggestion"
+        styles:
+          padding: "10px 12px"
+          cursor: "pointer"
+          transition: "background var(--transition-fast)"
+
+      highlight:
+        element: ".search-highlight"
+        description: "Подсветка совпадения в подсказке"
+        styles:
+          font_weight: "600"
+          color: "var(--accent)"
+
+    colors:
+      base_theme:
+        border: "var(--border)"
+        border_focus: "var(--accent)"
+        background: "var(--panel)"
+        text: "var(--text)"
+        placeholder: "var(--muted)"
+        icon: "var(--muted)"
+        icon_focus: "var(--accent)"
+        clear: "var(--muted)"
+        clear_hover: "var(--text)"
+        dropdown_bg: "var(--panel)"
+        suggestion_hover: "var(--accent-100)"
+        highlight: "var(--accent)"
+
+      dark_theme:
+        border: "var(--surface-6)"
+        border_focus: "var(--primary-500)"
+        background: "var(--surface-2)"
+        text: "var(--text-primary)"
+        placeholder: "var(--text-tertiary)"
+        icon: "var(--text-tertiary)"
+        icon_focus: "var(--primary-400)"
+        clear: "var(--text-tertiary)"
+        clear_hover: "var(--text-primary)"
+        dropdown_bg: "var(--surface-3)"
+        suggestion_hover: "rgba(33, 150, 243, 0.1)"
+        highlight: "var(--primary-400)"
+
+    accessibility:
+      role: "search (на container), searchbox или combobox (на input)"
+      aria_attributes:
+        - "aria-label='Search' на input"
+        - "aria-expanded: true/false (для dropdown)"
+        - "aria-controls: id выпадающего списка"
+        - "aria-activedescendant: id выбранной подсказки"
+        - "aria-autocomplete='list' или 'both'"
+      keyboard:
+        - "Escape: закрыть dropdown, очистить поле"
+        - "Arrow Down: открыть dropdown или следующая подсказка"
+        - "Arrow Up: предыдущая подсказка"
+        - "Enter: выбрать подсказку или выполнить поиск"
+      focus_visible: "box-shadow: 0 0 0 2px var(--accent)"
+
+    behavior:
+      debounce: "300ms для автокомплита"
+      min_chars: 2
+      highlight_match: true
+      keyboard_navigation: true
+
+    css_classes:
+      - ".search"
+      - ".search-sm"
+      - ".search-md"
+      - ".search-lg"
+      - ".search-input"
+      - ".search-icon"
+      - ".search-clear"
+      - ".search-spinner"
+      - ".search.has-value"
+      - ".search.loading"
+      - ".search-expandable"
+      - ".search-expandable.expanded"
+      - ".search-dropdown"
+      - ".search-suggestion"
+      - ".search-suggestion.selected"
+      - ".search-highlight"
+      - ".search-empty-state"
+
+# ==================== ОБЩИЕ УТИЛИТЫ ====================
+
+utilities:
+  animations:
+    spin:
+      keyframes: "from { transform: rotate(0deg); } to { transform: rotate(360deg); }"
+      duration: "0.8s"
+      timing: "linear"
+
+    fade_in:
+      keyframes: "from { opacity: 0; } to { opacity: 1; }"
+      duration: "0.2s"
+
+    fade_out:
+      keyframes: "from { opacity: 1; } to { opacity: 0; }"
+      duration: "0.2s"
+
+    slide_up:
+      keyframes: "from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); }"
+      duration: "0.3s"
+
+    slide_down:
+      keyframes: "from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); }"
+      duration: "0.3s"
+
+    scale_in:
+      keyframes: "from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); }"
+      duration: "0.2s"
+
+  focus_states:
+    default: "outline: 2px solid var(--accent); outline-offset: 2px"
+    ring: "box-shadow: 0 0 0 3px var(--accent-100)"
+
+  disabled_states:
+    opacity: "0.5"
+    cursor: "not-allowed"
+    pointer_events: "none"
+
+  transitions:
+    fast: "0.15s ease"
+    default: "0.2s ease"
+    slow: "0.3s ease"
+    bounce: "0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)"
+
+# ==================== РЕКОМЕНДАЦИИ ПО РЕАЛИЗАЦИИ ====================
+
+implementation_notes:
+  css_methodology: "BEM-like с префиксами компонентов"
+
+  dark_mode:
+    strategy: "CSS Variables + .dark class"
+    auto_switch: "@media (prefers-color-scheme: dark)"
+    manual_switch: ".dark class на body или :root"
+
+  responsive:
+    breakpoints:
+      sm: "640px"
+      md: "768px"
+      lg: "1024px"
+      xl: "1280px"
+    strategy: "Mobile-first с min-width queries"
+
+  accessibility_checklist:
+    - "Все интерактивные элементы доступны с клавиатуры"
+    - "Правильные ARIA роли и атрибуты"
+    - "Достаточный цветовой контраст (4.5:1 для текста)"
+    - "Focus visible states на всех focusable элементах"
+    - "Screen reader friendly labels"
+
+  performance:
+    - "Использовать CSS custom properties для тем"
+    - "Минимизировать reflows в анимациях (transform, opacity)"
+    - "GPU-ускоренные свойства для анимаций"
+    - "will-change только когда необходимо"
+
+# ==================== ВЕРСИОНИРОВАНИЕ ====================
+
+metadata:
+  version: "1.0.0"
+  created: "2025-11-23"
+  author: "UX-Ergonomics Specialist"
+  based_on:
+    - "d:\\_claude_project\\css-lab\\styles\\base\\variables.css"
+    - "d:\\_claude_project\\css-lab\\styles\\themes\\dark.css"
+    - "d:\\_claude_project\\css-lab\\styles\\components\\buttons.css"
+    - "d:\\_claude_project\\css-lab\\styles\\components\\alerts.css"
+    - "d:\\_claude_project\\css-lab\\styles\\components\\logs.css"
+  components_count: 11
+  groups:
+    - name: "Navigation"
+      components: ["tabs", "breadcrumbs", "steps"]
+    - name: "Feedback"
+      components: ["toast", "modal", "spinner"]
+    - name: "Data"
+      components: ["progress", "stats_card", "timeline"]
+    - name: "Forms"
+      components: ["toggle", "search_input"]

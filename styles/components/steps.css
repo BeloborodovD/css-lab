@@ -1,0 +1,327 @@
+/* ==================== Steps / Wizard ==================== */
+/* Пошаговый процесс / визард */
+
+/* Container */
+.steps {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  counter-reset: step;
+}
+
+/* Отдельный шаг */
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+  text-align: center;
+}
+
+/* Номер в круге */
+.step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--panel);
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+  z-index: 1;
+  transition: var(--transition);
+}
+
+/* Автоматическая нумерация */
+.step-number::before {
+  counter-increment: step;
+  content: counter(step);
+}
+
+/* Название шага */
+.step-title {
+  margin-top: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--muted);
+  transition: var(--transition);
+}
+
+/* Описание шага */
+.step-description {
+  margin-top: 4px;
+  font-size: 0.75rem;
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+/* Линия между шагами */
+.step-connector {
+  position: absolute;
+  top: 15px;
+  left: calc(50% + 20px);
+  width: calc(100% - 40px);
+  height: 2px;
+  background: var(--border);
+  transition: var(--transition);
+}
+
+/* Скрываем коннектор у последнего шага */
+.step:last-child .step-connector {
+  display: none;
+}
+
+/* ==================== Состояния ==================== */
+
+/* Завершённый шаг */
+.step.completed .step-number {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* Галочка вместо номера для завершённых */
+.step.completed .step-number::before {
+  content: '✓';
+}
+
+.step.completed .step-title {
+  color: var(--accent);
+}
+
+.step.completed .step-connector {
+  background: var(--accent);
+}
+
+/* Текущий/активный шаг */
+.step.active .step-number {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-100);
+}
+
+.step.active .step-title {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Будущий/ожидающий шаг */
+.step.pending .step-number {
+  border-color: var(--border);
+  color: var(--muted);
+}
+
+.step.pending .step-title {
+  color: var(--muted);
+}
+
+/* Ошибка */
+.step.error .step-number {
+  background: #ef4444;
+  border-color: #ef4444;
+  color: #fff;
+}
+
+.step.error .step-number::before {
+  content: '!';
+}
+
+.step.error .step-title {
+  color: #ef4444;
+}
+
+/* ==================== Размеры ==================== */
+
+/* Маленькие */
+.steps-sm .step-number {
+  width: 24px;
+  height: 24px;
+  font-size: 0.75rem;
+}
+
+.steps-sm .step-connector {
+  top: 11px;
+  left: calc(50% + 16px);
+  width: calc(100% - 32px);
+}
+
+.steps-sm .step-title {
+  font-size: 0.75rem;
+}
+
+/* Большие */
+.steps-lg .step-number {
+  width: 40px;
+  height: 40px;
+  font-size: 1rem;
+}
+
+.steps-lg .step-connector {
+  top: 19px;
+  left: calc(50% + 24px);
+  width: calc(100% - 48px);
+}
+
+.steps-lg .step-title {
+  font-size: 1rem;
+}
+
+/* ==================== Вертикальные шаги ==================== */
+
+.steps-vertical {
+  flex-direction: column;
+  gap: 0;
+}
+
+.steps-vertical .step {
+  flex-direction: row;
+  align-items: flex-start;
+  text-align: left;
+  padding-bottom: 24px;
+}
+
+.steps-vertical .step-number {
+  flex-shrink: 0;
+}
+
+.steps-vertical .step-content {
+  margin-left: 12px;
+  padding-top: 4px;
+}
+
+.steps-vertical .step-title {
+  margin-top: 0;
+}
+
+.steps-vertical .step-connector {
+  top: 36px;
+  left: 15px;
+  width: 2px;
+  height: calc(100% - 36px);
+}
+
+.steps-vertical .step:last-child {
+  padding-bottom: 0;
+}
+
+/* ==================== С иконками ==================== */
+
+.step-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--panel);
+  color: var(--muted);
+  z-index: 1;
+  transition: var(--transition);
+}
+
+.step-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.step.completed .step-icon {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.step.active .step-icon {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-100);
+}
+
+/* ==================== Clickable Steps ==================== */
+
+.steps-clickable .step {
+  cursor: pointer;
+}
+
+.steps-clickable .step:hover .step-number {
+  border-color: var(--accent);
+}
+
+.steps-clickable .step:hover .step-title {
+  color: var(--accent);
+}
+
+/* ==================== Dark Theme ==================== */
+
+.dark .step-number {
+  background: var(--surface-3);
+  border-color: var(--surface-6);
+  color: var(--text-tertiary);
+}
+
+.dark .step-title {
+  color: var(--text-tertiary);
+}
+
+.dark .step-connector {
+  background: var(--surface-6);
+}
+
+/* Completed dark */
+.dark .step.completed .step-number {
+  background: var(--primary-600);
+  border-color: var(--primary-600);
+  color: #fff;
+}
+
+.dark .step.completed .step-title {
+  color: var(--primary-400);
+}
+
+.dark .step.completed .step-connector {
+  background: var(--primary-600);
+}
+
+/* Active dark */
+.dark .step.active .step-number {
+  border-color: var(--primary-500);
+  color: var(--primary-400);
+  box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.2);
+}
+
+.dark .step.active .step-title {
+  color: var(--text-primary);
+}
+
+/* Pending dark */
+.dark .step.pending .step-number {
+  border-color: var(--surface-6);
+  color: var(--text-disabled);
+}
+
+.dark .step.pending .step-title {
+  color: var(--text-disabled);
+}
+
+/* Error dark */
+.dark .step.error .step-number {
+  background: var(--error);
+  border-color: var(--error);
+}
+
+.dark .step.error .step-title {
+  color: var(--error);
+}
+
+/* Clickable dark */
+.dark .steps-clickable .step:hover .step-number {
+  border-color: var(--primary-500);
+}
+
+.dark .steps-clickable .step:hover .step-title {
+  color: var(--primary-400);
+}

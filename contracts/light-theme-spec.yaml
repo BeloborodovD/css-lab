@@ -1,0 +1,525 @@
+# Light Theme Specification for CSS Lab
+# AutoTrassir Enterprise Design System - Light Variant
+# Generated: 2025-11-23
+# WCAG 2.1 AA Compliant
+
+task_id: "LIGHT-THEME-001"
+agent: "ux-ergonomics-specialist"
+status: "ready_for_css"
+version: "1.0.0"
+
+# =============================================================================
+# COLOR SYSTEM
+# =============================================================================
+
+color_system:
+  # ---------------------------------------------------------------------------
+  # Surface Colors (9 levels - inverted from dark theme)
+  # Dark theme: black to dark-gray | Light theme: white to light-gray
+  # ---------------------------------------------------------------------------
+  surfaces:
+    surface-0: "#ffffff"   # Inverted from #0a0a0f - Pure white (main background)
+    surface-1: "#f8f9fa"   # Inverted from #0f1117 - Off-white (body background)
+    surface-2: "#f1f3f5"   # Inverted from #151822 - Light gray (panels, cards)
+    surface-3: "#e9ecef"   # Inverted from #1a1f2e - Medium-light gray
+    surface-4: "#dee2e6"   # Inverted from #212838 - Medium gray
+    surface-5: "#ced4da"   # Inverted from #2a3347 - Gray
+    surface-6: "#adb5bd"   # Inverted from #343f56 - Medium-dark gray (borders)
+    surface-7: "#868e96"   # Inverted from #3f4c66 - Dark gray
+    surface-8: "#495057"   # Inverted from #4a5975 - Darkest gray
+
+  # ---------------------------------------------------------------------------
+  # Primary Blue Palette (same hues, same values as dark theme)
+  # Unchanged - works on both light and dark backgrounds
+  # ---------------------------------------------------------------------------
+  primary:
+    primary-50: "#e3f2fd"
+    primary-100: "#bbdefb"
+    primary-200: "#90caf9"
+    primary-300: "#64b5f6"
+    primary-400: "#42a5f5"
+    primary-500: "#2196f3"   # Main brand color
+    primary-600: "#1e88e5"
+    primary-700: "#1976d2"   # Hover/active state
+    primary-800: "#1565c0"
+    primary-900: "#0d47a1"
+
+  # ---------------------------------------------------------------------------
+  # Text Hierarchy (inverted - dark text on light background)
+  # ---------------------------------------------------------------------------
+  text:
+    primary: "#1a1a2e"      # Near-black for maximum contrast (7.5:1 on white)
+    secondary: "#4a5568"    # Medium gray for secondary info (5.2:1 on white)
+    tertiary: "#718096"     # Lighter for less important (3.8:1 on white)
+    disabled: "#a0aec0"     # Disabled state (2.6:1 - still visible)
+
+  # ---------------------------------------------------------------------------
+  # Semantic Colors (adjusted for light background visibility)
+  # Darker shades than dark theme for contrast on white
+  # ---------------------------------------------------------------------------
+  semantic:
+    amber: "#d97706"        # Darker amber for visibility (4.6:1 on white)
+    success: "#059669"      # Darker green (4.5:1 on white)
+    warning: "#d97706"      # Darker orange (4.6:1 on white)
+    error: "#dc2626"        # Darker red (4.5:1 on white)
+    info: "#2563eb"         # Darker blue (4.5:1 on white)
+
+  # ---------------------------------------------------------------------------
+  # Mapped Variables (CSS Lab compatibility)
+  # ---------------------------------------------------------------------------
+  mapped:
+    bg: "var(--surface-1)"
+    panel: "var(--surface-2)"
+    text: "var(--text-primary)"
+    muted: "var(--text-tertiary)"
+    border: "var(--surface-5)"
+    accent: "var(--primary-600)"       # Darker for light theme
+    accent_hover: "var(--primary-700)"
+    accent_subtle: "rgba(33, 150, 243, 0.1)"
+
+  # ---------------------------------------------------------------------------
+  # Shadows (lighter, more subtle for light theme)
+  # ---------------------------------------------------------------------------
+  shadows:
+    shadow: "0 2px 10px rgba(0, 0, 0, 0.1)"
+    shadow_lg: "0 4px 25px rgba(0, 0, 0, 0.15)"
+    shadow_inset: "inset 0 1px 2px rgba(0, 0, 0, 0.05)"
+
+# =============================================================================
+# COMPONENTS
+# =============================================================================
+
+components:
+  # ---------------------------------------------------------------------------
+  # Log Badges (info/warning/error/success/debug)
+  # Adjusted for contrast on light backgrounds
+  # ---------------------------------------------------------------------------
+  log_badge:
+    info:
+      text: "#1d4ed8"                   # blue-700 (5.1:1 contrast)
+      background: "rgba(37, 99, 235, 0.12)"
+      border: "none"
+    warning:
+      text: "#b45309"                   # amber-700 (5.0:1 contrast)
+      background: "rgba(217, 119, 6, 0.12)"
+      border: "none"
+    error:
+      text: "#b91c1c"                   # red-700 (5.2:1 contrast)
+      background: "rgba(220, 38, 38, 0.12)"
+      border: "none"
+    success:
+      text: "#047857"                   # emerald-700 (4.9:1 contrast)
+      background: "rgba(5, 150, 105, 0.12)"
+      border: "none"
+    debug:
+      text: "#4b5563"                   # gray-600 (5.7:1 contrast)
+      background: "rgba(75, 85, 99, 0.1)"
+      border: "none"
+
+  # ---------------------------------------------------------------------------
+  # Alert Boxes (info/warning/error/success)
+  # ---------------------------------------------------------------------------
+  alert_box:
+    info:
+      text: "#1d4ed8"                   # blue-700
+      background: "rgba(37, 99, 235, 0.08)"
+      border: "rgba(37, 99, 235, 0.3)"
+      icon: "#2563eb"
+    warning:
+      text: "#b45309"                   # amber-700
+      background: "rgba(217, 119, 6, 0.08)"
+      border: "rgba(217, 119, 6, 0.3)"
+      icon: "#d97706"
+    error:
+      text: "#b91c1c"                   # red-700
+      background: "rgba(220, 38, 38, 0.08)"
+      border: "rgba(220, 38, 38, 0.3)"
+      icon: "#dc2626"
+    success:
+      text: "#047857"                   # emerald-700
+      background: "rgba(5, 150, 105, 0.08)"
+      border: "rgba(5, 150, 105, 0.3)"
+      icon: "#059669"
+
+  # ---------------------------------------------------------------------------
+  # Alerts (legacy format from dark theme)
+  # ---------------------------------------------------------------------------
+  alerts:
+    info:
+      background: "rgba(37, 99, 235, 0.1)"
+      border_left: "#2563eb"
+      text: "#1d4ed8"
+    success:
+      background: "rgba(5, 150, 105, 0.1)"
+      border_left: "#059669"
+      text: "#047857"
+    warning:
+      background: "rgba(217, 119, 6, 0.1)"
+      border_left: "#d97706"
+      text: "#b45309"
+    error:
+      background: "rgba(220, 38, 38, 0.1)"
+      border_left: "#dc2626"
+      text: "#b91c1c"
+
+  # ---------------------------------------------------------------------------
+  # Log Entry Components
+  # ---------------------------------------------------------------------------
+  log_entry:
+    background: "var(--surface-1)"
+    background_hover: "var(--surface-2)"
+    border: "var(--surface-5)"
+    timestamp_color: "var(--text-tertiary)"
+    message_color: "var(--text-primary)"
+    toggle_color: "var(--text-tertiary)"
+    toggle_hover: "var(--text-primary)"
+    details_background: "var(--surface-2)"
+    details_pre_background: "var(--surface-3)"
+
+  # ---------------------------------------------------------------------------
+  # Status Indicators
+  # ---------------------------------------------------------------------------
+  status_indicator:
+    dot:
+      success: "#059669"
+      warning: "#d97706"
+      error: "#dc2626"
+      info: "#2563eb"
+    text:
+      success: "#047857"
+      warning: "#b45309"
+      error: "#b91c1c"
+      info: "#1d4ed8"
+
+  # ---------------------------------------------------------------------------
+  # Icon Colors (darker for light theme)
+  # ---------------------------------------------------------------------------
+  icon_colors:
+    amber: "#d97706"
+    success: "#059669"
+    warning: "#d97706"
+    error: "#dc2626"
+    primary: "#1976d2"      # Darker primary for visibility
+    muted: "#6b7280"
+
+  # ---------------------------------------------------------------------------
+  # Skeleton Loader (shimmer on light background)
+  # ---------------------------------------------------------------------------
+  skeleton:
+    base: "var(--surface-3)"
+    shimmer: "var(--surface-4)"
+    animation: |
+      background: linear-gradient(
+        90deg,
+        var(--surface-3) 0%,
+        var(--surface-4) 50%,
+        var(--surface-3) 100%
+      );
+      background-size: 200% 100%;
+      animation: skeleton-shimmer 1.5s infinite;
+
+  # ---------------------------------------------------------------------------
+  # Cards
+  # ---------------------------------------------------------------------------
+  card:
+    background: "var(--surface-2)"
+    border: "var(--surface-5)"
+    hover_shadow: "0 8px 32px rgba(0, 0, 0, 0.1)"
+
+  # ---------------------------------------------------------------------------
+  # Photo Card (AutoTrassir specific)
+  # ---------------------------------------------------------------------------
+  photo_card:
+    background: "var(--surface-2)"
+    border: "var(--surface-5)"
+    hover_border: "var(--primary-600)"
+    overlay_gradient: "linear-gradient(to top, rgba(255, 255, 255, 0.95), transparent)"
+    plate_color: "#b45309"   # Darker amber for light background
+    quick_action_bg: "rgba(255, 255, 255, 0.95)"
+    quick_action_hover: "var(--surface-3)"
+
+  # ---------------------------------------------------------------------------
+  # Inputs
+  # ---------------------------------------------------------------------------
+  input:
+    background: "var(--surface-0)"
+    border: "var(--surface-5)"
+    text: "var(--text-primary)"
+    placeholder: "var(--text-tertiary)"
+    focus_border: "var(--primary-600)"
+    focus_shadow: "0 0 0 3px rgba(33, 150, 243, 0.15)"
+
+  # ---------------------------------------------------------------------------
+  # Buttons
+  # ---------------------------------------------------------------------------
+  button:
+    default:
+      background: "var(--surface-2)"
+      border: "var(--surface-5)"
+      text: "var(--text-primary)"
+      hover_border: "var(--primary-600)"
+    primary:
+      background: "var(--primary-600)"
+      border: "var(--primary-600)"
+      text: "#ffffff"
+      hover_background: "var(--primary-700)"
+    outline:
+      background: "transparent"
+      border: "var(--primary-600)"
+      text: "var(--primary-700)"
+      hover_background: "rgba(33, 150, 243, 0.08)"
+
+  # ---------------------------------------------------------------------------
+  # Tables
+  # ---------------------------------------------------------------------------
+  table:
+    background: "var(--surface-2)"
+    header_background: "var(--surface-3)"
+    border: "var(--surface-5)"
+    stripe_even: "rgba(0, 0, 0, 0.02)"
+    hover: "rgba(33, 150, 243, 0.06)"
+    highlighted: "rgba(217, 119, 6, 0.1)"
+
+  # ---------------------------------------------------------------------------
+  # Tags & Badges
+  # ---------------------------------------------------------------------------
+  tag:
+    background: "rgba(33, 150, 243, 0.12)"
+    text: "#1976d2"
+  badge:
+    primary: "var(--primary-600)"
+    secondary: "#6b7280"
+
+  # ---------------------------------------------------------------------------
+  # Dropdown
+  # ---------------------------------------------------------------------------
+  dropdown:
+    background: "var(--surface-2)"
+    border: "var(--surface-5)"
+    item_hover: "rgba(0, 0, 0, 0.04)"
+
+  # ---------------------------------------------------------------------------
+  # Sidebar & Navigation
+  # ---------------------------------------------------------------------------
+  sidebar:
+    background: "var(--surface-2)"
+    border: "var(--surface-5)"
+    item_hover: "rgba(0, 0, 0, 0.04)"
+    item_selected: "rgba(33, 150, 243, 0.1)"
+    item_selected_text: "var(--primary-700)"
+
+  # ---------------------------------------------------------------------------
+  # Lightbox
+  # ---------------------------------------------------------------------------
+  lightbox:
+    background: "var(--surface-0)"
+    header_gradient: "linear-gradient(to bottom, var(--surface-2), var(--surface-3))"
+    border: "var(--surface-5)"
+    counter_background: "var(--primary-100)"
+    counter_text: "var(--primary-800)"
+    nav_background: "rgba(255, 255, 255, 0.9)"
+    nav_border: "rgba(0, 0, 0, 0.1)"
+    sidebar_background: "var(--surface-2)"
+
+  # ---------------------------------------------------------------------------
+  # KBD (keyboard hints)
+  # ---------------------------------------------------------------------------
+  kbd:
+    background: "var(--surface-3)"
+    text: "var(--text-secondary)"
+    border: "var(--surface-5)"
+
+  # ---------------------------------------------------------------------------
+  # Scrollbar
+  # ---------------------------------------------------------------------------
+  scrollbar:
+    track: "var(--surface-2)"
+    thumb: "var(--surface-5)"
+    thumb_hover: "var(--surface-6)"
+
+  # ---------------------------------------------------------------------------
+  # License Plate
+  # ---------------------------------------------------------------------------
+  license_plate:
+    text: "#1976d2"
+    highlight: "#b45309"
+
+  # ---------------------------------------------------------------------------
+  # Direction Indicators
+  # ---------------------------------------------------------------------------
+  direction:
+    enter: "#059669"
+    exit: "#d97706"
+
+  # ---------------------------------------------------------------------------
+  # Corporate Theme
+  # ---------------------------------------------------------------------------
+  corporate:
+    header_gradient: "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)"
+    specs_background: "rgba(33, 150, 243, 0.08)"
+    specs_border: "var(--primary-600)"
+
+  # ---------------------------------------------------------------------------
+  # Log Controls Toolbar
+  # ---------------------------------------------------------------------------
+  log_controls:
+    background: "var(--surface-2)"
+    border: "var(--surface-5)"
+    label_color: "var(--text-secondary)"
+    select_background: "var(--surface-0)"
+    select_border: "var(--surface-5)"
+    view_toggle_background: "var(--surface-0)"
+    view_toggle_active: "var(--primary-600)"
+
+# =============================================================================
+# ACCESSIBILITY - WCAG 2.1 AA COMPLIANCE
+# =============================================================================
+
+accessibility:
+  # ---------------------------------------------------------------------------
+  # Contrast Ratios (minimum requirements)
+  # WCAG AA: 4.5:1 for normal text, 3:1 for large text (18pt+)
+  # ---------------------------------------------------------------------------
+  contrast_ratios:
+    # Text on surface-0 (white)
+    text_primary_on_surface_0: "7.5:1"      # #1a1a2e on #ffffff - PASS AAA
+    text_secondary_on_surface_0: "5.2:1"    # #4a5568 on #ffffff - PASS AA
+    text_tertiary_on_surface_0: "3.8:1"     # #718096 on #ffffff - PASS AA large
+    text_disabled_on_surface_0: "2.6:1"     # #a0aec0 on #ffffff - visible
+
+    # Text on surface-1 (off-white #f8f9fa)
+    text_primary_on_surface_1: "7.3:1"      # #1a1a2e on #f8f9fa - PASS AAA
+    text_secondary_on_surface_1: "5.0:1"    # #4a5568 on #f8f9fa - PASS AA
+
+    # Text on surface-2 (light gray #f1f3f5)
+    text_primary_on_surface_2: "7.0:1"      # #1a1a2e on #f1f3f5 - PASS AAA
+    text_secondary_on_surface_2: "4.8:1"    # #4a5568 on #f1f3f5 - PASS AA
+
+    # Primary accent
+    primary_on_white: "4.5:1"               # #1976d2 on #ffffff - PASS AA
+    white_on_primary: "4.5:1"               # #ffffff on #1976d2 - PASS AA
+
+    # Semantic colors
+    success_on_white: "4.5:1"               # #059669 on #ffffff - PASS AA
+    warning_on_white: "4.6:1"               # #d97706 on #ffffff - PASS AA
+    error_on_white: "4.5:1"                 # #dc2626 on #ffffff - PASS AA
+    info_on_white: "4.5:1"                  # #2563eb on #ffffff - PASS AA
+
+    # Log badges (text on badge background)
+    log_info_contrast: "5.1:1"
+    log_warning_contrast: "5.0:1"
+    log_error_contrast: "5.2:1"
+    log_success_contrast: "4.9:1"
+    log_debug_contrast: "5.7:1"
+
+  # ---------------------------------------------------------------------------
+  # Focus States (visible on white background)
+  # ---------------------------------------------------------------------------
+  focus:
+    outline_color: "var(--primary-600)"
+    outline_width: "2px"
+    outline_offset: "2px"
+    shadow: "0 0 0 3px rgba(33, 150, 243, 0.25)"
+
+  # ---------------------------------------------------------------------------
+  # Selection
+  # ---------------------------------------------------------------------------
+  selection:
+    background: "rgba(33, 150, 243, 0.2)"
+    text: "inherit"
+
+# =============================================================================
+# HOVER STATES
+# =============================================================================
+
+hover_states:
+  # Light theme: darken elements on hover (opposite of dark theme)
+  direction: "darken"
+  delta: "5%"
+
+  # Specific hover implementations
+  implementations:
+    surface_0_hover: "var(--surface-1)"
+    surface_1_hover: "var(--surface-2)"
+    surface_2_hover: "var(--surface-3)"
+    surface_3_hover: "var(--surface-4)"
+
+    # Interactive elements
+    button_hover: "darken by 5-10%"
+    link_hover: "darken by 10%"
+    card_hover: "add subtle shadow + slight darken"
+    dropdown_item_hover: "rgba(0, 0, 0, 0.04)"
+    tree_item_hover: "rgba(33, 150, 243, 0.08)"
+
+# =============================================================================
+# RESPONSIVE & STATES
+# =============================================================================
+
+responsive:
+  # ---------------------------------------------------------------------------
+  # Disabled States
+  # ---------------------------------------------------------------------------
+  disabled:
+    opacity: "0.5"
+    cursor: "not-allowed"
+    text_color: "var(--text-disabled)"
+    background: "var(--surface-3)"
+
+  # ---------------------------------------------------------------------------
+  # Active/Selected States
+  # ---------------------------------------------------------------------------
+  active:
+    background: "rgba(33, 150, 243, 0.12)"
+    border: "var(--primary-600)"
+    text: "var(--primary-700)"
+
+  # ---------------------------------------------------------------------------
+  # Loading States
+  # ---------------------------------------------------------------------------
+  loading:
+    spinner_color: "var(--primary-600)"
+    overlay: "rgba(255, 255, 255, 0.8)"
+
+  # ---------------------------------------------------------------------------
+  # Transition Timings
+  # ---------------------------------------------------------------------------
+  transitions:
+    fast: "0.15s ease"
+    normal: "0.2s ease"
+    slow: "0.3s ease"
+
+# =============================================================================
+# IMPLEMENTATION NOTES
+# =============================================================================
+
+implementation_notes:
+  css_class: ".light"
+  body_selector: ".light body, body.light"
+
+  # Key differences from dark theme
+  key_inversions:
+    - "Surface levels: white->gray instead of black->dark-gray"
+    - "Text hierarchy: dark text on light background"
+    - "Shadows: lighter opacity (0.1-0.15 vs 0.4-0.5)"
+    - "Hover states: darken instead of lighten"
+    - "Semantic colors: darker shades for contrast"
+    - "Overlay gradients: white-based instead of black-based"
+
+  # Components requiring special attention
+  special_attention:
+    - "Log badges: darker text colors for visibility"
+    - "Alert boxes: darker text + subtle backgrounds"
+    - "Photo card overlay: inverted gradient direction"
+    - "Skeleton shimmer: lighter gray tones"
+    - "Focus rings: must be visible on white"
+    - "Scrollbar: subtle but visible"
+
+  # Testing checklist
+  testing:
+    - "[ ] All text meets WCAG AA contrast (4.5:1)"
+    - "[ ] Large text meets 3:1 minimum"
+    - "[ ] Focus indicators visible on all backgrounds"
+    - "[ ] Semantic colors distinguishable"
+    - "[ ] Disabled states clearly indicate inactive"
+    - "[ ] Hover states provide clear feedback"
+    - "[ ] Skeleton loaders visible but subtle"

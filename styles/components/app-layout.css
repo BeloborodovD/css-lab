@@ -1,0 +1,441 @@
+/* ==================== App Layout ==================== */
+/* Full page layout with sidebars, main content, and fixed footer */
+/* Panels PUSH content (not overlay) - main area always interactive */
+
+/* === CSS Custom Properties for Panel State === */
+:root {
+  --sidebar-width: 280px;
+  --sidebar-transition: 0.3s ease;
+}
+
+/* === Layout Container === */
+.app-layout {
+  display: flex;
+  min-height: calc(100vh - var(--header-h, 64px));
+  padding-bottom: 60px; /* Space for fixed footer */
+  background: var(--bg);
+}
+
+/* === Sidebars === */
+/* Fixed position but content adjusts via margins */
+.app-sidebar {
+  position: fixed;
+  top: var(--header-h, 64px);
+  bottom: 60px;
+  width: var(--sidebar-width);
+  height: auto;
+  padding: 16px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--panel);
+  z-index: 100;
+  box-shadow: var(--shadow-lg);
+  transition: transform var(--sidebar-transition);
+}
+
+.app-sidebar.left {
+  left: 0;
+  border-right: 1px solid var(--border);
+  transform: translateX(-100%);
+}
+
+.app-sidebar.right {
+  right: 0;
+  border-left: 1px solid var(--border);
+  transform: translateX(100%);
+}
+
+.app-sidebar.open {
+  transform: translateX(0);
+}
+
+/* Sidebar overlay - visual only, does NOT block interaction */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  top: var(--header-h, 64px);
+  bottom: 60px;
+  background: rgba(0, 0, 0, 0.1);
+  z-index: 99;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none; /* CRITICAL: Never block content interaction */
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.sidebar-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: none; /* Always passthrough clicks */
+}
+
+/* === Main Content === */
+/* Dynamic margins push content when sidebars open */
+.app-content {
+  flex: 1;
+  min-width: 0;
+  padding: 24px;
+  overflow-y: auto;
+  margin-left: 0;
+  margin-right: 0;
+  transition: margin-left var(--sidebar-transition), margin-right var(--sidebar-transition);
+}
+
+/* Content shifts when LEFT sidebar opens */
+.app-layout:has(.app-sidebar.left.open) .app-content {
+  margin-left: var(--sidebar-width);
+}
+
+/* Content shifts when RIGHT sidebar opens */
+.app-layout:has(.app-sidebar.right.open) .app-content {
+  margin-right: var(--sidebar-width);
+}
+
+/* Both sidebars open - content squeezed from both sides */
+.app-layout:has(.app-sidebar.left.open):has(.app-sidebar.right.open) .app-content {
+  margin-left: var(--sidebar-width);
+  margin-right: var(--sidebar-width);
+}
+
+/* Fallback for browsers without :has() support */
+/* Use JavaScript to add these classes to .app-content */
+.app-content.sidebar-left-open {
+  margin-left: var(--sidebar-width);
+}
+
+.app-content.sidebar-right-open {
+  margin-right: var(--sidebar-width);
+}
+
+.app-content.sidebar-both-open {
+  margin-left: var(--sidebar-width);
+  margin-right: var(--sidebar-width);
+}
+
+.app-content .container {
+  max-width: 100%;
+  transition: max-width 0.3s ease;
+}
+
+/* === Fixed Site Footer === */
+.site-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1000;
+  background: var(--panel);
+  border-top: 1px solid var(--border);
+  padding: 12px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+}
+
+.site-footer .footer-left,
+.site-footer .footer-center,
+.site-footer .footer-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.site-footer .footer-nav {
+  display: flex;
+  gap: 20px;
+}
+
+.site-footer .footer-nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.8rem;
+  transition: var(--transition);
+}
+
+.site-footer .footer-nav a:hover {
+  color: var(--accent);
+}
+
+.site-footer .footer-copyright {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.site-footer .footer-version {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  background: var(--bg);
+  border-radius: 10px;
+  color: var(--muted);
+}
+
+.site-footer .footer-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.site-footer .footer-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4caf50;
+}
+
+/* === Width Control Button === */
+.width-control {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  z-index: 1001;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition), transform var(--transition), right var(--sidebar-transition);
+}
+
+/* Width control shifts when right sidebar opens */
+.app-layout:has(.app-sidebar.right.open) ~ .width-control,
+body:has(.app-sidebar.right.open) .width-control {
+  right: calc(var(--sidebar-width) + 20px);
+}
+
+/* Fallback class for JS */
+.width-control.sidebar-right-open {
+  right: calc(var(--sidebar-width) + 20px);
+}
+
+.width-control:hover {
+  background: var(--accent-100);
+  transform: scale(1.05);
+}
+
+.width-control:active {
+  transform: scale(0.95);
+}
+
+.width-control svg,
+.width-control i {
+  width: 20px;
+  height: 20px;
+  color: var(--text);
+}
+
+/* Width control icons - show based on current mode */
+.width-control .icon-fixed,
+.width-control .icon-fluid,
+.width-control .icon-full {
+  display: none;
+}
+
+body.width-fixed .width-control .icon-fixed {
+  display: block;
+}
+
+body.width-fluid .width-control .icon-fluid {
+  display: block;
+}
+
+body.width-full .width-control .icon-full {
+  display: block;
+}
+
+/* === Width Modes (applied to .main.container) === */
+body.width-fixed .main.container {
+  max-width: 1920px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+body.width-fluid .main.container {
+  max-width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+body.width-full .main.container {
+  max-width: 100%;
+}
+
+/* === Demo App Layout (self-contained in demo card) === */
+.demo-app-layout {
+  display: flex;
+  min-height: 100%;
+  background: var(--bg);
+}
+
+.demo-app-sidebar {
+  width: 180px;
+  min-width: 180px;
+  padding: 12px;
+  background: var(--panel);
+  overflow: hidden;
+  transition: width var(--transition-slow), min-width var(--transition-slow), opacity var(--transition);
+  flex-shrink: 0;
+}
+
+.demo-app-sidebar.left {
+  border-right: 1px solid var(--border);
+}
+
+.demo-app-sidebar.right {
+  border-left: 1px solid var(--border);
+}
+
+.demo-app-sidebar.collapsed {
+  width: 0;
+  min-width: 0;
+  padding: 0;
+  opacity: 0;
+  overflow: hidden;
+  border-width: 0;
+}
+
+.demo-app-content {
+  flex: 1;
+  min-width: 0;
+  padding: 16px;
+}
+
+/* === Dark Theme Support === */
+.dark .app-layout {
+  background: var(--surface-1);
+}
+
+.dark .app-sidebar {
+  background: var(--surface-2);
+  border-color: var(--surface-6);
+}
+
+.dark .app-sidebar.left {
+  border-right-color: var(--surface-6);
+}
+
+.dark .app-sidebar.right {
+  border-left-color: var(--surface-6);
+}
+
+.dark .site-footer {
+  background: var(--surface-2);
+  border-top-color: var(--surface-6);
+}
+
+.dark .site-footer .footer-nav a {
+  color: var(--text-secondary);
+}
+
+.dark .site-footer .footer-nav a:hover {
+  color: var(--primary-400);
+}
+
+.dark .site-footer .footer-copyright,
+.dark .site-footer .footer-status {
+  color: var(--text-tertiary);
+}
+
+.dark .site-footer .footer-version {
+  background: var(--surface-4);
+  color: var(--text-tertiary);
+}
+
+.dark .width-control {
+  background: var(--surface-3);
+  border-color: var(--surface-6);
+}
+
+.dark .width-control:hover {
+  background: var(--surface-4);
+}
+
+.dark .width-control svg,
+.dark .width-control i {
+  color: var(--text-primary);
+}
+
+.dark .demo-app-layout {
+  background: var(--surface-1);
+}
+
+.dark .demo-app-sidebar {
+  background: var(--surface-2);
+  border-color: var(--surface-6);
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+  /* On mobile: sidebars overlay content instead of pushing */
+  .app-sidebar {
+    width: 85vw;
+    max-width: 300px;
+  }
+
+  /* Disable content pushing on mobile - sidebars overlay */
+  .app-layout:has(.app-sidebar.left.open) .app-content,
+  .app-layout:has(.app-sidebar.right.open) .app-content,
+  .app-layout:has(.app-sidebar.left.open):has(.app-sidebar.right.open) .app-content,
+  .app-content.sidebar-left-open,
+  .app-content.sidebar-right-open,
+  .app-content.sidebar-both-open {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  /* Enable overlay for closing sidebars on mobile */
+  .sidebar-overlay {
+    background: rgba(0, 0, 0, 0.4);
+    pointer-events: auto; /* Allow click to close on mobile */
+  }
+
+  .sidebar-overlay.visible {
+    pointer-events: auto;
+  }
+
+  .width-control {
+    bottom: 70px;
+    right: 16px;
+    width: 44px;
+    height: 44px;
+  }
+
+  /* Width control doesn't shift on mobile */
+  .app-layout:has(.app-sidebar.right.open) ~ .width-control,
+  body:has(.app-sidebar.right.open) .width-control,
+  .width-control.sidebar-right-open {
+    right: 16px;
+  }
+
+  .demo-app-layout {
+    flex-direction: column;
+  }
+
+  .demo-app-sidebar {
+    width: 100% !important;
+    min-width: 100% !important;
+    border-right: none !important;
+    border-left: none !important;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .demo-app-sidebar.collapsed {
+    height: 0;
+    border-bottom: none;
+  }
+}
+
+/* Tablet: narrower sidebars, still push content */
+@media (min-width: 769px) and (max-width: 1024px) {
+  :root {
+    --sidebar-width: 240px;
+  }
+}

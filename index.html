@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Lab - Style Library</title>
+  <link rel="stylesheet" href="/styles/index.css">
+  <style>
+    /* Scroll Progress Bar */
+    .scroll-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      width: 0%;
+      background: var(--accent);
+      transition: width 0.1s ease-out;
+      z-index: 10;
+    }
+    .dark .scroll-progress {
+      background: var(--primary-500, #3b82f6);
+    }
+
+    /* Body padding for fixed footer */
+    body {
+      padding-bottom: 70px;
+    }
+
+    /* Theme toggle icons */
+    #theme-toggle .icon-dark { display: none; }
+    .dark #theme-toggle .icon-light { display: none; }
+    .dark #theme-toggle .icon-dark { display: block; }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="scroll-progress"></div>
+    <div class="header-left">
+      <!-- Burger menu for left sidebar -->
+      <button class="btn btn-icon" id="burger-menu" title="Меню компонентов">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18"/><path d="M3 6h18"/><path d="M3 18h18"/></svg>
+      </button>
+      <span class="logo">CSS<span class="logo-accent">Lab</span></span>
+    </div>
+
+    <div class="search-bar">
+      <input type="text" class="input" placeholder="Поиск компонентов...">
+      <button class="btn btn-primary">Найти</button>
+    </div>
+
+    <div class="header-right">
+      <!-- Info panel toggle -->
+      <button class="btn btn-icon" id="info-toggle" title="Панель информации">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+      </button>
+      <!-- Theme toggle -->
+      <button class="btn btn-icon" id="theme-toggle" title="Сменить тему">
+        <svg class="icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2"/><path d="M12 21v2"/><path d="M4.22 4.22l1.42 1.42"/><path d="M18.36 18.36l1.42 1.42"/><path d="M1 12h2"/><path d="M21 12h2"/><path d="M4.22 19.78l1.42-1.42"/><path d="M18.36 5.64l1.42-1.42"/></svg>
+        <svg class="icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <div class="dropdown">
+        <button class="btn btn-icon dropdown-trigger">⚙️</button>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item">Настройки</a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">Выход</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- App Layout Wrapper -->
+  <div class="app-layout">
+    <!-- Left Sidebar - Navigation -->
+    <aside class="app-sidebar left" id="left-sidebar">
+      <div class="sidebar-header">
+        <h4 class="sidebar-title">Компоненты</h4>
+        <button class="sidebar-close" id="toggle-left">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+      </div>
+      <div class="sidebar-body">
+        <ul class="sidebar-nav">
+          <li class="sidebar-nav-item"><a href="#buttons" class="sidebar-nav-link">Buttons</a></li>
+          <li class="sidebar-nav-item"><a href="#cards" class="sidebar-nav-link">Cards</a></li>
+          <li class="sidebar-nav-item"><a href="#inputs" class="sidebar-nav-link">Inputs</a></li>
+          <li class="sidebar-nav-item"><a href="#badges" class="sidebar-nav-link">Badges</a></li>
+          <li class="sidebar-nav-item"><a href="#tree" class="sidebar-nav-link">Tree View</a></li>
+          <li class="sidebar-nav-item"><a href="#pagination" class="sidebar-nav-link">Pagination</a></li>
+          <li class="sidebar-nav-item"><a href="#alerts" class="sidebar-nav-link">Alerts</a></li>
+          <li class="sidebar-nav-item"><a href="#table" class="sidebar-nav-link">Table</a></li>
+          <li class="sidebar-nav-item"><a href="#logs" class="sidebar-nav-link">Log Viewer</a></li>
+          <li class="sidebar-nav-item"><a href="#tabs" class="sidebar-nav-link">Tabs</a></li>
+          <li class="sidebar-nav-item"><a href="#breadcrumbs" class="sidebar-nav-link">Breadcrumbs</a></li>
+          <li class="sidebar-nav-item"><a href="#steps" class="sidebar-nav-link">Steps</a></li>
+          <li class="sidebar-nav-item"><a href="#progress" class="sidebar-nav-link">Progress</a></li>
+          <li class="sidebar-nav-item"><a href="#stats" class="sidebar-nav-link">Stats</a></li>
+          <li class="sidebar-nav-item"><a href="#timeline" class="sidebar-nav-link">Timeline</a></li>
+          <li class="sidebar-nav-item"><a href="#toast" class="sidebar-nav-link">Toast</a></li>
+          <li class="sidebar-nav-item"><a href="#toggle" class="sidebar-nav-link">Toggle</a></li>
+          <li class="sidebar-nav-item"><a href="#search" class="sidebar-nav-link">Search</a></li>
+          <li class="sidebar-nav-item"><a href="#spinner" class="sidebar-nav-link">Spinner</a></li>
+          <li class="sidebar-nav-item"><a href="#animations" class="sidebar-nav-link">Animations</a></li>
+          <li class="sidebar-nav-item"><a href="#modal" class="sidebar-nav-link">Modal</a></li>
+          <li class="sidebar-nav-item"><a href="#tooltip" class="sidebar-nav-link">Tooltip</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="app-content">
+      <div class="container">
+        <h1 class="mb-4">CSS Lab - Библиотека стилей</h1>
+        <p class="text-muted mb-4">Собрано из проектов: mdm_terms, autoTrassir</p>
+
+        <!-- Buttons Section -->
+    <section id="buttons" class="mb-4">
+      <h2 class="mb-2">Buttons</h2>
+      <div class="flex gap-2 flex-wrap mb-2">
+        <button class="btn">Default</button>
+        <button class="btn btn-primary">Primary</button>
+        <button class="btn btn-outline">Outline</button>
+        <button class="btn btn-ghost">Ghost</button>
+      </div>
+      <div class="flex gap-2 flex-wrap mb-2">
+        <button class="btn btn-sm">Small</button>
+        <button class="btn">Normal</button>
+        <button class="btn btn-lg">Large</button>
+      </div>
+      <div class="btn-group">
+        <button class="btn">Left</button>
+        <button class="btn">Center</button>
+        <button class="btn">Right</button>
+      </div>
+    </section>
+
+    <!-- Cards Section -->
+    <section id="cards" class="mb-4">
+      <h2 class="mb-2">Cards</h2>
+      <div class="grid grid-cols-3 gap-4">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Basic Card</h3>
+          </div>
+          <div class="card-body">
+            <p>Простая карточка с заголовком и контентом.</p>
+          </div>
+        </div>
+
+        <div class="card card-elevated">
+          <div class="card-header">
+            <h3 class="card-title">Elevated Card</h3>
+            <span class="badge">New</span>
+          </div>
+          <div class="card-body">
+            <p>Карточка с увеличенной тенью и эффектом hover.</p>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-sm">Подробнее</button>
+          </div>
+        </div>
+
+        <div class="card card-accent">
+          <div class="card-header">
+            <h3 class="card-title">Accent Card</h3>
+          </div>
+          <div class="card-body">
+            <p>Карточка с акцентной левой границей.</p>
+          </div>
+          <div class="card-meta">
+            <span>📅 23 ноя 2024</span>
+            <span>👤 Автор</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Inputs Section -->
+    <section id="inputs" class="mb-4">
+      <h2 class="mb-2">Inputs</h2>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="label mb-1">Text Input</label>
+          <input type="text" class="input" placeholder="Введите текст...">
+        </div>
+        <div>
+          <label class="label mb-1">Select</label>
+          <select class="select w-full">
+            <option>Выберите опцию</option>
+            <option>Опция 1</option>
+            <option>Опция 2</option>
+          </select>
+        </div>
+        <div>
+          <label class="label mb-1">Error State</label>
+          <input type="text" class="input input-error" value="Неверное значение">
+        </div>
+        <div>
+          <label class="label">
+            <input type="checkbox" class="checkbox"> Checkbox option
+          </label>
+          <label class="label ml-auto">
+            <input type="radio" name="radio" class="radio"> Radio option
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- Badges Section -->
+    <section id="badges" class="mb-4">
+      <h2 class="mb-2">Badges & Tags</h2>
+      <div class="flex gap-2 flex-wrap mb-2">
+        <span class="badge">Default</span>
+        <span class="badge badge-secondary">Secondary</span>
+        <span class="badge badge-success">Success</span>
+        <span class="badge badge-warning">Warning</span>
+        <span class="badge badge-error">Error</span>
+        <span class="badge badge-outline">Outline</span>
+      </div>
+      <div class="tag-group">
+        <span class="tag">JavaScript</span>
+        <span class="tag">CSS</span>
+        <span class="tag">HTML</span>
+        <span class="tag tag-removable">React <button class="tag-remove">×</button></span>
+      </div>
+    </section>
+
+    <!-- Pagination Section -->
+    <section id="pagination" class="mb-4">
+      <h2 class="mb-2">Pagination</h2>
+
+      <!-- Classic pagination -->
+      <p class="text-muted mb-2">Classic (mdm_terms)</p>
+      <div class="pagination mb-4">
+        <button class="page-btn" disabled>←</button>
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <span class="pagination-ellipsis">...</span>
+        <button class="page-btn">10</button>
+        <button class="page-btn">→</button>
+      </div>
+
+      <!-- Modern pagination (AutoTrassir) -->
+      <p class="text-muted mb-2">Modern (AutoTrassir) — Lucide icons</p>
+      <div class="pagination-modern">
+        <div class="pagination-container">
+          <button class="pagination-btn" disabled title="В начало (Home)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 18-6-6 6-6"/><path d="M7 6v12"/></svg>
+          </button>
+          <button class="pagination-btn" disabled title="Назад (PageUp)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <div class="pagination-counter">
+            <span class="pagination-current">1</span>
+            <span class="pagination-separator">/</span>
+            <span class="pagination-total">24</span>
+          </div>
+          <button class="pagination-btn" title="Вперед (PageDown)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+          <button class="pagination-btn" title="В конец (End)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 18 6-6-6-6"/><path d="M17 6v12"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dropdown Section -->
+    <section class="mb-4">
+      <h2 class="mb-2">Dropdown</h2>
+      <div class="dropdown">
+        <button class="btn dropdown-trigger">Open Dropdown ▼</button>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item">Action 1</a>
+          <a href="#" class="dropdown-item active">Active Item</a>
+          <a href="#" class="dropdown-item">Action 3</a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">Separated Action</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tree Section -->
+    <section id="tree" class="mb-4">
+      <h2 class="mb-2">Tree View</h2>
+      <div class="grid grid-cols-2 gap-4">
+        <!-- Classic Tree (mdm_terms) -->
+        <div>
+          <p class="text-muted mb-2">Classic (mdm_terms)</p>
+          <div class="card">
+            <ul class="tree">
+              <li class="tree-folder open">
+                <div class="tree-item">
+                  <span class="tree-toggle">▶</span>
+                  <span class="icon">📁</span>
+                  <span class="label">src</span>
+                </div>
+                <ul>
+                  <li>
+                    <div class="tree-item">
+                      <span class="icon">📄</span>
+                      <span class="label">index.html</span>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="tree-item selected">
+                      <span class="icon">📄</span>
+                      <span class="label">style.css</span>
+                    </div>
+                  </li>
+                  <li class="tree-folder">
+                    <div class="tree-item">
+                      <span class="tree-toggle">▶</span>
+                      <span class="icon">📁</span>
+                      <span class="label">components</span>
+                    </div>
+                    <ul>
+                      <li>
+                        <div class="tree-item">
+                          <span class="icon">📄</span>
+                          <span class="label">Button.js</span>
+                        </div>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Modern Tree (AutoTrassir) -->
+        <div>
+          <p class="text-muted mb-2">Modern (AutoTrassir) — Lucide icons</p>
+          <div class="card">
+            <div class="tree-sidebar-header">
+              <div class="tree-sidebar-title">
+                <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+                Источники
+              </div>
+              <div class="tree-sidebar-actions">
+                <button class="tree-sidebar-btn" title="Показать все">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
+                </button>
+                <button class="tree-sidebar-btn" title="Обновить">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="tree-modern">
+              <button class="tree-modern-item expanded">
+                <svg class="tree-modern-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                <svg class="tree-modern-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 14 1.45-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.55 6a2 2 0 0 1-1.94 1.5H4a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h3.93a2 2 0 0 1 1.66.9l.82 1.2a2 2 0 0 0 1.66.9H18a2 2 0 0 1 2 2v2"/></svg>
+                <span class="tree-modern-label">2024</span>
+                <span class="tree-modern-count">156</span>
+              </button>
+              <div class="tree-modern-nested" style="max-height: 500px;">
+                <button class="tree-modern-item expanded">
+                  <svg class="tree-modern-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                  <svg class="tree-modern-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 14 1.45-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.55 6a2 2 0 0 1-1.94 1.5H4a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h3.93a2 2 0 0 1 1.66.9l.82 1.2a2 2 0 0 0 1.66.9H18a2 2 0 0 1 2 2v2"/></svg>
+                  <span class="tree-modern-label">Ноябрь</span>
+                  <span class="tree-modern-count">42</span>
+                </button>
+                <div class="tree-modern-nested" style="max-height: 500px; padding-left: 24px;">
+                  <button class="tree-modern-item selected">
+                    <span style="width: 16px;"></span>
+                    <svg class="tree-modern-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+                    <span class="tree-modern-label">23-11-2024</span>
+                    <span class="tree-modern-count">18</span>
+                  </button>
+                  <button class="tree-modern-item">
+                    <span style="width: 16px;"></span>
+                    <svg class="tree-modern-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+                    <span class="tree-modern-label">22-11-2024</span>
+                    <span class="tree-modern-count">24</span>
+                  </button>
+                </div>
+                <button class="tree-modern-item">
+                  <svg class="tree-modern-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                  <svg class="tree-modern-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+                  <span class="tree-modern-label">Октябрь</span>
+                  <span class="tree-modern-count">114</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Alerts Section -->
+    <section id="alerts" class="mb-4">
+      <h2 class="mb-2">Alerts</h2>
+      <div class="alert alert-info">
+        <strong class="alert-title">Info</strong> Информационное сообщение для пользователя.
+      </div>
+      <div class="alert alert-success">
+        <strong class="alert-title">Success</strong> Операция выполнена успешно!
+      </div>
+      <div class="alert alert-warning">
+        <strong class="alert-title">Warning</strong> Обратите внимание на это предупреждение.
+      </div>
+      <div class="alert alert-error">
+        <strong class="alert-title">Error</strong> Произошла ошибка при выполнении операции.
+      </div>
+    </section>
+
+    <!-- Tables Section -->
+    <section id="table" class="mb-4">
+      <h2 class="mb-2">Tables</h2>
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>Параметр</th>
+            <th>Значение</th>
+            <th>Единица</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Мощность</td>
+            <td>5.5</td>
+            <td>кВт</td>
+          </tr>
+          <tr>
+            <td>Напряжение</td>
+            <td>380</td>
+            <td>В</td>
+          </tr>
+          <tr class="highlighted">
+            <td>КПД</td>
+            <td>91.2</td>
+            <td>%</td>
+          </tr>
+          <tr>
+            <td>Частота вращения</td>
+            <td>1460</td>
+            <td>об/мин</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Corporate Theme Section -->
+    <section class="mb-4">
+      <h2 class="mb-2">Corporate Theme (Datasheet)</h2>
+      <div class="corp-header">
+        <h1>АИР 132М4</h1>
+        <div class="subtitle">Электродвигатель асинхронный трехфазный</div>
+      </div>
+      <div class="corp-specs mt-2">
+        <div class="flex justify-between mb-1">
+          <span>Мощность:</span>
+          <strong>11 кВт</strong>
+        </div>
+        <div class="flex justify-between mb-1">
+          <span>Напряжение:</span>
+          <strong>380 В</strong>
+        </div>
+        <div class="flex justify-between">
+          <span>Исполнение:</span>
+          <strong>IM1081</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- VEZA Datasheet Section -->
+    <section class="mb-4">
+      <h2 class="mb-2">VEZA Datasheet Style</h2>
+      <p class="text-muted mb-2">Стили из datasheet_electric_motor (таблицы характеристик)</p>
+
+      <!-- VEZA Header -->
+      <div class="veza-header">
+        <div class="veza-header-top">
+          <div>
+            <strong style="color: #374a51;">VEZA</strong>
+          </div>
+          <div class="veza-header-title">
+            АИР 132М4 — Электродвигатель асинхронный
+          </div>
+          <div>
+            <span style="color: #374a51;">veza.ru</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- DIP Table (dashed borders) -->
+      <table class="table table-dashed">
+        <thead>
+          <tr>
+            <th>Параметр</th>
+            <th class="align-center">Значение</th>
+            <th class="align-center">Единица</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Номинальная мощность</td>
+            <td class="align-center">11</td>
+            <td class="align-center">кВт</td>
+          </tr>
+          <tr>
+            <td>Номинальное напряжение</td>
+            <td class="align-center">380</td>
+            <td class="align-center">В</td>
+          </tr>
+          <tr>
+            <td>Частота вращения</td>
+            <td class="align-center">1460</td>
+            <td class="align-center">об/мин</td>
+          </tr>
+          <tr>
+            <td>КПД</td>
+            <td class="align-center">88.4</td>
+            <td class="align-center">%</td>
+          </tr>
+          <tr>
+            <td>Коэффициент мощности (cos φ)</td>
+            <td class="align-center">0.84</td>
+            <td class="align-center">—</td>
+          </tr>
+          <tr>
+            <td>Масса</td>
+            <td class="align-center">77</td>
+            <td class="align-center">кг</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Contact boxes -->
+      <div class="veza-header-contacts mt-2">
+        <div class="veza-header-box">
+          <a href="tel:+74951234567">+7 (495) 123-45-67</a>
+        </div>
+        <div class="veza-header-box">
+          <a href="mailto:info@veza.ru">info@veza.ru</a>
+        </div>
+        <div class="veza-header-box">
+          Москва, ул. Примерная, 1
+        </div>
+        <div class="veza-header-box">
+          <a href="https://veza.ru">veza.ru</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Utilities Section -->
+    <section class="mb-4">
+      <h2 class="mb-2">Utilities</h2>
+      <div class="flex gap-2 flex-wrap">
+        <div class="p-2 rounded bg" style="background: var(--accent-100);">.rounded</div>
+        <div class="p-2 rounded-lg shadow">.shadow</div>
+        <div class="p-2 border rounded">.border</div>
+        <div class="p-2 text-muted">.text-muted</div>
+        <div class="p-2 text-accent font-bold">.text-accent .font-bold</div>
+      </div>
+    </section>
+
+    <!-- AutoTrassir Components Section -->
+    <section id="logs" class="mb-4">
+      <h2 class="mb-2">AutoTrassir Components</h2>
+      <p class="text-muted mb-2">Компоненты из Enterprise LPR системы</p>
+
+      <!-- Photo Cards Grid -->
+      <div class="grid grid-cols-3 gap-4 mb-4">
+        <!-- Photo Card 1 -->
+        <div class="photo-card">
+          <div class="photo-card-image">
+            <img src="https://picsum.photos/400/300?random=1" alt="Photo">
+            <div class="photo-card-overlay">
+              <span class="photo-card-plate">A123BC77</span>
+            </div>
+            <div class="quick-actions">
+              <button class="quick-action-btn" title="Download">⬇️</button>
+            </div>
+          </div>
+          <div class="photo-card-content">
+            <p class="photo-card-timestamp">23.11.2024, 14:32:15</p>
+            <div class="photo-card-meta">
+              <span class="license-plate">A123BC77</span>
+              <span class="direction-enter">↓ Въезд</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Photo Card 2 -->
+        <div class="photo-card">
+          <div class="photo-card-image">
+            <img src="https://picsum.photos/400/300?random=2" alt="Photo">
+            <div class="photo-card-overlay">
+              <span class="photo-card-plate">X777XX77</span>
+            </div>
+            <div class="quick-actions">
+              <button class="quick-action-btn" title="Download">⬇️</button>
+            </div>
+          </div>
+          <div class="photo-card-content">
+            <p class="photo-card-timestamp">23.11.2024, 15:45:20</p>
+            <div class="photo-card-meta">
+              <span class="license-plate">X777XX77</span>
+              <span class="direction-exit">↑ Выезд</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skeleton Card -->
+        <div class="photo-card-skeleton">
+          <div class="skeleton-image skeleton"></div>
+          <div class="skeleton-content">
+            <div class="skeleton-line skeleton"></div>
+            <div class="skeleton-line skeleton"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Status Indicators -->
+      <h3 class="mb-2">Status Indicators</h3>
+      <div class="flex gap-4 flex-wrap mb-4">
+        <span class="status-indicator">
+          <span class="status-dot success"></span>
+          <span class="status-text success">Онлайн</span>
+        </span>
+        <span class="status-indicator">
+          <span class="status-dot warning"></span>
+          <span class="status-text warning">Ожидание</span>
+        </span>
+        <span class="status-indicator">
+          <span class="status-dot error"></span>
+          <span class="status-text error">Ошибка</span>
+        </span>
+        <span class="status-indicator">
+          <span class="status-dot info"></span>
+          <span class="status-text info">Инфо</span>
+        </span>
+      </div>
+
+      <!-- Icon Colors (Lucide) -->
+      <h3 class="mb-2">Icon Colors (Lucide)</h3>
+      <div class="flex gap-4 flex-wrap mb-4">
+        <span class="icon-color-demo icon-amber">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+          Car (amber)
+        </span>
+        <span class="icon-color-demo icon-success">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
+          LogIn (success)
+        </span>
+        <span class="icon-color-demo icon-warning">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+          LogOut (warning)
+        </span>
+        <span class="icon-color-demo icon-error">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          X (error)
+        </span>
+        <span class="icon-color-demo icon-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          Info (primary)
+        </span>
+        <span class="icon-color-demo icon-muted">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+          Folder (muted)
+        </span>
+      </div>
+
+      <!-- Country Flags -->
+      <h3 class="mb-2">Country Flags</h3>
+      <div class="flex gap-4 flex-wrap mb-4">
+        <span class="country-flag"><span class="country-flag-emoji">🇷🇺</span> RU</span>
+        <span class="country-flag"><span class="country-flag-emoji">🇰🇿</span> KZ</span>
+        <span class="country-flag"><span class="country-flag-emoji">🇧🇾</span> BY</span>
+        <span class="country-flag"><span class="country-flag-emoji">🇺🇦</span> UA</span>
+        <span class="country-flag"><span class="country-flag-emoji">🇦🇲</span> AM</span>
+      </div>
+
+      <!-- Keyboard Hints -->
+      <h3 class="mb-2">Keyboard Hints</h3>
+      <div class="flex gap-4 flex-wrap mb-4">
+        <div class="lightbox-hint">
+          <kbd>Esc</kbd>
+          <span class="lightbox-hint-text">закрыть</span>
+        </div>
+        <div class="lightbox-hint">
+          <kbd>← →</kbd>
+          <span class="lightbox-hint-text">навигация</span>
+        </div>
+        <div class="lightbox-hint">
+          <kbd>Space</kbd>
+          <span class="lightbox-hint-text">пауза</span>
+        </div>
+      </div>
+
+      <!-- License Plate Box -->
+      <h3 class="mb-2">License Plate Highlight</h3>
+      <div class="card" style="max-width: 320px;">
+        <div class="lightbox-plate-box">
+          <div class="flex justify-between items-center">
+            <span class="lightbox-plate">A123BC77</span>
+            <button class="btn btn-icon btn-sm">📋</button>
+          </div>
+        </div>
+        <div class="divider mt-2 mb-2"></div>
+        <div class="timestamps-grid p-2">
+          <div class="timestamp-row">
+            <span class="timestamp-label">↓ Въезд</span>
+            <span class="timestamp-value">14:32:15</span>
+          </div>
+          <div class="timestamp-row">
+            <span class="timestamp-label">⭐ Лучший</span>
+            <span class="timestamp-value highlight">14:32:18</span>
+          </div>
+          <div class="timestamp-row">
+            <span class="timestamp-label">↑ Выезд</span>
+            <span class="timestamp-value">14:32:45</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Log Viewer Section (AutoTrassir) -->
+    <section class="mb-4">
+      <h2 class="mb-2">Log Viewer (AutoTrassir)</h2>
+      <p class="text-muted mb-2">Компоненты для отображения логов с уровнями info/warning/error</p>
+
+      <!-- Log Level Badges -->
+      <h3 class="mb-2">Log Level Badges</h3>
+      <div class="flex gap-3 flex-wrap mb-4">
+        <span class="log-badge info">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          INFO
+        </span>
+        <span class="log-badge warning">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+          WARNING
+        </span>
+        <span class="log-badge error">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
+          ERROR
+        </span>
+        <span class="log-badge debug">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          DEBUG
+        </span>
+        <span class="log-badge success">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+          SUCCESS
+        </span>
+      </div>
+
+      <!-- Alert Boxes -->
+      <h3 class="mb-2">Alert Boxes</h3>
+      <div class="flex flex-col gap-3 mb-4" style="max-width: 600px;">
+        <div class="alert-box info">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          <span class="alert-box-content">Информационное сообщение: синхронизация данных запущена.</span>
+          <button class="alert-box-close">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          </button>
+        </div>
+        <div class="alert-box warning">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+          <span class="alert-box-content">Предупреждение: нестабильное соединение с сервером.</span>
+          <button class="alert-box-close">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          </button>
+        </div>
+        <div class="alert-box error">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
+          <span class="alert-box-content">Ошибка: не удалось подключиться к базе данных.</span>
+          <button class="alert-box-close">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          </button>
+        </div>
+        <div class="alert-box success">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+          <span class="alert-box-content">Успешно: все данные сохранены.</span>
+          <button class="alert-box-close">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Log Controls -->
+      <h3 class="mb-2">Log Controls Toolbar</h3>
+      <div class="log-controls mb-4">
+        <div class="log-controls-group">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-muted"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="log-controls-label">Уровень:</span>
+          <select class="log-controls-select">
+            <option>Все</option>
+            <option>Info</option>
+            <option>Warning</option>
+            <option>Error</option>
+            <option>Debug</option>
+          </select>
+        </div>
+        <div class="log-controls-group">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-muted"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+          <span class="log-controls-label">Записей:</span>
+          <select class="log-controls-select">
+            <option>50</option>
+            <option selected>100</option>
+            <option>200</option>
+            <option>500</option>
+          </select>
+        </div>
+        <div class="log-controls-group">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-muted"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
+          <span class="log-controls-label">Вид:</span>
+          <div class="view-mode-toggle">
+            <button class="view-mode-btn active">Текст</button>
+            <button class="view-mode-btn">JSON</button>
+          </div>
+        </div>
+        <div style="flex: 1;"></div>
+        <button class="log-refresh-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+          Обновить
+        </button>
+      </div>
+
+      <!-- Log Entry Examples -->
+      <h3 class="mb-2">Log Entries</h3>
+      <div class="card mb-4" style="overflow: hidden; padding: 0;">
+        <!-- Log entry 1 - Info -->
+        <div class="log-entry">
+          <span class="log-entry-toggle">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </span>
+          <span class="log-entry-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          </span>
+          <span class="log-entry-timestamp">2025-01-23 14:32:15.234</span>
+          <span class="log-entry-level"><span class="log-badge info">INFO</span></span>
+          <span class="log-entry-message">Photo processed successfully: A123BC77</span>
+        </div>
+        <!-- Log entry 2 - Warning -->
+        <div class="log-entry">
+          <span class="log-entry-toggle">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </span>
+          <span class="log-entry-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+          </span>
+          <span class="log-entry-timestamp">2025-01-23 14:32:14.891</span>
+          <span class="log-entry-level"><span class="log-badge warning">WARNING</span></span>
+          <span class="log-entry-message">S3 upload retry attempt 2/3</span>
+        </div>
+        <!-- Log entry 3 - Error -->
+        <div class="log-entry">
+          <span class="log-entry-toggle">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </span>
+          <span class="log-entry-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
+          </span>
+          <span class="log-entry-timestamp">2025-01-23 14:32:10.012</span>
+          <span class="log-entry-level"><span class="log-badge error">ERROR</span></span>
+          <span class="log-entry-message">Database connection failed: timeout after 30s</span>
+        </div>
+        <!-- Log entry 4 - Debug (expanded) -->
+        <div class="log-entry" style="background: var(--surface-2);">
+          <span class="log-entry-toggle">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </span>
+          <span class="log-entry-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          </span>
+          <span class="log-entry-timestamp">2025-01-23 14:32:08.567</span>
+          <span class="log-entry-level"><span class="log-badge debug">DEBUG</span></span>
+          <span class="log-entry-message">Request payload received</span>
+        </div>
+        <div class="log-entry-details">
+          <div class="log-entry-grid mb-2">
+            <span class="log-entry-label">Logger:</span>
+            <span class="log-entry-value">app.services.photo_service</span>
+          </div>
+          <div class="log-entry-grid mb-2">
+            <span class="log-entry-label">Event:</span>
+            <span class="log-entry-value">request_payload</span>
+          </div>
+          <pre>{"plate": "A123BC77", "timestamp": "2025-01-23T14:32:08", "camera_id": 1}</pre>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <h3 class="mb-2">Empty State</h3>
+      <div class="card mb-4" style="padding: 0;">
+        <div class="log-empty">
+          <svg class="log-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
+          <p class="log-empty-text">Нет записей в логе</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== NEW COMPONENTS ==================== -->
+
+    <!-- Tabs Section -->
+    <section id="tabs" class="mb-4">
+      <h2 class="mb-2">Tabs</h2>
+      <p class="text-muted mb-2">Горизонтальные вкладки для переключения контента</p>
+
+      <!-- Underline Style -->
+      <h3 class="mb-2">Underline Style</h3>
+      <div class="tabs mb-4">
+        <div class="tabs-list">
+          <button class="tab active">Обзор</button>
+          <button class="tab">Характеристики</button>
+          <button class="tab">Документы</button>
+          <button class="tab" disabled>Архив</button>
+        </div>
+        <div class="tab-panel">Контент вкладки "Обзор"</div>
+      </div>
+
+      <!-- Pills Style -->
+      <h3 class="mb-2">Pills Style</h3>
+      <div class="tabs tabs-pills mb-4">
+        <div class="tabs-list">
+          <button class="tab active">Все</button>
+          <button class="tab">Активные</button>
+          <button class="tab">Завершённые</button>
+        </div>
+      </div>
+
+      <!-- Boxed Style -->
+      <h3 class="mb-2">Boxed Style</h3>
+      <div class="tabs tabs-boxed mb-4">
+        <div class="tabs-list">
+          <button class="tab active">День</button>
+          <button class="tab">Неделя</button>
+          <button class="tab">Месяц</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Breadcrumbs Section -->
+    <section id="breadcrumbs" class="mb-4">
+      <h2 class="mb-2">Breadcrumbs</h2>
+      <p class="text-muted mb-2">Хлебные крошки для навигации</p>
+
+      <div class="breadcrumbs mb-2">
+        <a href="#" class="breadcrumb-item">Главная</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="#" class="breadcrumb-item">Каталог</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="#" class="breadcrumb-item">Оборудование</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-item current">Вентиляторы</span>
+      </div>
+
+      <div class="breadcrumbs breadcrumbs-chevron mb-4">
+        <a href="#" class="breadcrumb-item">Проекты</a>
+        <span class="breadcrumb-separator">›</span>
+        <a href="#" class="breadcrumb-item">AutoTrassir</a>
+        <span class="breadcrumb-separator">›</span>
+        <span class="breadcrumb-item current">Настройки</span>
+      </div>
+    </section>
+
+    <!-- Steps Section -->
+    <section id="steps" class="mb-4">
+      <h2 class="mb-2">Steps / Wizard</h2>
+      <p class="text-muted mb-2">Пошаговый процесс</p>
+
+      <div class="steps mb-4">
+        <div class="step completed">
+          <div class="step-number">✓</div>
+          <div class="step-content">
+            <div class="step-title">Регистрация</div>
+          </div>
+          <div class="step-connector"></div>
+        </div>
+        <div class="step active">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <div class="step-title">Настройка</div>
+          </div>
+          <div class="step-connector"></div>
+        </div>
+        <div class="step pending">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <div class="step-title">Подтверждение</div>
+          </div>
+          <div class="step-connector"></div>
+        </div>
+        <div class="step pending">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <div class="step-title">Готово</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Progress Section -->
+    <section id="progress" class="mb-4">
+      <h2 class="mb-2">Progress Bar</h2>
+      <p class="text-muted mb-2">Индикаторы прогресса</p>
+
+      <div class="mb-2">
+        <div class="progress mb-2">
+          <div class="progress-bar" style="width: 65%"></div>
+        </div>
+        <span class="text-muted">Default 65%</span>
+      </div>
+
+      <div class="mb-2">
+        <div class="progress progress-success mb-2">
+          <div class="progress-bar" style="width: 100%"></div>
+        </div>
+        <span class="text-muted">Success 100%</span>
+      </div>
+
+      <div class="mb-2">
+        <div class="progress progress-warning mb-2">
+          <div class="progress-bar" style="width: 45%"></div>
+        </div>
+        <span class="text-muted">Warning 45%</span>
+      </div>
+
+      <div class="mb-2">
+        <div class="progress progress-error mb-2">
+          <div class="progress-bar" style="width: 25%"></div>
+        </div>
+        <span class="text-muted">Error 25%</span>
+      </div>
+
+      <div class="mb-4">
+        <div class="progress progress-striped progress-animated">
+          <div class="progress-bar" style="width: 75%"></div>
+        </div>
+        <span class="text-muted">Striped Animated 75%</span>
+      </div>
+    </section>
+
+    <!-- Spinner Section -->
+    <section id="spinner" class="mb-4">
+      <h2 class="mb-2">Spinners</h2>
+      <p class="text-muted mb-2">Индикаторы загрузки</p>
+
+      <!-- Sizes -->
+      <h3 class="mb-2">Размеры</h3>
+      <div class="flex gap-4 flex-wrap items-center mb-4">
+        <div class="spinner spinner-xs"></div>
+        <div class="spinner spinner-sm"></div>
+        <div class="spinner"></div>
+        <div class="spinner spinner-lg"></div>
+        <div class="spinner spinner-xl"></div>
+      </div>
+
+      <!-- Variants -->
+      <h3 class="mb-2">Варианты</h3>
+      <div class="flex gap-4 flex-wrap items-center mb-4">
+        <div class="spinner"></div>
+        <div class="spinner spinner-smooth"></div>
+        <div class="spinner spinner-gradient"></div>
+        <div class="spinner-ring"></div>
+        <div class="spinner-pulse"></div>
+        <div class="spinner-dots"><span></span></div>
+        <div class="spinner-bars"><span></span><span></span><span></span><span></span></div>
+      </div>
+
+      <!-- Colors -->
+      <h3 class="mb-2">Цвета</h3>
+      <div class="flex gap-4 flex-wrap items-center mb-4">
+        <div class="spinner spinner-primary"></div>
+        <div class="spinner spinner-success"></div>
+        <div class="spinner spinner-warning"></div>
+        <div class="spinner spinner-error"></div>
+        <div class="spinner spinner-info"></div>
+      </div>
+
+      <!-- In buttons -->
+      <h3 class="mb-2">В кнопках</h3>
+      <div class="flex gap-4 flex-wrap items-center mb-4">
+        <button class="btn btn-primary" disabled>
+          <span class="spinner spinner-sm spinner-white"></span>
+          Загрузка...
+        </button>
+        <button class="btn btn-loading btn-primary">Отправить</button>
+        <button class="btn btn-loading">Сохранить</button>
+      </div>
+    </section>
+
+    <!-- Animations Section -->
+    <section id="animations" class="mb-4 force-animations">
+      <h2 class="mb-2">Animations</h2>
+      <p class="text-muted mb-2">Анимации и эффекты (нажмите для демо)</p>
+
+      <!-- Hover Effects -->
+      <h3 class="mb-2">Hover эффекты</h3>
+      <div class="flex gap-4 flex-wrap mb-4">
+        <div class="card hover-lift" style="padding: 16px; min-width: 120px; text-align: center;">.hover-lift</div>
+        <div class="card hover-scale" style="padding: 16px; min-width: 120px; text-align: center;">.hover-scale</div>
+        <div class="card hover-glow" style="padding: 16px; min-width: 120px; text-align: center;">.hover-glow</div>
+        <button class="btn hover-rotate">.hover-rotate</button>
+      </div>
+
+      <!-- Click Effects -->
+      <h3 class="mb-2">Click эффекты</h3>
+      <div class="flex gap-4 flex-wrap mb-4">
+        <button class="btn active-scale">active-scale</button>
+        <button class="btn active-press">active-press</button>
+        <button class="btn btn-primary btn-ripple">btn-ripple</button>
+      </div>
+
+      <!-- Utility Animations (click to trigger) -->
+      <h3 class="mb-2">Utility классы (наведите)</h3>
+      <div class="flex gap-4 flex-wrap mb-4">
+        <div class="card animate-pulse" style="padding: 16px;">.animate-pulse</div>
+        <div class="card animate-float" style="padding: 16px;">.animate-float</div>
+        <span class="badge badge-primary animate-heartbeat">.animate-heartbeat</span>
+      </div>
+
+      <!-- Staggered Animation -->
+      <h3 class="mb-2">Stagger (каскадная анимация)</h3>
+      <div class="flex gap-2 stagger-children mb-4">
+        <span class="badge">1</span>
+        <span class="badge">2</span>
+        <span class="badge">3</span>
+        <span class="badge">4</span>
+        <span class="badge">5</span>
+      </div>
+    </section>
+
+    <!-- Toggle Section -->
+    <section id="toggle" class="mb-4">
+      <h2 class="mb-2">Toggle / Switch</h2>
+      <p class="text-muted mb-2">Переключатели on/off</p>
+
+      <div class="flex gap-4 flex-wrap items-center mb-4">
+        <label class="toggle">
+          <input type="checkbox" checked>
+          <span class="toggle-track"></span>
+          <span class="toggle-thumb"></span>
+        </label>
+
+        <label class="toggle toggle-sm">
+          <input type="checkbox">
+          <span class="toggle-track"></span>
+          <span class="toggle-thumb"></span>
+        </label>
+
+        <label class="toggle toggle-lg">
+          <input type="checkbox" checked>
+          <span class="toggle-track"></span>
+          <span class="toggle-thumb"></span>
+        </label>
+
+        <label class="toggle">
+          <input type="checkbox" disabled>
+          <span class="toggle-track"></span>
+          <span class="toggle-thumb"></span>
+        </label>
+      </div>
+
+      <div class="toggle-group mb-4">
+        <label class="toggle-item">
+          <span class="toggle-label">Уведомления</span>
+          <label class="toggle">
+            <input type="checkbox" checked>
+            <span class="toggle-track"></span>
+            <span class="toggle-thumb"></span>
+          </label>
+        </label>
+        <label class="toggle-item">
+          <span class="toggle-label">Тёмная тема</span>
+          <label class="toggle">
+            <input type="checkbox">
+            <span class="toggle-track"></span>
+            <span class="toggle-thumb"></span>
+          </label>
+        </label>
+        <label class="toggle-item">
+          <span class="toggle-label">Автосохранение</span>
+          <label class="toggle">
+            <input type="checkbox" checked>
+            <span class="toggle-track"></span>
+            <span class="toggle-thumb"></span>
+          </label>
+        </label>
+      </div>
+    </section>
+
+    <!-- Search Input Section -->
+    <section id="search" class="mb-4">
+      <h2 class="mb-2">Search Input</h2>
+      <p class="text-muted mb-2">Поле поиска с иконкой</p>
+
+      <div class="flex gap-4 flex-wrap mb-4">
+        <div class="search-input" style="width: 300px;">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" placeholder="Поиск...">
+          <button class="search-clear" type="button">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          </button>
+        </div>
+
+        <div class="search-input search-input-sm" style="width: 200px;">
+          <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" placeholder="Поиск...">
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Cards Section -->
+    <section id="stats" class="mb-4">
+      <h2 class="mb-2">Stats / KPI Cards</h2>
+      <p class="text-muted mb-2">Карточки с метриками</p>
+
+      <div class="stats-grid mb-4">
+        <div class="stat-card">
+          <div class="stat-icon">📊</div>
+          <div class="stat-content">
+            <div class="stat-value">12,543</div>
+            <div class="stat-label">Всего записей</div>
+            <div class="stat-trend up">
+              <span>↑</span> +12.5%
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">✅</div>
+          <div class="stat-content">
+            <div class="stat-value">98.2%</div>
+            <div class="stat-label">Успешных</div>
+            <div class="stat-trend up">
+              <span>↑</span> +2.1%
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">⚠️</div>
+          <div class="stat-content">
+            <div class="stat-value">23</div>
+            <div class="stat-label">Предупреждений</div>
+            <div class="stat-trend down">
+              <span>↓</span> -5.3%
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">⏱️</div>
+          <div class="stat-content">
+            <div class="stat-value">1.2s</div>
+            <div class="stat-label">Среднее время</div>
+            <div class="stat-trend neutral">
+              <span>→</span> 0%
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section id="timeline" class="mb-4">
+      <h2 class="mb-2">Timeline</h2>
+      <p class="text-muted mb-2">Вертикальная лента событий</p>
+
+      <div class="timeline mb-4">
+        <div class="timeline-item success">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-time">14:32:15</div>
+            <div class="timeline-title">Синхронизация завершена</div>
+            <div class="timeline-description">Загружено 1,234 записей</div>
+          </div>
+        </div>
+
+        <div class="timeline-item warning">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-time">14:30:08</div>
+            <div class="timeline-title">Повторная попытка</div>
+            <div class="timeline-description">Соединение восстановлено после 2 попыток</div>
+          </div>
+        </div>
+
+        <div class="timeline-item error">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-time">14:28:45</div>
+            <div class="timeline-title">Ошибка подключения</div>
+            <div class="timeline-description">Timeout при подключении к серверу</div>
+          </div>
+        </div>
+
+        <div class="timeline-item info">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-time">14:25:00</div>
+            <div class="timeline-title">Запуск синхронизации</div>
+            <div class="timeline-description">Инициализация процесса</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Toast Section -->
+    <section id="toast" class="mb-4">
+      <h2 class="mb-2">Toast / Notifications</h2>
+      <p class="text-muted mb-2">Всплывающие уведомления (статичные примеры)</p>
+
+      <div class="flex flex-col gap-3 mb-4" style="max-width: 400px;">
+        <div class="toast toast-info">
+          <svg class="toast-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          <div class="toast-content">Информация сохранена</div>
+          <button class="toast-close">×</button>
+        </div>
+
+        <div class="toast toast-success">
+          <svg class="toast-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+          <div class="toast-content">Операция выполнена успешно!</div>
+          <button class="toast-close">×</button>
+        </div>
+
+        <div class="toast toast-warning">
+          <svg class="toast-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+          <div class="toast-content">Внимание: нестабильное соединение</div>
+          <button class="toast-close">×</button>
+        </div>
+
+        <div class="toast toast-error">
+          <svg class="toast-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
+          <div class="toast-content">Ошибка при сохранении данных</div>
+          <button class="toast-close">×</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modal Section -->
+    <section id="modal" class="mb-4">
+      <h2 class="mb-2">Modal / Dialog</h2>
+      <p class="text-muted mb-2">Модальные окна (статичный пример)</p>
+
+      <div class="card mb-4" style="max-width: 500px; position: relative;">
+        <div class="modal-header">
+          <h3 class="modal-title">Подтверждение действия</h3>
+          <button class="modal-close">×</button>
+        </div>
+        <div class="modal-body">
+          <p>Вы уверены, что хотите удалить этот элемент? Это действие нельзя отменить.</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn">Отмена</button>
+          <button class="btn btn-primary">Подтвердить</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tooltip Section -->
+    <section id="tooltip" class="mb-4">
+      <h2 class="mb-2">Tooltip</h2>
+      <p class="text-muted mb-2">Всплывающие подсказки (CSS-only с data-tooltip)</p>
+
+      <!-- Positions -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Позиции</h3>
+        </div>
+        <div class="card-body">
+          <div class="flex gap-4 flex-wrap">
+            <button class="btn tooltip" data-tooltip="Подсказка сверху" data-tooltip-position="top">Top</button>
+            <button class="btn tooltip" data-tooltip="Подсказка снизу" data-tooltip-position="bottom">Bottom</button>
+            <button class="btn tooltip" data-tooltip="Подсказка слева" data-tooltip-position="left">Left</button>
+            <button class="btn tooltip" data-tooltip="Подсказка справа" data-tooltip-position="right">Right</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sizes -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Размеры</h3>
+        </div>
+        <div class="card-body">
+          <div class="flex gap-4 flex-wrap">
+            <button class="btn tooltip tooltip-sm" data-tooltip="Маленькая">Small</button>
+            <button class="btn tooltip" data-tooltip="Стандартный размер подсказки">Default</button>
+            <button class="btn tooltip tooltip-lg" data-tooltip="Большая подсказка для длинного текста с переносом строк">Large</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Variants -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Варианты</h3>
+        </div>
+        <div class="card-body">
+          <div class="flex gap-4 flex-wrap">
+            <button class="btn tooltip" data-tooltip="Тёмный фон (по умолчанию)">Dark</button>
+            <button class="btn tooltip tooltip-light" data-tooltip="Светлый фон">Light</button>
+            <button class="btn tooltip tooltip-primary" data-tooltip="Accent цвет">Primary</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- On different elements -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Применение к элементам</h3>
+        </div>
+        <div class="card-body">
+          <div class="flex gap-4 flex-wrap items-center">
+            <span class="badge badge-primary tooltip" data-tooltip="Подсказка на бейдже">Badge</span>
+            <button class="btn btn-icon tooltip" data-tooltip="Иконка с подсказкой">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            </button>
+            <a href="#" class="tooltip" data-tooltip="Подсказка на ссылке">Ссылка с подсказкой</a>
+            <input type="text" class="input tooltip" data-tooltip="Введите значение" placeholder="Input с подсказкой" style="width: 200px;">
+          </div>
+        </div>
+      </div>
+    </section>
+
+      </div><!-- /.container -->
+    </main><!-- /.app-content -->
+
+    <!-- Right Sidebar - Info -->
+    <aside class="app-sidebar right" id="right-sidebar">
+      <div class="sidebar-header">
+        <h4 class="sidebar-title">Информация</h4>
+        <button class="sidebar-close" id="toggle-right">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </div>
+      <div class="sidebar-body">
+        <div class="sidebar-widget">
+          <div class="sidebar-widget-title">Статистика</div>
+          <div class="sidebar-stats">
+            <div class="sidebar-stat">
+              <div class="sidebar-stat-value">20</div>
+              <div class="sidebar-stat-label">Компонентов</div>
+            </div>
+            <div class="sidebar-stat">
+              <div class="sidebar-stat-value">2</div>
+              <div class="sidebar-stat-label">Темы</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-widget">
+          <div class="sidebar-widget-title">Режим ширины</div>
+          <div class="sidebar-widget-content" id="width-mode-label">1920px (fixed)</div>
+        </div>
+
+        <div class="sidebar-widget">
+          <div class="sidebar-widget-title">Источники</div>
+          <div class="sidebar-tags">
+            <span class="sidebar-tag active">mdm_terms</span>
+            <span class="sidebar-tag">autoTrassir</span>
+            <span class="sidebar-tag">DeepSearch</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+  </div><!-- /.app-layout -->
+
+  <!-- Sidebar Overlay -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <!-- Width Control Button -->
+  <button class="width-control" id="width-control" title="Переключить ширину (1920px / 90% / 100%)">
+    <svg class="icon-fixed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>
+    <svg class="icon-fluid" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12H3"/><path d="m15 6 6 6-6 6"/><path d="m9 6-6 6 6 6"/></svg>
+    <svg class="icon-full" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+  </button>
+
+  <!-- Fixed Site Footer -->
+  <footer class="site-footer">
+    <div class="footer-left">
+      <span class="footer-copyright">© 2024 CSS Lab</span>
+      <span class="footer-version">v1.0.0</span>
+    </div>
+    <div class="footer-center">
+      <nav class="footer-nav">
+        <a href="#">Документация</a>
+        <a href="#">Поддержка</a>
+        <a href="#">Лицензия</a>
+      </nav>
+    </div>
+    <div class="footer-right">
+      <div class="footer-status">
+        <span class="footer-status-dot"></span>
+        Система работает
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Theme Toggle (header button)
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    function applyTheme(isDark) {
+      if (isDark) {
+        body.classList.add('dark');
+      } else {
+        body.classList.remove('dark');
+      }
+      localStorage.setItem('css-lab-theme', isDark ? 'dark' : 'base');
+    }
+
+    // Load saved theme on page load
+    const savedTheme = localStorage.getItem('css-lab-theme');
+    if (savedTheme === 'dark') {
+      applyTheme(true);
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const isDark = body.classList.contains('dark');
+      applyTheme(!isDark);
+    });
+
+    // Toggle tree folders
+    document.querySelectorAll('.tree-folder > .tree-item').forEach(item => {
+      item.addEventListener('click', () => {
+        item.parentElement.classList.toggle('open');
+      });
+    });
+
+    // Toggle dropdown on click
+    document.querySelectorAll('.dropdown-trigger').forEach(trigger => {
+      trigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        trigger.closest('.dropdown').classList.toggle('open');
+      });
+    });
+
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.dropdown.open').forEach(d => d.classList.remove('open'));
+    });
+
+    // Scroll Progress Bar
+    const scrollProgress = document.querySelector('.scroll-progress');
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      scrollProgress.style.width = scrollPercent + '%';
+    });
+
+    // Width Control Button
+    const widthModes = ['width-fixed', 'width-fluid', 'width-full'];
+    const widthLabels = { 'width-fixed': '1920px', 'width-fluid': '90%', 'width-full': '100%' };
+    let currentModeIndex = 0;
+
+    // Load saved width mode
+    const savedWidthMode = localStorage.getItem('css-lab-width-mode');
+    if (savedWidthMode && widthModes.includes(savedWidthMode)) {
+      currentModeIndex = widthModes.indexOf(savedWidthMode);
+      document.body.classList.add(savedWidthMode);
+    } else {
+      document.body.classList.add(widthModes[0]);
+    }
+
+    const widthControl = document.getElementById('width-control');
+    widthControl.addEventListener('click', () => {
+      // Remove current mode
+      document.body.classList.remove(widthModes[currentModeIndex]);
+
+      // Cycle to next mode
+      currentModeIndex = (currentModeIndex + 1) % widthModes.length;
+      const newMode = widthModes[currentModeIndex];
+
+      // Apply new mode
+      document.body.classList.add(newMode);
+      localStorage.setItem('css-lab-width-mode', newMode);
+
+      // Update tooltip and label
+      widthControl.title = `Ширина: ${widthLabels[newMode]} (клик для смены)`;
+      const widthModeLabel = document.getElementById('width-mode-label');
+      if (widthModeLabel) {
+        widthModeLabel.textContent = widthLabels[newMode] + ' (' + newMode.replace('width-', '') + ')';
+      }
+    });
+
+    // Sidebar toggles
+    const leftSidebar = document.getElementById('left-sidebar');
+    const rightSidebar = document.getElementById('right-sidebar');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const burgerMenu = document.getElementById('burger-menu');
+    const infoToggle = document.getElementById('info-toggle');
+    const toggleLeft = document.getElementById('toggle-left');
+    const toggleRight = document.getElementById('toggle-right');
+
+    const appContent = document.querySelector('.app-content');
+    const widthControlBtn = document.getElementById('width-control');
+    const searchBar = document.querySelector('.search-bar');
+
+    function updateSidebarState() {
+      const leftOpen = leftSidebar?.classList.contains('open');
+      const rightOpen = rightSidebar?.classList.contains('open');
+      const anyOpen = leftOpen || rightOpen;
+      const isMobile = window.innerWidth <= 768;
+
+      // Update overlay (only on mobile)
+      if (anyOpen && isMobile) {
+        sidebarOverlay?.classList.add('visible');
+      } else {
+        sidebarOverlay?.classList.remove('visible');
+      }
+
+      // Fallback classes for browsers without :has() support
+      appContent?.classList.toggle('sidebar-left-open', leftOpen);
+      appContent?.classList.toggle('sidebar-right-open', rightOpen);
+      appContent?.classList.toggle('sidebar-both-open', leftOpen && rightOpen);
+      widthControlBtn?.classList.toggle('sidebar-right-open', rightOpen);
+
+      // Update search bar width (fallback for :has())
+      searchBar?.classList.remove('sidebar-both-open', 'sidebar-one-open', 'sidebar-none-open');
+      if (leftOpen && rightOpen) {
+        searchBar?.classList.add('sidebar-both-open');
+      } else if (leftOpen || rightOpen) {
+        searchBar?.classList.add('sidebar-one-open');
+      } else {
+        searchBar?.classList.add('sidebar-none-open');
+      }
+    }
+
+    function closeAllSidebars() {
+      leftSidebar?.classList.remove('open');
+      rightSidebar?.classList.remove('open');
+      updateSidebarState();
+    }
+
+    function toggleLeftSidebar() {
+      leftSidebar?.classList.toggle('open');
+      updateSidebarState();
+    }
+
+    function toggleRightSidebar() {
+      rightSidebar?.classList.toggle('open');
+      updateSidebarState();
+    }
+
+    function closeLeftSidebar() {
+      leftSidebar?.classList.remove('open');
+      updateSidebarState();
+    }
+
+    function closeRightSidebar() {
+      rightSidebar?.classList.remove('open');
+      updateSidebarState();
+    }
+
+    // Open sidebars by default on desktop (width > 1024px)
+    if (window.innerWidth > 1024) {
+      leftSidebar?.classList.add('open');
+      rightSidebar?.classList.add('open');
+      updateSidebarState();
+    }
+
+    // Burger menu toggles left sidebar (independent)
+    burgerMenu?.addEventListener('click', toggleLeftSidebar);
+
+    // Info toggle toggles right sidebar (independent)
+    infoToggle?.addEventListener('click', toggleRightSidebar);
+
+    // Close buttons inside sidebars (close only their own sidebar)
+    toggleLeft?.addEventListener('click', closeLeftSidebar);
+    toggleRight?.addEventListener('click', closeRightSidebar);
+
+    // Overlay click closes all sidebars
+    sidebarOverlay?.addEventListener('click', closeAllSidebars);
+
+    // ESC key closes all sidebars
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeAllSidebars();
+      }
+    });
+
+    // Highlight current nav item on scroll
+    const navLinks = document.querySelectorAll('.app-sidebar.left .sidebar-nav-link');
+    const sections = document.querySelectorAll('section[id]');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 100;
+        if (window.scrollY >= sectionTop) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) {
+          link.classList.add('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

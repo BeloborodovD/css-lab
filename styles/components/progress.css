@@ -1,0 +1,463 @@
+/* ==================== Progress Bar ==================== */
+/* Индикаторы прогресса */
+
+/* Контейнер */
+.progress {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+/* Заполненная часть */
+.progress-bar {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+  transition: width var(--duration-moderate, 300ms) var(--ease-decelerate, ease-out);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Shimmer effect on progress bar */
+.progress-shimmer .progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  animation: progress-shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes progress-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ==================== Размеры ==================== */
+
+/* Очень маленький */
+.progress-xs {
+  height: 4px;
+}
+
+/* Маленький */
+.progress-sm {
+  height: 6px;
+}
+
+/* Средний (default) */
+.progress-md {
+  height: 8px;
+}
+
+/* Большой */
+.progress-lg {
+  height: 12px;
+}
+
+/* Очень большой */
+.progress-xl {
+  height: 16px;
+}
+
+/* ==================== Цвета ==================== */
+
+/* Success */
+.progress-success .progress-bar {
+  background: #4caf50;
+}
+
+/* Warning */
+.progress-warning .progress-bar {
+  background: #ff9800;
+}
+
+/* Error */
+.progress-error .progress-bar {
+  background: #f44336;
+}
+
+/* Info */
+.progress-info .progress-bar {
+  background: #2196f3;
+}
+
+/* ==================== Полосатый (striped) ==================== */
+
+.progress-striped .progress-bar {
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 16px 16px;
+}
+
+.progress-lg.progress-striped .progress-bar {
+  background-size: 24px 24px;
+}
+
+/* ==================== Анимированный ==================== */
+
+.progress-animated .progress-bar {
+  animation: progress-stripes 1s linear infinite;
+}
+
+@keyframes progress-stripes {
+  from {
+    background-position: 16px 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+
+.progress-lg.progress-animated .progress-bar {
+  animation: progress-stripes-lg 1s linear infinite;
+}
+
+@keyframes progress-stripes-lg {
+  from {
+    background-position: 24px 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+
+/* ==================== Label (процент внутри) ==================== */
+
+.progress-labeled {
+  height: 20px;
+}
+
+.progress-labeled .progress-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+}
+
+.progress-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+}
+
+/* Label снаружи */
+.progress-with-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.progress-with-label .progress {
+  flex: 1;
+}
+
+.progress-with-label .progress-label {
+  color: var(--text);
+  text-shadow: none;
+  min-width: 40px;
+  text-align: right;
+}
+
+/* ==================== Indeterminate (неопределённый) ==================== */
+
+.progress-indeterminate .progress-bar {
+  width: 30% !important;
+  animation: progress-indeterminate 1.5s ease-in-out infinite;
+}
+
+@keyframes progress-indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
+
+/* Alternative indeterminate with dual bars */
+.progress-indeterminate-dual {
+  position: relative;
+}
+
+.progress-indeterminate-dual .progress-bar {
+  position: absolute;
+  width: 0;
+  animation: progress-indeterminate-primary 2s infinite ease-out;
+}
+
+.progress-indeterminate-dual::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background: var(--accent);
+  border-radius: 999px;
+  animation: progress-indeterminate-secondary 2s infinite ease-out;
+  animation-delay: 0.5s;
+}
+
+@keyframes progress-indeterminate-primary {
+  0% {
+    left: 0;
+    width: 0;
+  }
+  50% {
+    left: 25%;
+    width: 50%;
+  }
+  100% {
+    left: 100%;
+    width: 0;
+  }
+}
+
+@keyframes progress-indeterminate-secondary {
+  0% {
+    left: 0;
+    width: 0;
+  }
+  50% {
+    left: 25%;
+    width: 35%;
+  }
+  100% {
+    left: 100%;
+    width: 0;
+  }
+}
+
+/* ==================== Stacked (несколько значений) ==================== */
+
+.progress-stacked {
+  display: flex;
+}
+
+.progress-stacked .progress-bar {
+  border-radius: 0;
+}
+
+.progress-stacked .progress-bar:first-child {
+  border-radius: 999px 0 0 999px;
+}
+
+.progress-stacked .progress-bar:last-child {
+  border-radius: 0 999px 999px 0;
+}
+
+.progress-stacked .progress-bar:only-child {
+  border-radius: 999px;
+}
+
+/* ==================== С текстом (описание) ==================== */
+
+.progress-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.progress-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.progress-value {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+/* ==================== Circular Progress ==================== */
+
+.progress-circle {
+  position: relative;
+  width: 48px;
+  height: 48px;
+}
+
+.progress-circle svg {
+  transform: rotate(-90deg);
+}
+
+.progress-circle-track {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 4;
+}
+
+.progress-circle-bar {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 4;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.3s ease;
+}
+
+.progress-circle-value {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Размеры круга */
+.progress-circle-sm {
+  width: 32px;
+  height: 32px;
+}
+
+.progress-circle-sm .progress-circle-track,
+.progress-circle-sm .progress-circle-bar {
+  stroke-width: 3;
+}
+
+.progress-circle-sm .progress-circle-value {
+  font-size: 0.625rem;
+}
+
+.progress-circle-lg {
+  width: 64px;
+  height: 64px;
+}
+
+.progress-circle-lg .progress-circle-track,
+.progress-circle-lg .progress-circle-bar {
+  stroke-width: 5;
+}
+
+.progress-circle-lg .progress-circle-value {
+  font-size: 0.875rem;
+}
+
+/* ==================== Gradient ==================== */
+
+.progress-gradient .progress-bar {
+  background: linear-gradient(90deg, #4caf50, #8bc34a, #cddc39);
+}
+
+.progress-gradient-rainbow .progress-bar {
+  background: linear-gradient(90deg, #f44336, #ff9800, #ffeb3b, #4caf50, #2196f3, #9c27b0);
+}
+
+/* ==================== Dark Theme ==================== */
+
+.dark .progress {
+  background: var(--surface-4);
+}
+
+.dark .progress-bar {
+  background: var(--primary-500);
+}
+
+/* Цвета dark */
+.dark .progress-success .progress-bar {
+  background: var(--success);
+}
+
+.dark .progress-warning .progress-bar {
+  background: var(--warning);
+}
+
+.dark .progress-error .progress-bar {
+  background: var(--error);
+}
+
+.dark .progress-info .progress-bar {
+  background: var(--info);
+}
+
+/* Label dark */
+.dark .progress-with-label .progress-label {
+  color: var(--text-primary);
+}
+
+/* Text dark */
+.dark .progress-title {
+  color: var(--text-primary);
+}
+
+.dark .progress-value {
+  color: var(--text-tertiary);
+}
+
+/* Circle dark */
+.dark .progress-circle-track {
+  stroke: var(--surface-4);
+}
+
+.dark .progress-circle-bar {
+  stroke: var(--primary-500);
+}
+
+.dark .progress-circle-value {
+  color: var(--text-primary);
+}
+
+/* ==================== Reduced Motion ==================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .progress-bar {
+    transition: none;
+  }
+
+  .progress-shimmer .progress-bar::after {
+    animation: none;
+  }
+
+  .progress-animated .progress-bar {
+    animation: none;
+  }
+
+  .progress-indeterminate .progress-bar {
+    animation: none;
+    width: 50% !important;
+    transform: translateX(50%);
+  }
+
+  .progress-indeterminate-dual .progress-bar,
+  .progress-indeterminate-dual::after {
+    animation: none;
+    width: 40%;
+    left: 30%;
+  }
+
+  .progress-circle-bar {
+    transition: none;
+  }
+}

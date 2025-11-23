@@ -1,0 +1,422 @@
+/* ==================== Stats / KPI Cards ==================== */
+/* Карточки статистики и метрик */
+
+/* Базовая карточка */
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background: var(--panel);
+  border: 1px solid var(--card-border, #d1d5db);
+  border-radius: var(--radius);
+  transition: var(--transition);
+}
+
+.stat-card:hover {
+  box-shadow: var(--shadow);
+}
+
+/* ==================== Элементы ==================== */
+
+/* Большое число/значение */
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+/* Описание/label */
+.stat-label {
+  font-size: 0.875rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* Тренд (стрелка + delta) */
+.stat-trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-top: 8px;
+}
+
+.stat-trend svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Рост */
+.stat-trend.up {
+  color: #4caf50;
+}
+
+/* Падение */
+.stat-trend.down {
+  color: #f44336;
+}
+
+/* Без изменений */
+.stat-trend.neutral {
+  color: var(--muted);
+}
+
+/* Иконка слева */
+.stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius);
+  background: var(--accent-100);
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.stat-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ==================== Layouts ==================== */
+
+/* Горизонтальный layout */
+.stat-card-horizontal {
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+}
+
+.stat-card-horizontal .stat-icon {
+  margin-bottom: 0;
+}
+
+.stat-card-horizontal .stat-content {
+  flex: 1;
+}
+
+/* С иконкой справа */
+.stat-card-icon-right {
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.stat-card-icon-right .stat-icon {
+  margin-bottom: 0;
+  order: 2;
+}
+
+/* ==================== Размеры ==================== */
+
+/* Компактный */
+.stat-card-compact {
+  padding: 12px 16px;
+}
+
+.stat-card-compact .stat-value {
+  font-size: 1.5rem;
+}
+
+.stat-card-compact .stat-icon {
+  width: 36px;
+  height: 36px;
+}
+
+.stat-card-compact .stat-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Большой */
+.stat-card-lg {
+  padding: 24px;
+}
+
+.stat-card-lg .stat-value {
+  font-size: 2.5rem;
+}
+
+.stat-card-lg .stat-icon {
+  width: 56px;
+  height: 56px;
+}
+
+.stat-card-lg .stat-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+/* ==================== Цветовые варианты ==================== */
+
+/* Primary */
+.stat-card-primary {
+  border-left: 4px solid var(--accent);
+}
+
+.stat-card-primary .stat-icon {
+  background: var(--accent-100);
+  color: var(--accent);
+}
+
+/* Success */
+.stat-card-success {
+  border-left: 4px solid #4caf50;
+}
+
+.stat-card-success .stat-icon {
+  background: rgba(76, 175, 80, 0.1);
+  color: #4caf50;
+}
+
+.stat-card-success .stat-value {
+  color: #4caf50;
+}
+
+/* Warning */
+.stat-card-warning {
+  border-left: 4px solid #ff9800;
+}
+
+.stat-card-warning .stat-icon {
+  background: rgba(255, 152, 0, 0.1);
+  color: #ff9800;
+}
+
+.stat-card-warning .stat-value {
+  color: #ff9800;
+}
+
+/* Error */
+.stat-card-error {
+  border-left: 4px solid #f44336;
+}
+
+.stat-card-error .stat-icon {
+  background: rgba(244, 67, 54, 0.1);
+  color: #f44336;
+}
+
+.stat-card-error .stat-value {
+  color: #f44336;
+}
+
+/* Info */
+.stat-card-info {
+  border-left: 4px solid #2196f3;
+}
+
+.stat-card-info .stat-icon {
+  background: rgba(33, 150, 243, 0.1);
+  color: #2196f3;
+}
+
+/* ==================== Stats Grid ==================== */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.stats-grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.stats-grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.stats-grid-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+@media (max-width: 768px) {
+  .stats-grid-2,
+  .stats-grid-3,
+  .stats-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid-2,
+  .stats-grid-3,
+  .stats-grid-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==================== Mini Stats (inline) ==================== */
+
+.stat-mini {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+}
+
+.stat-mini-value {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.stat-mini-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.stat-mini-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.stat-mini-dot.success { background: #4caf50; }
+.stat-mini-dot.warning { background: #ff9800; }
+.stat-mini-dot.error { background: #f44336; }
+
+/* ==================== Sparkline placeholder ==================== */
+
+.stat-sparkline {
+  height: 32px;
+  margin-top: 12px;
+}
+
+/* ==================== Progress stat ==================== */
+
+.stat-progress {
+  margin-top: 12px;
+}
+
+.stat-progress-bar {
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.stat-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.stat-progress-label {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+/* ==================== Dark Theme ==================== */
+
+.dark .stat-card {
+  background: var(--surface-2);
+  --card-border: var(--surface-6);
+  border-color: var(--card-border);
+}
+
+.dark .stat-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.dark .stat-value {
+  color: var(--text-primary);
+}
+
+.dark .stat-label {
+  color: var(--text-tertiary);
+}
+
+/* Icon dark */
+.dark .stat-icon {
+  background: rgba(33, 150, 243, 0.15);
+  color: var(--primary-400);
+}
+
+/* Trend dark */
+.dark .stat-trend.up {
+  color: var(--success);
+}
+
+.dark .stat-trend.down {
+  color: var(--error);
+}
+
+.dark .stat-trend.neutral {
+  color: var(--text-tertiary);
+}
+
+/* Color variants dark */
+.dark .stat-card-primary .stat-icon {
+  background: rgba(33, 150, 243, 0.15);
+  color: var(--primary-400);
+}
+
+.dark .stat-card-success .stat-icon {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--success);
+}
+
+.dark .stat-card-success .stat-value {
+  color: var(--success);
+}
+
+.dark .stat-card-warning .stat-icon {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--warning);
+}
+
+.dark .stat-card-warning .stat-value {
+  color: var(--warning);
+}
+
+.dark .stat-card-error .stat-icon {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--error);
+}
+
+.dark .stat-card-error .stat-value {
+  color: var(--error);
+}
+
+.dark .stat-card-info .stat-icon {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--info);
+}
+
+/* Mini dark */
+.dark .stat-mini {
+  background: var(--surface-3);
+}
+
+.dark .stat-mini-value {
+  color: var(--text-primary);
+}
+
+.dark .stat-mini-label {
+  color: var(--text-tertiary);
+}
+
+/* Progress dark */
+.dark .stat-progress-bar {
+  background: var(--surface-4);
+}
+
+.dark .stat-progress-fill {
+  background: var(--primary-500);
+}
+
+.dark .stat-progress-label {
+  color: var(--text-tertiary);
+}

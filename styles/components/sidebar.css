@@ -511,3 +511,145 @@
     transition: background-color 0.01ms, color 0.01ms;
   }
 }
+
+/* ==================== Mobile Responsive Styles ==================== */
+
+/* Sidebar overlay backdrop for mobile */
+.sidebar-overlay {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  /* Overlay mode on mobile */
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 998;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition), visibility var(--transition);
+  }
+
+  .sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Sidebar becomes fixed overlay */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 280px;
+    max-width: 85vw;
+    z-index: 999;
+    transform: translateX(-100%);
+  }
+
+  .sidebar.left {
+    left: 0;
+    border-right: 1px solid var(--border);
+    border-left: none;
+  }
+
+  .sidebar.right {
+    right: 0;
+    left: auto;
+    transform: translateX(100%);
+    border-left: 1px solid var(--border);
+    border-right: none;
+  }
+
+  /* Open state */
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Touch-friendly nav links */
+  .sidebar-nav-link {
+    padding: 14px 12px;
+    min-height: 48px;
+  }
+
+  /* Larger close button */
+  .sidebar-close {
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+  }
+
+  /* Section padding */
+  .sidebar-section-title {
+    padding: 0 16px;
+  }
+
+  /* User card adjustments */
+  .sidebar-user {
+    padding: 12px;
+  }
+
+  /* Widget adjustments */
+  .sidebar-widget {
+    padding: 14px;
+  }
+
+  /* Activity items */
+  .sidebar-activity-item {
+    padding: 12px 0;
+  }
+
+  /* Stats grid */
+  .sidebar-stats {
+    gap: 10px;
+  }
+
+  .sidebar-stat {
+    padding: 12px 10px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 479px) {
+  .sidebar {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* Dark theme overlay */
+.dark .sidebar-overlay {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+/* Swipe gesture hint (visual indicator) */
+.sidebar-swipe-hint {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .sidebar-swipe-hint {
+    display: block;
+    position: absolute;
+    top: 50%;
+    width: 4px;
+    height: 40px;
+    border-radius: 2px;
+    background: var(--border);
+    transform: translateY(-50%);
+  }
+
+  .sidebar.left .sidebar-swipe-hint {
+    right: 6px;
+  }
+
+  .sidebar.right .sidebar-swipe-hint {
+    left: 6px;
+  }
+}
+
+.dark .sidebar-swipe-hint {
+  background: var(--surface-6);
+}

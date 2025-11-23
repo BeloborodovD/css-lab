@@ -418,3 +418,147 @@
   background: rgba(59, 130, 246, 0.15);
   color: var(--info);
 }
+
+/* ==================== Mobile Responsive Styles ==================== */
+
+@media (max-width: 767px) {
+  /* Full-screen modal on mobile by default */
+  .modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .modal {
+    max-width: 100%;
+    width: 100%;
+    max-height: 100vh;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    margin: 0;
+  }
+
+  /* True fullscreen variant */
+  .modal-fullscreen-mobile {
+    max-height: 100vh;
+    height: 100vh;
+    border-radius: 0;
+  }
+
+  /* Size classes collapse to full width */
+  .modal-sm,
+  .modal-md,
+  .modal-lg,
+  .modal-xl {
+    max-width: 100%;
+  }
+
+  /* Sticky header on mobile */
+  .modal-header {
+    position: sticky;
+    top: 0;
+    background: var(--panel);
+    z-index: 10;
+    padding: 12px 16px;
+  }
+
+  .modal-title {
+    font-size: 1rem;
+  }
+
+  /* Modal body adjustments */
+  .modal-body {
+    padding: 16px;
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  /* Sticky footer on mobile */
+  .modal-footer {
+    position: sticky;
+    bottom: 0;
+    background: var(--panel);
+    z-index: 10;
+    padding: 12px 16px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .modal-footer .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Drawer adjustments for mobile */
+  .modal-drawer {
+    width: 85%;
+    max-width: 320px;
+  }
+
+  /* Close button larger for touch */
+  .modal-close {
+    width: 40px;
+    height: 40px;
+  }
+
+  /* Modal icon slightly smaller */
+  .modal-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 12px;
+  }
+
+  .modal-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/* Bottom sheet modal variant */
+.modal-bottom-sheet .modal {
+  max-height: 85vh;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.modal-bottom-sheet-handle {
+  width: 36px;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 8px auto 4px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 767px) {
+  /* Slide from bottom animation for mobile */
+  .modal-overlay.modal-enter .modal {
+    animation: modal-slide-up 0.3s ease forwards;
+  }
+
+  .modal-overlay.modal-exit .modal {
+    animation: modal-slide-down-exit 0.2s ease forwards;
+  }
+}
+
+@keyframes modal-slide-down-exit {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+
+/* Dark theme mobile adjustments */
+.dark .modal-header {
+  background: var(--surface-2);
+}
+
+.dark .modal-footer {
+  background: var(--surface-2);
+}
+
+.dark .modal-bottom-sheet-handle {
+  background: var(--surface-6);
+}

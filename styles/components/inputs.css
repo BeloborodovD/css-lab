@@ -247,3 +247,141 @@
     transform: translateY(-50%) scale(1);
   }
 }
+
+/* ==================== Mobile Responsive Styles ==================== */
+
+@media (max-width: 767px) {
+  /* Full-width inputs on mobile */
+  .input,
+  .select,
+  .textarea {
+    width: 100%;
+  }
+
+  /* Touch-friendly minimum height (44px) */
+  .input,
+  .select {
+    min-height: 44px;
+    padding: 12px 14px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  .textarea {
+    min-height: 100px;
+    font-size: 16px;
+  }
+
+  /* Input sizes on mobile */
+  .input-sm,
+  .select-sm {
+    min-height: 40px;
+    padding: 10px 12px;
+    font-size: 16px;
+  }
+
+  .input-lg,
+  .select-lg {
+    min-height: 52px;
+    padding: 14px 18px;
+    font-size: 16px;
+  }
+
+  /* Select dropdown arrow positioning */
+  .select {
+    padding-right: 44px;
+    background-position: right 14px center;
+  }
+
+  /* Search bar full width */
+  .search-bar {
+    max-width: 100%;
+    flex-direction: row;
+  }
+
+  /* Input group adjustments */
+  .input-group .input {
+    padding-left: 44px;
+  }
+
+  .input-group .input-icon {
+    left: 14px;
+  }
+
+  /* Clear button easier to tap */
+  .input-clear {
+    width: 36px;
+    height: 36px;
+    right: 52px;
+  }
+
+  /* Checkbox & Radio larger touch targets */
+  .checkbox,
+  .radio {
+    width: 22px;
+    height: 22px;
+  }
+
+  .label {
+    gap: 10px;
+    padding: 8px 0;
+    min-height: 44px;
+  }
+
+  /* Floating label adjustments */
+  .input-floating .input {
+    padding-top: 22px;
+    padding-bottom: 8px;
+  }
+
+  .input-floating label {
+    left: 14px;
+    font-size: 16px;
+  }
+
+  .input-floating .input:focus ~ label,
+  .input-floating .input:not(:placeholder-shown) ~ label {
+    font-size: 0.75rem;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 479px) {
+  .input,
+  .select {
+    padding: 10px 12px;
+  }
+
+  /* Stack search bar on very small screens */
+  .search-bar-stack {
+    flex-direction: column;
+  }
+
+  .search-bar-stack .input {
+    border-radius: var(--radius);
+    margin-bottom: 8px;
+  }
+
+  .search-bar-stack .btn {
+    border-radius: var(--radius);
+    width: 100%;
+    border-left: 1px solid var(--border);
+  }
+}
+
+/* Input group responsive - stack on mobile */
+.input-group-stack-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+@media (min-width: 768px) {
+  .input-group-stack-mobile {
+    flex-direction: row;
+    gap: 12px;
+  }
+
+  .input-group-stack-mobile .input {
+    flex: 1;
+  }
+}

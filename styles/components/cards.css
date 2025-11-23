@@ -202,3 +202,80 @@
     animation: none;
   }
 }
+
+/* ==================== Mobile Responsive Styles ==================== */
+
+@media (max-width: 767px) {
+  /* Reduced padding on mobile */
+  .card {
+    padding: 12px;
+  }
+
+  .card-compact {
+    padding: 8px;
+  }
+
+  /* Card header stacks on mobile */
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .card-header-inline {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  /* Smaller title on mobile */
+  .card-title {
+    font-size: 1rem;
+  }
+
+  /* Card footer wraps on mobile */
+  .card-footer {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* Card list spacing */
+  .card-list {
+    gap: 8px;
+  }
+
+  /* Card meta wraps better */
+  .card-meta {
+    font-size: 0.8rem;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 479px) {
+  .card {
+    padding: 10px;
+    border-radius: var(--radius-sm);
+  }
+
+  .card-title {
+    font-size: 0.95rem;
+  }
+
+  .card-body {
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+}
+
+/* Force single column card grid on mobile */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 767px) {
+  .card-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}

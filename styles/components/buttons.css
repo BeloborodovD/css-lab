@@ -166,6 +166,70 @@
   }
 }
 
+/* ==================== Mobile Responsive Styles ==================== */
+
+/* Full-width button on mobile */
+.btn-block-mobile {
+  display: inline-flex;
+}
+
+@media (max-width: 767px) {
+  .btn-block-mobile {
+    display: flex;
+    width: 100%;
+  }
+}
+
+/* Touch-friendly minimum size on mobile */
+@media (max-width: 767px) {
+  .btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Adjust padding for better touch targets */
+  .btn-sm {
+    padding: 8px 12px;
+    min-height: 36px;
+  }
+
+  .btn-lg {
+    padding: 14px 24px;
+    min-height: 48px;
+  }
+
+  /* Icon buttons need 44px minimum */
+  .btn-icon {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* Extra small screens - stack button groups */
+@media (max-width: 479px) {
+  .btn-group-stack-mobile {
+    flex-direction: column;
+  }
+
+  .btn-group-stack-mobile .btn {
+    border-radius: 0;
+    width: 100%;
+  }
+
+  .btn-group-stack-mobile .btn:first-child {
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+
+  .btn-group-stack-mobile .btn:last-child {
+    border-radius: 0 0 var(--radius) var(--radius);
+  }
+
+  .btn-group-stack-mobile .btn:not(:last-child) {
+    border-right: 1px solid var(--border);
+    border-bottom: none;
+  }
+}
+
 /* ==================== Loading State ==================== */
 
 .btn-loading {

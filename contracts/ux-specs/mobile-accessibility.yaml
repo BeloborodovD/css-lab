@@ -1,0 +1,830 @@
+# Mobile Accessibility UX Specification
+# CSS Lab - Style Library
+# Created: 2025-11-23
+# Agent: ux-ergonomics-specialist
+
+spec_id: "mobile-accessibility-001"
+spec_type: "ux_specification"
+category: "mobile_optimization"
+
+# Overview
+overview:
+  name: "Mobile Accessibility"
+  description: |
+    Accessibility guidelines and specifications for mobile interfaces.
+    Covers font sizes, touch targets, screen readers, and reduced motion.
+    Ensures WCAG 2.1 AA compliance on mobile devices.
+  when_to_use:
+    - "All mobile interfaces"
+    - "Touch-enabled applications"
+    - "PWAs and hybrid apps"
+    - "Any public-facing web application"
+  standards:
+    - "WCAG 2.1 Level AA"
+    - "Apple Human Interface Guidelines"
+    - "Material Design Accessibility"
+
+# Font Size Minimums
+font_sizes:
+  name: "Font Size Minimums"
+  description: |
+    Minimum font sizes for readability on mobile devices.
+    Prevents iOS zoom on input focus and ensures text is legible.
+
+  specifications:
+    body_text:
+      minimum: "16px"
+      recommended: "16-18px"
+      line_height: "1.5"
+      note: "16px minimum prevents iOS auto-zoom on input focus"
+
+    form_inputs:
+      minimum: "16px"
+      recommended: "16px"
+      critical: true
+      note: "MUST be 16px or larger to prevent iOS zoom"
+
+    labels:
+      minimum: "14px"
+      recommended: "14-16px"
+      line_height: "1.4"
+
+    helper_text:
+      minimum: "12px"
+      recommended: "12-14px"
+      line_height: "1.4"
+
+    small_text:
+      minimum: "12px"
+      use_sparingly: true
+      note: "Only for non-critical info (timestamps, metadata)"
+
+    buttons:
+      minimum: "14px"
+      recommended: "16px"
+      font_weight: "500-600"
+
+    navigation:
+      minimum: "14px"
+      recommended: "14-16px"
+
+  responsive_scaling:
+    approach: "Use clamp() for fluid typography"
+    example: "font-size: clamp(16px, 4vw, 20px)"
+    min_viewport: "320px"
+    max_viewport: "768px"
+
+  css_implementation:
+    base: |
+      /* Root font size - base for rem units */
+      :root {
+        --font-size-xs: 12px;
+        --font-size-sm: 14px;
+        --font-size-base: 16px;
+        --font-size-lg: 18px;
+        --font-size-xl: 20px;
+        --font-size-2xl: 24px;
+
+        /* Line heights */
+        --line-height-tight: 1.25;
+        --line-height-normal: 1.5;
+        --line-height-relaxed: 1.75;
+      }
+
+      /* Body text */
+      body {
+        font-size: var(--font-size-base);
+        line-height: var(--line-height-normal);
+      }
+
+      /* Form inputs - CRITICAL: Must be 16px to prevent iOS zoom */
+      input,
+      textarea,
+      select {
+        font-size: 16px;
+        /* Never use font-size < 16px on inputs */
+      }
+
+      /* Labels */
+      label {
+        font-size: var(--font-size-sm);
+        line-height: var(--line-height-tight);
+      }
+
+      /* Helper/caption text */
+      .text-helper,
+      .text-caption {
+        font-size: var(--font-size-xs);
+        line-height: var(--line-height-normal);
+      }
+
+      /* Fluid typography example */
+      h1 {
+        font-size: clamp(24px, 6vw, 36px);
+        line-height: var(--line-height-tight);
+      }
+
+      h2 {
+        font-size: clamp(20px, 5vw, 28px);
+        line-height: var(--line-height-tight);
+      }
+
+      /* Respect user preferences */
+      @media (prefers-reduced-motion: no-preference) {
+        html {
+          scroll-behavior: smooth;
+        }
+      }
+
+  dark_theme:
+    font_weight_adjustment: "Consider slightly heavier weights for dark mode"
+    note: "Light text on dark can appear thinner"
+    css: |
+      @media (prefers-color-scheme: dark) {
+        body {
+          font-weight: 400; /* or adjust to preference */
+        }
+
+        .text-bold {
+          font-weight: 600; /* Slightly heavier */
+        }
+      }
+
+# Touch Target Accessibility
+touch_targets:
+  name: "Touch Target Accessibility"
+  description: |
+    Accessible touch target sizes for users with motor impairments.
+    Exceeds WCAG 2.1 minimum for better usability.
+
+  wcag_requirements:
+    success_criterion: "2.5.5 Target Size (AAA)"
+    minimum: "44x44 CSS pixels"
+    spacing: "No overlapping touch targets"
+
+  specifications:
+    minimum_size:
+      width: "44px"
+      height: "44px"
+      note: "Apple HIG and WCAG minimum"
+
+    recommended_size:
+      width: "48px"
+      height: "48px"
+      note: "Material Design recommendation"
+
+    large_touch_targets:
+      width: "56px"
+      height: "56px"
+      use_case: "Primary actions, accessibility mode"
+
+    minimum_spacing:
+      between_targets: "8px"
+      recommended: "12px"
+
+  techniques:
+    expanding_hit_area:
+      description: "Visual element smaller than touch target"
+      methods:
+        - "Padding on clickable element"
+        - "Pseudo-element overlay"
+        - "Negative margin with padding"
+
+    inline_links:
+      problem: "Links in text are hard to tap"
+      solution: "Add invisible padding via pseudo-element"
+
+    icon_buttons:
+      problem: "Small icons are hard to tap"
+      solution: "Wrap in button with minimum 44px size"
+
+  css_implementation:
+    base: |
+      /* Base touch target size */
+      .touch-target {
+        min-width: 44px;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Recommended size */
+      .touch-target--lg {
+        min-width: 48px;
+        min-height: 48px;
+      }
+
+      /* Expand hit area with pseudo-element */
+      .tap-expand {
+        position: relative;
+      }
+
+      .tap-expand::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        min-width: 44px;
+        min-height: 44px;
+        transform: translate(-50%, -50%);
+      }
+
+      /* Inline link with expanded touch target */
+      .link-inline {
+        position: relative;
+      }
+
+      .link-inline::before {
+        content: '';
+        position: absolute;
+        top: -8px;
+        left: -8px;
+        right: -8px;
+        bottom: -8px;
+      }
+
+      /* Icon button with proper touch target */
+      .btn-icon {
+        width: 44px;
+        height: 44px;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        border-radius: 50%;
+      }
+
+      .btn-icon svg,
+      .btn-icon img {
+        width: 24px;
+        height: 24px;
+      }
+
+      /* Focus visible indicator */
+      .touch-target:focus-visible {
+        outline: 2px solid var(--focus-color);
+        outline-offset: 2px;
+      }
+
+      /* Touch-specific enhancements */
+      @media (hover: none) and (pointer: coarse) {
+        .touch-target {
+          min-width: 48px;
+          min-height: 48px;
+        }
+      }
+
+  dark_theme:
+    focus_color: "var(--focus-color-dark, #90CAF9)"
+    focus_offset: "2px"
+
+# Screen Reader Considerations
+screen_readers:
+  name: "Screen Reader Considerations"
+  description: |
+    Ensuring content is accessible to mobile screen readers
+    (VoiceOver on iOS, TalkBack on Android).
+
+  landmarks:
+    description: "Use semantic HTML and ARIA landmarks"
+    elements:
+      header: "<header> or role='banner'"
+      nav: "<nav> or role='navigation'"
+      main: "<main> or role='main'"
+      footer: "<footer> or role='contentinfo'"
+      search: "role='search'"
+      form: "<form> with aria-label"
+
+  focus_management:
+    tab_order:
+      - "Ensure logical tab order (DOM order = visual order)"
+      - "Use tabindex='0' for custom interactive elements"
+      - "Avoid tabindex > 0"
+
+    focus_trap:
+      when: "Modals, dialogs, bottom sheets"
+      implementation: "Focus first element, trap with JS, return on close"
+
+    skip_links:
+      text: "Skip to main content"
+      position: "First focusable element"
+      visible_on_focus: true
+
+  aria_attributes:
+    labels:
+      aria_label: "For elements without visible text"
+      aria_labelledby: "Reference visible label"
+      aria_describedby: "Additional description"
+
+    states:
+      aria_expanded: "Expandable sections, dropdowns"
+      aria_selected: "Tabs, list items"
+      aria_checked: "Checkboxes, switches"
+      aria_pressed: "Toggle buttons"
+      aria_disabled: "Disabled elements"
+      aria_hidden: "Decorative elements"
+
+    live_regions:
+      aria_live: "polite (updates) or assertive (urgent)"
+      aria_atomic: "Announce entire region or just changes"
+      role_status: "For status messages"
+      role_alert: "For important alerts"
+
+  announcements:
+    loading_states:
+      start: "aria-live region: 'Loading...'"
+      complete: "aria-live region: 'Content loaded'"
+
+    form_errors:
+      associate: "aria-describedby linking to error"
+      announce: "aria-live='polite' on error container"
+
+    navigation:
+      page_change: "Update document.title"
+      section_change: "Move focus to heading"
+
+  css_implementation:
+    base: |
+      /* Skip link - visible on focus */
+      .skip-link {
+        position: absolute;
+        top: -40px;
+        left: 0;
+        background: var(--primary-color);
+        color: white;
+        padding: 12px 16px;
+        z-index: 10000;
+        transition: top 200ms;
+      }
+
+      .skip-link:focus {
+        top: 0;
+      }
+
+      /* Visually hidden but accessible to screen readers */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      /* Make visible on focus (for skip links in content) */
+      .sr-only-focusable:focus,
+      .sr-only-focusable:active {
+        position: static;
+        width: auto;
+        height: auto;
+        overflow: visible;
+        clip: auto;
+        white-space: normal;
+      }
+
+      /* Hide from screen readers */
+      .aria-hidden {
+        aria-hidden: true;
+      }
+
+      /* Focus styles for all interactive elements */
+      :focus-visible {
+        outline: 2px solid var(--focus-color);
+        outline-offset: 2px;
+      }
+
+      /* Remove outline for mouse users */
+      :focus:not(:focus-visible) {
+        outline: none;
+      }
+
+      /* Live region for announcements */
+      .sr-announcer {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+  dark_theme:
+    focus_color: "var(--focus-color-dark)"
+    skip_link_bg: "var(--primary-dark)"
+
+# Reduced Motion Handling
+reduced_motion:
+  name: "Reduced Motion Handling"
+  description: |
+    Respecting user preferences for reduced motion.
+    Critical for users with vestibular disorders or motion sensitivity.
+
+  media_query: "prefers-reduced-motion: reduce"
+
+  what_to_reduce:
+    remove:
+      - "Parallax effects"
+      - "Zoom/scale animations"
+      - "Auto-playing animations"
+      - "Decorative motion"
+      - "Bouncing/elastic effects"
+      - "Spinning/rotating elements (decorative)"
+      - "Background video auto-play"
+
+    keep:
+      - "Loading spinners (essential)"
+      - "Progress indicators"
+      - "Color transitions (brief)"
+      - "Opacity fades (brief, < 200ms)"
+      - "Focus indicators"
+      - "User-initiated animations (can be reduced)"
+
+    reduce:
+      - "Slide animations - use fade instead"
+      - "Complex transitions - simplify"
+      - "Long animations - shorten drastically"
+
+  implementation_strategy:
+    default: "Design with motion"
+    reduced: "Override with simpler alternatives"
+    duration_cap: "200ms for reduced motion"
+
+  css_implementation:
+    base: |
+      /* Default animations */
+      .animate-slide-in {
+        animation: slideIn 300ms ease-out;
+      }
+
+      .animate-fade-in {
+        animation: fadeIn 200ms ease-out;
+      }
+
+      .animate-scale {
+        animation: scaleIn 250ms ease-out;
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateX(-100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+
+      @keyframes scaleIn {
+        from {
+          transform: scale(0.9);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      /* Reduced motion overrides */
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+
+        /* Keep essential animations but reduce */
+        .loading-spinner {
+          animation-duration: 1s !important;
+        }
+
+        .progress-bar {
+          transition-duration: 100ms !important;
+        }
+
+        /* Replace slide with fade */
+        .animate-slide-in {
+          animation: fadeIn 100ms ease-out;
+        }
+
+        /* Remove parallax */
+        .parallax {
+          transform: none !important;
+        }
+
+        /* Stop auto-playing media */
+        video[autoplay] {
+          display: none;
+        }
+      }
+
+      /* Safe motion class - only animate if no preference */
+      @media (prefers-reduced-motion: no-preference) {
+        .motion-safe {
+          transition: transform 200ms, opacity 200ms;
+        }
+      }
+
+      /* Always reduced motion class */
+      .motion-reduce {
+        transition: none !important;
+        animation: none !important;
+      }
+
+    loading_spinner: |
+      /* Essential loading spinner - keep even with reduced motion */
+      .spinner {
+        width: 24px;
+        height: 24px;
+        border: 2px solid var(--border-color);
+        border-top-color: var(--primary-color);
+        border-radius: 50%;
+        animation: spin 800ms linear infinite;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      /* Reduced motion: slower spin or static indicator */
+      @media (prefers-reduced-motion: reduce) {
+        .spinner {
+          animation-duration: 1.5s;
+        }
+
+        /* Alternative: pulsing dot instead of spinner */
+        .spinner-alt {
+          animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.4; }
+        }
+      }
+
+  dark_theme:
+    note: "Same motion preferences apply regardless of theme"
+
+# Color and Contrast
+color_contrast:
+  name: "Color and Contrast"
+  description: |
+    Ensuring sufficient color contrast for readability.
+    WCAG 2.1 AA requirements for mobile interfaces.
+
+  wcag_requirements:
+    text_normal:
+      ratio: "4.5:1"
+      applies_to: "Text smaller than 18pt (24px) or 14pt bold"
+
+    text_large:
+      ratio: "3:1"
+      applies_to: "Text 18pt+ (24px) or 14pt+ bold"
+
+    ui_components:
+      ratio: "3:1"
+      applies_to: "Form borders, icons, focus indicators"
+
+    non_text:
+      ratio: "3:1"
+      applies_to: "Graphical objects, charts, buttons"
+
+  color_blindness:
+    considerations:
+      - "Don't rely on color alone to convey information"
+      - "Add icons, patterns, or text labels"
+      - "Test with color blindness simulators"
+
+    common_types:
+      - "Deuteranopia (red-green)"
+      - "Protanopia (red-green)"
+      - "Tritanopia (blue-yellow)"
+
+  dark_mode_considerations:
+    - "Pure white (#FFF) on pure black (#000) can cause eye strain"
+    - "Use slightly off-white text (e.g., #E0E0E0)"
+    - "Test on OLED screens (true blacks)"
+    - "Maintain contrast ratios in both modes"
+
+  css_implementation:
+    base: |
+      :root {
+        /* Light theme colors with good contrast */
+        --text-primary: #1A1A1A;        /* 14.5:1 on white */
+        --text-secondary: #5C5C5C;      /* 7:1 on white */
+        --text-tertiary: #8A8A8A;       /* 4.5:1 on white */
+        --text-disabled: #9E9E9E;       /* 3:1 on white - AA for large text */
+
+        --surface-color: #FFFFFF;
+        --border-color: #D1D1D1;        /* 3:1 for UI components */
+
+        --primary-color: #1976D2;       /* 4.5:1 on white */
+        --error-color: #D32F2F;         /* 5.5:1 on white */
+        --success-color: #388E3C;       /* 4.5:1 on white */
+
+        --focus-color: #1976D2;
+      }
+
+      /* Dark theme with adjusted contrast */
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --text-primary: #E0E0E0;        /* 12:1 on dark bg */
+          --text-secondary: #A0A0A0;      /* 6.5:1 on dark bg */
+          --text-tertiary: #757575;       /* 4.5:1 on dark bg */
+          --text-disabled: #616161;       /* 3:1 on dark bg */
+
+          --surface-color: #121212;       /* Material dark surface */
+          --surface-elevated: #1E1E1E;    /* Elevated surfaces */
+          --border-color: #424242;        /* 3:1 contrast */
+
+          --primary-color: #64B5F6;       /* Lighter for dark mode */
+          --error-color: #EF5350;
+          --success-color: #66BB6A;
+
+          --focus-color: #64B5F6;
+        }
+      }
+
+      /* High contrast mode support */
+      @media (prefers-contrast: high) {
+        :root {
+          --text-primary: #000000;
+          --text-secondary: #000000;
+          --border-color: #000000;
+          --focus-color: #000000;
+        }
+      }
+
+      @media (prefers-contrast: high) and (prefers-color-scheme: dark) {
+        :root {
+          --text-primary: #FFFFFF;
+          --text-secondary: #FFFFFF;
+          --border-color: #FFFFFF;
+          --surface-color: #000000;
+          --focus-color: #FFFFFF;
+        }
+      }
+
+      /* Don't rely on color alone */
+      .status-success {
+        color: var(--success-color);
+      }
+
+      .status-success::before {
+        content: '✓ '; /* Icon in addition to color */
+      }
+
+      .status-error {
+        color: var(--error-color);
+      }
+
+      .status-error::before {
+        content: '✕ ';
+      }
+
+# Additional Mobile Accessibility
+additional_considerations:
+  name: "Additional Mobile Accessibility"
+  description: "Other important accessibility considerations for mobile"
+
+  orientation:
+    requirement: "Support both portrait and landscape"
+    note: "Don't lock orientation unless critical"
+    css: |
+      /* Ensure content works in both orientations */
+      @media (orientation: landscape) {
+        .mobile-form {
+          max-width: 600px;
+          margin: 0 auto;
+        }
+      }
+
+  zoom:
+    requirement: "Support up to 200% zoom"
+    note: "Don't disable pinch zoom"
+    meta_tag: '<meta name="viewport" content="width=device-width, initial-scale=1">'
+    avoid: "user-scalable=no, maximum-scale=1"
+
+  text_spacing:
+    requirement: "WCAG 1.4.12 - Text Spacing"
+    accommodations:
+      line_height: "1.5x font size"
+      paragraph_spacing: "2x font size"
+      letter_spacing: "0.12x font size"
+      word_spacing: "0.16x font size"
+
+  timeouts:
+    requirement: "Allow users to extend time limits"
+    minimum_warning: "20 seconds before timeout"
+    user_control: "Option to disable or extend"
+
+  error_prevention:
+    reversible: "Allow undo for destructive actions"
+    confirmation: "Confirm before delete/submit"
+    review: "Allow review before final submission"
+
+  css_implementation:
+    base: |
+      /* Support text spacing adjustments */
+      body {
+        line-height: 1.5;
+        letter-spacing: 0.12em;
+        word-spacing: 0.16em;
+      }
+
+      p {
+        margin-bottom: 2em;
+      }
+
+      /* Ensure scrollable regions are keyboard accessible */
+      .scrollable-region {
+        overflow: auto;
+        /* Make focusable if content is taller than container */
+      }
+
+      .scrollable-region:focus {
+        outline: 2px solid var(--focus-color);
+        outline-offset: -2px;
+      }
+
+      /* Touch target spacing */
+      .button-group {
+        display: flex;
+        gap: 8px; /* Minimum spacing between targets */
+      }
+
+      /* Error messages are announced */
+      .form-error[role="alert"] {
+        /* Automatically announced by screen readers */
+      }
+
+# Testing Checklist
+testing_checklist:
+  screen_readers:
+    - "VoiceOver on iOS Safari"
+    - "TalkBack on Android Chrome"
+    - "Test all interactive elements are announced"
+    - "Test focus order is logical"
+    - "Test live regions announce correctly"
+
+  motor_accessibility:
+    - "All targets are minimum 44x44px"
+    - "Adequate spacing between targets"
+    - "No time-limited interactions"
+    - "Gestures have alternatives"
+
+  visual_accessibility:
+    - "Contrast meets WCAG AA (4.5:1 text, 3:1 UI)"
+    - "Color is not the only indicator"
+    - "Text can scale to 200%"
+    - "Content reflows at 400% zoom"
+
+  reduced_motion:
+    - "Enable 'Reduce motion' in device settings"
+    - "Verify decorative animations are removed"
+    - "Verify essential indicators still work"
+
+  tools:
+    - "axe DevTools"
+    - "WAVE accessibility evaluation"
+    - "Lighthouse accessibility audit"
+    - "Color contrast analyzers"
+
+# Implementation Notes
+implementation_notes:
+  priority:
+    - "Font sizes (16px inputs) - prevents usability issues"
+    - "Touch targets (44px minimum) - critical for motor accessibility"
+    - "Focus management - essential for keyboard/switch users"
+    - "Screen reader support - semantic HTML first"
+    - "Reduced motion - respect user preferences"
+
+  testing:
+    - "Test with real assistive technology"
+    - "Test on actual mobile devices"
+    - "Include users with disabilities in testing"
+    - "Audit regularly, not just at launch"
+
+  resources:
+    - "WCAG 2.1 Guidelines: https://www.w3.org/WAI/WCAG21/quickref/"
+    - "Apple Accessibility: https://developer.apple.com/accessibility/"
+    - "Android Accessibility: https://developer.android.com/guide/topics/ui/accessibility"

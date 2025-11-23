@@ -988,3 +988,139 @@
     transition: none;
   }
 }
+
+/* ==================== Mobile Responsive Styles ==================== */
+
+@media (max-width: 767px) {
+  /* Full-width on mobile */
+  .combobox {
+    width: 100%;
+  }
+
+  /* Touch-friendly trigger */
+  .combobox-trigger {
+    min-height: 44px;
+    padding: 12px 14px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  /* Bottom sheet dropdown on mobile */
+  .combobox-dropdown {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 70vh;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    transform: translateY(100%);
+    transform-origin: bottom center;
+  }
+
+  .combobox.open .combobox-dropdown {
+    transform: translateY(0);
+  }
+
+  /* Bottom sheet handle */
+  .combobox-dropdown::before {
+    content: '';
+    display: block;
+    width: 36px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 8px auto;
+  }
+
+  /* Larger option items for touch */
+  .combobox-option {
+    padding: 14px 16px;
+    min-height: 48px;
+  }
+
+  /* Options list scrolling */
+  .combobox-options {
+    max-height: calc(70vh - 120px);
+  }
+
+  /* Search input */
+  .combobox-search {
+    padding: 12px 16px;
+  }
+
+  .combobox-search-input {
+    font-size: 16px;
+    min-height: 36px;
+  }
+
+  /* Tags wrap better */
+  .combobox-tag {
+    max-width: 120px;
+    padding: 4px 8px;
+    font-size: 0.85rem;
+  }
+
+  .combobox-tag-remove {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Clear button larger */
+  .combobox-clear {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* Arrow larger */
+  .combobox-arrow {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* Footer actions */
+  .combobox-footer {
+    padding: 12px 16px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  }
+
+  .combobox-footer-btn {
+    padding: 8px 14px;
+    min-height: 40px;
+  }
+
+  /* Create option */
+  .combobox-create {
+    padding: 14px 16px;
+    min-height: 48px;
+  }
+
+  /* Group headers */
+  .combobox-group-header {
+    padding: 12px 16px 6px;
+  }
+
+  .combobox-group-toggle {
+    padding: 12px 16px;
+  }
+
+  /* Empty state */
+  .combobox-empty {
+    padding: 32px 20px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 479px) {
+  .combobox-tag {
+    max-width: 100px;
+  }
+
+  .combobox-option {
+    padding: 12px 14px;
+  }
+}
+
+/* Dark theme mobile adjustments */
+.dark .combobox-dropdown::before {
+  background: var(--dark-border);
+}

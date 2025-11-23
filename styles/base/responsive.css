@@ -1,0 +1,831 @@
+/* ==================== Responsive Design System ==================== */
+/* Mobile-first breakpoints and responsive utilities for CSS Lab */
+
+/* =============================================
+   1. Breakpoint CSS Variables
+   ============================================= */
+
+:root {
+  --breakpoint-xs: 320px;
+  --breakpoint-sm: 480px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-xxl: 1536px;
+
+  /* Touch target minimum (WCAG 2.5.5) */
+  --touch-target-min: 44px;
+}
+
+/* =============================================
+   2. Container Classes
+   ============================================= */
+
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.container-fluid {
+  width: 100%;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+/* Container max-widths at breakpoints */
+@media (min-width: 480px) {
+  .container {
+    max-width: 448px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .container-fluid {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 960px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1200px;
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  .container-fluid {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .container {
+    max-width: 1440px;
+  }
+}
+
+/* =============================================
+   3. Visibility Utilities
+   ============================================= */
+
+/* Hide at specific breakpoints and up */
+.hide-xs {
+  display: none !important;
+}
+
+@media (min-width: 480px) {
+  .hide-xs {
+    display: revert !important;
+  }
+  .hide-sm {
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .hide-sm {
+    display: revert !important;
+  }
+  .hide-md {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hide-md {
+    display: revert !important;
+  }
+  .hide-lg {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  .hide-lg {
+    display: revert !important;
+  }
+  .hide-xl {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1536px) {
+  .hide-xl {
+    display: revert !important;
+  }
+  .hide-xxl {
+    display: none !important;
+  }
+}
+
+/* Show at specific breakpoints and up (hidden by default) */
+.show-sm,
+.show-md,
+.show-lg,
+.show-xl,
+.show-xxl {
+  display: none !important;
+}
+
+@media (min-width: 480px) {
+  .show-sm {
+    display: revert !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .show-md {
+    display: revert !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .show-lg {
+    display: revert !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  .show-xl {
+    display: revert !important;
+  }
+}
+
+@media (min-width: 1536px) {
+  .show-xxl {
+    display: revert !important;
+  }
+}
+
+/* Hide only on mobile (below md) */
+.hide-mobile {
+  display: none !important;
+}
+
+@media (min-width: 768px) {
+  .hide-mobile {
+    display: revert !important;
+  }
+}
+
+/* Show only on mobile (below md) */
+@media (min-width: 768px) {
+  .show-mobile {
+    display: none !important;
+  }
+}
+
+/* =============================================
+   4. Grid Responsive Utilities
+   ============================================= */
+
+/* Force single column on mobile */
+.grid-cols-1-mobile {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .grid-cols-1-mobile {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
+/* Two columns on tablet+ */
+.grid-cols-2-tablet {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .grid-cols-2-tablet {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Three columns on desktop+ */
+.grid-cols-3-desktop {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .grid-cols-3-desktop {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-cols-3-desktop {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Flex column on mobile */
+.flex-column-mobile {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .flex-column-mobile {
+    flex-direction: row;
+  }
+}
+
+/* Flex wrap on mobile */
+.flex-wrap-mobile {
+  flex-wrap: wrap;
+}
+
+@media (min-width: 768px) {
+  .flex-wrap-mobile {
+    flex-wrap: nowrap;
+  }
+}
+
+/* =============================================
+   5. Spacing Responsive Utilities
+   ============================================= */
+
+/* Gap utilities */
+.gap-2-mobile {
+  gap: 8px;
+}
+
+.gap-4-mobile {
+  gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .gap-2-mobile {
+    gap: 12px;
+  }
+
+  .gap-4-mobile {
+    gap: 20px;
+  }
+
+  .gap-4-tablet {
+    gap: 16px;
+  }
+
+  .gap-6-tablet {
+    gap: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .gap-6-desktop {
+    gap: 24px;
+  }
+
+  .gap-8-desktop {
+    gap: 32px;
+  }
+}
+
+/* Padding utilities */
+.p-2-mobile {
+  padding: 8px;
+}
+
+.p-4-mobile {
+  padding: 16px;
+}
+
+@media (min-width: 768px) {
+  .p-2-mobile {
+    padding: 12px;
+  }
+
+  .p-4-mobile {
+    padding: 20px;
+  }
+
+  .p-4-tablet {
+    padding: 16px;
+  }
+
+  .p-6-tablet {
+    padding: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .p-6-desktop {
+    padding: 24px;
+  }
+
+  .p-8-desktop {
+    padding: 32px;
+  }
+}
+
+/* Margin utilities */
+.m-2-mobile {
+  margin: 8px;
+}
+
+.m-4-mobile {
+  margin: 16px;
+}
+
+@media (min-width: 768px) {
+  .m-2-mobile {
+    margin: 12px;
+  }
+
+  .m-4-mobile {
+    margin: 20px;
+  }
+}
+
+/* =============================================
+   6. Text Responsive Utilities
+   ============================================= */
+
+/* Text alignment */
+.text-center-mobile {
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .text-center-mobile {
+    text-align: left;
+  }
+
+  .text-left-tablet {
+    text-align: left;
+  }
+
+  .text-center-tablet {
+    text-align: center;
+  }
+}
+
+@media (min-width: 1024px) {
+  .text-left-desktop {
+    text-align: left;
+  }
+
+  .text-center-desktop {
+    text-align: center;
+  }
+
+  .text-right-desktop {
+    text-align: right;
+  }
+}
+
+/* =============================================
+   7. Fluid Typography
+   ============================================= */
+
+/* Fluid heading sizes using clamp() */
+.text-fluid-xs {
+  font-size: clamp(0.75rem, 2vw, 0.875rem);
+}
+
+.text-fluid-sm {
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
+}
+
+.text-fluid-base {
+  font-size: clamp(1rem, 3vw, 1.125rem);
+}
+
+.text-fluid-lg {
+  font-size: clamp(1.125rem, 3.5vw, 1.25rem);
+}
+
+.text-fluid-xl {
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
+}
+
+.text-fluid-2xl {
+  font-size: clamp(1.5rem, 4.5vw, 2rem);
+}
+
+.text-fluid-3xl {
+  font-size: clamp(1.875rem, 5vw, 2.5rem);
+}
+
+.text-fluid-4xl {
+  font-size: clamp(2.25rem, 6vw, 3rem);
+}
+
+/* Fluid heading classes */
+h1.fluid, .h1-fluid {
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  line-height: 1.2;
+}
+
+h2.fluid, .h2-fluid {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  line-height: 1.25;
+}
+
+h3.fluid, .h3-fluid {
+  font-size: clamp(1.25rem, 3.5vw, 1.5rem);
+  line-height: 1.3;
+}
+
+h4.fluid, .h4-fluid {
+  font-size: clamp(1.125rem, 3vw, 1.25rem);
+  line-height: 1.35;
+}
+
+h5.fluid, .h5-fluid {
+  font-size: clamp(1rem, 2.5vw, 1.125rem);
+  line-height: 1.4;
+}
+
+h6.fluid, .h6-fluid {
+  font-size: clamp(0.875rem, 2vw, 1rem);
+  line-height: 1.4;
+}
+
+/* =============================================
+   8. Width Utilities
+   ============================================= */
+
+/* Full width on mobile */
+.w-full-mobile {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .w-full-mobile {
+    width: auto;
+  }
+
+  .w-full-tablet {
+    width: 100%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .w-full-tablet {
+    width: auto;
+  }
+
+  .w-full-desktop {
+    width: 100%;
+  }
+}
+
+/* Auto width on desktop */
+.w-auto-desktop {
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .w-auto-desktop {
+    width: auto;
+  }
+}
+
+/* =============================================
+   9. Order Utilities (Flexbox/Grid)
+   ============================================= */
+
+.order-first-mobile {
+  order: -1;
+}
+
+.order-last-mobile {
+  order: 999;
+}
+
+@media (min-width: 768px) {
+  .order-first-mobile {
+    order: 0;
+  }
+
+  .order-last-mobile {
+    order: 0;
+  }
+
+  .order-first-tablet {
+    order: -1;
+  }
+
+  .order-last-tablet {
+    order: 999;
+  }
+}
+
+@media (min-width: 1024px) {
+  .order-first-tablet {
+    order: 0;
+  }
+
+  .order-last-tablet {
+    order: 0;
+  }
+}
+
+/* =============================================
+   10. Stack Utilities (Vertical Spacing)
+   ============================================= */
+
+.stack-mobile > * + * {
+  margin-top: 12px;
+}
+
+@media (min-width: 768px) {
+  .stack-mobile > * + * {
+    margin-top: 16px;
+  }
+}
+
+.stack-sm-mobile > * + * {
+  margin-top: 8px;
+}
+
+@media (min-width: 768px) {
+  .stack-sm-mobile > * + * {
+    margin-top: 12px;
+  }
+}
+
+.stack-lg-mobile > * + * {
+  margin-top: 16px;
+}
+
+@media (min-width: 768px) {
+  .stack-lg-mobile > * + * {
+    margin-top: 24px;
+  }
+}
+
+/* =============================================
+   11. Touch-Friendly Utilities
+   ============================================= */
+
+/* Ensure minimum touch target size */
+.touch-target {
+  min-width: var(--touch-target-min);
+  min-height: var(--touch-target-min);
+}
+
+/* Increase tap area without changing visual size */
+.touch-target-expanded {
+  position: relative;
+}
+
+.touch-target-expanded::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: var(--touch-target-min);
+  min-height: var(--touch-target-min);
+  width: 100%;
+  height: 100%;
+}
+
+/* =============================================
+   12. Safe Area Utilities (Notch support)
+   ============================================= */
+
+.safe-area-inset-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-inset-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-area-inset-left {
+  padding-left: env(safe-area-inset-left);
+}
+
+.safe-area-inset-right {
+  padding-right: env(safe-area-inset-right);
+}
+
+.safe-area-inset-all {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* =============================================
+   13. Aspect Ratio Utilities
+   ============================================= */
+
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
+
+.aspect-video {
+  aspect-ratio: 16 / 9;
+}
+
+.aspect-portrait {
+  aspect-ratio: 3 / 4;
+}
+
+/* Mobile-specific aspect ratios */
+@media (max-width: 767px) {
+  .aspect-square-mobile {
+    aspect-ratio: 1 / 1;
+  }
+
+  .aspect-video-mobile {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+/* =============================================
+   14. Scroll Utilities
+   ============================================= */
+
+/* Horizontal scroll container */
+.scroll-x {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.scroll-x::-webkit-scrollbar {
+  height: 6px;
+}
+
+.scroll-x::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+.scroll-x::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+/* Hide scrollbar on mobile */
+.scroll-x-no-scrollbar {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scroll-x-no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Snap scroll for carousels */
+.scroll-snap-x {
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+}
+
+.scroll-snap-item {
+  scroll-snap-align: start;
+}
+
+.scroll-snap-item-center {
+  scroll-snap-align: center;
+}
+
+/* =============================================
+   15. Bottom Sheet Base
+   ============================================= */
+
+.bottom-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--panel);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(100%);
+  transition: transform var(--transition-slow);
+  z-index: 1000;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.bottom-sheet.open {
+  transform: translateY(0);
+}
+
+.bottom-sheet-handle {
+  width: 36px;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 12px auto;
+  flex-shrink: 0;
+}
+
+.bottom-sheet-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 16px 16px;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom));
+}
+
+/* Dark theme */
+.dark .bottom-sheet {
+  background: var(--dark-panel);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.dark .bottom-sheet-handle {
+  background: var(--dark-border);
+}
+
+/* =============================================
+   16. Overlay Utilities
+   ============================================= */
+
+.overlay-mobile {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .overlay-mobile {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition), visibility var(--transition);
+  }
+
+  .overlay-mobile.active {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.dark .overlay-mobile {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+/* =============================================
+   17. Reduced Motion Support
+   ============================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .bottom-sheet {
+    transition: none;
+  }
+
+  .overlay-mobile {
+    transition: none;
+  }
+
+  .scroll-snap-x {
+    scroll-behavior: auto;
+  }
+}
+
+/* =============================================
+   18. Print Styles
+   ============================================= */
+
+@media print {
+  .hide-print {
+    display: none !important;
+  }
+
+  .show-print {
+    display: block !important;
+  }
+
+  .container {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .bottom-sheet {
+    display: none !important;
+  }
+}

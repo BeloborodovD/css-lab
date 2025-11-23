@@ -1,0 +1,258 @@
+# Contract: CSS Lab - Mobile UX Audit & Touch Optimization
+# Task ID: css-lab-mobile-ux
+# Created: 2025-11-23
+# Agent: ux-ergonomics-specialist
+
+contract_id: "css-lab-mobile-ux-001"
+task_type: "ux_audit"
+priority: "high"
+
+# Контекст проекта
+context:
+  project: "CSS Lab - Style Library"
+  location: "d:\\_claude_project\\css-lab"
+  demo_page: "index.html"
+  current_components: 29
+  tech_stack: "Vanilla CSS + JS"
+
+# Задание
+task:
+  title: "Mobile UX Audit и Touch Optimization спецификации"
+  description: |
+    Провести UX аудит всех компонентов для мобильных устройств.
+    Создать спецификации для touch-оптимизации и мобильной эргономики.
+
+# Области аудита
+audit_areas:
+
+  touch_targets:
+    title: "Touch Target Sizes"
+    requirements:
+      - "Минимум 44x44px для всех интерактивных элементов"
+      - "48x48px рекомендуется для primary actions"
+      - "Spacing между targets минимум 8px"
+    components_to_check:
+      - buttons
+      - links
+      - checkboxes/radios
+      - dropdown items
+      - date picker days
+      - combobox options
+      - notification items
+      - chips (removable)
+
+  thumb_zones:
+    title: "Thumb-Friendly Zones"
+    description: "Оптимизация для использования одной рукой"
+    guidelines:
+      primary_zone: "Нижняя треть экрана - легко достать"
+      secondary_zone: "Середина экрана - требует усилия"
+      hard_zone: "Верхние углы - сложно достать"
+    recommendations:
+      - "Primary actions в нижней части"
+      - "FAB (floating action button) в правом нижнем углу"
+      - "Bottom sheets вместо centered modals"
+      - "Bottom navigation для основных разделов"
+
+  gestures:
+    title: "Touch Gestures Support"
+    patterns:
+      swipe_horizontal:
+        use_cases:
+          - "Удаление элементов (swipe-to-delete)"
+          - "Навигация между tabs"
+          - "Carousel/slider"
+        css_support: "touch-action, overflow-x, scroll-snap"
+
+      swipe_vertical:
+        use_cases:
+          - "Pull-to-refresh индикация"
+          - "Dismiss bottom sheet"
+          - "Scroll acceleration"
+        css_support: "overscroll-behavior, scroll-behavior"
+
+      long_press:
+        use_cases:
+          - "Context menu"
+          - "Multi-select mode"
+          - "Drag-and-drop initiation"
+        css_support: "user-select, -webkit-touch-callout"
+
+      pinch_zoom:
+        use_cases:
+          - "Image gallery"
+          - "Map components"
+        css_support: "touch-action: pinch-zoom"
+
+  mobile_patterns:
+    title: "Mobile UI Patterns"
+
+    navigation:
+      - pattern: "Bottom Navigation Bar"
+        when: "3-5 primary destinations"
+        specs:
+          height: "56-64px"
+          icons: "24px with labels"
+          active_state: "Color + scale"
+
+      - pattern: "Hamburger Menu"
+        when: "More than 5 destinations"
+        specs:
+          trigger: "Top-left or top-right"
+          animation: "Slide from left/right"
+          overlay: "Semi-transparent backdrop"
+
+      - pattern: "Tab Bar"
+        when: "Content sections"
+        specs:
+          scrollable: "If more than 4 tabs"
+          indicator: "Animated underline"
+
+    modals:
+      - pattern: "Bottom Sheet"
+        when: "Actions, pickers, filters"
+        specs:
+          drag_handle: "Visible 40x4px bar"
+          snap_points: "25%, 50%, 90%"
+          dismiss: "Swipe down or backdrop tap"
+
+      - pattern: "Full Screen Modal"
+        when: "Complex forms, detailed content"
+        specs:
+          close_button: "Top-left X or top-right"
+          sticky_footer: "Primary actions"
+
+    inputs:
+      - pattern: "Floating Labels"
+        benefit: "Saves vertical space"
+
+      - pattern: "Input Masks"
+        benefit: "Guides formatting (phone, card)"
+
+      - pattern: "Inline Validation"
+        benefit: "Immediate feedback"
+
+    feedback:
+      - pattern: "Haptic-Ready States"
+        css: "Will be triggered by JS"
+
+      - pattern: "Loading Skeletons"
+        benefit: "Perceived performance"
+
+      - pattern: "Pull-to-Refresh"
+        indicator: "Spinner at top"
+
+# Component-Specific Recommendations
+component_specs:
+
+  buttons:
+    mobile:
+      min_height: "44px (48px preferred)"
+      full_width: "For primary actions in forms"
+      spacing: "16px vertical gap"
+      loading_state: "Inline spinner, disable touch"
+
+  forms:
+    mobile:
+      layout: "Single column always"
+      labels: "Above inputs (not inline)"
+      keyboard: "Appropriate input types (tel, email)"
+      submit: "Sticky at bottom"
+
+  date_picker:
+    mobile:
+      trigger: "Full-width input"
+      calendar: "Bottom sheet"
+      day_size: "Min 44x44px"
+      swipe: "Month navigation"
+
+  combobox:
+    mobile:
+      trigger: "Full-width"
+      dropdown: "Bottom sheet с поиском"
+      options: "48px height, clear tap areas"
+      multi_select: "Chips below input"
+
+  notification_panel:
+    mobile:
+      trigger: "Top-right icon"
+      panel: "Full-width bottom sheet"
+      items: "Swipe-to-dismiss"
+      batch_actions: "Mark all read button"
+
+  command_palette:
+    mobile:
+      trigger: "Floating button или menu item"
+      layout: "Full screen"
+      search: "Auto-focus с keyboard"
+      results: "Large touch targets"
+
+  tables:
+    mobile:
+      layout_options:
+        - "Horizontal scroll (default)"
+        - "Card stack (responsive tables)"
+        - "Collapsible rows"
+      sticky: "First column"
+      actions: "Swipe to reveal"
+
+# Accessibility on Mobile
+accessibility:
+  font_sizes:
+    min_body: "16px (prevents iOS zoom)"
+    min_label: "14px"
+    touch_readable: "14-18px range"
+
+  color_contrast:
+    requirement: "WCAG AA (4.5:1 text, 3:1 UI)"
+    dark_mode: "Check on OLED screens"
+
+  screen_readers:
+    - "Proper focus order"
+    - "Aria labels for icons"
+    - "Announce loading states"
+    - "Skip links for navigation"
+
+  reduced_motion:
+    respect: "prefers-reduced-motion"
+    essential: "Keep loading indicators"
+    remove: "Decorative animations"
+
+# Output Deliverables
+output:
+  specs:
+    - "contracts/ux-specs/mobile-touch-targets.yaml"
+    - "contracts/ux-specs/mobile-navigation-patterns.yaml"
+    - "contracts/ux-specs/mobile-form-patterns.yaml"
+    - "contracts/ux-specs/mobile-gesture-support.yaml"
+    - "contracts/ux-specs/mobile-accessibility.yaml"
+
+  implementation_notes:
+    - "CSS класс .touch-device для touch-specific стилей"
+    - "CSS класс .mobile-view для mobile layout"
+    - "@media (hover: none) для touch detection"
+    - "@media (pointer: coarse) для touch pointer"
+
+# Testing Requirements
+testing:
+  real_devices:
+    - "iOS Safari (iPhone)"
+    - "Chrome Android"
+    - "Samsung Internet"
+
+  emulators:
+    - "Chrome DevTools Device Mode"
+    - "Firefox Responsive Design Mode"
+
+  scenarios:
+    - "One-handed use (right and left)"
+    - "Portrait and landscape"
+    - "With virtual keyboard open"
+    - "With screen reader"
+    - "Slow network (3G)"
+
+# Handoff
+handoff:
+  next_agent: "frontend-developer"
+  reason: "После UX specs → JS implementation"
+  deliverable: "Mobile UX specifications"

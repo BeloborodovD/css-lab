@@ -1,0 +1,207 @@
+# Contract: CSS Lab - Responsive Design & Mobile Styles
+# Task ID: css-lab-responsive
+# Created: 2025-11-23
+# Agent: css-design-specialist
+
+contract_id: "css-lab-responsive-001"
+task_type: "css_implementation"
+priority: "high"
+
+# Контекст проекта
+context:
+  project: "CSS Lab - Style Library"
+  location: "d:\\_claude_project\\css-lab"
+  styles_dir: "styles/"
+  tech_stack: "Pure CSS (no preprocessors)"
+  target: "Полная адаптивность всех компонентов для мобильных устройств"
+
+# Задание
+task:
+  title: "Responsive Design System для CSS Lab"
+  description: |
+    Создать систему адаптивных стилей для всех компонентов библиотеки.
+    Обеспечить корректное отображение на всех устройствах от 320px до 1920px+.
+
+# Breakpoints System
+breakpoints:
+  xs: "320px"   # Маленькие телефоны
+  sm: "480px"   # Телефоны
+  md: "768px"   # Планшеты portrait
+  lg: "1024px"  # Планшеты landscape / маленькие ноутбуки
+  xl: "1280px"  # Десктопы
+  xxl: "1536px" # Большие мониторы
+
+# Файлы для создания/обновления
+files:
+  create:
+    - path: "styles/base/responsive.css"
+      description: "Основные responsive утилиты и breakpoint миксины"
+      content_guide: |
+        ## CSS Variables для breakpoints
+        ```css
+        :root {
+          --breakpoint-xs: 320px;
+          --breakpoint-sm: 480px;
+          --breakpoint-md: 768px;
+          --breakpoint-lg: 1024px;
+          --breakpoint-xl: 1280px;
+          --breakpoint-xxl: 1536px;
+        }
+        ```
+
+        ## Container responsive
+        - .container с max-width для каждого breakpoint
+        - .container-fluid для full-width
+
+        ## Responsive утилиты
+        - .hide-xs, .hide-sm, .hide-md, .hide-lg, .hide-xl
+        - .show-xs, .show-sm, .show-md, .show-lg, .show-xl
+        - .text-center-mobile, .text-left-desktop
+
+        ## Grid responsive
+        - .grid-cols-1-mobile
+        - .grid-cols-2-tablet
+        - .flex-column-mobile
+
+        ## Spacing responsive
+        - .gap-2-mobile, .gap-4-tablet, .gap-6-desktop
+        - .p-2-mobile, .p-4-tablet
+
+  update:
+    - path: "styles/components/buttons.css"
+      changes:
+        - "Кнопки full-width на mobile (.btn-block-mobile)"
+        - "Уменьшенный padding на xs screens"
+        - "Touch-friendly размер минимум 44px"
+
+    - path: "styles/components/cards.css"
+      changes:
+        - "Карточки в одну колонку на mobile"
+        - "Уменьшенный padding на mobile"
+        - "Stack layout для card-header на mobile"
+
+    - path: "styles/components/modal.css"
+      changes:
+        - "Full-screen modal на mobile"
+        - "Bottom sheet вариант для mobile"
+        - "Sticky header/footer на mobile"
+
+    - path: "styles/components/sidebar.css"
+      changes:
+        - "Overlay sidebar на mobile"
+        - "Swipe-to-close готовность (CSS transitions)"
+        - "Backdrop blur на mobile"
+
+    - path: "styles/components/table.css"
+      changes:
+        - "Horizontal scroll на mobile"
+        - "Card-style layout опция для mobile"
+        - "Sticky first column опция"
+
+    - path: "styles/components/nav.css"
+      changes:
+        - "Hamburger menu pattern"
+        - "Dropdown → full-width на mobile"
+        - "Bottom navigation опция"
+
+    - path: "styles/components/inputs.css"
+      changes:
+        - "Full-width inputs на mobile"
+        - "Larger touch targets (min 44px height)"
+        - "Floating labels stack на mobile"
+
+    - path: "styles/components/date-picker.css"
+      changes:
+        - "Full-width dropdown на mobile"
+        - "Larger day cells для touch"
+        - "Month view scroll на small screens"
+
+    - path: "styles/components/combobox.css"
+      changes:
+        - "Full-width на mobile"
+        - "Bottom sheet dropdown на mobile"
+        - "Larger option items для touch"
+
+    - path: "styles/components/command-palette.css"
+      changes:
+        - "Full-screen на mobile"
+        - "Simplified layout"
+        - "Touch-optimized items"
+
+    - path: "styles/components/notification-badge.css"
+      changes:
+        - "Panel full-width на mobile"
+        - "Bottom sheet на mobile"
+        - "Swipeable items готовность"
+
+# Responsive Patterns
+patterns:
+  mobile_first:
+    description: "Начинаем с mobile стилей, расширяем для desktop"
+    example: |
+      .component {
+        /* Mobile first */
+        padding: 12px;
+        font-size: 14px;
+      }
+
+      @media (min-width: 768px) {
+        .component {
+          padding: 16px;
+          font-size: 16px;
+        }
+      }
+
+  touch_targets:
+    description: "Минимальный размер touch target 44x44px"
+    applies_to:
+      - buttons
+      - links
+      - form controls
+      - list items
+
+  fluid_typography:
+    description: "Плавное изменение размера шрифта"
+    example: |
+      h1 {
+        font-size: clamp(1.5rem, 4vw, 2.5rem);
+      }
+
+  container_queries:
+    description: "Container queries для компонентной адаптивности"
+    note: "Использовать где поддерживается"
+
+# Dark Theme Responsive
+dark_theme:
+  notes:
+    - "Все responsive стили должны работать с .dark классом"
+    - "Проверить контраст на mobile"
+    - "Учесть OLED экраны (true black)"
+
+# Testing Checklist
+testing:
+  devices:
+    - "iPhone SE (375px)"
+    - "iPhone 14 Pro (393px)"
+    - "iPad Mini (768px)"
+    - "iPad Pro (1024px)"
+    - "Desktop (1280px+)"
+
+  scenarios:
+    - "Portrait и Landscape ориентации"
+    - "Zoom 200% accessibility"
+    - "Touch vs Mouse взаимодействие"
+    - "Virtual keyboard открыт"
+
+# Output
+output:
+  files:
+    - "styles/base/responsive.css (новый)"
+    - "Обновления всех component файлов"
+    - "styles/index.css (добавить import)"
+
+# Handoff
+handoff:
+  next_agent: "ux-ergonomics-specialist"
+  reason: "После CSS → UX review мобильного опыта"
+  deliverable: "Responsive CSS styles"

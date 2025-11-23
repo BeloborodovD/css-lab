@@ -288,3 +288,181 @@
     content: "\200b";
   }
 }
+
+/* ==================== Mobile Responsive Styles ==================== */
+
+@media (max-width: 767px) {
+  /* Smaller cells on mobile */
+  .table th,
+  .table td {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+
+  /* Compact table even smaller */
+  .table-compact th,
+  .table-compact td {
+    padding: 5px 6px;
+    font-size: 0.8rem;
+  }
+
+  /* Parameter table adjustments */
+  .table-params th {
+    width: 50%;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 479px) {
+  .table th,
+  .table td {
+    padding: 6px 8px;
+    font-size: 0.8rem;
+  }
+}
+
+/* ==================== Card-Style Table for Mobile ==================== */
+
+/* Card layout transforms table rows into cards */
+@media (max-width: 767px) {
+  .table-card-mobile {
+    display: block;
+    border: none;
+  }
+
+  .table-card-mobile thead {
+    display: none;
+  }
+
+  .table-card-mobile tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .table-card-mobile tr {
+    display: block;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px;
+    box-shadow: var(--shadow);
+  }
+
+  .table-card-mobile td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .table-card-mobile td:last-child {
+    border-bottom: none;
+  }
+
+  /* Use data-label attribute for headers */
+  .table-card-mobile td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--muted);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    margin-right: 12px;
+  }
+
+  /* Value alignment */
+  .table-card-mobile td span,
+  .table-card-mobile td .badge {
+    text-align: right;
+  }
+}
+
+/* Dark theme card table */
+.dark .table-card-mobile tr {
+  background: var(--surface-2);
+  border-color: var(--surface-6);
+}
+
+.dark .table-card-mobile td {
+  border-bottom-color: var(--surface-6);
+}
+
+/* ==================== Sticky First Column ==================== */
+
+.table-sticky-col {
+  position: relative;
+}
+
+@media (max-width: 1023px) {
+  .table-sticky-col th:first-child,
+  .table-sticky-col td:first-child {
+    position: sticky;
+    left: 0;
+    background: var(--panel);
+    z-index: 1;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+  }
+
+  .table-sticky-col th:first-child {
+    background: var(--bg);
+    z-index: 2;
+  }
+}
+
+.dark .table-sticky-col th:first-child {
+  background: var(--surface-3);
+}
+
+.dark .table-sticky-col td:first-child {
+  background: var(--surface-2);
+}
+
+/* ==================== Horizontal Scroll Indicator ==================== */
+
+.table-responsive {
+  position: relative;
+}
+
+/* Scroll shadow indicators */
+.table-responsive::before,
+.table-responsive::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 20px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  z-index: 1;
+}
+
+.table-responsive::before {
+  left: 0;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.08), transparent);
+}
+
+.table-responsive::after {
+  right: 0;
+  background: linear-gradient(to left, rgba(0, 0, 0, 0.08), transparent);
+}
+
+.table-responsive.scroll-left::before {
+  opacity: 1;
+}
+
+.table-responsive.scroll-right::after {
+  opacity: 1;
+}
+
+/* Dark theme scroll shadows */
+.dark .table-responsive::before {
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.3), transparent);
+}
+
+.dark .table-responsive::after {
+  background: linear-gradient(to left, rgba(0, 0, 0, 0.3), transparent);
+}

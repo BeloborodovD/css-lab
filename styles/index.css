@@ -40,6 +40,11 @@
 @import './components/divider.css';
 @import './components/chip.css';
 @import './components/empty-state.css';
+@import './components/file-upload.css';
+@import './components/date-picker.css';
+@import './components/command-palette.css';
+@import './components/notification-badge.css';
+@import './components/combobox.css';
 
 /* Themes */
 @import './themes/dark.css';

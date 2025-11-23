@@ -1,0 +1,727 @@
+/* ==================== Command Palette ==================== */
+/* Modal-style command palette with search, results, and keyboard navigation */
+
+/* =============================================
+   1. Overlay & Container
+   ============================================= */
+
+.command-palette-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 10vh 16px 16px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--duration-normal, 200ms) var(--ease-standard, ease),
+              visibility var(--duration-normal, 200ms) var(--ease-standard, ease);
+}
+
+.command-palette-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Dialog container */
+.command-palette {
+  width: 100%;
+  max-width: 640px;
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 16px 70px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  transform: translateY(-20px) scale(0.98);
+  opacity: 0;
+  transition: transform var(--duration-moderate, 300ms) var(--ease-decelerate, ease-out),
+              opacity var(--duration-moderate, 300ms) var(--ease-decelerate, ease-out);
+}
+
+.command-palette-overlay.open .command-palette {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* =============================================
+   2. Search Input Section
+   ============================================= */
+
+.command-palette-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.command-palette-search-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  color: var(--muted);
+  transition: color var(--duration-fast, 150ms) var(--ease-standard, ease);
+}
+
+.command-palette-header:focus-within .command-palette-search-icon {
+  color: var(--accent);
+}
+
+.command-palette-input {
+  flex: 1;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  font-family: var(--font-sans);
+  color: var(--text);
+  outline: none;
+}
+
+.command-palette-input::placeholder {
+  color: var(--muted);
+}
+
+/* Shortcut badge in header */
+.command-palette-close-hint {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+/* =============================================
+   3. Results Container
+   ============================================= */
+
+.command-palette-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+/* Scrollbar styling */
+.command-palette-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.command-palette-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.command-palette-body::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.command-palette-body::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
+/* =============================================
+   4. Category Headers / Separators
+   ============================================= */
+
+.command-palette-category {
+  padding: 8px 12px 6px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.command-palette-category:not(:first-child) {
+  margin-top: 8px;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+
+/* Category separator line */
+.command-palette-separator {
+  height: 1px;
+  margin: 8px 12px;
+  background: var(--border);
+}
+
+/* =============================================
+   5. Result Items
+   ============================================= */
+
+.command-palette-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background-color var(--duration-fast, 150ms) var(--ease-standard, ease);
+}
+
+.command-palette-item:hover,
+.command-palette-item.highlighted {
+  background: var(--accent-100);
+}
+
+.command-palette-item.highlighted {
+  outline: none;
+}
+
+/* Active/selected state (for keyboard navigation) */
+.command-palette-item.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.command-palette-item.active .command-palette-item-icon,
+.command-palette-item.active .command-palette-item-meta,
+.command-palette-item.active .command-palette-item-shortcut {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.command-palette-item.active .kbd {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+
+/* Item icon */
+.command-palette-item-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  color: var(--muted);
+  transition: color var(--duration-fast, 150ms) var(--ease-standard, ease);
+}
+
+.command-palette-item:hover .command-palette-item-icon,
+.command-palette-item.highlighted .command-palette-item-icon {
+  color: var(--accent);
+}
+
+/* Item content */
+.command-palette-item-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.command-palette-item-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.command-palette-item.active .command-palette-item-title {
+  color: #fff;
+}
+
+.command-palette-item-meta {
+  font-size: 0.75rem;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Highlight match in search results */
+.command-palette-highlight {
+  background: rgba(255, 235, 59, 0.4);
+  border-radius: 2px;
+  padding: 0 1px;
+}
+
+.command-palette-item.active .command-palette-highlight {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* =============================================
+   6. Shortcut Badges (Kbd)
+   ============================================= */
+
+.command-palette-item-shortcut {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 22px;
+  padding: 0 6px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  color: var(--muted);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 1px 0 var(--border);
+}
+
+/* Larger kbd for standalone use */
+.kbd-lg {
+  min-width: 28px;
+  height: 26px;
+  padding: 0 8px;
+  font-size: 0.75rem;
+}
+
+/* Kbd group (e.g., Ctrl + K) */
+.kbd-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.kbd-plus {
+  font-size: 0.65rem;
+  color: var(--muted);
+}
+
+/* =============================================
+   7. Empty State & No Results
+   ============================================= */
+
+.command-palette-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.command-palette-empty-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+  color: var(--muted);
+  opacity: 0.5;
+}
+
+.command-palette-empty-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.command-palette-empty-description {
+  font-size: 0.85rem;
+  color: var(--muted);
+  max-width: 280px;
+}
+
+/* No results state */
+.command-palette-no-results {
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.command-palette-no-results-text {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.command-palette-no-results-query {
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* =============================================
+   8. Footer (Optional hints)
+   ============================================= */
+
+.command-palette-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+  flex-shrink: 0;
+}
+
+.command-palette-hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.command-palette-hint-icon {
+  width: 14px;
+  height: 14px;
+}
+
+/* =============================================
+   9. Loading State
+   ============================================= */
+
+.command-palette-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  gap: 12px;
+}
+
+.command-palette-loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.command-palette-loading-text {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* =============================================
+   10. Animations
+   ============================================= */
+
+/* Entry animation for overlay */
+@keyframes command-palette-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Entry animation for dialog */
+@keyframes command-palette-in {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Exit animation for overlay */
+@keyframes command-palette-overlay-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Exit animation for dialog */
+@keyframes command-palette-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+}
+
+/* Animation classes */
+.command-palette-overlay.animate-in {
+  animation: command-palette-overlay-in var(--duration-normal, 200ms) var(--ease-decelerate, ease-out) forwards;
+}
+
+.command-palette-overlay.animate-in .command-palette {
+  animation: command-palette-in var(--duration-moderate, 300ms) var(--ease-decelerate, ease-out) forwards;
+}
+
+.command-palette-overlay.animate-out {
+  animation: command-palette-overlay-out var(--duration-fast, 150ms) var(--ease-accelerate, ease-in) forwards;
+}
+
+.command-palette-overlay.animate-out .command-palette {
+  animation: command-palette-out var(--duration-fast, 150ms) var(--ease-accelerate, ease-in) forwards;
+}
+
+/* Item stagger animation */
+.command-palette-item {
+  opacity: 0;
+  animation: fade-in-up var(--duration-fast, 150ms) var(--ease-decelerate, ease-out) forwards;
+}
+
+.command-palette-item:nth-child(1) { animation-delay: 0ms; }
+.command-palette-item:nth-child(2) { animation-delay: 30ms; }
+.command-palette-item:nth-child(3) { animation-delay: 60ms; }
+.command-palette-item:nth-child(4) { animation-delay: 90ms; }
+.command-palette-item:nth-child(5) { animation-delay: 120ms; }
+.command-palette-item:nth-child(6) { animation-delay: 150ms; }
+.command-palette-item:nth-child(7) { animation-delay: 180ms; }
+.command-palette-item:nth-child(8) { animation-delay: 210ms; }
+
+/* Disable animation for items after 8th */
+.command-palette-item:nth-child(n+9) {
+  animation-delay: 0ms;
+  opacity: 1;
+}
+
+/* =============================================
+   11. Size Variants
+   ============================================= */
+
+/* Small */
+.command-palette-sm .command-palette {
+  max-width: 480px;
+}
+
+.command-palette-sm .command-palette-header {
+  padding: 12px;
+}
+
+.command-palette-sm .command-palette-input {
+  font-size: 0.9rem;
+}
+
+.command-palette-sm .command-palette-item {
+  padding: 8px 10px;
+}
+
+/* Large */
+.command-palette-lg .command-palette {
+  max-width: 800px;
+  max-height: 80vh;
+}
+
+.command-palette-lg .command-palette-header {
+  padding: 20px;
+}
+
+.command-palette-lg .command-palette-input {
+  font-size: 1.1rem;
+}
+
+/* =============================================
+   12. Dark Theme
+   ============================================= */
+
+.dark .command-palette-overlay {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.dark .command-palette {
+  background: var(--dark-panel, #1a1f2e);
+  border-color: var(--dark-border, #343f56);
+  box-shadow: 0 16px 70px rgba(0, 0, 0, 0.5);
+}
+
+.dark .command-palette-header {
+  border-bottom-color: var(--dark-border, #343f56);
+}
+
+.dark .command-palette-search-icon {
+  color: var(--dark-muted, #6b7280);
+}
+
+.dark .command-palette-header:focus-within .command-palette-search-icon {
+  color: var(--dark-accent, #2196f3);
+}
+
+.dark .command-palette-input {
+  color: var(--dark-text, rgb(232, 234, 237));
+}
+
+.dark .command-palette-input::placeholder {
+  color: var(--dark-muted, #6b7280);
+}
+
+.dark .command-palette-close-hint {
+  color: var(--dark-muted, #6b7280);
+}
+
+.dark .command-palette-body::-webkit-scrollbar-thumb {
+  background: var(--dark-border, #343f56);
+}
+
+.dark .command-palette-body::-webkit-scrollbar-thumb:hover {
+  background: var(--dark-muted, #6b7280);
+}
+
+.dark .command-palette-category {
+  color: var(--dark-muted, #6b7280);
+}
+
+.dark .command-palette-category:not(:first-child) {
+  border-top-color: var(--dark-border, #343f56);
+}
+
+.dark .command-palette-separator {
+  background: var(--dark-border, #343f56);
+}
+
+.dark .command-palette-item:hover,
+.dark .command-palette-item.highlighted {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dark .command-palette-item.active {
+  background: var(--dark-accent, #2196f3);
+}
+
+.dark .command-palette-item-icon {
+  color: var(--dark-muted, #6b7280);
+}
+
+.dark .command-palette-item:hover .command-palette-item-icon,
+.dark .command-palette-item.highlighted .command-palette-item-icon {
+  color: var(--dark-accent, #2196f3);
+}
+
+.dark .command-palette-item-title {
+  color: var(--dark-text, rgb(232, 234, 237));
+}
+
+.dark .command-palette-item-meta {
+  color: var(--dark-muted, #6b7280);
+}
+
+.dark .command-palette-highlight {
+  background: rgba(251, 191, 36, 0.3);
+}
+
+.dark .kbd {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--dark-border, #343f56);
+  color: var(--dark-muted, #6b7280);
+  box-shadow: 0 1px 0 var(--dark-border, #343f56);
+}
+
+.dark .kbd-plus {
+  color: var(--dark-muted, #6b7280);
+}
+
+.dark .command-palette-empty-icon {
+  color: var(--dark-muted, #6b7280);
+}
+
+.dark .command-palette-empty-title {
+  color: var(--dark-text, rgb(232, 234, 237));
+}
+
+.dark .command-palette-empty-description {
+  color: var(--dark-muted, #6b7280);
+}
+
+.dark .command-palette-no-results-text {
+  color: var(--dark-muted, #6b7280);
+}
+
+.dark .command-palette-no-results-query {
+  color: var(--dark-text, rgb(232, 234, 237));
+}
+
+.dark .command-palette-footer {
+  background: rgba(0, 0, 0, 0.2);
+  border-top-color: var(--dark-border, #343f56);
+}
+
+.dark .command-palette-hint {
+  color: var(--dark-muted, #6b7280);
+}
+
+.dark .command-palette-loading-spinner {
+  border-color: var(--dark-border, #343f56);
+  border-top-color: var(--dark-accent, #2196f3);
+}
+
+.dark .command-palette-loading-text {
+  color: var(--dark-muted, #6b7280);
+}
+
+/* =============================================
+   13. Reduced Motion Support
+   ============================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .command-palette-overlay {
+    transition: opacity 0.01ms, visibility 0.01ms;
+  }
+
+  .command-palette {
+    transition: opacity 0.01ms;
+    transform: translateY(0) scale(1) !important;
+  }
+
+  .command-palette-overlay.animate-in,
+  .command-palette-overlay.animate-out {
+    animation: none;
+  }
+
+  .command-palette-overlay.animate-in .command-palette,
+  .command-palette-overlay.animate-out .command-palette {
+    animation: none;
+    opacity: 1;
+  }
+
+  .command-palette-item {
+    animation: none;
+    opacity: 1;
+  }
+
+  .command-palette-loading-spinner {
+    animation: none;
+    border-top-color: var(--accent);
+    border-right-color: var(--accent);
+  }
+}
+
+/* =============================================
+   14. Force Animations Override
+   ============================================= */
+
+.force-animations .command-palette-overlay.animate-in {
+  animation: command-palette-overlay-in var(--duration-normal) var(--ease-decelerate) forwards !important;
+}
+
+.force-animations .command-palette-overlay.animate-in .command-palette {
+  animation: command-palette-in var(--duration-moderate) var(--ease-decelerate) forwards !important;
+}
+
+.force-animations .command-palette-item {
+  animation: fade-in-up var(--duration-fast) var(--ease-decelerate) forwards !important;
+}
+
+.force-animations .command-palette-loading-spinner {
+  animation: spin 0.8s linear infinite !important;
+}
+
+/* =============================================
+   15. Print - Hide Command Palette
+   ============================================= */
+
+@media print {
+  .command-palette-overlay {
+    display: none !important;
+  }
+}

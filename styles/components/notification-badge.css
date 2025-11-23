@@ -1,0 +1,874 @@
+/* ==================== Notification Badge ==================== */
+/* Notification indicators, count badges, and notification panel */
+
+/* =============================================
+   1. CSS Custom Properties
+   ============================================= */
+
+:root {
+  --notification-badge-size: 20px;
+  --notification-badge-size-sm: 16px;
+  --notification-badge-size-lg: 24px;
+  --notification-dot-size: 10px;
+  --notification-panel-width: 360px;
+  --notification-item-padding: 12px 16px;
+}
+
+/* =============================================
+   2. Notification Badge Container
+   ============================================= */
+
+.notification-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notification-badge-trigger {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* =============================================
+   3. Dot Badge (Small Circle Indicator)
+   ============================================= */
+
+.notification-dot {
+  position: absolute;
+  width: var(--notification-dot-size);
+  height: var(--notification-dot-size);
+  background: #ef4444;
+  border-radius: 50%;
+  border: 2px solid var(--panel);
+}
+
+/* Dot size variants */
+.notification-dot-sm {
+  width: 8px;
+  height: 8px;
+  border-width: 1px;
+}
+
+.notification-dot-lg {
+  width: 12px;
+  height: 12px;
+  border-width: 2px;
+}
+
+/* =============================================
+   4. Count Badge with Numbers
+   ============================================= */
+
+.notification-count {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--notification-badge-size);
+  height: var(--notification-badge-size);
+  padding: 0 5px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  line-height: 1;
+  color: #fff;
+  background: #ef4444;
+  border-radius: calc(var(--notification-badge-size) / 2);
+  border: 2px solid var(--panel);
+}
+
+/* Count size variants */
+.notification-count-sm {
+  min-width: var(--notification-badge-size-sm);
+  height: var(--notification-badge-size-sm);
+  padding: 0 4px;
+  font-size: 0.625rem;
+  border-radius: calc(var(--notification-badge-size-sm) / 2);
+}
+
+.notification-count-lg {
+  min-width: var(--notification-badge-size-lg);
+  height: var(--notification-badge-size-lg);
+  padding: 0 6px;
+  font-size: 0.75rem;
+  border-radius: calc(var(--notification-badge-size-lg) / 2);
+}
+
+/* =============================================
+   5. Position Variants
+   ============================================= */
+
+/* Top-right (default) */
+.notification-dot,
+.notification-count {
+  top: -4px;
+  right: -4px;
+}
+
+/* Top-left */
+.notification-badge-top-left .notification-dot,
+.notification-badge-top-left .notification-count,
+.notification-dot-top-left,
+.notification-count-top-left {
+  top: -4px;
+  right: auto;
+  left: -4px;
+}
+
+/* Bottom-right */
+.notification-badge-bottom-right .notification-dot,
+.notification-badge-bottom-right .notification-count,
+.notification-dot-bottom-right,
+.notification-count-bottom-right {
+  top: auto;
+  bottom: -4px;
+  right: -4px;
+}
+
+/* Bottom-left */
+.notification-badge-bottom-left .notification-dot,
+.notification-badge-bottom-left .notification-count,
+.notification-dot-bottom-left,
+.notification-count-bottom-left {
+  top: auto;
+  right: auto;
+  bottom: -4px;
+  left: -4px;
+}
+
+/* =============================================
+   6. Color Variants
+   ============================================= */
+
+/* Primary (accent) */
+.notification-dot-primary,
+.notification-count-primary {
+  background: var(--accent);
+}
+
+/* Success */
+.notification-dot-success,
+.notification-count-success {
+  background: #22c55e;
+}
+
+/* Warning */
+.notification-dot-warning,
+.notification-count-warning {
+  background: #f59e0b;
+}
+
+/* Error (default) */
+.notification-dot-error,
+.notification-count-error {
+  background: #ef4444;
+}
+
+/* Info */
+.notification-dot-info,
+.notification-count-info {
+  background: #3b82f6;
+}
+
+/* =============================================
+   7. Pulse Animation for New Notifications
+   ============================================= */
+
+@keyframes notification-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+@keyframes notification-pulse-primary {
+  0% {
+    box-shadow: 0 0 0 0 rgba(46, 138, 60, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(46, 138, 60, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(46, 138, 60, 0);
+  }
+}
+
+@keyframes notification-pulse-success {
+  0% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(34, 197, 94, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+  }
+}
+
+@keyframes notification-pulse-warning {
+  0% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(245, 158, 11, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+  }
+}
+
+@keyframes notification-pulse-info {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(59, 130, 246, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+}
+
+/* Apply pulse animation */
+.notification-dot-pulse,
+.notification-count-pulse {
+  animation: notification-pulse 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.notification-dot-pulse.notification-dot-primary,
+.notification-count-pulse.notification-count-primary {
+  animation-name: notification-pulse-primary;
+}
+
+.notification-dot-pulse.notification-dot-success,
+.notification-count-pulse.notification-count-success {
+  animation-name: notification-pulse-success;
+}
+
+.notification-dot-pulse.notification-dot-warning,
+.notification-count-pulse.notification-count-warning {
+  animation-name: notification-pulse-warning;
+}
+
+.notification-dot-pulse.notification-dot-info,
+.notification-count-pulse.notification-count-info {
+  animation-name: notification-pulse-info;
+}
+
+/* =============================================
+   8. Notification Panel Dropdown
+   ============================================= */
+
+.notification-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: var(--notification-panel-width);
+  max-height: 480px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px) scale(0.98);
+  transform-origin: top right;
+  transition: opacity var(--duration-fast, 150ms) var(--ease-standard, ease),
+              visibility var(--duration-fast, 150ms) var(--ease-standard, ease),
+              transform var(--duration-fast, 150ms) var(--ease-decelerate, ease-out);
+  z-index: 200;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.notification-badge.open .notification-panel {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+/* Panel left-aligned variant */
+.notification-panel-left {
+  right: auto;
+  left: 0;
+  transform-origin: top left;
+}
+
+/* =============================================
+   9. Notification Panel Header
+   ============================================= */
+
+.notification-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.notification-panel-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+}
+
+.notification-panel-count {
+  font-size: 0.8125rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* =============================================
+   10. Notification Items List
+   ============================================= */
+
+.notification-list {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* Scrollbar styling */
+.notification-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notification-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.notification-list::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.notification-list::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
+/* =============================================
+   11. Notification Item
+   ============================================= */
+
+.notification-item {
+  display: flex;
+  gap: 12px;
+  padding: var(--notification-item-padding);
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background-color var(--duration-fast, 150ms) var(--ease-standard, ease);
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-item:hover {
+  background: var(--accent-100);
+}
+
+/* Unread state */
+.notification-item-unread {
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.notification-item-unread:hover {
+  background: rgba(59, 130, 246, 0.1);
+}
+
+/* Unread indicator dot */
+.notification-item-unread::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  background: #3b82f6;
+  border-radius: 50%;
+}
+
+.notification-item {
+  position: relative;
+}
+
+.notification-item-unread {
+  padding-left: 20px;
+}
+
+/* Item icon/avatar */
+.notification-item-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--accent-100);
+  color: var(--accent);
+}
+
+.notification-item-icon img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.notification-item-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Item content */
+.notification-item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.notification-item-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text);
+  margin: 0 0 4px;
+  line-height: 1.4;
+}
+
+.notification-item-unread .notification-item-title {
+  font-weight: 600;
+}
+
+.notification-item-message {
+  font-size: 0.8125rem;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.notification-item-time {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* Item actions */
+.notification-item-actions {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity var(--duration-fast, 150ms) var(--ease-standard, ease);
+}
+
+.notification-item:hover .notification-item-actions {
+  opacity: 1;
+}
+
+.notification-item-action {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--duration-fast, 150ms) var(--ease-standard, ease),
+              color var(--duration-fast, 150ms) var(--ease-standard, ease);
+}
+
+.notification-item-action:hover {
+  background: var(--border);
+  color: var(--text);
+}
+
+/* =============================================
+   12. Notification Item Type Variants
+   ============================================= */
+
+/* Success notification */
+.notification-item-success .notification-item-icon {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+/* Warning notification */
+.notification-item-warning .notification-item-icon {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+/* Error notification */
+.notification-item-error .notification-item-icon {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+/* Info notification */
+.notification-item-info .notification-item-icon {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+}
+
+/* =============================================
+   13. Notification Panel Footer
+   ============================================= */
+
+.notification-panel-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Mark all as read button */
+.notification-mark-read {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--accent);
+  background: transparent;
+  border: none;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--duration-fast, 150ms) var(--ease-standard, ease);
+}
+
+.notification-mark-read:hover {
+  background: var(--accent-100);
+}
+
+.notification-mark-read:disabled {
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
+.notification-mark-read:disabled:hover {
+  background: transparent;
+}
+
+/* View all link */
+.notification-view-all {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--duration-fast, 150ms) var(--ease-standard, ease);
+}
+
+.notification-view-all:hover {
+  background: var(--accent-100);
+}
+
+/* =============================================
+   14. Empty Notifications State
+   ============================================= */
+
+.notification-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.notification-empty-icon {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  color: var(--muted);
+  opacity: 0.5;
+}
+
+.notification-empty-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.notification-empty-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 8px;
+}
+
+.notification-empty-message {
+  font-size: 0.8125rem;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* =============================================
+   15. Notification Badge Inline (Standalone)
+   ============================================= */
+
+.notification-badge-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.notification-badge-inline .notification-dot,
+.notification-badge-inline .notification-count {
+  position: static;
+}
+
+/* =============================================
+   16. Dark Theme Support
+   ============================================= */
+
+.dark .notification-dot,
+.dark .notification-count {
+  border-color: var(--dark-panel);
+}
+
+.dark .notification-panel {
+  background: var(--dark-panel);
+  border-color: var(--dark-border);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+}
+
+.dark .notification-panel-header {
+  border-bottom-color: var(--dark-border);
+}
+
+.dark .notification-panel-title {
+  color: var(--dark-text);
+}
+
+.dark .notification-panel-count {
+  color: var(--dark-muted);
+}
+
+.dark .notification-list::-webkit-scrollbar-thumb {
+  background: var(--dark-border);
+}
+
+.dark .notification-list::-webkit-scrollbar-thumb:hover {
+  background: var(--dark-muted);
+}
+
+.dark .notification-item {
+  border-bottom-color: var(--dark-border);
+}
+
+.dark .notification-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dark .notification-item-unread {
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.dark .notification-item-unread:hover {
+  background: rgba(59, 130, 246, 0.12);
+}
+
+.dark .notification-item-icon {
+  background: rgba(33, 150, 243, 0.15);
+  color: var(--dark-accent);
+}
+
+.dark .notification-item-title {
+  color: var(--dark-text);
+}
+
+.dark .notification-item-message {
+  color: var(--dark-muted);
+}
+
+.dark .notification-item-time {
+  color: var(--dark-muted);
+}
+
+.dark .notification-item-action {
+  color: var(--dark-muted);
+}
+
+.dark .notification-item-action:hover {
+  background: var(--dark-border);
+  color: var(--dark-text);
+}
+
+/* Dark theme - notification type variants */
+.dark .notification-item-success .notification-item-icon {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+}
+
+.dark .notification-item-warning .notification-item-icon {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+}
+
+.dark .notification-item-error .notification-item-icon {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+}
+
+.dark .notification-item-info .notification-item-icon {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+}
+
+.dark .notification-panel-footer {
+  border-top-color: var(--dark-border);
+}
+
+.dark .notification-mark-read {
+  color: var(--dark-accent);
+}
+
+.dark .notification-mark-read:hover {
+  background: rgba(33, 150, 243, 0.15);
+}
+
+.dark .notification-mark-read:disabled {
+  color: var(--dark-muted);
+}
+
+.dark .notification-view-all {
+  color: var(--dark-accent);
+}
+
+.dark .notification-view-all:hover {
+  background: rgba(33, 150, 243, 0.15);
+}
+
+.dark .notification-empty-icon {
+  color: var(--dark-muted);
+}
+
+.dark .notification-empty-title {
+  color: var(--dark-text);
+}
+
+.dark .notification-empty-message {
+  color: var(--dark-muted);
+}
+
+/* =============================================
+   17. Reduced Motion Support
+   ============================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .notification-panel {
+    transition: opacity 0.01ms, visibility 0.01ms;
+    transform: translateY(0) scale(1);
+  }
+
+  .notification-dot-pulse,
+  .notification-count-pulse {
+    animation: none;
+  }
+
+  .notification-item,
+  .notification-item-action,
+  .notification-item-actions,
+  .notification-mark-read,
+  .notification-view-all {
+    transition: none;
+  }
+}
+
+/* =============================================
+   18. Force Animations Override
+   ============================================= */
+
+.force-animations .notification-panel {
+  transition: opacity var(--duration-fast, 150ms) var(--ease-standard, ease),
+              visibility var(--duration-fast, 150ms) var(--ease-standard, ease),
+              transform var(--duration-fast, 150ms) var(--ease-decelerate, ease-out) !important;
+}
+
+.force-animations .notification-dot-pulse,
+.force-animations .notification-count-pulse {
+  animation: notification-pulse 2s cubic-bezier(0, 0, 0.2, 1) infinite !important;
+}
+
+.force-animations .notification-dot-pulse.notification-dot-primary,
+.force-animations .notification-count-pulse.notification-count-primary {
+  animation-name: notification-pulse-primary !important;
+}
+
+.force-animations .notification-dot-pulse.notification-dot-success,
+.force-animations .notification-count-pulse.notification-count-success {
+  animation-name: notification-pulse-success !important;
+}
+
+.force-animations .notification-dot-pulse.notification-dot-warning,
+.force-animations .notification-count-pulse.notification-count-warning {
+  animation-name: notification-pulse-warning !important;
+}
+
+.force-animations .notification-dot-pulse.notification-dot-info,
+.force-animations .notification-count-pulse.notification-count-info {
+  animation-name: notification-pulse-info !important;
+}
+
+/* =============================================
+   19. Responsive Adjustments
+   ============================================= */
+
+@media (max-width: 480px) {
+  .notification-panel {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-height: 70vh;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    transform: translateY(100%);
+    transform-origin: bottom center;
+  }
+
+  .notification-badge.open .notification-panel {
+    transform: translateY(0);
+  }
+
+  .notification-panel-left {
+    left: 0;
+    right: 0;
+  }
+
+  .notification-item-padding {
+    padding: 14px;
+  }
+
+  .notification-empty {
+    padding: 40px 20px;
+  }
+}

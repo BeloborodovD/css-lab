@@ -108,6 +108,11 @@
           <li class="sidebar-nav-item"><a href="#divider" class="sidebar-nav-link">Divider</a></li>
           <li class="sidebar-nav-item"><a href="#chip" class="sidebar-nav-link">Chip</a></li>
           <li class="sidebar-nav-item"><a href="#empty-state" class="sidebar-nav-link">Empty State</a></li>
+          <li class="sidebar-nav-item"><a href="#file-upload" class="sidebar-nav-link">File Upload</a></li>
+          <li class="sidebar-nav-item"><a href="#combobox" class="sidebar-nav-link">Combobox</a></li>
+          <li class="sidebar-nav-item"><a href="#date-picker" class="sidebar-nav-link">Date Picker</a></li>
+          <li class="sidebar-nav-item"><a href="#command-palette" class="sidebar-nav-link">Command Palette</a></li>
+          <li class="sidebar-nav-item"><a href="#notification" class="sidebar-nav-link">Notification</a></li>
         </ul>
       </div>
     </aside>
@@ -1742,6 +1747,579 @@
       </div>
     </section>
 
+    <!-- File Upload Section -->
+    <section id="file-upload" class="mb-4">
+      <h2 class="mb-2">File Upload</h2>
+      <p class="text-muted mb-2">Загрузка файлов с drag & drop, превью и прогрессом</p>
+
+      <!-- Basic Dropzone -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Dropzone</h3>
+        </div>
+        <div class="card-body">
+          <div class="file-dropzone" id="dropzone-demo">
+            <div class="file-dropzone-icon">📁</div>
+            <div class="file-dropzone-text">
+              <div class="file-dropzone-title">Перетащите файлы сюда</div>
+              <div class="file-dropzone-subtitle">или нажмите для выбора</div>
+            </div>
+            <input type="file" class="file-dropzone-input" multiple>
+          </div>
+        </div>
+      </div>
+
+      <!-- File List -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Список файлов</h3>
+        </div>
+        <div class="card-body">
+          <div class="file-list">
+            <div class="file-item">
+              <div class="file-icon file-icon-pdf">PDF</div>
+              <div class="file-info">
+                <div class="file-name">document.pdf</div>
+                <div class="file-meta">2.4 MB</div>
+              </div>
+              <button class="file-action btn btn-icon btn-sm">×</button>
+            </div>
+            <div class="file-item file-item-success">
+              <div class="file-icon file-icon-image">IMG</div>
+              <div class="file-info">
+                <div class="file-name">photo.jpg</div>
+                <div class="file-meta">1.2 MB • Загружено</div>
+              </div>
+              <span class="file-status">✓</span>
+            </div>
+            <div class="file-item file-item-error">
+              <div class="file-icon file-icon-doc">DOC</div>
+              <div class="file-info">
+                <div class="file-name">report.docx</div>
+                <div class="file-meta">Ошибка загрузки</div>
+              </div>
+              <button class="file-action btn btn-icon btn-sm">↻</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- With Progress -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">С прогрессом загрузки</h3>
+        </div>
+        <div class="card-body">
+          <div class="file-list">
+            <div class="file-item">
+              <div class="file-icon file-icon-video">VID</div>
+              <div class="file-info">
+                <div class="file-name">video.mp4</div>
+                <div class="file-meta">45% • 12.5 MB</div>
+                <div class="file-progress">
+                  <div class="file-progress-bar" style="width: 45%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Image Preview Grid -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Превью изображений</h3>
+        </div>
+        <div class="card-body">
+          <div class="file-preview-grid">
+            <div class="file-preview-card">
+              <img src="https://picsum.photos/150/150?random=1" alt="Preview">
+              <div class="file-preview-overlay">
+                <button class="btn btn-sm btn-icon">×</button>
+              </div>
+            </div>
+            <div class="file-preview-card">
+              <img src="https://picsum.photos/150/150?random=2" alt="Preview">
+              <div class="file-preview-overlay">
+                <button class="btn btn-sm btn-icon">×</button>
+              </div>
+            </div>
+            <div class="file-preview-card">
+              <img src="https://picsum.photos/150/150?random=3" alt="Preview">
+              <div class="file-preview-overlay">
+                <button class="btn btn-sm btn-icon">×</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Combobox Section -->
+    <section id="combobox" class="mb-4">
+      <h2 class="mb-2">Combobox</h2>
+      <p class="text-muted mb-2">Выпадающий список с поиском, мультивыбором и группировкой</p>
+
+      <!-- Basic -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Базовый</h3>
+        </div>
+        <div class="card-body">
+          <div class="combobox" style="width: 300px;">
+            <button class="combobox-trigger">
+              <span class="combobox-value">Выберите опцию</span>
+              <span class="combobox-arrow">▼</span>
+            </button>
+            <div class="combobox-dropdown">
+              <div class="combobox-options">
+                <div class="combobox-option">Опция 1</div>
+                <div class="combobox-option combobox-option-selected">Опция 2</div>
+                <div class="combobox-option">Опция 3</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- With Search -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">С поиском</h3>
+        </div>
+        <div class="card-body">
+          <div class="combobox open" style="width: 300px;">
+            <button class="combobox-trigger">
+              <span class="combobox-value">React</span>
+              <span class="combobox-clear">×</span>
+              <span class="combobox-arrow">▼</span>
+            </button>
+            <div class="combobox-dropdown" style="display: block; position: relative;">
+              <div class="combobox-search">
+                <input type="text" class="combobox-search-input" placeholder="Поиск...">
+              </div>
+              <div class="combobox-options">
+                <div class="combobox-option combobox-option-selected">
+                  <span class="combobox-option-check">✓</span>
+                  React
+                </div>
+                <div class="combobox-option">Vue</div>
+                <div class="combobox-option">Angular</div>
+                <div class="combobox-option">Svelte</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Multi-select -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Мультивыбор</h3>
+        </div>
+        <div class="card-body">
+          <div class="combobox combobox-multi" style="width: 350px;">
+            <div class="combobox-trigger">
+              <div class="combobox-tags">
+                <span class="combobox-tag">JavaScript <button class="combobox-tag-remove">×</button></span>
+                <span class="combobox-tag">TypeScript <button class="combobox-tag-remove">×</button></span>
+                <span class="combobox-tag-more">+2</span>
+              </div>
+              <span class="combobox-arrow">▼</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grouped -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Группировка</h3>
+        </div>
+        <div class="card-body">
+          <div class="combobox open" style="width: 300px;">
+            <button class="combobox-trigger">
+              <span class="combobox-value">Выберите город</span>
+              <span class="combobox-arrow">▼</span>
+            </button>
+            <div class="combobox-dropdown" style="display: block; position: relative;">
+              <div class="combobox-options">
+                <div class="combobox-group">
+                  <div class="combobox-group-header">Россия</div>
+                  <div class="combobox-option">Москва</div>
+                  <div class="combobox-option">Санкт-Петербург</div>
+                </div>
+                <div class="combobox-group">
+                  <div class="combobox-group-header">Европа</div>
+                  <div class="combobox-option">Берлин</div>
+                  <div class="combobox-option">Париж</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Date Picker Section -->
+    <section id="date-picker" class="mb-4">
+      <h2 class="mb-2">Date Picker</h2>
+      <p class="text-muted mb-2">Выбор даты с календарём и диапазоном</p>
+
+      <!-- Basic -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Выбор даты</h3>
+        </div>
+        <div class="card-body">
+          <div class="date-picker" style="width: 280px;">
+            <div class="date-picker-input">
+              <span class="date-picker-icon">📅</span>
+              <input type="text" placeholder="Выберите дату" value="23 ноября 2025">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inline Calendar -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Inline календарь</h3>
+        </div>
+        <div class="card-body">
+          <div class="date-picker-inline">
+            <div class="date-picker-header">
+              <button class="date-picker-nav-btn">‹</button>
+              <span class="date-picker-month-year">Ноябрь 2025</span>
+              <button class="date-picker-nav-btn">›</button>
+            </div>
+            <div class="date-picker-weekdays">
+              <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
+            </div>
+            <div class="date-picker-days">
+              <span class="other-month">28</span>
+              <span class="other-month">29</span>
+              <span class="other-month">30</span>
+              <span class="other-month">31</span>
+              <span>1</span>
+              <span>2</span>
+              <span>3</span>
+              <span>4</span>
+              <span>5</span>
+              <span>6</span>
+              <span>7</span>
+              <span>8</span>
+              <span>9</span>
+              <span>10</span>
+              <span>11</span>
+              <span>12</span>
+              <span>13</span>
+              <span>14</span>
+              <span>15</span>
+              <span>16</span>
+              <span>17</span>
+              <span>18</span>
+              <span>19</span>
+              <span>20</span>
+              <span>21</span>
+              <span>22</span>
+              <span class="today selected">23</span>
+              <span>24</span>
+              <span>25</span>
+              <span>26</span>
+              <span>27</span>
+              <span>28</span>
+              <span>29</span>
+              <span>30</span>
+              <span class="other-month">1</span>
+            </div>
+            <div class="date-picker-footer">
+              <button class="btn btn-sm">Сегодня</button>
+              <button class="btn btn-sm btn-ghost">Очистить</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Range Selection -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Диапазон дат</h3>
+        </div>
+        <div class="card-body">
+          <div class="date-picker-inline">
+            <div class="date-picker-header">
+              <button class="date-picker-nav-btn">‹</button>
+              <span class="date-picker-month-year">Ноябрь 2025</span>
+              <button class="date-picker-nav-btn">›</button>
+            </div>
+            <div class="date-picker-weekdays">
+              <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
+            </div>
+            <div class="date-picker-days">
+              <span class="other-month">28</span>
+              <span class="other-month">29</span>
+              <span class="other-month">30</span>
+              <span class="other-month">31</span>
+              <span>1</span>
+              <span>2</span>
+              <span>3</span>
+              <span>4</span>
+              <span>5</span>
+              <span>6</span>
+              <span>7</span>
+              <span>8</span>
+              <span>9</span>
+              <span>10</span>
+              <span>11</span>
+              <span>12</span>
+              <span>13</span>
+              <span>14</span>
+              <span class="range-start">15</span>
+              <span class="in-range">16</span>
+              <span class="in-range">17</span>
+              <span class="in-range">18</span>
+              <span class="in-range">19</span>
+              <span class="in-range">20</span>
+              <span class="range-end">21</span>
+              <span>22</span>
+              <span class="today">23</span>
+              <span>24</span>
+              <span>25</span>
+              <span>26</span>
+              <span>27</span>
+              <span>28</span>
+              <span>29</span>
+              <span>30</span>
+              <span class="other-month">1</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Command Palette Section -->
+    <section id="command-palette" class="mb-4">
+      <h2 class="mb-2">Command Palette</h2>
+      <p class="text-muted mb-2">Быстрый поиск команд и навигация (Ctrl+K / Cmd+K)</p>
+
+      <!-- Demo (inline) -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Демо (статичный вид)</h3>
+        </div>
+        <div class="card-body" style="background: var(--bg-muted); padding: 2rem;">
+          <div class="command-palette-dialog" style="position: relative; transform: none; max-width: 500px; margin: 0 auto;">
+            <div class="command-palette-search">
+              <span class="command-palette-search-icon">🔍</span>
+              <input type="text" class="command-palette-input" placeholder="Введите команду или поиск...">
+              <span class="command-palette-hint">ESC</span>
+            </div>
+            <div class="command-palette-body">
+              <div class="command-palette-category">Быстрые действия</div>
+              <div class="command-palette-item active">
+                <span class="command-palette-item-icon">📄</span>
+                <span class="command-palette-item-title">Новый файл</span>
+                <span class="command-palette-shortcut">
+                  <kbd class="kbd">Ctrl</kbd>
+                  <span class="kbd-plus">+</span>
+                  <kbd class="kbd">N</kbd>
+                </span>
+              </div>
+              <div class="command-palette-item">
+                <span class="command-palette-item-icon">📁</span>
+                <span class="command-palette-item-title">Открыть папку</span>
+                <span class="command-palette-shortcut">
+                  <kbd class="kbd">Ctrl</kbd>
+                  <span class="kbd-plus">+</span>
+                  <kbd class="kbd">O</kbd>
+                </span>
+              </div>
+              <div class="command-palette-separator"></div>
+              <div class="command-palette-category">Навигация</div>
+              <div class="command-palette-item">
+                <span class="command-palette-item-icon">⚙️</span>
+                <span class="command-palette-item-title">Настройки</span>
+                <span class="command-palette-shortcut">
+                  <kbd class="kbd">Ctrl</kbd>
+                  <span class="kbd-plus">+</span>
+                  <kbd class="kbd">,</kbd>
+                </span>
+              </div>
+              <div class="command-palette-item">
+                <span class="command-palette-item-icon">🎨</span>
+                <span class="command-palette-item-title">Сменить тему</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Keyboard Shortcuts -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Клавиатурные сочетания</h3>
+        </div>
+        <div class="card-body">
+          <div class="flex gap-4 flex-wrap">
+            <span class="kbd-group">
+              <kbd class="kbd">Ctrl</kbd>
+              <span class="kbd-plus">+</span>
+              <kbd class="kbd">K</kbd>
+            </span>
+            <span class="kbd-group">
+              <kbd class="kbd">Ctrl</kbd>
+              <span class="kbd-plus">+</span>
+              <kbd class="kbd">Shift</kbd>
+              <span class="kbd-plus">+</span>
+              <kbd class="kbd">P</kbd>
+            </span>
+            <span class="kbd-group">
+              <kbd class="kbd kbd-lg">⌘</kbd>
+              <span class="kbd-plus">+</span>
+              <kbd class="kbd kbd-lg">K</kbd>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trigger Button -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Кнопка вызова</h3>
+        </div>
+        <div class="card-body">
+          <button class="btn btn-outline" id="open-command-palette">
+            <span>🔍</span>
+            <span>Поиск команд...</span>
+            <span class="kbd-group" style="margin-left: auto;">
+              <kbd class="kbd">Ctrl</kbd>
+              <kbd class="kbd">K</kbd>
+            </span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Notification Section -->
+    <section id="notification" class="mb-4">
+      <h2 class="mb-2">Notification Badge</h2>
+      <p class="text-muted mb-2">Индикаторы уведомлений, счётчики и панель уведомлений</p>
+
+      <!-- Dot Badge -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Точечный индикатор</h3>
+        </div>
+        <div class="card-body">
+          <div class="flex gap-6">
+            <div class="notification-wrapper">
+              <button class="btn btn-icon">🔔</button>
+              <span class="notification-dot"></span>
+            </div>
+            <div class="notification-wrapper">
+              <button class="btn btn-icon">✉️</button>
+              <span class="notification-dot notification-dot-success"></span>
+            </div>
+            <div class="notification-wrapper">
+              <button class="btn btn-icon">⚙️</button>
+              <span class="notification-dot notification-dot-warning"></span>
+            </div>
+            <div class="notification-wrapper">
+              <button class="btn btn-icon">👤</button>
+              <span class="notification-dot notification-dot-pulse"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Count Badge -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Счётчик</h3>
+        </div>
+        <div class="card-body">
+          <div class="flex gap-6">
+            <div class="notification-wrapper">
+              <button class="btn btn-icon">🔔</button>
+              <span class="notification-count">3</span>
+            </div>
+            <div class="notification-wrapper">
+              <button class="btn btn-icon">✉️</button>
+              <span class="notification-count">12</span>
+            </div>
+            <div class="notification-wrapper">
+              <button class="btn btn-icon">💬</button>
+              <span class="notification-count">99+</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notification Panel -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Панель уведомлений</h3>
+        </div>
+        <div class="card-body">
+          <div class="notification-panel" style="position: relative; display: block; max-width: 360px;">
+            <div class="notification-panel-header">
+              <h4>Уведомления</h4>
+              <button class="notification-mark-read">Прочитать все</button>
+            </div>
+            <div class="notification-list">
+              <div class="notification-item notification-item-unread">
+                <div class="notification-item-icon">📦</div>
+                <div class="notification-item-content">
+                  <div class="notification-item-title">Заказ отправлен</div>
+                  <div class="notification-item-message">Ваш заказ #12345 отправлен</div>
+                  <div class="notification-item-time">5 минут назад</div>
+                </div>
+              </div>
+              <div class="notification-item notification-item-unread notification-item-success">
+                <div class="notification-item-icon">✅</div>
+                <div class="notification-item-content">
+                  <div class="notification-item-title">Оплата получена</div>
+                  <div class="notification-item-message">Платёж на сумму 5,000 ₽ успешно обработан</div>
+                  <div class="notification-item-time">1 час назад</div>
+                </div>
+              </div>
+              <div class="notification-item">
+                <div class="notification-item-icon">💬</div>
+                <div class="notification-item-content">
+                  <div class="notification-item-title">Новый комментарий</div>
+                  <div class="notification-item-message">Иван оставил комментарий к вашему посту</div>
+                  <div class="notification-item-time">Вчера</div>
+                </div>
+              </div>
+            </div>
+            <div class="notification-panel-footer">
+              <a href="#">Показать все уведомления</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Нет уведомлений</h3>
+        </div>
+        <div class="card-body">
+          <div class="notification-panel" style="position: relative; display: block; max-width: 360px;">
+            <div class="notification-panel-header">
+              <h4>Уведомления</h4>
+            </div>
+            <div class="notification-empty">
+              <div class="notification-empty-icon">🔔</div>
+              <div class="notification-empty-title">Нет уведомлений</div>
+              <div class="notification-empty-message">Новые уведомления появятся здесь</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
       </div><!-- /.container -->
     </main><!-- /.app-content -->
 
@@ -1758,7 +2336,7 @@
           <div class="sidebar-widget-title">Статистика</div>
           <div class="sidebar-stats">
             <div class="sidebar-stat">
-              <div class="sidebar-stat-value">24</div>
+              <div class="sidebar-stat-value">29</div>
               <div class="sidebar-stat-label">Компонентов</div>
             </div>
             <div class="sidebar-stat">

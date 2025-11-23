@@ -1,0 +1,672 @@
+/* ==================== File Upload ==================== */
+/* Dropzone, file list, progress, previews */
+
+/* ==================== Dropzone ==================== */
+
+.file-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.file-dropzone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  padding: 32px 24px;
+  background: var(--panel);
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: border-color var(--transition),
+              background-color var(--transition),
+              box-shadow var(--transition);
+}
+
+.file-dropzone:hover {
+  border-color: var(--accent);
+  background: var(--accent-100);
+}
+
+.file-dropzone:focus-within {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-100);
+}
+
+/* Drag-over state */
+.file-dropzone.drag-over,
+.file-dropzone[data-drag-over="true"] {
+  border-color: var(--accent);
+  border-style: solid;
+  background: var(--accent-100);
+  box-shadow: 0 0 0 4px var(--accent-100),
+              inset 0 0 20px rgba(46, 138, 60, 0.05);
+}
+
+/* Dropzone icon */
+.file-dropzone-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 16px;
+  background: var(--accent-100);
+  border-radius: 50%;
+  color: var(--accent);
+  font-size: 24px;
+  transition: transform var(--transition),
+              background-color var(--transition);
+}
+
+.file-dropzone:hover .file-dropzone-icon,
+.file-dropzone.drag-over .file-dropzone-icon {
+  transform: scale(1.1);
+  background: rgba(46, 138, 60, 0.2);
+}
+
+/* Dropzone text */
+.file-dropzone-text {
+  text-align: center;
+}
+
+.file-dropzone-title {
+  margin: 0 0 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.file-dropzone-subtitle {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.file-dropzone-subtitle strong {
+  color: var(--accent);
+  cursor: pointer;
+}
+
+/* Hidden file input */
+.file-dropzone input[type="file"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Dropzone sizes */
+.file-dropzone-sm {
+  min-height: 120px;
+  padding: 20px 16px;
+}
+
+.file-dropzone-sm .file-dropzone-icon {
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.file-dropzone-lg {
+  min-height: 240px;
+  padding: 48px 32px;
+}
+
+.file-dropzone-lg .file-dropzone-icon {
+  width: 72px;
+  height: 72px;
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+/* ==================== File List ==================== */
+
+.file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: border-color var(--transition),
+              box-shadow var(--transition);
+}
+
+.file-item:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow);
+}
+
+/* File icon */
+.file-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--accent-100);
+  border-radius: var(--radius-sm);
+  color: var(--accent);
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* File type icons by extension */
+.file-icon-pdf {
+  background: rgba(244, 67, 54, 0.1);
+  color: #f44336;
+}
+
+.file-icon-doc,
+.file-icon-docx {
+  background: rgba(33, 150, 243, 0.1);
+  color: #2196f3;
+}
+
+.file-icon-xls,
+.file-icon-xlsx {
+  background: rgba(76, 175, 80, 0.1);
+  color: #4caf50;
+}
+
+.file-icon-image {
+  background: rgba(156, 39, 176, 0.1);
+  color: #9c27b0;
+}
+
+.file-icon-video {
+  background: rgba(255, 152, 0, 0.1);
+  color: #ff9800;
+}
+
+.file-icon-audio {
+  background: rgba(233, 30, 99, 0.1);
+  color: #e91e63;
+}
+
+.file-icon-zip {
+  background: rgba(121, 85, 72, 0.1);
+  color: #795548;
+}
+
+/* File info */
+.file-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.file-name {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.file-size {
+  color: var(--muted);
+}
+
+.file-type {
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* File actions */
+.file-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.file-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+  cursor: pointer;
+  transition: background-color var(--transition),
+              color var(--transition);
+}
+
+.file-action:hover {
+  background: var(--accent-100);
+  color: var(--accent);
+}
+
+.file-action-remove:hover {
+  background: rgba(244, 67, 54, 0.1);
+  color: #f44336;
+}
+
+/* ==================== Upload Progress ==================== */
+
+.file-item-uploading .file-progress {
+  margin-top: 8px;
+}
+
+.file-progress {
+  width: 100%;
+  height: 4px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.file-progress-bar {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+  transition: width var(--transition);
+}
+
+.file-progress-text {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* Progress with percentage */
+.file-item-uploading .file-meta {
+  justify-content: space-between;
+}
+
+.file-progress-percent {
+  font-weight: 500;
+  color: var(--accent);
+}
+
+/* Indeterminate progress */
+.file-progress-indeterminate .file-progress-bar {
+  width: 30%;
+  animation: file-progress-indeterminate 1.5s ease-in-out infinite;
+}
+
+@keyframes file-progress-indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
+
+/* ==================== Preview Thumbnails ==================== */
+
+.file-preview {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.file-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.file-preview-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.file-preview:hover .file-preview-overlay {
+  opacity: 1;
+}
+
+.file-preview-overlay button {
+  color: #fff;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+/* Larger preview grid */
+.file-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 12px;
+}
+
+.file-preview-card {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--border);
+}
+
+.file-preview-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition);
+}
+
+.file-preview-card:hover img {
+  transform: scale(1.05);
+}
+
+.file-preview-card-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 8px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+  color: #fff;
+}
+
+.file-preview-card-name {
+  font-size: 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-preview-card-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--transition),
+              background-color var(--transition);
+}
+
+.file-preview-card:hover .file-preview-card-remove {
+  opacity: 1;
+}
+
+.file-preview-card-remove:hover {
+  background: rgba(244, 67, 54, 0.9);
+}
+
+/* ==================== States ==================== */
+
+/* Success state */
+.file-item-success {
+  border-color: #4caf50;
+  background: rgba(76, 175, 80, 0.05);
+}
+
+.file-item-success .file-icon {
+  background: rgba(76, 175, 80, 0.1);
+  color: #4caf50;
+}
+
+.file-item-success .file-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  color: #4caf50;
+  font-weight: 500;
+}
+
+/* Error state */
+.file-item-error {
+  border-color: #f44336;
+  background: rgba(244, 67, 54, 0.05);
+}
+
+.file-item-error .file-icon {
+  background: rgba(244, 67, 54, 0.1);
+  color: #f44336;
+}
+
+.file-item-error .file-error {
+  font-size: 0.75rem;
+  color: #f44336;
+  margin-top: 4px;
+}
+
+/* Dropzone error state */
+.file-dropzone-error {
+  border-color: #f44336;
+  background: rgba(244, 67, 54, 0.05);
+}
+
+.file-dropzone-error .file-dropzone-icon {
+  background: rgba(244, 67, 54, 0.1);
+  color: #f44336;
+}
+
+/* Dropzone success state */
+.file-dropzone-success {
+  border-color: #4caf50;
+  background: rgba(76, 175, 80, 0.05);
+}
+
+.file-dropzone-success .file-dropzone-icon {
+  background: rgba(76, 175, 80, 0.1);
+  color: #4caf50;
+}
+
+/* Disabled state */
+.file-dropzone:disabled,
+.file-dropzone[disabled],
+.file-dropzone-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ==================== Compact Variant ==================== */
+
+.file-item-compact {
+  padding: 8px;
+  gap: 8px;
+}
+
+.file-item-compact .file-icon {
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+}
+
+.file-item-compact .file-name {
+  font-size: 0.8125rem;
+}
+
+.file-item-compact .file-meta {
+  font-size: 0.6875rem;
+}
+
+/* ==================== Dark Theme ==================== */
+
+.dark .file-dropzone {
+  background: var(--dark-panel);
+  border-color: var(--dark-border);
+}
+
+.dark .file-dropzone:hover {
+  border-color: var(--dark-accent);
+  background: rgba(33, 150, 243, 0.1);
+}
+
+.dark .file-dropzone.drag-over,
+.dark .file-dropzone[data-drag-over="true"] {
+  border-color: var(--dark-accent);
+  background: rgba(33, 150, 243, 0.15);
+  box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.1),
+              inset 0 0 20px rgba(33, 150, 243, 0.05);
+}
+
+.dark .file-dropzone:focus-within {
+  border-color: var(--dark-accent);
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+}
+
+.dark .file-dropzone-icon {
+  background: rgba(33, 150, 243, 0.15);
+  color: var(--dark-accent);
+}
+
+.dark .file-dropzone:hover .file-dropzone-icon,
+.dark .file-dropzone.drag-over .file-dropzone-icon {
+  background: rgba(33, 150, 243, 0.25);
+}
+
+.dark .file-dropzone-title {
+  color: var(--dark-text);
+}
+
+.dark .file-dropzone-subtitle {
+  color: var(--dark-muted);
+}
+
+.dark .file-dropzone-subtitle strong {
+  color: var(--dark-accent);
+}
+
+.dark .file-item {
+  background: var(--dark-panel);
+  border-color: var(--dark-border);
+}
+
+.dark .file-item:hover {
+  border-color: var(--dark-accent);
+}
+
+.dark .file-icon {
+  background: rgba(33, 150, 243, 0.15);
+  color: var(--dark-accent);
+}
+
+.dark .file-name {
+  color: var(--dark-text);
+}
+
+.dark .file-meta,
+.dark .file-size {
+  color: var(--dark-muted);
+}
+
+.dark .file-action {
+  color: var(--dark-muted);
+}
+
+.dark .file-action:hover {
+  background: rgba(33, 150, 243, 0.15);
+  color: var(--dark-accent);
+}
+
+.dark .file-progress {
+  background: var(--dark-border);
+}
+
+.dark .file-progress-bar {
+  background: var(--dark-accent);
+}
+
+.dark .file-progress-percent {
+  color: var(--dark-accent);
+}
+
+.dark .file-preview-card {
+  background: var(--dark-border);
+}
+
+/* Dark theme states */
+.dark .file-item-success {
+  border-color: #4caf50;
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.dark .file-item-error {
+  border-color: #f44336;
+  background: rgba(244, 67, 54, 0.1);
+}
+
+.dark .file-dropzone-error {
+  border-color: #f44336;
+  background: rgba(244, 67, 54, 0.1);
+}
+
+.dark .file-dropzone-success {
+  border-color: #4caf50;
+  background: rgba(76, 175, 80, 0.1);
+}
+
+/* ==================== Reduced Motion ==================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .file-dropzone,
+  .file-dropzone-icon,
+  .file-item,
+  .file-action,
+  .file-progress-bar,
+  .file-preview-overlay,
+  .file-preview-card img,
+  .file-preview-card-remove {
+    transition: none;
+  }
+
+  .file-dropzone:hover .file-dropzone-icon,
+  .file-dropzone.drag-over .file-dropzone-icon {
+    transform: none;
+  }
+
+  .file-preview-card:hover img {
+    transform: none;
+  }
+
+  .file-progress-indeterminate .file-progress-bar {
+    animation: none;
+    width: 50%;
+    transform: translateX(50%);
+  }
+}

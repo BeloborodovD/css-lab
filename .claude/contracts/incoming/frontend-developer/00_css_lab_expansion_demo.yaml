@@ -1,0 +1,220 @@
+# Contract: CSS Lab Library Expansion - Demo Pages & JS Components
+# Task ID: css-lab-expansion-demo
+# Created: 2025-11-23
+# Agent: frontend-developer
+
+contract_id: "css-lab-expansion-demo-001"
+task_type: "frontend_implementation"
+priority: "high"
+
+# Контекст проекта
+context:
+  project: "CSS Lab - Style Library"
+  location: "d:\\_claude_project\\css-lab"
+  existing_demo: "index.html"
+  tech_stack: "Vanilla JS (no framework)"
+  target: "Создать демо-секции и JS-интерактивность для новых компонентов"
+
+# Задание
+task:
+  title: "Demo pages и JavaScript для новых компонентов CSS Lab"
+  description: |
+    1. Добавить секции в index.html для новых компонентов
+    2. Создать JS-интерактивность где необходимо
+    3. Обновить навигацию в sidebar
+
+# Демо секции для добавления в index.html
+demo_sections:
+  - id: "file-upload"
+    title: "File Upload"
+    demos:
+      - title: "Basic Upload"
+        html: |
+          <div class="file-upload">
+            <div class="file-upload-dropzone">
+              <input type="file" class="file-upload-input" id="file-basic">
+              <label for="file-basic" class="file-upload-label">
+                <span class="file-upload-icon">📁</span>
+                <span class="file-upload-text">Drag & drop or click to upload</span>
+              </label>
+            </div>
+          </div>
+      - title: "Multiple Files"
+        multiple: true
+      - title: "With Progress"
+        show_progress: true
+      - title: "Image Preview"
+        accept: "image/*"
+
+  - id: "combobox"
+    title: "Combobox / Rich Select"
+    demos:
+      - title: "Basic Select"
+        options: ["Option 1", "Option 2", "Option 3"]
+      - title: "Searchable"
+        searchable: true
+      - title: "Multi-select"
+        multiple: true
+      - title: "Grouped Options"
+        grouped: true
+
+  - id: "date-picker"
+    title: "Date Picker"
+    demos:
+      - title: "Single Date"
+      - title: "Date Range"
+        range: true
+      - title: "With Min/Max"
+        min: "2024-01-01"
+        max: "2025-12-31"
+
+  - id: "command-palette"
+    title: "Command Palette"
+    demos:
+      - title: "Press Cmd+K to open"
+        trigger: "keyboard"
+      - title: "With Categories"
+        categories: ["Navigation", "Actions", "Settings"]
+
+  - id: "avatar"
+    title: "Avatar"
+    demos:
+      - title: "Sizes"
+        sizes: [xs, sm, md, lg, xl]
+      - title: "With Status"
+        statuses: [online, offline, busy, away]
+      - title: "Avatar Group"
+        count: 5
+        max_visible: 3
+      - title: "Initials Fallback"
+        names: ["John Doe", "Jane Smith", "Alex Brown"]
+
+  - id: "empty-state"
+    title: "Empty State"
+    demos:
+      - title: "No Data"
+        icon: "📊"
+        message: "No data to display"
+        action: "Add Data"
+      - title: "No Results"
+        icon: "🔍"
+        message: "No results found"
+        action: "Clear Filters"
+      - title: "Error State"
+        icon: "⚠️"
+        message: "Something went wrong"
+        action: "Retry"
+
+  - id: "notification-badge"
+    title: "Notification Badge"
+    demos:
+      - title: "Dot Badge"
+        type: "dot"
+      - title: "Count Badge"
+        count: 5
+      - title: "Max Count (99+)"
+        count: 150
+      - title: "With Panel"
+        panel: true
+
+  - id: "divider"
+    title: "Divider"
+    demos:
+      - title: "Horizontal"
+      - title: "Vertical"
+        vertical: true
+      - title: "With Text"
+        text: "OR"
+      - title: "Dashed"
+        style: "dashed"
+
+  - id: "chip"
+    title: "Chip / Tag"
+    demos:
+      - title: "Basic"
+        labels: ["Tag 1", "Tag 2", "Tag 3"]
+      - title: "With Remove"
+        removable: true
+      - title: "Colors"
+        colors: [primary, success, warning, error, info]
+      - title: "Outlined"
+        variant: "outlined"
+
+# JavaScript компоненты для реализации
+js_components:
+  - name: "FileUpload"
+    file: "js/components/file-upload.js"
+    features:
+      - "Drag & drop handling"
+      - "File validation (type, size)"
+      - "Progress simulation"
+      - "Preview generation"
+
+  - name: "Combobox"
+    file: "js/components/combobox.js"
+    features:
+      - "Open/close dropdown"
+      - "Search filtering"
+      - "Keyboard navigation"
+      - "Multi-select handling"
+
+  - name: "DatePicker"
+    file: "js/components/date-picker.js"
+    features:
+      - "Calendar rendering"
+      - "Date selection"
+      - "Range selection"
+      - "Month/year navigation"
+
+  - name: "CommandPalette"
+    file: "js/components/command-palette.js"
+    features:
+      - "Cmd+K trigger"
+      - "Fuzzy search"
+      - "Keyboard navigation"
+      - "Action execution"
+
+  - name: "NotificationPanel"
+    file: "js/components/notification-panel.js"
+    features:
+      - "Badge update"
+      - "Panel toggle"
+      - "Mark as read"
+
+  - name: "Chip"
+    file: "js/components/chip.js"
+    features:
+      - "Remove chip"
+      - "Click handling"
+
+# Sidebar navigation update
+sidebar_update:
+  new_items:
+    - { href: "#file-upload", text: "File Upload" }
+    - { href: "#combobox", text: "Combobox" }
+    - { href: "#date-picker", text: "Date Picker" }
+    - { href: "#command-palette", text: "Command Palette" }
+    - { href: "#avatar", text: "Avatar" }
+    - { href: "#empty-state", text: "Empty State" }
+    - { href: "#notification-badge", text: "Notification" }
+    - { href: "#divider", text: "Divider" }
+    - { href: "#chip", text: "Chip" }
+
+# Output
+output:
+  update:
+    - "index.html (add demo sections)"
+    - "main.js (import component scripts)"
+  create:
+    - "js/components/file-upload.js"
+    - "js/components/combobox.js"
+    - "js/components/date-picker.js"
+    - "js/components/command-palette.js"
+    - "js/components/notification-panel.js"
+    - "js/components/chip.js"
+
+# Handoff
+handoff:
+  next_agent: "qa-engineer"
+  reason: "После demo → UI testing"
+  input: "Demo pages, JS components"

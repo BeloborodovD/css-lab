@@ -1,0 +1,257 @@
+# Contract: CSS Lab Library Expansion - New Component Styles
+# Task ID: css-lab-expansion-styles
+# Created: 2025-11-23
+# Agent: css-design-specialist
+
+contract_id: "css-lab-expansion-styles-001"
+task_type: "css_implementation"
+priority: "high"
+
+# Контекст проекта
+context:
+  project: "CSS Lab - Style Library"
+  location: "d:\\_claude_project\\css-lab"
+  design_system:
+    variables: "styles/base/variables.css"
+    existing_components: "styles/components/*.css"
+  target: "Создать CSS для новых компонентов"
+
+# Задание
+task:
+  title: "CSS стили для новых компонентов CSS Lab"
+  description: |
+    Создать CSS стили для новых компонентов.
+    Следовать существующему design system (variables.css).
+    Поддержка light/dark theme. Responsive. Accessible.
+
+# Новые компоненты для стилизации
+components_to_style:
+
+  # === FILE UPLOAD ===
+  - name: "file-upload"
+    output: "styles/components/file-upload.css"
+    elements:
+      - ".file-upload" # Container
+      - ".file-upload-dropzone" # Drag & drop area
+      - ".file-upload-input" # Hidden input
+      - ".file-upload-label" # Clickable label
+      - ".file-upload-icon" # Upload icon
+      - ".file-upload-text" # Instructions text
+      - ".file-upload-preview" # Uploaded file preview
+      - ".file-upload-progress" # Progress bar
+      - ".file-upload-list" # List of files
+      - ".file-upload-item" # Single file item
+    states:
+      - default
+      - dragover (highlighted border)
+      - uploading (disabled, progress visible)
+      - success (green indicator)
+      - error (red indicator)
+    variants:
+      - small (compact)
+      - large (full area)
+
+  # === RICH SELECT / COMBOBOX ===
+  - name: "combobox"
+    output: "styles/components/combobox.css"
+    elements:
+      - ".combobox" # Container
+      - ".combobox-trigger" # Button/input
+      - ".combobox-input" # Search input
+      - ".combobox-dropdown" # Options container
+      - ".combobox-option" # Single option
+      - ".combobox-option-group" # Group header
+      - ".combobox-selected" # Selected option display
+      - ".combobox-tags" # Multi-select tags
+      - ".combobox-tag" # Single tag
+      - ".combobox-clear" # Clear button
+    states:
+      - closed
+      - open
+      - focused
+      - disabled
+      - loading
+    features:
+      - "Search highlighting"
+      - "Selected option checkmark"
+      - "Multi-select tag pills"
+
+  # === DATE PICKER ===
+  - name: "date-picker"
+    output: "styles/components/date-picker.css"
+    elements:
+      - ".date-picker" # Container
+      - ".date-picker-input" # Input field
+      - ".date-picker-calendar" # Calendar dropdown
+      - ".date-picker-header" # Month/year navigation
+      - ".date-picker-nav" # Prev/next buttons
+      - ".date-picker-title" # Month Year text
+      - ".date-picker-weekdays" # Su Mo Tu...
+      - ".date-picker-days" # Days grid
+      - ".date-picker-day" # Single day
+      - ".date-picker-day.today" # Current day
+      - ".date-picker-day.selected" # Selected day
+      - ".date-picker-day.in-range" # Range selection
+      - ".date-picker-day.disabled" # Disabled day
+    variants:
+      - single (one date)
+      - range (start-end)
+      - month-picker
+      - year-picker
+
+  # === COMMAND PALETTE ===
+  - name: "command-palette"
+    output: "styles/components/command-palette.css"
+    elements:
+      - ".command-palette" # Overlay + container
+      - ".command-palette-backdrop" # Dark overlay
+      - ".command-palette-dialog" # Dialog box
+      - ".command-palette-input" # Search input
+      - ".command-palette-results" # Results list
+      - ".command-palette-group" # Group header
+      - ".command-palette-item" # Single command
+      - ".command-palette-icon" # Command icon
+      - ".command-palette-label" # Command name
+      - ".command-palette-shortcut" # Keyboard shortcut
+      - ".command-palette-empty" # No results
+    features:
+      - "Centered modal style"
+      - "Max-width: 640px"
+      - "Keyboard shortcut badges"
+      - "Selected item highlight"
+
+  # === AVATAR ===
+  - name: "avatar"
+    output: "styles/components/avatar.css"
+    elements:
+      - ".avatar" # Image container
+      - ".avatar-image" # Actual image
+      - ".avatar-initials" # Fallback initials
+      - ".avatar-status" # Online/offline dot
+      - ".avatar-group" # Stacked avatars
+    sizes:
+      - xs: 24px
+      - sm: 32px
+      - md: 40px
+      - lg: 48px
+      - xl: 64px
+    variants:
+      - circle (default)
+      - square (rounded corners)
+    status:
+      - online (green dot)
+      - offline (gray dot)
+      - busy (red dot)
+      - away (yellow dot)
+
+  # === EMPTY STATE ===
+  - name: "empty-state"
+    output: "styles/components/empty-state.css"
+    elements:
+      - ".empty-state" # Container
+      - ".empty-state-illustration" # SVG/image
+      - ".empty-state-title" # Heading
+      - ".empty-state-description" # Text
+      - ".empty-state-action" # CTA button
+    sizes:
+      - small (inline)
+      - medium (default)
+      - large (full page)
+
+  # === NOTIFICATION / BADGE ===
+  - name: "notification-badge"
+    output: "styles/components/notification-badge.css"
+    elements:
+      - ".notification-badge" # Container (relative)
+      - ".notification-dot" # Red dot
+      - ".notification-count" # Number badge
+      - ".notification-panel" # Dropdown panel
+      - ".notification-list" # List container
+      - ".notification-item" # Single notification
+      - ".notification-item.unread" # Unread style
+      - ".notification-time" # Timestamp
+    features:
+      - "Positioned absolute (top-right)"
+      - "Pulse animation for new"
+      - "Max count: 99+"
+
+  # === DIVIDER ===
+  - name: "divider"
+    output: "styles/components/divider.css"
+    elements:
+      - ".divider" # Horizontal line
+      - ".divider-vertical" # Vertical line
+      - ".divider-text" # With text in middle
+    variants:
+      - solid
+      - dashed
+      - dotted
+
+  # === CHIP / TAG ===
+  - name: "chip"
+    output: "styles/components/chip.css"
+    elements:
+      - ".chip" # Container
+      - ".chip-icon" # Left icon
+      - ".chip-label" # Text
+      - ".chip-remove" # X button
+    variants:
+      - default
+      - outlined
+      - filled
+    colors:
+      - primary
+      - success
+      - warning
+      - error
+      - info
+
+# Design system compliance
+design_system:
+  colors:
+    use_variables: true
+    source: "var(--accent), var(--text), var(--bg), etc."
+  spacing:
+    use_variables: true
+    source: "gap values from utilities.css"
+  border_radius:
+    use_variables: true
+    source: "var(--radius), var(--radius-sm), var(--radius-lg)"
+  shadows:
+    use_variables: true
+    source: "var(--shadow), var(--shadow-lg)"
+  typography:
+    use_variables: true
+    source: "font-size from utilities.css"
+
+# Dark theme support
+dark_theme:
+  approach: ".dark prefix for all dark styles"
+  location: "Add to styles/themes/dark.css or inline in component file"
+
+# Responsive breakpoints
+responsive:
+  mobile: "max-width: 768px"
+  tablet: "min-width: 769px and max-width: 1024px"
+  desktop: "min-width: 1025px"
+
+# Output
+output:
+  new_files:
+    - "styles/components/file-upload.css"
+    - "styles/components/combobox.css"
+    - "styles/components/date-picker.css"
+    - "styles/components/command-palette.css"
+    - "styles/components/avatar.css"
+    - "styles/components/empty-state.css"
+    - "styles/components/notification-badge.css"
+    - "styles/components/divider.css"
+    - "styles/components/chip.css"
+  update:
+    - "styles/index.css (add @import for new components)"
+
+# Handoff
+handoff:
+  next_agent: "frontend-developer"
+  reason: "После CSS → HTML demo для компонентов"
+  input: "CSS files for new components"

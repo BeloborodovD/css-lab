@@ -12,6 +12,7 @@
 .app-layout {
   display: flex;
   min-height: calc(100vh - var(--header-h, 64px));
+  margin-top: var(--header-h, 64px); /* Space for fixed header */
   padding-bottom: 60px; /* Space for fixed footer */
   background: var(--bg);
 }
@@ -108,24 +109,27 @@
   transition: none;
 }
 
-/* Sidebar overlay - visual only, does NOT block interaction */
+/* Sidebar overlay - for closing sidebars on click */
 .sidebar-overlay {
+  display: none; /* Hidden on desktop */
   position: fixed;
   inset: 0;
   top: var(--header-h, 64px);
   bottom: 60px;
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
   z-index: 99;
   opacity: 0;
   visibility: hidden;
-  pointer-events: none; /* CRITICAL: Never block content interaction */
+  pointer-events: none;
   transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .sidebar-overlay.visible {
   opacity: 1;
   visibility: visible;
-  pointer-events: none; /* Always passthrough clicks */
+  pointer-events: auto; /* Allow click to close */
+  cursor: pointer;
 }
 
 /* === Main Content === */
@@ -368,20 +372,20 @@ body.width-full .width-control .icon-full {
   display: block;
 }
 
-/* === Width Modes (applied to .main.container) === */
-body.width-fixed .main.container {
+/* === Width Modes (applied to .app-content .container) === */
+body.width-fixed .app-content > .container {
   max-width: 1920px;
   margin-left: auto;
   margin-right: auto;
 }
 
-body.width-fluid .main.container {
+body.width-fluid .app-content > .container {
   max-width: 90%;
   margin-left: auto;
   margin-right: auto;
 }
 
-body.width-full .main.container {
+body.width-full .app-content > .container {
   max-width: 100%;
 }
 
@@ -547,6 +551,7 @@ body.width-full .main.container {
 
   /* Enable overlay for closing sidebars on mobile */
   .sidebar-overlay {
+    display: block; /* Show on mobile */
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(4px);
     pointer-events: auto; /* Allow click to close on mobile */

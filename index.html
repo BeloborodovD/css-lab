@@ -2500,7 +2500,7 @@
       const leftOpen = leftSidebar?.classList.contains('open');
       const rightOpen = rightSidebar?.classList.contains('open');
       const anyOpen = leftOpen || rightOpen;
-      const isMobile = window.innerWidth <= 768;
+      const isMobile = window.innerWidth < 768; // Match CSS breakpoint @media (max-width: 767px)
 
       // Update overlay (only on mobile)
       if (anyOpen && isMobile) {
@@ -2558,6 +2558,27 @@
       rightSidebar?.classList.add('open');
       updateSidebarState();
     }
+
+    // Handle window resize - close sidebars when switching to mobile
+    let previousWidth = window.innerWidth;
+    window.addEventListener('resize', () => {
+      const currentWidth = window.innerWidth;
+      const wasMobile = previousWidth < 768;
+      const isMobile = currentWidth < 768;
+
+      // Switching from desktop to mobile - close sidebars
+      if (!wasMobile && isMobile) {
+        closeAllSidebars();
+      }
+      // Switching from mobile to desktop - optionally reopen sidebars
+      else if (wasMobile && !isMobile && currentWidth > 1024) {
+        leftSidebar?.classList.add('open');
+        rightSidebar?.classList.add('open');
+        updateSidebarState();
+      }
+
+      previousWidth = currentWidth;
+    });
 
     // Burger menu toggles left sidebar (independent)
     burgerMenu?.addEventListener('click', toggleLeftSidebar);

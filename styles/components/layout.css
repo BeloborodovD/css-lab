@@ -200,7 +200,43 @@ body:not(:has(.app-sidebar.left.open)):not(:has(.app-sidebar.right.open)) .searc
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
+  /* Header responsive adjustments */
+  .header {
+    padding: 0 12px;
+    gap: 8px;
+  }
+
+  .header-left {
+    gap: 6px;
+  }
+
+  .header-right {
+    gap: 4px;
+  }
+
+  /* Hide logo text on very small screens, keep icon */
+  .logo {
+    font-size: 1rem;
+  }
+
+  /* Search bar adjustments for mobile */
+  .search-bar {
+    max-width: none !important;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .search-bar .input {
+    min-width: 80px;
+    flex: 1;
+  }
+
+  /* Hide search button text on mobile, keep it compact */
+  .search-bar .btn {
+    padding: 8px 12px;
+  }
+
   .sidebar-left {
     width: min(85vw, 300px);
     transform: translateX(-100%);
@@ -213,5 +249,36 @@ body:not(:has(.app-sidebar.left.open)):not(:has(.app-sidebar.right.open)) .searc
 
   .main.with-sidebar-left {
     padding-left: 16px;
+  }
+
+  /* Main content full width on mobile */
+  .main {
+    padding: 12px;
+  }
+
+  .container {
+    padding: 0 12px;
+  }
+}
+
+/* Extra small screens (iPhone SE, etc.) */
+@media (max-width: 374px) {
+  .header {
+    padding: 0 8px;
+  }
+
+  /* Stack search bar below header on very small screens */
+  .search-bar .btn {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+
+  .search-bar .input {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+  }
+
+  .logo {
+    font-size: 0.9rem;
   }
 }

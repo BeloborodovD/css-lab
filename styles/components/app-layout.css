@@ -186,6 +186,64 @@
   background: #4caf50;
 }
 
+/* Site Footer Mobile Responsive */
+@media (max-width: 767px) {
+  .site-footer {
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 16px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+    font-size: 0.75rem;
+  }
+
+  .site-footer .footer-left,
+  .site-footer .footer-center,
+  .site-footer .footer-right {
+    justify-content: center;
+    width: 100%;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .site-footer .footer-nav {
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .site-footer .footer-nav a {
+    font-size: 0.7rem;
+    padding: 4px 0;
+  }
+
+  .site-footer .footer-copyright,
+  .site-footer .footer-status {
+    font-size: 0.65rem;
+  }
+
+  .site-footer .footer-version {
+    font-size: 0.6rem;
+    padding: 2px 6px;
+  }
+}
+
+@media (max-width: 479px) {
+  .site-footer {
+    padding: 8px 12px;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom));
+  }
+
+  /* Hide less important elements on very small screens */
+  .site-footer .footer-center {
+    display: none;
+  }
+
+  .site-footer .footer-version,
+  .site-footer .footer-status {
+    display: none;
+  }
+}
+
 /* === Width Control Button === */
 .width-control {
   position: fixed;
@@ -373,11 +431,38 @@ body.width-full .main.container {
 }
 
 /* === Responsive === */
-@media (max-width: 768px) {
-  /* On mobile: sidebars overlay content instead of pushing */
+@media (max-width: 767px) {
+  /* CRITICAL: On mobile, sidebars must be hidden by default and overlay content */
   .app-sidebar {
-    width: 85vw;
-    max-width: 300px;
+    position: fixed;
+    width: 280px;
+    max-width: 85vw;
+    z-index: 1000;
+    box-shadow: var(--shadow-xl, 0 25px 50px -12px rgba(0, 0, 0, 0.25));
+  }
+
+  /* Left sidebar: hidden off-screen by default */
+  .app-sidebar.left {
+    transform: translateX(-100%);
+  }
+
+  /* Right sidebar: hidden off-screen by default */
+  .app-sidebar.right {
+    transform: translateX(100%);
+  }
+
+  /* Only show when .open class is added */
+  .app-sidebar.left.open,
+  .app-sidebar.right.open {
+    transform: translateX(0);
+  }
+
+  /* Main content takes full width on mobile - no margins */
+  .app-content {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+    padding: 16px;
   }
 
   /* Disable content pushing on mobile - sidebars overlay */
@@ -387,17 +472,21 @@ body.width-full .main.container {
   .app-content.sidebar-left-open,
   .app-content.sidebar-right-open,
   .app-content.sidebar-both-open {
-    margin-left: 0;
-    margin-right: 0;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
 
   /* Enable overlay for closing sidebars on mobile */
   .sidebar-overlay {
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
     pointer-events: auto; /* Allow click to close on mobile */
+    z-index: 999; /* Below sidebar (1000) but above content */
   }
 
   .sidebar-overlay.visible {
+    opacity: 1;
+    visibility: visible;
     pointer-events: auto;
   }
 
@@ -430,6 +519,18 @@ body.width-full .main.container {
   .demo-app-sidebar.collapsed {
     height: 0;
     border-bottom: none;
+  }
+}
+
+/* Extra small screens (iPhone SE, etc.) */
+@media (max-width: 374px) {
+  .app-sidebar {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .app-content {
+    padding: 12px;
   }
 }
 

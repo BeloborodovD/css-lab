@@ -514,26 +514,27 @@
 
 /* ==================== Mobile Responsive Styles ==================== */
 
-/* Sidebar overlay backdrop for mobile */
+/* Sidebar overlay backdrop - hidden by default on desktop */
 .sidebar-overlay {
   display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 998;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 @media (max-width: 767px) {
-  /* Overlay mode on mobile */
+  /* Enable overlay on mobile */
   .sidebar-overlay {
     display: block;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-    z-index: 998;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity var(--transition), visibility var(--transition);
   }
 
-  .sidebar-overlay.active {
+  .sidebar-overlay.active,
+  .sidebar-overlay.visible {
     opacity: 1;
     visibility: visible;
   }
@@ -546,15 +547,17 @@
     width: 280px;
     max-width: 85vw;
     z-index: 999;
-    transform: translateX(-100%);
   }
 
+  /* Left sidebar: hidden by default */
   .sidebar.left {
     left: 0;
+    transform: translateX(-100%);
     border-right: 1px solid var(--border);
     border-left: none;
   }
 
+  /* Right sidebar: hidden by default */
   .sidebar.right {
     right: 0;
     left: auto;
@@ -563,22 +566,29 @@
     border-right: none;
   }
 
-  /* Open state */
-  .sidebar.open {
+  /* Open state - slide in */
+  .sidebar.left.open {
     transform: translateX(0);
   }
 
-  /* Touch-friendly nav links */
+  .sidebar.right.open {
+    transform: translateX(0);
+  }
+
+  /* Touch-friendly nav links (min 44px for WCAG 2.5.5) */
   .sidebar-nav-link {
     padding: 14px 12px;
     min-height: 48px;
   }
 
-  /* Larger close button */
+  /* Larger close button for touch */
   .sidebar-close {
-    width: 40px;
-    height: 40px;
-    padding: 8px;
+    width: 44px;
+    height: 44px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   /* Section padding */

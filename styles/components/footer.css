@@ -275,3 +275,93 @@
 .dark .footer-column-links a:hover {
   color: var(--primary-400);
 }
+
+/* ==================== Mobile Responsive Styles ==================== */
+
+@media (max-width: 767px) {
+  /* Stack footer on mobile */
+  .footer {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .footer-left,
+  .footer-center,
+  .footer-right {
+    justify-content: center;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  /* Nav links wrap on mobile */
+  .footer-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px 16px;
+  }
+
+  /* Touch-friendly link targets */
+  .footer-nav a {
+    padding: 8px 4px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* Larger social icons for touch */
+  .footer-social-link {
+    width: 44px;
+    height: 44px;
+  }
+
+  .footer-social-link svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Multi-row footer adjustments */
+  .footer-multi {
+    padding: 20px 16px;
+  }
+
+  .footer-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* Footer columns single column on mobile */
+  .footer-columns {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .footer-column-title {
+    text-align: center;
+  }
+
+  .footer-column-links {
+    text-align: center;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 479px) {
+  .footer {
+    padding: 12px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  }
+
+  .footer-nav {
+    gap: 8px 12px;
+  }
+
+  .footer-nav a {
+    font-size: 0.75rem;
+  }
+
+  .footer-copyright {
+    font-size: 0.7rem;
+  }
+}

@@ -1,0 +1,207 @@
+/* ==========================================================================
+   dark-v3.css — Lightweight dark theme
+   --------------------------------------------------------------------------
+   Минимальный набор dark-стилей. ВСЕ цветовые токены уже определены в
+   variables-v2.css (.dark { ... }), поэтому компоненты автоматически
+   подхватывают dark-палитру через CSS-переменные.
+
+   Здесь только то, что НЕЛЬЗЯ выразить через переменные:
+     - body/html base: bg + text + color-scheme
+     - scrollbar (CSS pseudo-elements)
+     - selection (CSS pseudo-elements)
+     - focus-visible base ring (для интерактивных элементов без явного focus)
+     - shared utility (.divider, .kbd) — общие, не привязанные к компоненту
+     - photo-card / lightbox / sidebar-panel из AutoTrassir-секции (упрощены)
+
+   Базовый bg: #15171c (НЕ #0a0a0f). Контраст комфортный, не давит на глаз.
+
+   Ключевые отличия от старой dark.css:
+     - 4 surface-уровня вместо 9 (см. variables-v2.css)
+     - НЕТ photo-card transform: translateY(-4px) на hover
+     - НЕТ box-shadow 0 8px 32px rgba(0,0,0,0.5) — слишком плотно
+     - НЕТ skeleton с 3-stop linear-gradient — заменено на opacity-pulse
+     - shadow-lg для всех popover/drawer/modal (через переменные)
+   ========================================================================== */
+
+/* ==================== Body / html ==================== */
+.dark,
+html.dark,
+body.dark,
+.dark body,
+[data-theme="dark"] {
+  background: var(--color-bg);
+  color: var(--color-text);
+  color-scheme: dark;
+}
+
+/* Auto dark-mode (когда нет .light override) */
+@media (prefers-color-scheme: dark) {
+  html:not(.light):not([data-theme="light"]),
+  body:not(.light) {
+    color-scheme: dark;
+  }
+}
+
+/* ==================== Scrollbar ==================== */
+.dark ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-bg);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-strong);
+}
+
+.dark ::-webkit-scrollbar-corner {
+  background: var(--color-bg);
+}
+
+/* Firefox */
+.dark * {
+  scrollbar-color: var(--color-border) var(--color-bg);
+  scrollbar-width: thin;
+}
+
+/* ==================== Selection ==================== */
+.dark ::selection {
+  background: var(--color-accent-soft-hover);
+  color: var(--color-text);
+}
+
+.dark ::-moz-selection {
+  background: var(--color-accent-soft-hover);
+  color: var(--color-text);
+}
+
+/* ==================== Focus-visible (default ring для всех интерактивных) ==================== */
+.dark :focus-visible {
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--shadow-focus);
+}
+
+/* Снимаем глобальный focus-ring с явно стилизованных элементов */
+.dark .btn:focus-visible,
+.dark .input:focus-visible,
+.dark .textarea:focus-visible,
+.dark .select:focus-visible,
+.dark .toggle:focus-visible,
+.dark .tab:focus-visible {
+  outline: none;
+}
+
+/* ==================== Shared utilities ==================== */
+
+/* Divider — горизонтальная и вертикальная линия */
+.dark .divider {
+  height: var(--border-w);
+  background: var(--color-border);
+}
+
+.dark .divider-vertical {
+  width: var(--border-w);
+  height: 100%;
+  background: var(--color-border);
+}
+
+/* Kbd — keyboard hint (используется в command-palette, tooltips и т.д.) */
+.dark kbd:not(.kbd) {
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-xs);
+  background: var(--color-surface-sunken);
+  border: var(--border-w) solid var(--color-border);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+/* ==================== AutoTrassir overrides (только то, что осталось) ==================== */
+
+/* Photo card в dark — без translateY(-4px) и тяжёлого 0 8px 32px */
+.dark .photo-card {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+
+.dark .photo-card:hover {
+  border-color: var(--color-border-strong);
+  /* В dark тени почти не работают — лёгкий accent-glow вместо тяжёлой тени */
+  box-shadow: 0 0 0 1px var(--color-accent-soft);
+}
+
+.dark .photo-card-image {
+  background: var(--color-surface-sunken);
+}
+
+.dark .quick-action-btn {
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  border-color: var(--color-border);
+}
+
+.dark .quick-action-btn:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+/* Skeleton в dark — opacity pulse без gradient */
+.dark .skeleton {
+  background: var(--color-surface-hover);
+  animation: skeleton-pulse-dark 1.4s var(--ease-in-out) infinite;
+}
+
+@keyframes skeleton-pulse-dark {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.55; }
+}
+
+.dark .photo-card-skeleton {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+
+/* Lightbox plate-box в dark */
+.dark .lightbox-plate-box {
+  background: var(--color-accent-soft);
+  border-left-color: var(--color-accent);
+}
+
+/* ==================== Image / SVG в dark ==================== */
+.dark img,
+.dark video {
+  /* Снижение яркости картинок в dark — опционально, через class */
+  /* По умолчанию НЕ применяется, чтобы не «убивать» photo-card */
+}
+
+.dark .img-dim {
+  filter: brightness(0.85) contrast(1.05);
+}
+
+/* ==================== Code blocks в dark ==================== */
+.dark pre,
+.dark code {
+  background: var(--color-surface-sunken);
+  color: var(--color-text);
+}
+
+/* ==================== Print — игнорируем dark при печати ==================== */
+@media print {
+  .dark,
+  body.dark,
+  html.dark {
+    background: white !important;
+    color: black !important;
+    color-scheme: light;
+  }
+}

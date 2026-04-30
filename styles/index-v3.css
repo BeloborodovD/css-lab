@@ -1,0 +1,56 @@
+/* ==================== CSS Lab v3 — Lightweight Redesign (full) ==================== */
+/* Все 36 компонентов переписаны под новые токены variables-v2.css. */
+/* Палитра премиальная, сдержанная — без пёстрых акцентов. */
+
+/* Base */
+@import './base/variables-v2.css';
+@import './base/reset.css';
+@import './base/utilities.css';
+@import './base/animations.css';
+@import './base/responsive.css';
+
+/* Components — переписанные под лёгкий стиль */
+@import './components-v3/buttons.css';
+@import './components-v3/cards.css';
+@import './components-v3/inputs.css';
+@import './components-v3/layout.css';
+@import './components-v3/dropdown.css';
+@import './components-v3/badge.css';
+@import './components-v3/tree.css';
+@import './components-v3/pagination.css';
+@import './components-v3/tooltip.css';
+@import './components-v3/alerts.css';
+@import './components-v3/table.css';
+@import './components-v3/nav.css';
+@import './components-v3/logs.css';
+@import './components-v3/tabs.css';
+@import './components-v3/breadcrumbs.css';
+@import './components-v3/steps.css';
+@import './components-v3/toast.css';
+@import './components-v3/modal.css';
+@import './components-v3/spinner.css';
+@import './components-v3/progress.css';
+@import './components-v3/stats.css';
+@import './components-v3/timeline.css';
+@import './components-v3/toggle.css';
+@import './components-v3/search.css';
+@import './components-v3/sidebar.css';
+@import './components-v3/footer.css';
+@import './components-v3/app-layout.css';
+@import './components-v3/autotrassir.css';
+@import './components-v3/avatar.css';
+@import './components-v3/divider.css';
+@import './components-v3/chip.css';
+@import './components-v3/empty-state.css';
+@import './components-v3/file-upload.css';
+@import './components-v3/date-picker.css';
+@import './components-v3/command-palette.css';
+@import './components-v3/notification-badge.css';
+@import './components-v3/combobox.css';
+@import './components-v3/tag-cloud.css';
+
+/* Новый компонент для search-ui */
+@import './components/search-result-card.css';
+
+/* Theme dark — облегчённая (4 surface вместо 9) */
+@import './themes/dark-v3.css';

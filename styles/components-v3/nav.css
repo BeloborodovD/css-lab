@@ -1,0 +1,206 @@
+/* ==========================================================================
+   nav.css — Lightweight redesign
+   --------------------------------------------------------------------------
+   - убран gradient `linear-gradient(135deg, accent → accent-700)` — слишком тяжёло
+   - nav: surface + 1px bottom-border (как у нормальных современных nav-bar)
+   - link active: accent-soft + accent text (а не fill)
+   - breadcrumb сохранён, но с современным разделителем
+   ========================================================================== */
+
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-sticky);
+  background: var(--color-surface);
+  border-bottom: var(--border-w) solid var(--color-border);
+}
+
+.nav-container {
+  max-width: var(--max-content-w);
+  margin: 0 auto;
+  padding: var(--space-3) var(--space-5);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: var(--header-h);
+}
+
+.nav-logo {
+  color: var(--color-text);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semi);
+  letter-spacing: var(--tracking-tight);
+}
+
+.nav-menu {
+  display: flex;
+  gap: var(--space-1);
+  align-items: center;
+}
+
+.nav-link {
+  padding: var(--space-2) var(--space-4);
+  background: transparent;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  font-family: inherit;
+  border: none;
+  cursor: pointer;
+  transition: background var(--t-fast) var(--ease),
+              color var(--t-fast) var(--ease);
+}
+
+.nav-link:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
+.nav-link.active {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-weight: var(--fw-semi);
+}
+
+.nav-link:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+/* CTA link — primary button-style */
+.nav-link-primary {
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+  font-weight: var(--fw-semi);
+}
+
+.nav-link-primary:hover {
+  background: var(--color-accent-hover);
+  color: var(--color-text-on-accent);
+}
+
+/* ==================== Mobile toggle ==================== */
+.nav-toggle {
+  display: none;
+  padding: var(--space-2);
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: background var(--t-fast) var(--ease);
+}
+
+.nav-toggle:hover {
+  background: var(--color-surface-hover);
+}
+
+@media (max-width: 768px) {
+  .nav-container {
+    flex-wrap: wrap;
+  }
+
+  .nav-toggle { display: block; }
+
+  .nav-menu {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    padding-top: var(--space-3);
+    gap: 2px;
+  }
+
+  .nav-menu.open { display: flex; }
+
+  .nav-link {
+    width: 100%;
+    text-align: left;
+    padding: var(--space-3) var(--space-4);
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+}
+
+/* ==================== Page navigation (sticky-toc) ==================== */
+.page-nav {
+  position: fixed;
+  top: 50%;
+  right: var(--space-5);
+  transform: translateY(-50%);
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--space-3);
+  z-index: var(--z-sticky);
+}
+
+.page-nav-link {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  margin: 2px 0;
+  background: transparent;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-sm);
+  transition: background var(--t-fast) var(--ease),
+              color var(--t-fast) var(--ease);
+}
+
+.page-nav-link:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
+.page-nav-link.active {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-weight: var(--fw-medium);
+}
+
+/* ==================== Breadcrumb ==================== */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.breadcrumb-item:not(:last-child)::after {
+  content: "/";
+  color: var(--color-text-disabled);
+  font-weight: var(--fw-regular);
+}
+
+.breadcrumb-link {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color var(--t-fast) var(--ease);
+}
+
+.breadcrumb-link:hover {
+  color: var(--color-accent);
+}
+
+.breadcrumb-current {
+  color: var(--color-text);
+  font-weight: var(--fw-medium);
+}
+
+@media print {
+  .nav,
+  .page-nav { display: none !important; }
+}

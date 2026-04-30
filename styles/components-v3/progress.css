@@ -1,0 +1,281 @@
+/* ==========================================================================
+   progress.css — линейный + circular + indeterminate + stacked
+   --------------------------------------------------------------------------
+   Базовая дорожка: surface-sunken (а не border) — чтобы прогресс был виден
+   на любом фоне. Все семантические цвета через токены.
+   ========================================================================== */
+
+/* ====================== Linear ====================== */
+.progress {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  background: var(--color-surface-sunken);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: var(--color-accent);
+  border-radius: var(--radius-full);
+  transition: width var(--t-slow) var(--ease-out);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Shimmer-эффект поверх progress-bar */
+.progress-shimmer .progress-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  animation: progress-shimmer 1.5s var(--ease-in-out) infinite;
+}
+@keyframes progress-shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* ====================== Sizes ====================== */
+.progress-xs { height: 4px; }
+.progress-sm { height: 6px; }
+.progress-md { height: 8px; }
+.progress-lg { height: 12px; }
+.progress-xl { height: 16px; }
+
+/* ====================== Colors ====================== */
+.progress-success .progress-bar { background: var(--color-success); }
+.progress-warning .progress-bar { background: var(--color-warning); }
+.progress-error   .progress-bar { background: var(--color-error); }
+.progress-info    .progress-bar { background: var(--color-info); }
+
+/* ====================== Striped + Animated ====================== */
+.progress-striped .progress-bar {
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.18) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.18) 50%,
+    rgba(255, 255, 255, 0.18) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 16px 16px;
+}
+.progress-lg.progress-striped .progress-bar { background-size: 24px 24px; }
+
+.progress-animated .progress-bar {
+  animation: progress-stripes 1s linear infinite;
+}
+@keyframes progress-stripes {
+  from { background-position: 16px 0; }
+  to   { background-position: 0 0; }
+}
+.progress-lg.progress-animated .progress-bar {
+  animation: progress-stripes-lg 1s linear infinite;
+}
+@keyframes progress-stripes-lg {
+  from { background-position: 24px 0; }
+  to   { background-position: 0 0; }
+}
+
+/* ====================== Label ====================== */
+.progress-labeled { height: 20px; }
+.progress-labeled .progress-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+}
+
+.progress-label {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semi);
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Label снаружи */
+.progress-with-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.progress-with-label .progress { flex: 1; }
+.progress-with-label .progress-label {
+  color: var(--color-text);
+  text-shadow: none;
+  min-width: 40px;
+  text-align: right;
+}
+
+/* ====================== Indeterminate ====================== */
+.progress-indeterminate .progress-bar {
+  width: 30% !important;
+  animation: progress-indeterminate 1.5s var(--ease-in-out) infinite;
+}
+@keyframes progress-indeterminate {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
+}
+
+.progress-indeterminate-dual { position: relative; }
+.progress-indeterminate-dual .progress-bar {
+  position: absolute;
+  width: 0;
+  animation: progress-indeterminate-primary 2s infinite var(--ease-out);
+}
+.progress-indeterminate-dual::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background: var(--color-accent);
+  border-radius: var(--radius-full);
+  animation: progress-indeterminate-secondary 2s infinite var(--ease-out);
+  animation-delay: 0.5s;
+}
+@keyframes progress-indeterminate-primary {
+  0%   { left: 0;    width: 0; }
+  50%  { left: 25%;  width: 50%; }
+  100% { left: 100%; width: 0; }
+}
+@keyframes progress-indeterminate-secondary {
+  0%   { left: 0;    width: 0; }
+  50%  { left: 25%;  width: 35%; }
+  100% { left: 100%; width: 0; }
+}
+
+/* ====================== Stacked ====================== */
+.progress-stacked { display: flex; }
+.progress-stacked .progress-bar { border-radius: 0; }
+.progress-stacked .progress-bar:first-child { border-radius: var(--radius-full) 0 0 var(--radius-full); }
+.progress-stacked .progress-bar:last-child  { border-radius: 0 var(--radius-full) var(--radius-full) 0; }
+.progress-stacked .progress-bar:only-child  { border-radius: var(--radius-full); }
+
+/* ====================== Container with title/value ====================== */
+.progress-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.progress-title {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--color-text);
+}
+.progress-value {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ====================== Circular ====================== */
+.progress-circle {
+  position: relative;
+  width: 48px;
+  height: 48px;
+}
+.progress-circle svg {
+  transform: rotate(-90deg);
+}
+.progress-circle-track {
+  fill: none;
+  stroke: var(--color-surface-sunken);
+  stroke-width: 4;
+}
+.progress-circle-bar {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 4;
+  stroke-linecap: round;
+  transition: stroke-dashoffset var(--t-slow) var(--ease-out);
+}
+.progress-circle-value {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semi);
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.progress-circle-sm { width: 32px; height: 32px; }
+.progress-circle-sm .progress-circle-track,
+.progress-circle-sm .progress-circle-bar { stroke-width: 3; }
+.progress-circle-sm .progress-circle-value { font-size: 10px; }
+
+.progress-circle-lg { width: 64px; height: 64px; }
+.progress-circle-lg .progress-circle-track,
+.progress-circle-lg .progress-circle-bar { stroke-width: 5; }
+.progress-circle-lg .progress-circle-value { font-size: var(--fs-sm); }
+
+/* ====================== Gradient (декоративный, цвета через токены) ====================== */
+.progress-gradient .progress-bar {
+  background: linear-gradient(90deg,
+    var(--color-success),
+    var(--color-warning));
+}
+.progress-gradient-rainbow .progress-bar {
+  background: linear-gradient(90deg,
+    var(--color-error),
+    var(--color-warning),
+    var(--color-success),
+    var(--color-info),
+    var(--color-accent));
+}
+
+/* ====================== Dark theme ====================== */
+.dark .progress,
+[data-theme="dark"] .progress {
+  background: var(--color-surface-sunken);
+}
+.dark .progress-bar,
+[data-theme="dark"] .progress-bar {
+  background: var(--color-accent);
+}
+.dark .progress-circle-track,
+[data-theme="dark"] .progress-circle-track {
+  stroke: var(--color-surface-sunken);
+}
+.dark .progress-circle-bar,
+[data-theme="dark"] .progress-circle-bar {
+  stroke: var(--color-accent);
+}
+
+/* ====================== Reduced motion ====================== */
+@media (prefers-reduced-motion: reduce) {
+  .progress-bar { transition: none; }
+  .progress-shimmer .progress-bar::after,
+  .progress-animated .progress-bar { animation: none; }
+  .progress-indeterminate .progress-bar {
+    animation: none;
+    width: 50% !important;
+    transform: translateX(50%);
+  }
+  .progress-indeterminate-dual .progress-bar,
+  .progress-indeterminate-dual::after {
+    animation: none;
+    width: 40%;
+    left: 30%;
+  }
+  .progress-circle-bar { transition: none; }
+}

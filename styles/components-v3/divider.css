@@ -1,0 +1,137 @@
+/* ==========================================================================
+   divider.css — горизонтальные/вертикальные разделители с опциональным текстом
+   ========================================================================== */
+
+/* ====================== Base ====================== */
+.divider {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: var(--space-4) 0;
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: var(--border-w);
+  background: var(--color-border);
+}
+
+.divider:empty::before { flex: 1; }
+.divider:empty::after  { display: none; }
+
+.divider-text {
+  padding: 0 var(--space-4);
+  white-space: nowrap;
+}
+
+/* ====================== Стили линии ====================== */
+.divider-dashed::before,
+.divider-dashed::after {
+  background: transparent;
+  border-top: var(--border-w) dashed var(--color-border);
+  height: 0;
+}
+.divider-dotted::before,
+.divider-dotted::after {
+  background: transparent;
+  border-top: var(--border-w) dotted var(--color-border);
+  height: 0;
+}
+
+/* ====================== Alignment ====================== */
+.divider-left::before  { flex: 0 0 24px; }
+.divider-right::after  { flex: 0 0 24px; }
+
+/* ====================== Spacing ====================== */
+.divider-sm    { margin: var(--space-2) 0; }
+.divider-lg    { margin: var(--space-6) 0; }
+.divider-xl    { margin: var(--space-8) 0; }
+.divider-flush { margin: 0; }
+
+/* ====================== Vertical ====================== */
+.divider-vertical {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  width: auto;
+  height: 100%;
+  min-height: 24px;
+  margin: 0 var(--space-4);
+}
+.divider-vertical::before,
+.divider-vertical::after {
+  width: var(--border-w);
+  height: auto;
+  flex: 1;
+}
+.divider-vertical:empty::before {
+  height: 100%;
+}
+.divider-vertical .divider-text {
+  padding: var(--space-2) 0;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+.divider-vertical-inline {
+  display: inline-block;
+  width: var(--border-w);
+  height: 1em;
+  margin: 0 var(--space-2);
+  background: var(--color-border);
+  vertical-align: middle;
+}
+.divider-vertical-sm { margin: 0 var(--space-2); }
+.divider-vertical-lg { margin: 0 var(--space-6); }
+
+/* ====================== Color variants ====================== */
+.divider-accent::before,
+.divider-accent::after {
+  background: var(--color-accent);
+}
+.divider-accent {
+  color: var(--color-accent);
+}
+
+.divider-subtle::before,
+.divider-subtle::after {
+  background: var(--color-border-subtle);
+}
+
+.divider-strong::before,
+.divider-strong::after {
+  background: var(--color-border-strong);
+}
+
+/* ====================== With icon ====================== */
+.divider-icon {
+  gap: var(--space-3);
+}
+.divider-icon svg,
+.divider-icon .icon {
+  width: 20px;
+  height: 20px;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+/* ====================== Dark theme ======================
+   Все цвета на токенах — переключение автоматически. */
+.dark .divider,
+[data-theme="dark"] .divider {
+  color: var(--color-text-muted);
+}
+.dark .divider::before,
+.dark .divider::after,
+[data-theme="dark"] .divider::before,
+[data-theme="dark"] .divider::after {
+  background: var(--color-border);
+}
+.dark .divider-vertical-inline,
+[data-theme="dark"] .divider-vertical-inline {
+  background: var(--color-border);
+}

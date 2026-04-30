@@ -1,0 +1,501 @@
+/* ==========================================================================
+   variables-v2.css — Lightweight Design System v2
+   ==========================================================================
+   Источники:
+     - motor-selector/styles.css (палитра, layered shadows)
+     - motor-datasheet (badge palette IE1/IE2/IE3)
+     - corporate-search/search-ui (source-colors wiki/forum/catalog, highlight)
+     - Open WebUI (нейтральный фон, тонкие границы вместо box-shadow)
+     - Tailwind slate/gray/zinc (нейтральная база)
+
+   Принципы (premium / restrained / Stripe-Linear-Vercel-Apple style):
+     1. Light bg — warm off-white #fafaf9 (stone-50, Notion-style), не холодный
+     2. Monochrome база (zinc/stone neutrals) + ОДИН accent (indigo)
+     3. Source/semantic выражены через value-шкалу, а не через 4 разных hue
+     4. Тонкие 1px границы вместо тяжёлых shadows
+     5. Слоистые тени (Material-style: 2 box-shadow) — мягкая глубина
+     6. Скругления 12-16px на карточках (motor-datasheet style)
+     7. WCAG AA минимум, для большинства пар AAA (≥7:1)
+     8. Dark — luxury warm-black zinc-900 (#18181b), не синеватый
+
+   Совместимость с текущим css-lab:
+     - Используем .dark класс (как в текущем dark.css), а не data-theme
+     - Старые токены (--bg, --panel, --text, --accent) маппятся в конце
+       для плавной миграции
+   ========================================================================== */
+
+:root {
+  /* ======================================================================
+     COLOR — LIGHT THEME (Premium / Restrained / Monochrome + 1 accent)
+     Референсы: Stripe, Linear, Vercel, Apple HIG, GitHub Primer, Notion
+     ====================================================================== */
+
+  /* Off-white с лёгким тёплым подтоном (stone-50 / Notion-style).
+     Чистый #f7f7f8 был холодноват — #fafaf9 ощущается «теплее» и дороже */
+  --color-bg:               #fafaf9;  /* stone-50 — warm off-white */
+
+  /* Surface — pure white для максимальной иерархии относительно bg.
+     Дельта bg→surface даёт чёткое разделение карточек без shadow */
+  --color-surface:          #ffffff;
+  --color-surface-hover:    #f5f5f4;  /* stone-100 — hover на listrows, ghost btn */
+  --color-surface-active:   #e7e5e4;  /* stone-200 — pressed state */
+  --color-surface-sunken:   #f5f5f4;  /* для inputs/code blocks внутри карточки */
+
+  /* Borders — warm-gray, очень тонкие. Stone-шкала вместо холодного gray */
+  --color-border:           #e7e5e4;  /* stone-200 — основной 1px */
+  --color-border-strong:    #d6d3d1;  /* stone-300 — focus, акцент */
+  --color-border-subtle:    #f5f5f4;  /* stone-100 — almost invisible (table rows) */
+
+  /* Text hierarchy. Глубокие near-blacks вместо чистого #000.
+     Контрасты на --color-bg=#fafaf9:
+     #18181b = 17.1:1 (AAA) — zinc-900, premium near-black
+     #27272a = 13.4:1 (AAA) — zinc-800
+     #52525b = 7.4:1  (AAA для small text) — zinc-600
+     #a1a1aa = 3.0:1  (decorative only) — zinc-400 */
+  --color-text:             #18181b;  /* zinc-900 — primary, premium near-black */
+  --color-text-secondary:   #27272a;  /* zinc-800 — body */
+  --color-text-muted:       #52525b;  /* zinc-600 — meta, AAA 7:1 */
+  --color-text-disabled:    #a1a1aa;  /* zinc-400 */
+  --color-text-on-accent:   #ffffff;  /* белый текст на accent */
+
+  /* ======================================================================
+     ACCENT — Indigo (Variant A: благородный, классический luxury)
+     indigo-800 #3730a3 — desaturated, не «vivid», но насыщенный.
+     На bg=#fafaf9: 9.7:1 — AAA для всех размеров. Безопасный premium-blue */
+  --color-accent:           #3730a3;  /* indigo-800 */
+  --color-accent-hover:     #312e81;  /* indigo-900 */
+  --color-accent-active:    #1e1b4b;  /* indigo-950 */
+  --color-accent-soft:      rgba(55, 48, 163, 0.06); /* очень лёгкий tint, едва заметен */
+  --color-accent-soft-hover: rgba(55, 48, 163, 0.10);
+  --color-accent-text:      #ffffff;  /* белый текст на accent */
+  --color-accent-border:    rgba(55, 48, 163, 0.30); /* для outline на accent-soft chip */
+
+  /* ======================================================================
+     SEMANTIC — приглушённые, не «кричащие».
+     Цели: alert/toast выглядит спокойно. Soft-варианты — едва заметные tints. */
+  --color-success:          #15803d;  /* green-700 — desaturated, не яркий */
+  --color-success-hover:    #166534;  /* green-800 */
+  --color-success-soft:     rgba(21, 128, 61, 0.07);
+  --color-success-text:     #14532d;  /* green-900 — для текста на soft bg */
+
+  --color-warning:          #b45309;  /* amber-700 — не оранжевый */
+  --color-warning-hover:    #92400e;  /* amber-800 */
+  --color-warning-soft:     rgba(180, 83, 9, 0.07);
+  --color-warning-text:     #78350f;  /* amber-900 */
+
+  --color-error:            #b91c1c;  /* red-700 — не red-600 */
+  --color-error-hover:      #991b1b;  /* red-800 */
+  --color-error-soft:       rgba(185, 28, 28, 0.07);
+  --color-error-text:       #7f1d1d;  /* red-900 */
+
+  /* Info — тот же hue что accent (indigo), на 1 шаг светлее.
+     Гармонирует с accent, не вводит новый цвет */
+  --color-info:             #4338ca;  /* indigo-700 */
+  --color-info-hover:       #3730a3;
+  --color-info-soft:        rgba(67, 56, 202, 0.07);
+  --color-info-text:        #312e81;  /* indigo-900 */
+
+  /* ======================================================================
+     SOURCE COLORS — Подход 1: монохромная нейтральная шкала (zinc).
+     Различие читается через ЗНАЧЕНИЕ (light/dark), а не через hue.
+     Все 3 source — оттенки одной zinc-шкалы. Не «пестрит». */
+  --color-source-wiki:        #52525b;  /* zinc-600 — средне-тёмный */
+  --color-source-wiki-soft:   rgba(82, 82, 91, 0.06);
+  --color-source-wiki-text:   #27272a;  /* zinc-800 — на wiki-soft */
+
+  --color-source-forum:       #a1a1aa;  /* zinc-400 — самый светлый из трёх */
+  --color-source-forum-soft:  rgba(161, 161, 170, 0.08);
+  --color-source-forum-text:  #52525b;  /* zinc-600 */
+
+  --color-source-catalog:     #18181b;  /* zinc-900 — самый тёмный */
+  --color-source-catalog-soft: rgba(24, 24, 27, 0.05);
+  --color-source-catalog-text: #18181b; /* zinc-900 */
+
+  /* Highlight для <mark>/.hl — subtle indigo tint (гармонирует с accent).
+     Был vivid #fef3c7 (yellow), стал very-light indigo wash */
+  --color-highlight:          #eef2ff;  /* indigo-50 — almost-white indigo tint */
+  --color-highlight-strong:   #e0e7ff;  /* indigo-100 — для активной цитаты */
+  --color-highlight-text:     #18181b;  /* читается на highlight */
+
+  /* ======================================================================
+     CONFIDENCE — подогнаны под новые semantic */
+  --color-confidence-high:        #15803d;  /* green-700 */
+  --color-confidence-high-soft:   rgba(21, 128, 61, 0.07);
+  --color-confidence-medium:      #b45309;  /* amber-700 */
+  --color-confidence-medium-soft: rgba(180, 83, 9, 0.07);
+  --color-confidence-low:         #71717a;  /* zinc-500 — нейтральный, low ≠ error */
+  --color-confidence-low-soft:    rgba(113, 113, 122, 0.08);
+
+  /* ======================================================================
+     BRAND COLORS — официальные корпоративные цвета (из брендбуков)
+     Использовать ТОЛЬКО для брендированных страниц/элементов (header, лого, печатные шаблоны).
+     В обычном UI применять --color-accent (indigo) — это нейтральный design-system primary.
+
+     ── VEZA ─────────────────────────────────────────────────────
+       Primary   #2E8A3C — green (Pantone 356 C, RAL 6037, CMYK 81/21/96/6)
+       Secondary #5B5B5B — neutral grey (CMYK 80/0/0/0 — указано в брендбуке)
+       Источник: официальный брендбук VEZA
+       NB: цвет #374A51 (slate-teal) из motor-datasheet — НЕ корпоративный
+       VEZA, это был стиль конкретного datasheet-документа.
+
+     ── Уралэлектро ──────────────────────────────────────────────
+       Primary  #136B5C — RAL 6026 patina-green (CMYK 85/21/60/39)
+       Dark     #065448 — RAL 6036 deep teal (CMYK 91/25/64/56)
+       Light    #459184 — RAL 6033 mint patina (CMYK 71/15/48/17)
+       Шрифты:  NT Somic Med (заголовки), NT Somic (текст)
+       Источник: официальный брендбук Уралэлектро
+     ====================================================================== */
+
+  /* VEZA — emerald green Pantone 356 C + neutral grey */
+  --brand-veza:                       #2e8a3c;  /* primary green — Pantone 356 C, RAL 6037 */
+  --brand-veza-soft:                  rgba(46, 138, 60, 0.08);
+  --brand-veza-text:                  #ffffff;  /* белый на green: 4.4:1 — AA для large text/UI; для small body — используй --color-text */
+  --brand-veza-secondary:             #5b5b5b;  /* secondary neutral grey */
+  --brand-veza-secondary-soft:        rgba(91, 91, 91, 0.08);
+  --brand-veza-secondary-text:        #ffffff;  /* AAA 7.0:1 на grey */
+
+  /* Уралэлектро — patina-green palette (3 тона) */
+  --brand-uralelectro:                #136b5c;  /* primary RAL 6026 — AA 6.5:1 на white */
+  --brand-uralelectro-soft:           rgba(19, 107, 92, 0.08);
+  --brand-uralelectro-text:           #ffffff;  /* белый на primary green */
+  --brand-uralelectro-dark:           #065448;  /* RAL 6036 deep teal — для hover/active, AAA 8:1 на white */
+  --brand-uralelectro-dark-soft:      rgba(6, 84, 72, 0.08);
+  --brand-uralelectro-light:          #459184;  /* RAL 6033 mint — для tints/secondary blocks */
+  --brand-uralelectro-light-soft:     rgba(69, 145, 132, 0.10);
+
+  /* ======================================================================
+     RADIUS — увеличенные углы (Open WebUI / motor-datasheet style)
+     Старый css-lab был 6/10/16px — новый 4/8/12/16/24 */
+  --radius-xs:        4px;     /* chips, badges */
+  --radius-sm:        8px;     /* buttons, inputs */
+  --radius:           12px;    /* основной — карточки */
+  --radius-lg:        16px;    /* модалки, drawers */
+  --radius-xl:        20px;    /* hero blocks */
+  --radius-2xl:       24px;    /* spec cards */
+  --radius-full:      9999px;  /* pills, avatar */
+
+  /* ======================================================================
+     SHADOW — слоистые, лёгкие. Material/motor-selector style.
+     Идея: два слоя box-shadow дают мягкую естественную глубину vs один тяжёлый.
+
+     В dark mode тени почти бесполезны (нет контраста) — используем border вместо */
+  --shadow-xs:    0 1px 2px rgba(16, 24, 40, 0.04);
+                  /* почти невидимая, для inputs, sticky headers */
+  --shadow-sm:    0 1px 2px rgba(16, 24, 40, 0.06),
+                  0 1px 3px rgba(16, 24, 40, 0.10);
+                  /* motor-selector card baseline */
+  --shadow:       0 4px 8px -2px rgba(16, 24, 40, 0.08),
+                  0 2px 4px -1px rgba(16, 24, 40, 0.06);
+                  /* dropdowns, hover на карточках */
+  --shadow-lg:    0 12px 24px -6px rgba(16, 24, 40, 0.12),
+                  0 4px 8px -2px rgba(16, 24, 40, 0.06);
+                  /* popovers, lightbox */
+  --shadow-xl:    0 24px 48px -12px rgba(16, 24, 40, 0.18),
+                  0 8px 16px -4px rgba(16, 24, 40, 0.08);
+                  /* modals */
+  --shadow-focus: 0 0 0 3px rgba(55, 48, 163, 0.18);
+                  /* focus ring — на --color-accent (indigo-800) */
+  --shadow-focus-error: 0 0 0 3px rgba(185, 28, 28, 0.18);
+
+  /* ======================================================================
+     BORDER WIDTH */
+  --border-w:         1px;
+  --border-w-strong:  2px;  /* focus, активная карточка */
+  --border-w-thick:   3px;  /* source-stripe слева у карточки */
+
+  /* ======================================================================
+     SPACING — 4px base scale */
+  --space-0:    0;
+  --space-px:   1px;
+  --space-1:    4px;
+  --space-2:    8px;
+  --space-3:    12px;
+  --space-4:    16px;
+  --space-5:    20px;
+  --space-6:    24px;
+  --space-8:    32px;
+  --space-10:   40px;
+  --space-12:   48px;
+  --space-16:   64px;
+  --space-20:   80px;
+  --space-24:   96px;
+
+  /* ======================================================================
+     TYPOGRAPHY */
+  --font-sans:  -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono:  ui-monospace, SFMono-Regular, "Fira Code", Menlo, Consolas, monospace;
+
+  /* Font sizes — основной 14px (corporate-search), не 16px.
+     Промышленный UI с плотной информацией читается лучше при 14px. */
+  --fs-xs:      12px;   /* meta, captions */
+  --fs-sm:      13px;   /* secondary text, snippets */
+  --fs-base:    14px;   /* основной body */
+  --fs-md:      15px;   /* выделенный body */
+  --fs-lg:      16px;   /* заголовки H4 */
+  --fs-xl:      18px;   /* H3 */
+  --fs-2xl:     20px;   /* H2 */
+  --fs-3xl:     24px;   /* H1 страниц */
+  --fs-4xl:     30px;   /* hero */
+
+  --lh-tight:   1.25;
+  --lh-snug:    1.4;
+  --lh-normal:  1.5;
+  --lh-relaxed: 1.65;
+  --lh-loose:   1.8;
+
+  --fw-regular: 400;
+  --fw-medium:  500;
+  --fw-semi:    600;
+  --fw-bold:    700;
+
+  --tracking-tight:  -0.01em;
+  --tracking-normal: 0;
+  --tracking-wide:   0.03em;  /* uppercase labels */
+
+  /* ======================================================================
+     TRANSITIONS — Material standard easing */
+  --t-instant:  0;
+  --t-fast:     0.12s;
+  --t:          0.18s;
+  --t-slow:     0.28s;
+  --t-slower:   0.4s;
+
+  --ease:           cubic-bezier(0.4, 0, 0.2, 1);   /* Material standard */
+  --ease-in:        cubic-bezier(0.4, 0, 1, 1);
+  --ease-out:       cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out:    cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring:    cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ======================================================================
+     Z-INDEX SCALE — диапазоны, не точные значения, чтобы можно было вставлять */
+  --z-base:        0;
+  --z-raised:      10;
+  --z-sticky:      100;
+  --z-dropdown:    200;
+  --z-drawer:      300;
+  --z-modal:       400;
+  --z-toast:       500;
+  --z-tooltip:     600;
+
+  /* ======================================================================
+     LAYOUT */
+  --header-h:       64px;
+  --sidebar-w:      280px;
+  --sidebar-w-sm:   220px;
+  --drawer-w:       420px;
+  --max-content-w:  1280px;
+  --max-prose-w:    72ch;
+  --icon-size:      36px;
+  --icon-size-sm:   24px;
+  --icon-size-lg:   48px;
+
+  /* ======================================================================
+     LEGACY MAPPING — чтобы существующие компоненты не сломались сразу.
+     При миграции компонента вычищать использование старых токенов. */
+  --bg:             var(--color-bg);
+  --panel:          var(--color-surface);
+  --text:           var(--color-text);
+  --muted:          var(--color-text-muted);
+  --border:         var(--color-border);
+  --card-border:    var(--color-border);
+  --accent:         var(--color-accent);
+  --accent-700:     var(--color-accent-hover);
+  --accent-100:     var(--color-accent-soft);
+
+  --transition-fast: var(--t-fast) var(--ease);
+  --transition:      var(--t) var(--ease);
+  --transition-slow: var(--t-slow) var(--ease);
+}
+
+/* ==========================================================================
+   DARK THEME
+   --------------------------------------------------------------------------
+   Активируется через `.dark` (совместимо с текущим css-lab).
+
+   Ключевые отличия от старого AutoTrassir-dark:
+     - Базовый bg: #15171c (НЕ #0a0a0f). Чёрный режет глаз, особенно в светлой
+       комнате. Open WebUI / GitHub dark / Linear используют ~#15-#1a.
+     - 4 surface-уровня вместо 9. Больше — путаница, не читается иерархия.
+     - Accent muted: #60a5fa (blue-400) вместо #2563eb. На тёмном bg яркий
+       blue-600 теряет читаемость (3.8:1), blue-400 даёт 7.4:1 AAA.
+     - Тени почти не работают — используем border более явные.
+   ========================================================================== */
+
+.dark,
+[data-theme="dark"] {
+  /* Luxury warm-black neutral base (zinc-900 шкала, НЕ синеватый).
+     Постепенное warming surface-уровней — глаз отдыхает, ощущается дороже */
+  --color-bg:               #18181b;  /* zinc-900 — neutral warm-black */
+  --color-surface:          #1c1c1f;  /* +1 уровень — карточки */
+  --color-surface-hover:    #222225;
+  --color-surface-active:   #28282b;
+  --color-surface-sunken:   #0d0d0e;  /* ниже bg — inputs, code */
+
+  /* Borders в dark играют роль теней. Тёплые zinc-оттенки */
+  --color-border:           #2a2a2e;
+  --color-border-strong:    #3f3f46;  /* zinc-700 */
+  --color-border-subtle:    #222225;
+
+  /* Text. High-contrast premium-style на zinc-900 (#18181b):
+     #fafafa = 17.4:1 (AAA) — almost-white, premium
+     #d4d4d8 = 12.5:1 (AAA) — zinc-300
+     #a1a1aa = 7.0:1  (AAA) — zinc-400
+     #71717a = 3.9:1  (large/decorative only) — zinc-500 */
+  --color-text:             #fafafa;  /* zinc-50 — high-contrast primary */
+  --color-text-secondary:   #d4d4d8;  /* zinc-300 — body */
+  --color-text-muted:       #a1a1aa;  /* zinc-400 — AAA 7:1 */
+  --color-text-disabled:    #71717a;  /* zinc-500 */
+  --color-text-on-accent:   #ffffff;
+
+  /* Accent — Indigo-400 для dark (на 1 шаг светлее light=indigo-800).
+     #818cf8 на bg=#18181b: 7.2:1 — AAA. Не vivid, благородный. */
+  --color-accent:           #818cf8;  /* indigo-400 */
+  --color-accent-hover:     #a5b4fc;  /* indigo-300 */
+  --color-accent-active:    #6366f1;  /* indigo-500 */
+  --color-accent-soft:      rgba(129, 140, 248, 0.10);
+  --color-accent-soft-hover: rgba(129, 140, 248, 0.16);
+  --color-accent-text:      #1e1b4b;  /* indigo-950 — dark text на light accent */
+  --color-accent-border:    rgba(129, 140, 248, 0.35);
+
+  /* Semantic — desaturated, спокойные. Не кричащие неон-цвета. */
+  --color-success:          #4ade80;  /* green-400 */
+  --color-success-hover:    #86efac;
+  --color-success-soft:     rgba(74, 222, 128, 0.10);
+  --color-success-text:     #bbf7d0;
+
+  --color-warning:          #d4a373;  /* warm desaturated amber, не fbbf24 (vivid) */
+  --color-warning-hover:    #e9c598;
+  --color-warning-soft:     rgba(212, 163, 115, 0.10);
+  --color-warning-text:     #fde68a;
+
+  --color-error:            #f87171;  /* red-400 */
+  --color-error-hover:      #fca5a5;
+  --color-error-soft:       rgba(248, 113, 113, 0.10);
+  --color-error-text:       #fecaca;
+
+  /* Info — тот же hue что accent (indigo), на 1 шаг светлее */
+  --color-info:             #a5b4fc;  /* indigo-300 */
+  --color-info-hover:       #c7d2fe;
+  --color-info-soft:        rgba(165, 180, 252, 0.10);
+  --color-info-text:        #c7d2fe;
+
+  /* Source colors — Подход 1: монохромная zinc-шкала.
+     Те же оттенки нейтральной шкалы (zinc-300/400/500), различие через value */
+  --color-source-wiki:        #a1a1aa;  /* zinc-400 — средний */
+  --color-source-wiki-soft:   rgba(161, 161, 170, 0.10);
+  --color-source-wiki-text:   #d4d4d8;  /* zinc-300 — на wiki-soft */
+
+  --color-source-forum:       #71717a;  /* zinc-500 — самый тёмный из трёх (dim) */
+  --color-source-forum-soft:  rgba(113, 113, 122, 0.10);
+  --color-source-forum-text:  #a1a1aa;  /* zinc-400 */
+
+  --color-source-catalog:     #d4d4d8;  /* zinc-300 — самый светлый */
+  --color-source-catalog-soft: rgba(212, 212, 216, 0.08);
+  --color-source-catalog-text: #e4e4e7; /* zinc-200 */
+
+  /* Highlight в dark — тёмный warm amber tint, НЕ яркий pastel */
+  --color-highlight:          #3f3a26;  /* dark warm amber background */
+  --color-highlight-strong:   #57502f;  /* активная цитата */
+  --color-highlight-text:     #fde68a;  /* amber-200 — читаемый текст */
+
+  /* Confidence — подогнаны под новые semantic */
+  --color-confidence-high:        #4ade80;
+  --color-confidence-high-soft:   rgba(74, 222, 128, 0.10);
+  --color-confidence-medium:      #d4a373;
+  --color-confidence-medium-soft: rgba(212, 163, 115, 0.10);
+  --color-confidence-low:         #71717a;  /* zinc-500 */
+  --color-confidence-low-soft:    rgba(113, 113, 122, 0.10);
+
+  /* Brand colors — на dark подсветлены до читаемого варианта.
+     Оригинальные #2E8A3C и #136b5c слишком тёмные на dark-bg #18181b
+     (контраст < 3:1). Поднимаем на 2-3 шага светлее, сохраняя hue.
+     RAL/Pantone эталоны остаются для печати — light-варианты в брендбуке. */
+
+  /* VEZA dark — подсветлённый green */
+  --brand-veza:                       #4ade80;  /* green-400 — AA 7.5:1 на dark */
+  --brand-veza-soft:                  rgba(74, 222, 128, 0.15);
+  --brand-veza-text:                  #18181b;  /* near-black на светлом green */
+  --brand-veza-secondary:             #a1a1aa;  /* zinc-400 — подсветлённый neutral grey */
+  --brand-veza-secondary-soft:        rgba(161, 161, 170, 0.15);
+  --brand-veza-secondary-text:        #18181b;
+
+  /* Уралэлектро dark — patina-green подсветлён до AA */
+  --brand-uralelectro:                #5cb8a4;  /* подсветлён до AA на dark — primary patina */
+  --brand-uralelectro-soft:           rgba(92, 184, 164, 0.15);
+  --brand-uralelectro-text:           #18181b;  /* near-black на светлом teal */
+  --brand-uralelectro-dark:           #459184;  /* light-вариант из light-палитры — на dark он "primary" */
+  --brand-uralelectro-dark-soft:      rgba(69, 145, 132, 0.15);
+  --brand-uralelectro-light:          #7ec9b8;  /* ещё светлее — для secondary/tints */
+  --brand-uralelectro-light-soft:     rgba(126, 201, 184, 0.18);
+
+  /* Shadows — в dark менее эффективны. Усилены alpha, но в основном
+     полагаемся на border */
+  --shadow-xs:    0 1px 2px rgba(0, 0, 0, 0.30);
+  --shadow-sm:    0 1px 2px rgba(0, 0, 0, 0.30),
+                  0 1px 3px rgba(0, 0, 0, 0.40);
+  --shadow:       0 4px 8px -2px rgba(0, 0, 0, 0.40),
+                  0 2px 4px -1px rgba(0, 0, 0, 0.30);
+  --shadow-lg:    0 12px 24px -6px rgba(0, 0, 0, 0.50),
+                  0 4px 8px -2px rgba(0, 0, 0, 0.30);
+  --shadow-xl:    0 24px 48px -12px rgba(0, 0, 0, 0.60),
+                  0 8px 16px -4px rgba(0, 0, 0, 0.40);
+  --shadow-focus: 0 0 0 3px rgba(129, 140, 248, 0.25);
+  --shadow-focus-error: 0 0 0 3px rgba(248, 113, 113, 0.25);
+
+  /* Legacy mapping для dark */
+  --bg:           var(--color-bg);
+  --panel:        var(--color-surface);
+  --text:         var(--color-text);
+  --muted:        var(--color-text-muted);
+  --border:       var(--color-border);
+  --card-border:  var(--color-border);
+  --accent:       var(--color-accent);
+  --accent-700:   var(--color-accent-hover);
+  --accent-100:   var(--color-accent-soft);
+}
+
+/* ==========================================================================
+   AUTO DARK MODE — только если пользователь не задал manual override
+   .light/.dark на html-элементе перебивает media-query
+   ========================================================================== */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light):not([data-theme="light"]) {
+    color-scheme: dark;
+    /* Применяем те же значения что в .dark — luxury warm-black + indigo */
+    --color-bg:               #18181b;
+    --color-surface:          #1c1c1f;
+    --color-surface-hover:    #222225;
+    --color-surface-active:   #28282b;
+    --color-surface-sunken:   #0d0d0e;
+    --color-border:           #2a2a2e;
+    --color-border-strong:    #3f3f46;
+    --color-border-subtle:    #222225;
+    --color-text:             #fafafa;
+    --color-text-secondary:   #d4d4d8;
+    --color-text-muted:       #a1a1aa;
+    --color-text-disabled:    #71717a;
+    --color-accent:           #818cf8;
+    --color-accent-hover:     #a5b4fc;
+    --color-accent-soft:      rgba(129, 140, 248, 0.10);
+    --color-highlight:        #3f3a26;
+
+    --bg:     var(--color-bg);
+    --panel:  var(--color-surface);
+    --text:   var(--color-text);
+    --muted:  var(--color-text-muted);
+    --border: var(--color-border);
+    --accent: var(--color-accent);
+  }
+}
+
+/* ==========================================================================
+   REDUCED MOTION — accessibility
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --t-fast:   0.001s;
+    --t:        0.001s;
+    --t-slow:   0.001s;
+    --t-slower: 0.001s;
+  }
+}

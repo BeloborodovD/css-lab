@@ -1,0 +1,229 @@
+/* ==========================================================================
+   toggle.css — switch on/off + sizes/colors
+   --------------------------------------------------------------------------
+   Без scale-эффекта на active; focus = ring через box-shadow.
+   ========================================================================== */
+
+/* ====================== Container ====================== */
+.toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Hidden input */
+.toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* ====================== Track ====================== */
+.toggle-track {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  background: var(--color-border-strong);
+  border-radius: var(--radius-full);
+  transition: background-color var(--t) var(--ease);
+}
+
+/* ====================== Thumb ====================== */
+.toggle-thumb {
+  position: absolute;
+  top: 50%;
+  left: 2px;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background: var(--color-surface);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-sm);
+  pointer-events: none;
+  transition: left var(--t) var(--ease),
+              box-shadow var(--t-fast) var(--ease);
+}
+
+/* ====================== States ====================== */
+.toggle.checked .toggle-track,
+.toggle input:checked + .toggle-track {
+  background: var(--color-accent);
+}
+
+.toggle.checked .toggle-thumb,
+.toggle input:checked ~ .toggle-thumb {
+  left: 24px;
+}
+
+.toggle:hover .toggle-track {
+  background: var(--color-text-muted);
+}
+.toggle.checked:hover .toggle-track,
+.toggle:hover input:checked + .toggle-track {
+  background: var(--color-accent-hover);
+}
+
+.toggle:focus-visible .toggle-track,
+.toggle input:focus-visible + .toggle-track {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.toggle:has(input:disabled),
+.toggle.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ====================== Sizes ====================== */
+.toggle-sm .toggle-track { width: 32px; height: 18px; }
+.toggle-sm .toggle-thumb { width: 14px; height: 14px; }
+.toggle-sm.checked .toggle-thumb,
+.toggle-sm input:checked ~ .toggle-thumb { left: 16px; }
+
+.toggle-lg .toggle-track { width: 56px; height: 30px; }
+.toggle-lg .toggle-thumb { width: 24px; height: 24px; }
+.toggle-lg.checked .toggle-thumb,
+.toggle-lg input:checked ~ .toggle-thumb { left: 29px; }
+
+/* ====================== Label positions ====================== */
+.toggle-label {
+  font-size: var(--fs-sm);
+  color: var(--color-text);
+}
+.toggle-label-left   { flex-direction: row-reverse; }
+.toggle-label-top    { flex-direction: column-reverse; align-items: flex-start; }
+.toggle-label-bottom { flex-direction: column;         align-items: flex-start; }
+
+/* ====================== Color variants ====================== */
+.toggle-success.checked .toggle-track,
+.toggle-success input:checked + .toggle-track { background: var(--color-success); }
+.toggle-success.checked:hover .toggle-track,
+.toggle-success:hover input:checked + .toggle-track { background: var(--color-success-hover); }
+
+.toggle-warning.checked .toggle-track,
+.toggle-warning input:checked + .toggle-track { background: var(--color-warning); }
+.toggle-warning.checked:hover .toggle-track,
+.toggle-warning:hover input:checked + .toggle-track { background: var(--color-warning-hover); }
+
+.toggle-error.checked .toggle-track,
+.toggle-error input:checked + .toggle-track { background: var(--color-error); }
+.toggle-error.checked:hover .toggle-track,
+.toggle-error:hover input:checked + .toggle-track { background: var(--color-error-hover); }
+
+/* ====================== With icons inside track ====================== */
+.toggle-icons .toggle-track { width: 52px; }
+.toggle-icons .toggle-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  transition: opacity var(--t-fast) var(--ease);
+}
+.toggle-icons .toggle-icon-off {
+  right: 6px;
+  color: var(--color-text-muted);
+}
+.toggle-icons .toggle-icon-on {
+  left: 6px;
+  opacity: 0;
+}
+.toggle-icons.checked .toggle-icon-off,
+.toggle-icons input:checked + .toggle-track .toggle-icon-off { opacity: 0; }
+.toggle-icons.checked .toggle-icon-on,
+.toggle-icons input:checked + .toggle-track .toggle-icon-on  { opacity: 1; }
+
+/* ====================== With ON/OFF text ====================== */
+.toggle-text .toggle-track {
+  width: 64px;
+  font-size: 0.625rem;
+  font-weight: var(--fw-semi);
+  text-transform: uppercase;
+}
+.toggle-text .toggle-text-on,
+.toggle-text .toggle-text-off {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: opacity var(--t-fast) var(--ease);
+}
+.toggle-text .toggle-text-off { right: 8px; color: var(--color-text-muted); }
+.toggle-text .toggle-text-on  { left: 8px;  color: #fff; opacity: 0; }
+.toggle-text.checked .toggle-text-off,
+.toggle-text input:checked + .toggle-track .toggle-text-off { opacity: 0; }
+.toggle-text.checked .toggle-text-on,
+.toggle-text input:checked + .toggle-track .toggle-text-on  { opacity: 1; }
+
+/* ====================== Loading ====================== */
+.toggle-loading .toggle-thumb::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-accent);
+  border-radius: var(--radius-full);
+  animation: toggle-spin 0.8s linear infinite;
+}
+@keyframes toggle-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ====================== Group ====================== */
+.toggle-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.toggle-group-horizontal {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+/* ====================== Dark theme ====================== */
+.dark .toggle-track,
+[data-theme="dark"] .toggle-track {
+  background: var(--color-border-strong);
+}
+.dark .toggle-thumb,
+[data-theme="dark"] .toggle-thumb {
+  background: var(--color-text);
+  box-shadow: var(--shadow-sm);
+}
+.dark .toggle:hover .toggle-track,
+[data-theme="dark"] .toggle:hover .toggle-track {
+  background: var(--color-text-muted);
+}
+.dark .toggle.checked .toggle-track,
+.dark .toggle input:checked + .toggle-track,
+[data-theme="dark"] .toggle.checked .toggle-track,
+[data-theme="dark"] .toggle input:checked + .toggle-track {
+  background: var(--color-accent);
+}
+.dark .toggle-icons .toggle-icon-off,
+[data-theme="dark"] .toggle-icons .toggle-icon-off {
+  color: var(--color-text-disabled);
+}
+.dark .toggle-text .toggle-text-off,
+[data-theme="dark"] .toggle-text .toggle-text-off {
+  color: var(--color-text-disabled);
+}
+
+/* ====================== Reduced motion ====================== */
+@media (prefers-reduced-motion: reduce) {
+  .toggle-track,
+  .toggle-thumb { transition: none; }
+  .toggle-loading .toggle-thumb::after { animation: none; }
+}

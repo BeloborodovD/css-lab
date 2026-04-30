@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Lab — Lightweight Redesign Preview</title>
+  <link rel="stylesheet" href="styles/base/variables-v2.css">
+  <link rel="stylesheet" href="styles/components/search-result-card.css">
+  <style>
+    /* ==== Минимальный page-shell для демо ==== */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-sans);
+      font-size: var(--fs-base);
+      line-height: var(--lh-normal);
+      color: var(--color-text);
+      background: var(--color-bg);
+      transition: background var(--t) var(--ease), color var(--t) var(--ease);
+    }
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: var(--space-8) var(--space-6);
+    }
+    .demo-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-8);
+      padding-bottom: var(--space-5);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .demo-title { font-size: var(--fs-2xl); font-weight: var(--fw-semi); margin: 0; }
+    .demo-sub { color: var(--color-text-muted); font-size: var(--fs-sm); margin-top: var(--space-1); }
+
+    .theme-toggle {
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      padding: var(--space-2) var(--space-4);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      font-size: var(--fs-sm);
+      color: var(--color-text);
+      cursor: pointer;
+      transition: border-color var(--t) var(--ease), background var(--t) var(--ease);
+    }
+    .theme-toggle:hover { border-color: var(--color-border-strong); background: var(--color-surface-hover); }
+    .theme-toggle:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-color: var(--color-accent); }
+
+    .section-title {
+      font-size: var(--fs-md); font-weight: var(--fw-semi);
+      color: var(--color-text-secondary);
+      text-transform: uppercase; letter-spacing: 0.06em;
+      margin: var(--space-8) 0 var(--space-4);
+    }
+    .results-list { display: flex; flex-direction: column; gap: var(--space-3); }
+    .grid-2 { display: grid; grid-template-columns: 320px 1fr; gap: var(--space-6); align-items: start; }
+    @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    .facet-card {
+      padding: var(--space-4);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+    }
+    .facet-card h3 { margin: 0 0 var(--space-3); font-size: var(--fs-sm); text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-secondary); }
+    .compact-list { display: flex; flex-direction: column; gap: var(--space-2); }
+
+    .palette-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: var(--space-3); }
+    .swatch {
+      padding: var(--space-3);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+      font-size: var(--fs-xs);
+      font-family: var(--font-mono);
+    }
+    .swatch-chip { display: block; width: 100%; height: 36px; border-radius: var(--radius-xs); margin-bottom: var(--space-2); border: 1px solid var(--color-border); }
+    .swatch small { display: block; color: var(--color-text-muted); margin-top: var(--space-1); }
+
+    .footer {
+      margin-top: var(--space-12);
+      padding-top: var(--space-5);
+      border-top: 1px solid var(--color-border);
+      color: var(--color-text-muted);
+      font-size: var(--fs-sm);
+    }
+    code { font-family: var(--font-mono); font-size: 0.92em; padding: 2px 6px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-xs); }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="demo-header">
+      <div>
+        <h1 class="demo-title">Lightweight Redesign Preview</h1>
+        <div class="demo-sub">
+          <code>variables-v2.css</code> + <code>search-result-card.css</code> · ветка <code>feature/lightweight-redesign</code>
+        </div>
+      </div>
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" aria-label="Переключить тему">
+        <span id="themeIcon">🌙</span>
+        <span id="themeLabel">Тёмная</span>
+      </button>
+    </header>
+
+    <!-- ==================== Цветовая палитра ==================== -->
+    <h2 class="section-title">Палитра — light/dark</h2>
+    <div class="palette-grid">
+      <div class="swatch"><span class="swatch-chip" style="background: var(--color-bg)"></span>--color-bg<small>warm off-white</small></div>
+      <div class="swatch"><span class="swatch-chip" style="background: var(--color-surface)"></span>--color-surface<small>карточки</small></div>
+      <div class="swatch"><span class="swatch-chip" style="background: var(--color-surface-hover)"></span>--color-surface-hover<small>hover</small></div>
+      <div class="swatch"><span class="swatch-chip" style="background: var(--color-border)"></span>--color-border<small>1px тонкие</small></div>
+      <div class="swatch"><span class="swatch-chip" style="background: var(--color-text)"></span>--color-text<small>almost-black</small></div>
+      <div class="swatch"><span class="swatch-chip" style="background: var(--color-text-muted)"></span>--color-text-muted<small>WCAG AAA 7:1</small></div>
+      <div class="swatch"><span class="swatch-chip" style="background: var(--color-accent)"></span>--color-accent<small>indigo, restrained</small></div>
+      <div class="swatch"><span class="swatch-chip" style="background: var(--color-accent-soft)"></span>--color-accent-soft<small>tint для selected</small></div>
+      <div class="swatch"><span class="swatch-chip" style="background: var(--color-source-wiki)"></span>source-wiki<small>zinc — нейтральный</small></div>
+      <div class="swatch"><span class="swatch-chip" style="background: var(--color-source-forum)"></span>source-forum<small>zinc — светлее</small></div>
+      <div class="swatch"><span class="swatch-chip" style="background: var(--color-source-catalog)"></span>source-catalog<small>zinc — темнее</small></div>
+      <div class="swatch"><span class="swatch-chip" style="background: var(--color-highlight)"></span>--color-highlight<small>indigo wash для mark</small></div>
+      <div class="swatch"><span class="swatch-chip" style="background: var(--color-success)"></span>--color-success<small>приглушённый green</small></div>
+      <div class="swatch"><span class="swatch-chip" style="background: var(--color-warning)"></span>--color-warning<small>amber-700</small></div>
+      <div class="swatch"><span class="swatch-chip" style="background: var(--color-error)"></span>--color-error<small>red-700</small></div>
+    </div>
+    <p style="color: var(--color-text-muted); font-size: var(--fs-sm); margin-top: var(--space-3);">
+      Source-цвета — монохромная zinc-шкала, различимая через светлоту, а не разные hue. Никакого зелёного/фиолетового/оранжевого, чтобы выдача не пестрила.
+    </p>
+
+    <!-- ==================== Search results — обычная выдача ==================== -->
+    <h2 class="section-title">Search Results — обычная выдача (default)</h2>
+    <div class="results-list">
+
+      <article class="search-result-card" data-source="wiki" tabindex="0">
+        <header class="search-result-card__header">
+          <h3 class="search-result-card__title">
+            <a href="#">Глава 26. Формулы, таблицы и номограммы для расчёта мощности электродвигателя</a>
+          </h3>
+          <span class="search-result-card__score">0.847</span>
+        </header>
+        <div class="search-result-card__snippet">
+          <p>Расчёт <mark>мощности электродвигателя</mark> ведётся по формуле <code>P = M · ω / η</code>, где M — крутящий момент, ω — угловая скорость, η — КПД. Для асинхронных двигателей <mark>мощности</mark> 5–10 кВт типичное значение η = 0.87–0.92.</p>
+        </div>
+        <footer class="search-result-card__meta">
+          <span class="search-result-card__source-badge search-result-card__source-badge--wiki">wiki</span>
+          <span class="search-result-card__meta-item">обновлено 12 дней назад</span>
+          <span class="search-result-card__meta-item">Беляев А.В.</span>
+          <span class="search-result-card__meta-item">methodology / engineering</span>
+        </footer>
+        <div class="search-result-card__actions">
+          <button class="search-result-card__action" type="button">Похожие</button>
+          <button class="search-result-card__action" type="button" aria-pressed="false">👍 Полезно</button>
+          <button class="search-result-card__action" type="button">Поделиться</button>
+        </div>
+      </article>
+
+      <article class="search-result-card" data-source="forum" tabindex="0">
+        <header class="search-result-card__header">
+          <h3 class="search-result-card__title">
+            <a href="#">Re: Подбор взрывозащищённого вентилятора для покрасочной камеры</a>
+          </h3>
+          <span class="search-result-card__score">0.681</span>
+        </header>
+        <div class="search-result-card__snippet">
+          <p>Для покрасочных камер с парами растворителя класс <mark>взрывозащиты</mark> минимум IIB T3, лучше IIC T4. По нашему опыту <mark>вентилятор</mark> ВРАН-9-Ex с двигателем АИММ-100 справляется при расходе до 2400 м³/ч…</p>
+        </div>
+        <footer class="search-result-card__meta">
+          <span class="search-result-card__source-badge search-result-card__source-badge--forum">forum</span>
+          <span class="search-result-card__meta-item">3 месяца назад</span>
+          <span class="search-result-card__meta-item">Кузьмин И.</span>
+          <span class="search-result-card__meta-item">5 ответов</span>
+        </footer>
+        <div class="search-result-card__actions">
+          <button class="search-result-card__action" type="button">Похожие</button>
+          <button class="search-result-card__action" type="button" aria-pressed="true">👍 Полезно</button>
+        </div>
+      </article>
+
+      <article class="search-result-card" data-source="catalog" tabindex="0">
+        <header class="search-result-card__header">
+          <h3 class="search-result-card__title">
+            <a href="#">Электродвигатель АИР160S4 — 15 кВт, 1465 об/мин, IP55, IE3</a>
+          </h3>
+          <span class="search-result-card__score">0.923</span>
+        </header>
+        <div class="search-result-card__snippet">
+          <p>Асинхронный <mark>электродвигатель</mark> общепромышленного назначения. Класс энергоэффективности IE3, степень защиты IP55, монтажное исполнение IM1081. Совместим с преобразователями частоты до 30 Гц без принудительного охлаждения.</p>
+        </div>
+        <footer class="search-result-card__meta">
+          <span class="search-result-card__source-badge search-result-card__source-badge--catalog">catalog</span>
+          <span class="search-result-card__meta-item">15 кВт</span>
+          <span class="search-result-card__meta-item">1465 об/мин</span>
+          <span class="search-result-card__meta-item">IP55</span>
+          <span class="search-result-card__meta-item">IE3</span>
+        </footer>
+        <div class="search-result-card__actions">
+          <button class="search-result-card__action" type="button">Похожие</button>
+          <button class="search-result-card__action" type="button">Datasheet PDF</button>
+          <button class="search-result-card__action" type="button">Сравнить</button>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- ==================== Skeleton + selected ==================== -->
+    <h2 class="section-title">Состояния — skeleton, selected</h2>
+    <div class="results-list">
+      <article class="search-result-card search-result-card--skeleton" aria-busy="true" aria-label="Загрузка"></article>
+      <article class="search-result-card search-result-card--selected" data-source="wiki" tabindex="0">
+        <header class="search-result-card__header">
+          <h3 class="search-result-card__title"><a href="#">Выбран этот результат (selected состояние)</a></h3>
+          <span class="search-result-card__score">0.991</span>
+        </header>
+        <div class="search-result-card__snippet"><p>Карточка с <code>--selected</code>: усиленная граница и accent-фон.</p></div>
+        <footer class="search-result-card__meta">
+          <span class="search-result-card__source-badge search-result-card__source-badge--wiki">wiki</span>
+          <span class="search-result-card__meta-item">сейчас</span>
+        </footer>
+      </article>
+    </div>
+
+    <!-- ==================== Compact в facet-sidebar ==================== -->
+    <h2 class="section-title">Compact-режим (для SimilarDocs / sidebar-preview)</h2>
+    <div class="grid-2">
+      <aside class="facet-card">
+        <h3>Похожие документы</h3>
+        <div class="compact-list">
+          <article class="search-result-card search-result-card--compact" data-source="wiki" tabindex="0">
+            <header class="search-result-card__header">
+              <h3 class="search-result-card__title"><a href="#">Расчёт КПД асинхронного двигателя</a></h3>
+              <span class="search-result-card__score">0.78</span>
+            </header>
+            <div class="search-result-card__snippet"><p>КПД зависит от <mark>нагрузки</mark>, режима работы и температуры обмоток…</p></div>
+          </article>
+          <article class="search-result-card search-result-card--compact" data-source="catalog" tabindex="0">
+            <header class="search-result-card__header">
+              <h3 class="search-result-card__title"><a href="#">АИР132M4 — 11 кВт</a></h3>
+              <span class="search-result-card__score">0.71</span>
+            </header>
+            <div class="search-result-card__snippet"><p>11 кВт · 1460 об/мин · IP55</p></div>
+          </article>
+          <article class="search-result-card search-result-card--compact" data-source="forum" tabindex="0">
+            <header class="search-result-card__header">
+              <h3 class="search-result-card__title"><a href="#">Re: вибрация при пуске</a></h3>
+              <span class="search-result-card__score">0.65</span>
+            </header>
+            <div class="search-result-card__snippet"><p>Проверьте <mark>центровку</mark> и сбалансированность ротора…</p></div>
+          </article>
+        </div>
+      </aside>
+      <div class="results-list">
+        <p style="color: var(--color-text-muted); font-size: var(--fs-sm); margin: 0 0 var(--space-3)">
+          Слева — <code>--compact</code> для SimilarDocs drawer (без actions, меньше padding, snippet 1 строка).<br>
+          Справа — обычные карточки.
+        </p>
+        <article class="search-result-card" data-source="wiki" tabindex="0">
+          <header class="search-result-card__header">
+            <h3 class="search-result-card__title"><a href="#">Полная карточка для контраста</a></h3>
+            <span class="search-result-card__score">0.83</span>
+          </header>
+          <div class="search-result-card__snippet"><p>Сравните плотность информации между обычной и <mark>compact</mark>-карточкой.</p></div>
+          <footer class="search-result-card__meta">
+            <span class="search-result-card__source-badge search-result-card__source-badge--wiki">wiki</span>
+            <span class="search-result-card__meta-item">2 дня назад</span>
+          </footer>
+        </article>
+      </div>
+    </div>
+
+    <footer class="footer">
+      Source-stripe слева — 3px цветная полоса по <code>data-source</code>.
+      Hover/focus — тонкая граница вместо тяжёлого shadow.
+      <code>mark.hl</code> — pastel yellow, не «жёлтый маркер».
+      Радиусы 12px (карточка) / 8px (badge) / 4px (chip).
+      Переключите тему кнопкой справа сверху.
+    </footer>
+  </main>
+
+  <script>
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      document.getElementById('themeIcon').textContent = isDark ? '☀️' : '🌙';
+      document.getElementById('themeLabel').textContent = isDark ? 'Светлая' : 'Тёмная';
+      try { localStorage.setItem('cssLabRedesignTheme', isDark ? 'dark' : 'light'); } catch (e) {}
+    }
+    (function init() {
+      let saved = null;
+      try { saved = localStorage.getItem('cssLabRedesignTheme'); } catch (e) {}
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const useDark = saved === 'dark' || (saved === null && prefersDark);
+      if (useDark) {
+        document.documentElement.classList.add('dark');
+        document.getElementById('themeIcon').textContent = '☀️';
+        document.getElementById('themeLabel').textContent = 'Светлая';
+      }
+    })();
+  </script>
+</body>
+</html>

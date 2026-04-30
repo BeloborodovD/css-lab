@@ -1,0 +1,240 @@
+/* ==========================================================================
+   tag-cloud.css — воздушное облако тегов + компактная лента «Популярное»
+   --------------------------------------------------------------------------
+   Цель: облако тегов и trending-лента на пустой главной поиска должны
+   ощущаться лёгкими, не занимать много места по высоте, не давить на глаз.
+
+   Принципы:
+     - Tag cloud: текст-ссылки, не chip-style. Без border, без soft-bg.
+       Размер 12-15px (узкая шкала). Plain underline-on-hover.
+     - Trending: <ol> компактный список, не carousel карточек.
+       3-7 строк, ширина 100%, в один столбец.
+     - Совместно занимают ~150-180px высоты вместе.
+     - Семантический HTML: <ol>/<li>/<a>, без div-mania.
+   ========================================================================== */
+
+/* ====================== Home empty: общий контейнер ====================== */
+/* Группа "Trending + TagCloud" на пустой главной — компактный двухблочный
+   модуль, без внешних карточек. */
+.home-empty-aside {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: var(--space-5);
+  align-items: start;
+  margin-top: var(--space-3);
+}
+
+.home-empty-aside__block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.home-empty-aside__title {
+  margin: 0;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semi);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+
+@media (max-width: 767px) {
+  .home-empty-aside {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+}
+
+/* ====================== Trending: компактный список ====================== */
+/* Семантика: <ol class="trending-list"> с <li><a>... <span class="trending-list__count"/>...
+   Без карточек, scroll-snap, и стрипов слева — это просто список ссылок. */
+.trending-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.trending-list__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 4px 0;
+  border-bottom: var(--border-w) solid var(--color-border-subtle);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  counter-increment: trending-counter;
+}
+.trending-list__item:last-child {
+  border-bottom: none;
+}
+
+.trending-list--numbered {
+  counter-reset: trending-counter;
+}
+.trending-list--numbered .trending-list__item::before {
+  content: counter(trending-counter);
+  flex: 0 0 auto;
+  width: 18px;
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--fw-medium);
+  color: var(--color-text-disabled);
+  text-align: right;
+}
+
+.trending-list__link {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color var(--t-fast) var(--ease);
+}
+.trending-list__link:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.trending-list__link:focus-visible {
+  outline: none;
+  color: var(--color-accent);
+  box-shadow: var(--shadow-focus);
+  border-radius: var(--radius-xs);
+}
+
+/* Source-метка перед заголовком — uppercase, очень мелкая */
+.trending-list__source {
+  flex: 0 0 auto;
+  font-size: 10px;
+  font-weight: var(--fw-medium);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 1px 6px;
+  background: var(--color-surface-sunken);
+  border-radius: var(--radius-xs);
+  line-height: 1.6;
+}
+
+.trending-list__count {
+  flex: 0 0 auto;
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+}
+
+/* Skeleton (loading) */
+.trending-list--skeleton .trending-list__item {
+  pointer-events: none;
+}
+.trending-list--skeleton .skeleton-line {
+  flex: 1;
+  height: 12px;
+  background: var(--color-surface-active);
+  border-radius: var(--radius-xs);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+/* ====================== Tag cloud: воздушный ====================== */
+/* Семантика: <ul class="tag-cloud" role="list"><li><button>...</button></li></ul>.
+   Tag — это plain link с оттенками font-size, без chip-pill бордеров. */
+.tag-cloud {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px; /* row-gap чуть меньше column-gap для воздушности по горизонтали */
+  line-height: 1.6;
+}
+
+.tag-cloud__item {
+  display: inline-flex;
+  align-items: baseline;
+}
+
+/* Базовая ссылка/кнопка тега. Без border, без background, без padding-pill.
+   Hover — лёгкое подчёркивание + accent. */
+.tag-cloud__tag {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 3px;
+  padding: 2px 4px;
+  margin: 0;
+  font-family: inherit;
+  font-weight: var(--fw-regular);
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  text-decoration: none;
+  transition: color var(--t-fast) var(--ease),
+              background-color var(--t-fast) var(--ease);
+}
+.tag-cloud__tag:hover {
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+.tag-cloud__tag:focus-visible {
+  outline: none;
+  color: var(--color-accent);
+  box-shadow: var(--shadow-focus);
+}
+
+/* Маленький count после тега, нейтральный, без bubble. */
+.tag-cloud__count {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-disabled);
+  font-weight: var(--fw-regular);
+}
+
+/* Размерные модификаторы — узкая шкала 12 → 15px, шаги по 1px.
+   Плавная разница (не 11→18 как раньше). 4 ступени. */
+.tag-cloud__tag--xs { font-size: 12px; }
+.tag-cloud__tag--sm { font-size: 13px; }
+.tag-cloud__tag--md { font-size: 14px; color: var(--color-text); }
+.tag-cloud__tag--lg {
+  font-size: 15px;
+  font-weight: var(--fw-medium);
+  color: var(--color-text);
+}
+
+/* Top-N (особо популярные) — лёгкая accent-подсветка без увеличения веса */
+.tag-cloud__tag--top {
+  color: var(--color-accent);
+}
+.tag-cloud__tag--top .tag-cloud__count {
+  color: var(--color-accent);
+  opacity: 0.7;
+}
+
+/* Skeleton chip — невидимый текст */
+.tag-cloud__tag--skeleton {
+  background: var(--color-surface-active);
+  color: transparent;
+  pointer-events: none;
+  animation: pulse 1.4s ease-in-out infinite;
+  border-radius: var(--radius-xs);
+}
+
+/* ====================== Mobile ====================== */
+@media (max-width: 640px) {
+  .trending-list__item {
+    font-size: var(--fs-sm);
+    padding: 3px 0;
+  }
+  .tag-cloud {
+    gap: 4px 8px;
+  }
+}

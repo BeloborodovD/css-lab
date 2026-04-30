@@ -1,0 +1,307 @@
+/* ==========================================================================
+   autotrassir.css — Lightweight redesign (значительно упрощено)
+   --------------------------------------------------------------------------
+   AutoTrassir — enterprise LPR-система. Оригинал был очень тяжёлый:
+     - photo-card hover с translateY(-4px) + box-shadow 0 8px 32px
+     - quick-actions с backdrop-filter blur
+     - skeleton с 3-stop gradient + 1.5s shimmer
+     - lightbox-plate-box с border-left + accent-100 фоном
+     - icon hardcode #fbbf24 / #d97706 / #10b981 / #ef4444
+
+   Лёгкая версия:
+     - photo-card: тонкая 1px рамка, hover = border-strong + shadow-sm (без
+       transform). image scale на hover оставлен для UX.
+     - quick-action-btn без backdrop-filter, прозрачный с border на hover
+     - skeleton без 3-stop gradient — pulse opacity 0.55→1
+     - license-plate / lightbox-plate через семантические токены
+     - icon-* utility classes маппинг на токены (warning/success/error/info)
+   ========================================================================== */
+
+/* ==================== Photo Card ==================== */
+.photo-card {
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color var(--t) var(--ease),
+              box-shadow var(--t) var(--ease);
+}
+
+.photo-card:hover {
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+.photo-card-image {
+  height: 192px;
+  overflow: hidden;
+  position: relative;
+  background: var(--color-surface-sunken);
+}
+
+.photo-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--t-slower) var(--ease);
+}
+
+.photo-card:hover .photo-card-image img {
+  transform: scale(1.03);
+}
+
+.photo-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  padding: var(--space-3);
+  display: flex;
+  align-items: flex-end;
+  opacity: 0;
+  transition: opacity var(--t) var(--ease);
+}
+
+.photo-card:hover .photo-card-overlay {
+  opacity: 1;
+}
+
+.photo-card-plate {
+  font-family: var(--font-mono);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-warning);  /* amber через токен */
+}
+
+.photo-card-content {
+  padding: var(--space-3);
+}
+
+.photo-card-timestamp {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semi);
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.photo-card-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+/* ==================== Quick Actions ==================== */
+.quick-actions {
+  position: absolute;
+  right: var(--space-2);
+  top: var(--space-2);
+  display: flex;
+  gap: var(--space-1);
+  opacity: 0;
+  transition: opacity var(--t-fast) var(--ease);
+}
+
+.photo-card:hover .quick-actions {
+  opacity: 1;
+}
+
+.quick-action-btn {
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  border: var(--border-w) solid var(--color-border);
+  cursor: pointer;
+  transition: background var(--t-fast) var(--ease),
+              color var(--t-fast) var(--ease),
+              border-color var(--t-fast) var(--ease);
+}
+
+.quick-action-btn:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+/* ==================== Skeleton ==================== */
+.skeleton {
+  background: var(--color-surface-sunken);
+  border-radius: var(--radius-xs);
+  animation: skeleton-pulse 1.4s var(--ease-in-out) infinite;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.55; }
+}
+
+.photo-card-skeleton {
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.photo-card-skeleton .skeleton-image {
+  height: 192px;
+}
+
+.photo-card-skeleton .skeleton-content {
+  padding: var(--space-3);
+}
+
+.photo-card-skeleton .skeleton-line {
+  height: 16px;
+  margin-bottom: var(--space-2);
+}
+
+.photo-card-skeleton .skeleton-line:last-child {
+  width: 50%;
+  margin-bottom: 0;
+}
+
+/* ==================== Status Indicators ==================== */
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--fs-xs);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+}
+
+.status-dot.success { background: var(--color-success); }
+.status-dot.warning { background: var(--color-warning); }
+.status-dot.error   { background: var(--color-error); }
+.status-dot.info    { background: var(--color-info); }
+
+.status-text.success { color: var(--color-success); }
+.status-text.warning { color: var(--color-warning); }
+.status-text.error   { color: var(--color-error); }
+.status-text.info    { color: var(--color-info); }
+
+/* Direction indicators */
+.direction-enter { color: var(--color-success); }
+.direction-exit  { color: var(--color-warning); }
+
+/* ==================== License Plate ==================== */
+.license-plate {
+  font-family: var(--font-mono);
+  font-weight: var(--fw-semi);
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-accent);
+}
+
+.license-plate-highlight {
+  font-size: var(--fs-2xl);
+  color: var(--color-warning);
+  font-weight: var(--fw-bold);
+}
+
+/* ==================== Icon utility colors ==================== */
+.icon-amber   { color: var(--color-warning); }
+.icon-success { color: var(--color-success); }
+.icon-warning { color: var(--color-warning); }
+.icon-error   { color: var(--color-error); }
+.icon-primary { color: var(--color-accent); }
+.icon-muted   { color: var(--color-text-muted); }
+
+/* ==================== Country flag ==================== */
+.country-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+.country-flag-emoji {
+  font-size: var(--fs-base);
+  line-height: 1;
+}
+
+/* ==================== Lightbox plate-box ==================== */
+.lightbox-plate-box {
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  border-left: var(--border-w-strong) solid var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+.lightbox-plate {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-warning);
+}
+
+.lightbox-hint {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.lightbox-hint-text {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+/* ==================== Timestamps grid ==================== */
+.timestamps-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.timestamp-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.timestamp-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+.timestamp-value {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.timestamp-value.highlight {
+  color: var(--color-success);
+  font-weight: var(--fw-medium);
+}
+
+/* ==================== Reduced motion ==================== */
+@media (prefers-reduced-motion: reduce) {
+  .photo-card,
+  .photo-card-image img,
+  .photo-card-overlay,
+  .quick-actions,
+  .quick-action-btn {
+    transition: none;
+  }
+  .photo-card:hover .photo-card-image img {
+    transform: none;
+  }
+  .skeleton {
+    animation: none;
+    opacity: 0.7;
+  }
+}

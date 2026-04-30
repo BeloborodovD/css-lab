@@ -1,0 +1,135 @@
+/* ==========================================================================
+   alerts.css — info/success/warning/error баннер с soft-bg + accent border-left
+   --------------------------------------------------------------------------
+   Soft фон вместо ярких цветных пастелей; border-radius полный (не только
+   справа); без агрессивного pulse/attention-glow.
+   ========================================================================== */
+
+/* ====================== Base ====================== */
+.alert {
+  position: relative;
+  padding: var(--space-3) var(--space-4);
+  margin: var(--space-4) 0;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  background: var(--color-surface-sunken);
+  border: var(--border-w) solid var(--color-border);
+  border-left: var(--border-w-thick) solid var(--color-text-muted);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+}
+
+/* ====================== Variants ====================== */
+.alert-info {
+  background: var(--color-info-soft);
+  border-color: var(--color-info-soft);
+  border-left-color: var(--color-info);
+  color: var(--color-info-text);
+}
+
+.alert-success {
+  background: var(--color-success-soft);
+  border-color: var(--color-success-soft);
+  border-left-color: var(--color-success);
+  color: var(--color-success-text);
+}
+
+.alert-warning,
+.note {
+  background: var(--color-warning-soft);
+  border-color: var(--color-warning-soft);
+  border-left-color: var(--color-warning);
+  color: var(--color-warning-text);
+}
+
+.alert-error,
+.alert-danger,
+.alert.warning {
+  background: var(--color-error-soft);
+  border-color: var(--color-error-soft);
+  border-left-color: var(--color-error);
+  color: var(--color-error-text);
+}
+
+/* ====================== Anatomy ====================== */
+.alert-icon {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+.alert-icon .icon {
+  flex-shrink: 0;
+  font-size: var(--fs-lg);
+}
+
+.alert-title {
+  font-weight: var(--fw-semi);
+  margin-bottom: var(--space-1);
+  color: inherit;
+}
+
+/* Dismissible */
+.alert-dismissible {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  transition: opacity var(--t) var(--ease),
+              transform var(--t) var(--ease);
+}
+
+.alert-close {
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  font-size: var(--fs-lg);
+  line-height: 1;
+  color: inherit;
+  opacity: 0.6;
+  padding: 0;
+  margin-left: var(--space-2);
+  cursor: pointer;
+  transition: opacity var(--t-fast) var(--ease);
+}
+.alert-close:hover { opacity: 1; }
+.alert-close:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-radius: var(--radius-xs);
+}
+
+/* ====================== Animations ====================== */
+.alert-animate-in {
+  animation: alert-slide-in var(--t-slow) var(--ease-out) forwards;
+}
+@keyframes alert-slide-in {
+  0%   { opacity: 0; transform: translateX(-12px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+.alert-animate-out {
+  animation: alert-fade-out var(--t) var(--ease-in) forwards;
+}
+@keyframes alert-fade-out {
+  0%   { opacity: 1; transform: translateX(0); }
+  100% { opacity: 0; transform: translateX(-8px); }
+}
+
+.alert-dismissing {
+  opacity: 0;
+  transform: translateX(-8px);
+}
+
+/* ====================== Reduced motion ====================== */
+@media (prefers-reduced-motion: reduce) {
+  .alert-animate-in,
+  .alert-animate-out {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .alert-dismissible { transition: opacity 0.01ms; }
+}
+
+/* ====================== Dark theme ======================
+   В dark *-soft уже сменились через :root → .dark в variables-v2.
+   *-text токены тоже переопределены. Дополнительно ничего не нужно. */

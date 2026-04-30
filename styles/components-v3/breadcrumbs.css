@@ -1,0 +1,125 @@
+/* ==========================================================================
+   breadcrumbs.css — навигация по уровням
+   ========================================================================== */
+
+/* ====================== Container ====================== */
+.breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+  font-size: var(--fs-sm);
+}
+
+/* ====================== Item ====================== */
+.breadcrumb-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color var(--t-fast) var(--ease);
+}
+
+.breadcrumb-item a,
+a.breadcrumb-item {
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.breadcrumb-item a:hover,
+a.breadcrumb-item:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.breadcrumb-item a:focus-visible,
+a.breadcrumb-item:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-radius: var(--radius-xs);
+}
+
+/* Текущий — последний / .current */
+.breadcrumb-item.current,
+.breadcrumb-item:last-child {
+  color: var(--color-text);
+  font-weight: var(--fw-medium);
+  pointer-events: none;
+}
+
+/* ====================== Separator ====================== */
+.breadcrumb-separator {
+  color: var(--color-text-disabled);
+  user-select: none;
+}
+
+/* ====================== Icons ====================== */
+.breadcrumb-item svg,
+.breadcrumb-item .breadcrumb-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.breadcrumb-home {
+  color: var(--color-text-muted);
+  transition: color var(--t-fast) var(--ease);
+}
+.breadcrumb-home:hover {
+  color: var(--color-accent);
+}
+
+/* ====================== Separator styles ====================== */
+.breadcrumbs-slash    .breadcrumb-separator::before { content: '/'; }
+.breadcrumbs-arrow    .breadcrumb-separator::before { content: '›'; }
+.breadcrumbs-chevron  .breadcrumb-separator::before { content: '>'; }
+.breadcrumbs-dot      .breadcrumb-separator::before { content: '•'; }
+
+/* ====================== Variants ====================== */
+.breadcrumbs-boxed {
+  background: var(--color-surface);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  border: var(--border-w) solid var(--color-border);
+}
+
+.breadcrumbs-sm {
+  font-size: var(--fs-xs);
+  gap: var(--space-1);
+}
+.breadcrumbs-sm .breadcrumb-item svg { width: 12px; height: 12px; }
+
+.breadcrumbs-lg {
+  font-size: var(--fs-base);
+  gap: var(--space-3);
+}
+
+/* ====================== Collapsed (длинные пути) ====================== */
+.breadcrumb-ellipsis {
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: 2px var(--space-1);
+  border-radius: var(--radius-xs);
+  transition: background-color var(--t-fast) var(--ease),
+              color var(--t-fast) var(--ease);
+}
+.breadcrumb-ellipsis:hover {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+/* ====================== Dark theme ======================
+   Все цвета через токены — переключение автоматически. */
+.dark .breadcrumbs-boxed,
+[data-theme="dark"] .breadcrumbs-boxed {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+.dark .breadcrumb-ellipsis:hover,
+[data-theme="dark"] .breadcrumb-ellipsis:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-accent);
+}

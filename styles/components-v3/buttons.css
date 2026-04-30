@@ -1,0 +1,238 @@
+/* ==========================================================================
+   buttons.css — кнопки лёгкого стиля
+   --------------------------------------------------------------------------
+   Без ripple/scale; hover = смена фона/border-color; focus = ring через shadow.
+   ========================================================================== */
+
+/* ====================== Base ====================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-4);
+  font-family: inherit;
+  font-size: var(--fs-base);
+  font-weight: var(--fw-medium);
+  line-height: var(--lh-tight);
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  transition: color var(--t-fast) var(--ease),
+              background-color var(--t-fast) var(--ease),
+              border-color var(--t-fast) var(--ease),
+              box-shadow var(--t-fast) var(--ease);
+}
+
+.btn:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-strong);
+}
+
+.btn:active {
+  background: var(--color-surface-active);
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-color: var(--color-accent);
+}
+
+.btn:disabled,
+.btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ====================== Variants ====================== */
+
+/* Primary — заполненный accent */
+.btn-primary {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-text-on-accent);
+}
+.btn-primary:hover {
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+}
+.btn-primary:active {
+  background: var(--color-accent-active);
+  border-color: var(--color-accent-active);
+}
+
+/* Outline — accent border + accent text, прозрачный фон */
+.btn-outline {
+  background: transparent;
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+.btn-outline:hover {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
+}
+.btn-outline:active {
+  background: var(--color-accent-soft-hover);
+}
+
+/* Ghost — без фона/границы */
+.btn-ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--color-text-secondary);
+}
+.btn-ghost:hover {
+  background: var(--color-surface-hover);
+  border-color: transparent;
+  color: var(--color-text);
+}
+.btn-ghost:active {
+  background: var(--color-surface-active);
+}
+
+/* Danger */
+.btn-danger {
+  background: var(--color-error);
+  border-color: var(--color-error);
+  color: var(--color-text-on-accent);
+}
+.btn-danger:hover {
+  background: var(--color-error-hover);
+  border-color: var(--color-error-hover);
+}
+.btn-danger:focus-visible {
+  box-shadow: var(--shadow-focus-error);
+  border-color: var(--color-error);
+}
+
+/* Icon */
+.btn-icon {
+  width: var(--icon-size);
+  height: var(--icon-size);
+  padding: 0;
+  display: grid;
+  place-content: center;
+}
+
+/* ====================== Sizes ====================== */
+.btn-sm {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--fs-sm);
+}
+.btn-lg {
+  padding: var(--space-3) var(--space-5);
+  font-size: var(--fs-md);
+}
+
+/* ====================== Group ====================== */
+.btn-group {
+  display: inline-flex;
+  gap: 0;
+}
+.btn-group .btn {
+  border-radius: 0;
+}
+.btn-group .btn:first-child {
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+}
+.btn-group .btn:last-child {
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.btn-group .btn:not(:last-child) {
+  border-right: none;
+}
+
+/* ====================== Loading ====================== */
+.btn-loading {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+}
+.btn-loading::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-accent);
+  border-radius: var(--radius-full);
+  animation: btn-spin 0.7s linear infinite;
+}
+.btn-primary.btn-loading::before,
+.btn-danger.btn-loading::before {
+  border-color: rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+}
+@keyframes btn-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ====================== Responsive ====================== */
+.btn-block-mobile { display: inline-flex; }
+
+@media (max-width: 767px) {
+  .btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  .btn-sm   { min-height: 36px; padding: var(--space-2) var(--space-3); }
+  .btn-lg   { min-height: 48px; padding: var(--space-3) var(--space-6); }
+  .btn-icon { width: 44px; height: 44px; }
+
+  .btn-block-mobile {
+    display: flex;
+    width: 100%;
+  }
+  .btn-responsive span { display: none; }
+}
+
+@media (max-width: 479px) {
+  .btn-group-stack-mobile {
+    flex-direction: column;
+  }
+  .btn-group-stack-mobile .btn {
+    border-radius: 0;
+    width: 100%;
+  }
+  .btn-group-stack-mobile .btn:first-child {
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  }
+  .btn-group-stack-mobile .btn:last-child {
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  }
+  .btn-group-stack-mobile .btn:not(:last-child) {
+    border-right: var(--border-w) solid var(--color-border);
+    border-bottom: none;
+  }
+}
+
+/* ====================== Dark theme ====================== */
+.dark .btn,
+[data-theme="dark"] .btn {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+.dark .btn:hover,
+[data-theme="dark"] .btn:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-strong);
+}
+.dark .btn-primary,
+[data-theme="dark"] .btn-primary {
+  /* В dark — accent светлый, текст тёмный для контраста */
+  color: var(--color-accent-text);
+}
+.dark .btn-ghost:hover,
+[data-theme="dark"] .btn-ghost:hover {
+  background: var(--color-surface-hover);
+}

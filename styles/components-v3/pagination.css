@@ -1,0 +1,171 @@
+/* ==========================================================================
+   pagination.css — стандартный + modern (контейнерный) варианты
+   --------------------------------------------------------------------------
+   Hover убран glow (3px shadow ring) — заменён на смену border + soft bg.
+   ========================================================================== */
+
+/* ====================== Standard ====================== */
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.page-btn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: color var(--t-fast) var(--ease),
+              background-color var(--t-fast) var(--ease),
+              border-color var(--t-fast) var(--ease),
+              box-shadow var(--t-fast) var(--ease);
+}
+
+.page-btn:hover:not(:disabled):not(.active) {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-strong);
+}
+
+.page-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-color: var(--color-accent);
+}
+
+.page-btn.active {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-text-on-accent);
+}
+
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Info / ellipsis */
+.pagination-info {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+  margin: 0 var(--space-2);
+}
+
+.pagination-ellipsis {
+  color: var(--color-text-muted);
+  padding: 0 var(--space-1);
+  user-select: none;
+}
+
+/* Compact size */
+.pagination-compact .page-btn {
+  min-width: 32px;
+  height: 32px;
+  font-size: var(--fs-xs);
+}
+
+/* ====================== Modern (контейнер с тонкой рамкой) ====================== */
+.pagination-modern {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-4) 0;
+}
+
+.pagination-container {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border-radius: var(--radius-sm);
+  border: var(--border-w) solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.pagination-btn {
+  padding: var(--space-2);
+  border-radius: var(--radius-xs);
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--t-fast) var(--ease),
+              color var(--t-fast) var(--ease);
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
+.pagination-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  color: var(--color-text-muted);
+}
+
+.pagination-btn svg,
+.pagination-btn .icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Counter X / Y */
+.pagination-counter {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-3);
+}
+
+.pagination-current {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semi);
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.pagination-separator {
+  color: var(--color-text-muted);
+}
+
+.pagination-total {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ====================== Dark theme ====================== */
+.dark .pagination-container,
+[data-theme="dark"] .pagination-container {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+.dark .pagination-btn:hover:not(:disabled),
+[data-theme="dark"] .pagination-btn:hover:not(:disabled) {
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+}
+.dark .page-btn.active,
+[data-theme="dark"] .page-btn.active {
+  color: var(--color-accent-text);
+}

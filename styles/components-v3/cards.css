@@ -1,0 +1,227 @@
+/* ==========================================================================
+   cards.css — общая карточка
+   --------------------------------------------------------------------------
+   Тонкая 1px граница вместо плотной тени; hover = смена border + shadow-sm.
+   Без translate/lift, без shimmer, лёгкий fade-in остался опционально.
+   ========================================================================== */
+
+/* ====================== Base ====================== */
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-5);
+  transition: border-color var(--t) var(--ease),
+              box-shadow var(--t) var(--ease);
+}
+
+.card:hover {
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Interactive — кликабельная карточка */
+.card-interactive {
+  cursor: pointer;
+}
+.card-interactive:focus-visible {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-focus);
+}
+
+/* Elevated — изначально с тенью (для floating блоков) */
+.card-elevated {
+  border-color: transparent;
+  box-shadow: var(--shadow-sm);
+}
+.card-elevated:hover {
+  box-shadow: var(--shadow);
+}
+
+/* Glass — прозрачный фон поверх изображений */
+.card-glass {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Accent left-border (для AnswerBox / featured) */
+.card-accent {
+  border-left: var(--border-w-thick) solid var(--color-accent);
+  padding-left: var(--space-5);
+}
+
+/* Compact */
+.card-compact {
+  padding: var(--space-3);
+}
+
+/* Selected */
+.card-selected {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+/* ====================== Anatomy ====================== */
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.card-title {
+  margin: 0;
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semi);
+  line-height: var(--lh-snug);
+  color: var(--color-text);
+  letter-spacing: var(--tracking-tight);
+}
+
+.card-body {
+  font-size: var(--fs-base);
+  line-height: var(--lh-normal);
+  color: var(--color-text-secondary);
+}
+
+.card-footer {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: var(--border-w) solid var(--color-border-subtle);
+}
+
+.card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+.card-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* ====================== List & Grid ====================== */
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-4);
+}
+
+/* ====================== Animations ====================== */
+.card-animate-in {
+  animation: card-fade-in-up var(--t-slow) var(--ease-out) forwards;
+}
+@keyframes card-fade-in-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.card-list-animated .card {
+  opacity: 0;
+  animation: card-fade-in-up var(--t-slow) var(--ease-out) forwards;
+}
+.card-list-animated .card:nth-child(1) { animation-delay: 0ms; }
+.card-list-animated .card:nth-child(2) { animation-delay: 50ms; }
+.card-list-animated .card:nth-child(3) { animation-delay: 100ms; }
+.card-list-animated .card:nth-child(4) { animation-delay: 150ms; }
+.card-list-animated .card:nth-child(5) { animation-delay: 200ms; }
+.card-list-animated .card:nth-child(6) { animation-delay: 250ms; }
+.card-list-animated .card:nth-child(7) { animation-delay: 300ms; }
+.card-list-animated .card:nth-child(8) { animation-delay: 350ms; }
+
+/* Loading shimmer (через цветовые токены) */
+.card-loading {
+  position: relative;
+  overflow: hidden;
+}
+.card-loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-surface-hover) 50%,
+    transparent 100%
+  );
+  animation: card-shimmer 1.5s var(--ease-in-out) infinite;
+}
+@keyframes card-shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* ====================== Responsive ====================== */
+@media (max-width: 767px) {
+  .card {
+    padding: var(--space-4);
+  }
+  .card-compact { padding: var(--space-3); }
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+  .card-header-inline {
+    flex-direction: row;
+    align-items: center;
+  }
+  .card-title { font-size: var(--fs-md); }
+  .card-footer { flex-wrap: wrap; }
+  .card-list { gap: var(--space-2); }
+  .card-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+}
+
+@media (max-width: 479px) {
+  .card {
+    padding: var(--space-3);
+    border-radius: var(--radius-sm);
+  }
+  .card-title { font-size: var(--fs-base); }
+  .card-body  { font-size: var(--fs-sm); line-height: var(--lh-snug); }
+}
+
+/* ====================== Dark theme ====================== */
+.dark .card,
+[data-theme="dark"] .card {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+.dark .card:hover,
+[data-theme="dark"] .card:hover {
+  border-color: var(--color-border-strong);
+  box-shadow: 0 0 0 1px var(--color-accent-soft);
+}
+.dark .card-glass,
+[data-theme="dark"] .card-glass {
+  background: rgba(28, 31, 38, 0.6);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+.dark .card-loading::after,
+[data-theme="dark"] .card-loading::after {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-surface-hover) 50%,
+    transparent 100%
+  );
+}

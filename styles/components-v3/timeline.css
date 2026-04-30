@@ -1,0 +1,223 @@
+/* ==========================================================================
+   timeline.css — Lightweight redesign
+   --------------------------------------------------------------------------
+   - line: --color-border-subtle (мягко)
+   - dot: surface + 2px border-strong
+   - state colors через семантические токены
+   - убраны хардкоженые #4caf50/#ff9800 etc
+   ========================================================================== */
+
+.timeline {
+  position: relative;
+  padding-left: var(--space-6);
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 0;
+  bottom: 0;
+  width: var(--border-w-strong);
+  background: var(--color-border);
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: var(--space-6);
+}
+
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: calc(-1 * var(--space-6));
+  top: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  border: var(--border-w-strong) solid var(--color-border-strong);
+  z-index: var(--z-raised);
+}
+
+/* ==================== Content ==================== */
+.timeline-content {
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.timeline-time {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.timeline-title {
+  font-size: var(--fs-base);
+  font-weight: var(--fw-semi);
+  color: var(--color-text);
+  margin-bottom: var(--space-1);
+}
+
+.timeline-description {
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--lh-normal);
+}
+
+/* ==================== Semantic states ==================== */
+.timeline-item.success .timeline-dot {
+  background: var(--color-success);
+  border-color: var(--color-success);
+}
+.timeline-item.success .timeline-content {
+  border-left: var(--border-w-thick) solid var(--color-success);
+}
+
+.timeline-item.warning .timeline-dot {
+  background: var(--color-warning);
+  border-color: var(--color-warning);
+}
+.timeline-item.warning .timeline-content {
+  border-left: var(--border-w-thick) solid var(--color-warning);
+}
+
+.timeline-item.error .timeline-dot {
+  background: var(--color-error);
+  border-color: var(--color-error);
+}
+.timeline-item.error .timeline-content {
+  border-left: var(--border-w-thick) solid var(--color-error);
+}
+
+.timeline-item.info .timeline-dot {
+  background: var(--color-info);
+  border-color: var(--color-info);
+}
+.timeline-item.info .timeline-content {
+  border-left: var(--border-w-thick) solid var(--color-info);
+}
+
+/* ==================== Iconned dots ==================== */
+.timeline-icon {
+  padding-left: var(--space-10);
+}
+
+.timeline-icon::before {
+  left: 15px;
+}
+
+.timeline-icon .timeline-dot {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  left: calc(-1 * var(--space-8));
+}
+
+.timeline-icon .timeline-dot svg {
+  width: 16px;
+  height: 16px;
+  color: var(--color-text-muted);
+}
+
+.timeline-icon .timeline-item.success .timeline-dot svg,
+.timeline-icon .timeline-item.warning .timeline-dot svg,
+.timeline-icon .timeline-item.error .timeline-dot svg,
+.timeline-icon .timeline-item.info .timeline-dot svg {
+  color: var(--color-text-on-accent);
+}
+
+/* ==================== Alternate (zig-zag) ==================== */
+.timeline-alternate {
+  padding-left: 0;
+}
+
+.timeline-alternate::before {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.timeline-alternate .timeline-item {
+  width: 50%;
+  padding-right: var(--space-8);
+}
+
+.timeline-alternate .timeline-item:nth-child(even) {
+  margin-left: 50%;
+  padding-right: 0;
+  padding-left: var(--space-8);
+}
+
+.timeline-alternate .timeline-dot {
+  left: auto;
+  right: -8px;
+}
+
+.timeline-alternate .timeline-item:nth-child(even) .timeline-dot {
+  right: auto;
+  left: -8px;
+}
+
+/* ==================== Horizontal ==================== */
+.timeline-horizontal {
+  display: flex;
+  padding-left: 0;
+  padding-top: var(--space-6);
+  overflow-x: auto;
+}
+
+.timeline-horizontal::before {
+  top: 7px;
+  left: 0;
+  right: 0;
+  bottom: auto;
+  width: auto;
+  height: var(--border-w-strong);
+}
+
+.timeline-horizontal .timeline-item {
+  flex-shrink: 0;
+  padding-bottom: 0;
+  padding-right: var(--space-12);
+  min-width: 200px;
+}
+
+.timeline-horizontal .timeline-item:last-child {
+  padding-right: 0;
+}
+
+.timeline-horizontal .timeline-dot {
+  top: calc(-1 * var(--space-6));
+  left: 0;
+}
+
+.timeline-horizontal .timeline-content {
+  min-height: 80px;
+}
+
+/* ==================== Compact ==================== */
+.timeline-compact .timeline-item {
+  padding-bottom: var(--space-4);
+}
+
+.timeline-compact .timeline-content {
+  padding: var(--space-2) var(--space-3);
+}
+
+.timeline-compact .timeline-title { font-size: var(--fs-sm); }
+.timeline-compact .timeline-description { font-size: var(--fs-xs); }
+
+/* ==================== Simple (no card) ==================== */
+.timeline-simple .timeline-content {
+  background: transparent;
+  border: none;
+  padding: 0;
+}

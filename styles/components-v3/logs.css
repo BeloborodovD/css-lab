@@ -1,0 +1,333 @@
+/* ==========================================================================
+   logs.css — Lightweight redesign
+   --------------------------------------------------------------------------
+   - log-badge: семантические токены (info/warn/error/debug/success)
+   - alert-box → border-left 3px + soft bg (без border-обводки)
+   - log-entry: hover surface-hover, monospace timestamps
+   - log-controls и view-mode-toggle упрощены
+   ========================================================================== */
+
+/* ==================== Log level badges ==================== */
+.log-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-xs);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.log-badge.info {
+  color: var(--color-info-text);
+  background: var(--color-info-soft);
+}
+
+.log-badge.warning {
+  color: var(--color-warning-text);
+  background: var(--color-warning-soft);
+}
+
+.log-badge.error {
+  color: var(--color-error-text);
+  background: var(--color-error-soft);
+}
+
+.log-badge.debug {
+  color: var(--color-text-muted);
+  background: var(--color-surface-sunken);
+}
+
+.log-badge.success {
+  color: var(--color-success-text);
+  background: var(--color-success-soft);
+}
+
+.log-badge svg { width: 14px; height: 14px; }
+
+/* ==================== Alert/Message boxes ==================== */
+.alert-box {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  border-left: var(--border-w-thick) solid var(--color-border);
+}
+
+.alert-box.info {
+  background: var(--color-info-soft);
+  border-left-color: var(--color-info);
+  color: var(--color-info-text);
+}
+
+.alert-box.warning {
+  background: var(--color-warning-soft);
+  border-left-color: var(--color-warning);
+  color: var(--color-warning-text);
+}
+
+.alert-box.error {
+  background: var(--color-error-soft);
+  border-left-color: var(--color-error);
+  color: var(--color-error-text);
+}
+
+.alert-box.success {
+  background: var(--color-success-soft);
+  border-left-color: var(--color-success);
+  color: var(--color-success-text);
+}
+
+.alert-box svg {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
+.alert-box-content {
+  flex: 1;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+}
+
+.alert-box-close {
+  padding: var(--space-1);
+  border-radius: var(--radius-xs);
+  border: none;
+  background: transparent;
+  color: inherit;
+  opacity: 0.7;
+  cursor: pointer;
+  transition: opacity var(--t-fast) var(--ease),
+              background var(--t-fast) var(--ease);
+}
+
+.alert-box-close:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* ==================== Log entry row ==================== */
+.log-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: var(--border-w) solid var(--color-border-subtle);
+  transition: background var(--t-fast) var(--ease);
+}
+
+.log-entry:hover {
+  background: var(--color-surface-hover);
+}
+
+.log-entry-toggle {
+  flex-shrink: 0;
+  padding: 2px;
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: color var(--t-fast) var(--ease);
+}
+
+.log-entry-toggle:hover { color: var(--color-text); }
+
+.log-entry-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.log-entry-timestamp {
+  flex-shrink: 0;
+  min-width: 180px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+.log-entry-level {
+  flex-shrink: 0;
+  min-width: 80px;
+}
+
+.log-entry-message {
+  flex: 1;
+  font-size: var(--fs-sm);
+  color: var(--color-text);
+}
+
+/* Expanded details */
+.log-entry-details {
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface-sunken);
+  border-bottom: var(--border-w) solid var(--color-border-subtle);
+}
+
+.log-entry-details pre {
+  margin: 0;
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-border-subtle);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--color-text);
+  overflow-x: auto;
+}
+
+.log-entry-grid {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: var(--space-2);
+  font-size: var(--fs-sm);
+}
+
+.log-entry-label { color: var(--color-text-muted); }
+
+.log-entry-value {
+  color: var(--color-text);
+  font-family: var(--font-mono);
+}
+
+/* ==================== Controls toolbar ==================== */
+.log-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border-radius: var(--radius);
+  border: var(--border-w) solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.log-controls-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.log-controls-label {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.log-controls-select {
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  border: var(--border-w) solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: var(--fs-sm);
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color var(--t-fast) var(--ease),
+              box-shadow var(--t-fast) var(--ease);
+}
+
+.log-controls-select:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-focus);
+}
+
+/* ==================== View-mode toggle ==================== */
+.view-mode-toggle {
+  display: flex;
+  border-radius: var(--radius-sm);
+  border: var(--border-w) solid var(--color-border);
+  background: var(--color-surface);
+  overflow: hidden;
+}
+
+.view-mode-btn {
+  padding: var(--space-1) var(--space-3);
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+  font-family: inherit;
+  cursor: pointer;
+  transition: background var(--t-fast) var(--ease),
+              color var(--t-fast) var(--ease);
+}
+
+.view-mode-btn:hover { color: var(--color-text); }
+
+.view-mode-btn.active {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-weight: var(--fw-medium);
+}
+
+/* ==================== Refresh button ==================== */
+.log-refresh-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  border: none;
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  font-family: inherit;
+  cursor: pointer;
+  transition: background var(--t-fast) var(--ease);
+}
+
+.log-refresh-btn:hover { background: var(--color-accent-hover); }
+.log-refresh-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.log-refresh-btn svg { width: 16px; height: 16px; }
+.log-refresh-btn svg.spinning { animation: log-spin 1s linear infinite; }
+
+@keyframes log-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ==================== Empty ==================== */
+.log-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-12) var(--space-4);
+  text-align: center;
+}
+
+.log-empty-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: var(--space-3);
+  color: var(--color-text-muted);
+  opacity: 0.5;
+}
+
+.log-empty-text {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+/* Demo helper */
+.icon-color-demo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-sunken);
+  font-size: var(--fs-sm);
+}
+
+/* ==================== Dark theme — точечно ==================== */
+.dark .alert-box-close:hover {
+  background: rgba(255, 255, 255, 0.08);
+}

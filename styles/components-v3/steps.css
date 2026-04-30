@@ -1,0 +1,242 @@
+/* ==========================================================================
+   steps.css — пошаговый процесс / wizard
+   --------------------------------------------------------------------------
+   Active-step без агрессивного box-shadow ring (4px) — заменён на shadow-focus.
+   Connector — 1px полоса; pending/completed — через цвета токенов.
+   ========================================================================== */
+
+/* ====================== Container ====================== */
+.steps {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  counter-reset: step;
+}
+
+/* ====================== Step ====================== */
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+  text-align: center;
+}
+
+.step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  border: var(--border-w-strong) solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semi);
+  z-index: 1;
+  transition: background-color var(--t-fast) var(--ease),
+              border-color var(--t-fast) var(--ease),
+              color var(--t-fast) var(--ease),
+              box-shadow var(--t-fast) var(--ease);
+}
+
+.step-number::before {
+  counter-increment: step;
+  content: counter(step);
+}
+
+.step-title {
+  margin-top: var(--space-2);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-muted);
+  transition: color var(--t-fast) var(--ease);
+}
+
+.step-description {
+  margin-top: var(--space-1);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  opacity: 0.8;
+}
+
+/* Линия-коннектор между шагами */
+.step-connector {
+  position: absolute;
+  top: 15px;
+  left: calc(50% + 20px);
+  width: calc(100% - 40px);
+  height: var(--border-w-strong);
+  background: var(--color-border);
+  transition: background-color var(--t-fast) var(--ease);
+}
+.step:last-child .step-connector { display: none; }
+
+/* ====================== States ====================== */
+
+/* Completed */
+.step.completed .step-number {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-text-on-accent);
+}
+.step.completed .step-number::before {
+  content: '✓';
+}
+.step.completed .step-title    { color: var(--color-accent); }
+.step.completed .step-connector { background: var(--color-accent); }
+
+/* Active */
+.step.active .step-number {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  box-shadow: var(--shadow-focus);
+}
+.step.active .step-title {
+  color: var(--color-text);
+  font-weight: var(--fw-semi);
+}
+
+/* Pending */
+.step.pending .step-number {
+  border-color: var(--color-border);
+  color: var(--color-text-muted);
+}
+.step.pending .step-title { color: var(--color-text-muted); }
+
+/* Error */
+.step.error .step-number {
+  background: var(--color-error);
+  border-color: var(--color-error);
+  color: #fff;
+}
+.step.error .step-number::before { content: '!'; }
+.step.error .step-title { color: var(--color-error); }
+
+/* ====================== Sizes ====================== */
+.steps-sm .step-number {
+  width: 24px;
+  height: 24px;
+  font-size: var(--fs-xs);
+}
+.steps-sm .step-connector {
+  top: 11px;
+  left: calc(50% + 16px);
+  width: calc(100% - 32px);
+}
+.steps-sm .step-title { font-size: var(--fs-xs); }
+
+.steps-lg .step-number {
+  width: 40px;
+  height: 40px;
+  font-size: var(--fs-base);
+}
+.steps-lg .step-connector {
+  top: 19px;
+  left: calc(50% + 24px);
+  width: calc(100% - 48px);
+}
+.steps-lg .step-title { font-size: var(--fs-base); }
+
+/* ====================== Vertical ====================== */
+.steps-vertical {
+  flex-direction: column;
+  gap: 0;
+}
+.steps-vertical .step {
+  flex-direction: row;
+  align-items: flex-start;
+  text-align: left;
+  padding-bottom: var(--space-6);
+}
+.steps-vertical .step-number { flex-shrink: 0; }
+
+.steps-vertical .step-content {
+  margin-left: var(--space-3);
+  padding-top: var(--space-1);
+}
+.steps-vertical .step-title { margin-top: 0; }
+
+.steps-vertical .step-connector {
+  top: 36px;
+  left: 15px;
+  width: var(--border-w-strong);
+  height: calc(100% - 36px);
+}
+.steps-vertical .step:last-child {
+  padding-bottom: 0;
+}
+
+/* ====================== With icons ====================== */
+.step-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  border: var(--border-w-strong) solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  z-index: 1;
+  transition: background-color var(--t-fast) var(--ease),
+              border-color var(--t-fast) var(--ease),
+              color var(--t-fast) var(--ease),
+              box-shadow var(--t-fast) var(--ease);
+}
+.step-icon svg { width: 16px; height: 16px; }
+
+.step.completed .step-icon {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-text-on-accent);
+}
+.step.active .step-icon {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  box-shadow: var(--shadow-focus);
+}
+
+/* ====================== Clickable ====================== */
+.steps-clickable .step {
+  cursor: pointer;
+}
+.steps-clickable .step:hover .step-number {
+  border-color: var(--color-accent);
+}
+.steps-clickable .step:hover .step-title {
+  color: var(--color-accent);
+}
+.steps-clickable .step:focus-visible .step-number {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-color: var(--color-accent);
+}
+
+/* ====================== Dark theme ====================== */
+.dark .step-number,
+.dark .step-icon,
+[data-theme="dark"] .step-number,
+[data-theme="dark"] .step-icon {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-text-muted);
+}
+.dark .step-connector,
+[data-theme="dark"] .step-connector {
+  background: var(--color-border);
+}
+.dark .step.completed .step-number,
+.dark .step.completed .step-icon,
+[data-theme="dark"] .step.completed .step-number,
+[data-theme="dark"] .step.completed .step-icon {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-accent-text);
+}
+.dark .step.active .step-title,
+[data-theme="dark"] .step.active .step-title {
+  color: var(--color-text);
+}

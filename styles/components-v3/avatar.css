@@ -1,0 +1,167 @@
+/* ==========================================================================
+   avatar.css — аватары с инициалами/картинкой, статусы, group-stack
+   --------------------------------------------------------------------------
+   Без scale на hover; status-online без агрессивной pulse-аура.
+   ========================================================================== */
+
+/* ====================== Base ====================== */
+.avatar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-weight: var(--fw-semi);
+  font-size: var(--fs-base);
+  overflow: hidden;
+  transition: box-shadow var(--t-fast) var(--ease),
+              border-color var(--t-fast) var(--ease);
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+.avatar-initials {
+  text-transform: uppercase;
+  user-select: none;
+}
+
+/* ====================== Sizes ====================== */
+.avatar-xs { width: 24px; height: 24px; font-size: var(--fs-xs); }
+.avatar-sm { width: 32px; height: 32px; font-size: var(--fs-sm); }
+.avatar-md { width: 40px; height: 40px; font-size: var(--fs-base); }
+.avatar-lg { width: 48px; height: 48px; font-size: var(--fs-md); }
+.avatar-xl { width: 64px; height: 64px; font-size: var(--fs-2xl); }
+
+/* ====================== Variants ====================== */
+.avatar-square        { border-radius: var(--radius); }
+.avatar-square.avatar-xs { border-radius: var(--radius-sm); }
+.avatar-square.avatar-xl { border-radius: var(--radius-lg); }
+
+.avatar-bordered {
+  border: 2px solid var(--color-surface);
+  box-shadow: 0 0 0 1px var(--color-border);
+}
+
+.avatar-clickable {
+  cursor: pointer;
+}
+.avatar-clickable:hover {
+  box-shadow: var(--shadow-sm);
+}
+.avatar-clickable:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+/* ====================== Status indicator ====================== */
+.avatar-status {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-surface);
+  background: var(--color-text-muted);
+}
+
+.avatar-xs .avatar-status { width: 6px;  height: 6px;  border-width: 1px; }
+.avatar-sm .avatar-status { width: 8px;  height: 8px; }
+.avatar-lg .avatar-status { width: 12px; height: 12px; }
+.avatar-xl .avatar-status { width: 14px; height: 14px; border-width: 3px; }
+
+.avatar-status-online  { background: var(--color-success); }
+.avatar-status-offline { background: var(--color-text-muted); }
+.avatar-status-busy    { background: var(--color-error); }
+.avatar-status-away    { background: var(--color-warning); }
+
+/* ====================== Group ====================== */
+.avatar-group {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+.avatar-group .avatar {
+  margin-left: -8px;
+  border: 2px solid var(--color-surface);
+  transition: z-index 0s;
+}
+.avatar-group .avatar:last-child {
+  margin-left: 0;
+}
+.avatar-group .avatar:hover {
+  z-index: var(--z-raised);
+}
+
+.avatar-group-xs .avatar { margin-left: -6px; }
+.avatar-group-sm .avatar { margin-left: -8px; }
+.avatar-group-lg .avatar { margin-left: -12px; }
+
+/* Count remainder (+N) */
+.avatar-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface-active);
+  color: var(--color-text);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semi);
+  border: 2px solid var(--color-surface);
+}
+.avatar-group-xs .avatar-count { width: 24px; height: 24px; font-size: var(--fs-xs); }
+.avatar-group-sm .avatar-count { width: 32px; height: 32px; font-size: var(--fs-xs); }
+.avatar-group-lg .avatar-count { width: 48px; height: 48px; font-size: var(--fs-sm); }
+
+/* ====================== Placeholder ====================== */
+.avatar-placeholder {
+  background: var(--color-surface-sunken);
+  color: var(--color-text-muted);
+}
+.avatar-placeholder svg {
+  width: 60%;
+  height: 60%;
+}
+
+/* ====================== Dark theme ====================== */
+.dark .avatar,
+[data-theme="dark"] .avatar {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+.dark .avatar-bordered,
+[data-theme="dark"] .avatar-bordered {
+  border-color: var(--color-surface);
+  box-shadow: 0 0 0 1px var(--color-border);
+}
+.dark .avatar-status,
+[data-theme="dark"] .avatar-status {
+  border-color: var(--color-surface);
+}
+.dark .avatar-group .avatar,
+[data-theme="dark"] .avatar-group .avatar {
+  border-color: var(--color-surface);
+}
+.dark .avatar-count,
+[data-theme="dark"] .avatar-count {
+  background: var(--color-surface-active);
+  color: var(--color-text);
+  border-color: var(--color-surface);
+}
+.dark .avatar-placeholder,
+[data-theme="dark"] .avatar-placeholder {
+  background: var(--color-surface-sunken);
+  color: var(--color-text-muted);
+}

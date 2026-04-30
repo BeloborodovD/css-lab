@@ -1,0 +1,304 @@
+/* ==========================================================================
+   tree.css — Lightweight redesign
+   --------------------------------------------------------------------------
+   - hover: surface-hover (без accent-tint)
+   - selected: accent-soft + accent text (без outline-обводки)
+   - chevron вместо стрелочки
+   - amber folder-icon выкинут (был хардкод #fbbf24) — теперь через --color-warning
+   ========================================================================== */
+
+.tree {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: var(--fs-sm);
+}
+
+.tree ul {
+  list-style: none;
+  margin: 0;
+  padding-left: var(--space-5);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--t-slow) var(--ease);
+}
+
+.tree li { margin: 2px 0; }
+
+.tree li.open > ul {
+  max-height: none;
+  overflow: visible;
+}
+
+.tree-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  user-select: none;
+  transition: background var(--t-fast) var(--ease),
+              color var(--t-fast) var(--ease);
+}
+
+.tree-item:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
+.tree-item:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.tree-item.selected {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-weight: var(--fw-medium);
+}
+
+.tree-item .icon {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: var(--color-text-muted);
+}
+
+.tree-item.selected .icon {
+  color: var(--color-accent);
+}
+
+.tree-item .label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tree-folder > .tree-item .icon {
+  color: var(--color-warning);  /* amber вместо хардкода */
+}
+
+/* Chevron toggle */
+.tree-toggle {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  transition: transform var(--t-fast) var(--ease);
+}
+
+.tree li.open > .tree-item .tree-toggle {
+  transform: rotate(90deg);
+}
+
+/* ==================== Filter / tools ==================== */
+.tree-filter {
+  margin-bottom: var(--space-3);
+}
+
+.tree-tools {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+/* ==================== Modern tree (sidebar variant) ====================
+   AutoTrassir folder sidebar, упрощено */
+
+.tree-modern {
+  list-style: none;
+  margin: 0;
+  padding: var(--space-2);
+}
+
+.tree-modern ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tree-modern-item {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background var(--t-fast) var(--ease),
+              color var(--t-fast) var(--ease);
+}
+
+.tree-modern-item:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
+.tree-modern-item.selected {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-weight: var(--fw-medium);
+}
+
+.tree-modern-chevron {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: var(--color-text-muted);
+  transition: transform var(--t-fast) var(--ease);
+}
+
+.tree-modern-item.expanded .tree-modern-chevron {
+  transform: rotate(90deg);
+}
+
+.tree-modern-icon {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: var(--color-warning);
+}
+
+.tree-modern-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tree-modern-nested {
+  padding-left: var(--space-3);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--t-slow) var(--ease);
+}
+
+.tree-modern-item.expanded + .tree-modern-nested {
+  max-height: 1000px;
+}
+
+.tree-modern-count {
+  font-size: var(--fs-xs);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--color-surface-sunken);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==================== Sidebar wrapper ==================== */
+.tree-sidebar {
+  padding: var(--space-2);
+  overflow-y: auto;
+}
+
+.tree-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: var(--border-w) solid var(--color-border-subtle);
+}
+
+.tree-sidebar-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semi);
+  color: var(--color-text);
+}
+
+.tree-sidebar-title .icon {
+  color: var(--color-warning);
+}
+
+.tree-sidebar-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.tree-sidebar-btn {
+  padding: var(--space-1);
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: background var(--t-fast) var(--ease),
+              color var(--t-fast) var(--ease);
+}
+
+.tree-sidebar-btn:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
+/* ==================== Empty / loading ==================== */
+.tree-empty {
+  padding: var(--space-8) var(--space-4);
+  text-align: center;
+}
+
+.tree-empty-icon {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto var(--space-3);
+  color: var(--color-text-muted);
+  opacity: 0.5;
+}
+
+.tree-empty-text {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.tree-empty-hint {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  margin-top: var(--space-1);
+}
+
+.tree-loading {
+  padding: var(--space-2);
+}
+
+.tree-loading-item {
+  height: 32px;
+  margin-bottom: var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-sunken);
+  animation: tree-skeleton 1.5s var(--ease-in-out) infinite;
+}
+
+@keyframes tree-skeleton {
+  0%, 100% { opacity: 0.5; }
+  50%      { opacity: 1; }
+}
+
+/* ==================== Reduced motion ==================== */
+@media (prefers-reduced-motion: reduce) {
+  .tree ul,
+  .tree-modern-nested {
+    transition: none;
+  }
+  .tree-loading-item { animation: none; opacity: 0.7; }
+}
+
+/* ==================== Dark Theme — точечно ==================== */
+.dark .tree-loading-item {
+  background: var(--color-surface-hover);
+}

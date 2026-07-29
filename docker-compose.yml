@@ -36,6 +36,6 @@ services:
     container_name: css-lab-web
     profiles: ["prod"]
     ports:
-      - "${WEB_PORT:-48620}:80"
+      - "${WEB_PORT:-48620}:8080"
     restart: unless-stopped
   # </CONFIG:service.css-lab-web>

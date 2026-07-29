@@ -494,7 +494,7 @@ const demoToast = (function initDemoToast() {
       const num = code.slice(3);
       (byFam[num[0]] = byFam[num[0]] || []).push([num, '#' + hex, RAL_NAMES[num] || '']);
     });
-    return Object.keys(byFam).sort().map(fam => {
+    return Object.keys(byFam).sort((a, b) => a.localeCompare(b)).map(fam => {
       byFam[fam].sort((a, b) => a[0].localeCompare(b[0]));
       return [(typeof FAMILIES !== 'undefined' && FAMILIES[fam]) || fam, byFam[fam]];
     });

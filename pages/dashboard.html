@@ -531,6 +531,8 @@
         const el = document.getElementById(id);
         el.textContent = String(Math.max(0, parseInt(el.textContent, 10) + delta));
       };
+      // Math.random — генерация ДЕМО-данных сводки, не криптография
+      // (Sonar S2245: hotspot помечен безопасным)
       bump('dash-stat-work', Math.floor(Math.random() * 3) - 1);
       bump('dash-stat-shipped', Math.floor(Math.random() * 2));
       addLog('info', 'Сводка обзора обновлена вручную');

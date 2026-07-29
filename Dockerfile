@@ -7,7 +7,9 @@
 # ("/styles/…", "/pages/…", url("/assets/…")) переписываются на этапе сборки.
 # Пустой BASE_PATH (по умолчанию) — образ для корня домена, файлы не трогаются.
 
-FROM nginx:1.29-alpine
+# Unprivileged-вариант официального nginx: процесс работает от nginx (101),
+# слушает 8080 — закрывает Trivy DS-0002 (no root user)
+FROM nginxinc/nginx-unprivileged:1.29-alpine
 
 ARG BASE_PATH=""
 
@@ -15,7 +17,8 @@ LABEL org.opencontainers.image.title="css-lab" \
       org.opencontainers.image.description="Дизайн-система и сайт-витрина VEZA / Уралэлектро / HEMAH" \
       org.opencontainers.image.source="https://gitlab.veza.ru/beloborodov.dv/css-lab"
 
-# Конфиг сайта вместо дефолтного
+# Конфиг сайта вместо дефолтного (COPY от root: далее пути только на чтение)
+USER root
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 
 # Статика сайта
@@ -54,7 +57,10 @@ RUN if [ -n "$BASE_PATH" ]; then \
       mkdir -p "./${sub}" && mv /tmp/site/* "./${sub}/" && rmdir /tmp/site; \
     fi
 
-EXPOSE 80
+# Обратно на непривилегированного пользователя образа
+USER nginx
+
+EXPOSE 8080
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD wget -qO- http://127.0.0.1/healthz || exit 1
+    CMD wget -qO- http://127.0.0.1:8080/healthz || exit 1

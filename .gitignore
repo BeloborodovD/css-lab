@@ -3,3 +3,12 @@ dist/
 .env
 .DS_Store
 *.log
+
+# Артефакты Playwright MCP (скриншоты, снапшоты, логи консоли)
+.playwright-mcp/
+*.jpeg
+
+# Контракты агентов — рабочее состояние, не история проекта
+.claude/contracts/incoming/*
+.claude/contracts/outgoing/*
+!.claude/contracts/*/.gitkeep

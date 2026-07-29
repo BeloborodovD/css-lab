@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/motion-lint.py\" 2>/dev/null || python \"$CLAUDE_PROJECT_DIR/.claude/hooks/motion-lint.py\""
+          }
+        ]
+      }
+    ]
+  }
+}

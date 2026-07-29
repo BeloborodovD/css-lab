@@ -1,0 +1,56 @@
+/* [CONFIG:motion-tokens]
+ * Токены движения — единственный источник кривых и длительностей проекта.
+ * Модуль: ui-motion-craft. Зависимости: нет.
+ * Правила и обоснование значений: .claude/skills/ui-motion-craft/RULES.md
+ * Подключать первым в каскаде; хардкод cubic-bezier/ms в компонентах запрещён.
+ */
+
+:root {
+  /* Кривые. Встроенные ease-* слишком слабые — используются только эти три. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);        /* вход и выход элементов */
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);    /* движение по экрану */
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);     /* шторки, sheet, drawer */
+  /* ease-in намеренно отсутствует: в UI он всегда ощущается вялым. */
+
+  /* Длительности. UI-анимация не превышает 300 мс. */
+  --duration-press: 160ms;    /* отклик на нажатие */
+  --duration-tooltip: 150ms;  /* тултипы, мелкие поповеры */
+  --duration-dropdown: 200ms; /* дропдауны, селекты */
+  --duration-modal: 300ms;    /* модальные окна, шторки */
+
+  /* Шаг каскада для группового появления списков и сеток. */
+  --stagger-step: 50ms;
+}
+
+/* Обратная связь на нажатие — обязательна для любого нажимаемого элемента. */
+/* PURPOSE: feedback — подтверждает, что интерфейс услышал пользователя */
+[data-pressable],
+button:not([disabled]),
+[role='button']:not([aria-disabled='true']) {
+  transition: transform var(--duration-press) var(--ease-out);
+}
+
+[data-pressable]:active,
+button:not([disabled]):active,
+[role='button']:not([aria-disabled='true']):active {
+  transform: scale(0.97);
+}
+
+/* Уменьшенное движение — мягче, но не «выключено»: непрозрачность остаётся. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 200ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  [data-pressable]:active,
+  button:not([disabled]):active,
+  [role='button']:not([aria-disabled='true']):active {
+    transform: none;
+  }
+}
+/* </CONFIG:motion-tokens> */

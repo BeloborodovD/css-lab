@@ -47,6 +47,11 @@ RUN if [ -n "$BASE_PATH" ]; then \
         -e "s|'/index.html'|'${BASE_PATH}/index.html'|g" \
         -e "s|'/assets/|'${BASE_PATH}/assets/|g" \
         {} + ; \
+      # Файлы переезжают в физическую подпапку префикса: root-отдача nginx
+      # без alias/rewrite-трюков (alias+try_files — известная ловушка)
+      sub="${BASE_PATH#/}"; \
+      mkdir /tmp/site && mv ./* /tmp/site/ && \
+      mkdir -p "./${sub}" && mv /tmp/site/* "./${sub}/" && rmdir /tmp/site; \
     fi
 
 EXPOSE 80

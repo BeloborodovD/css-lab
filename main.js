@@ -175,7 +175,7 @@ const demoToast = (function initDemoToast() {
     '.filter-pills, .chips, #demo-log-view-toggle, .form-rows__add, .row-card__remove, ' +
     '.chip-remove, .modal, .dropdown, .tree-item, .toast, #theme-toggle, #width-control, ' +
     '#burger-menu, #info-toggle, .sidebar-close, .tab, .toggle, [data-datepicker], ' +
-    '#demo-drawer-open, .quiz-header__nav';
+    '#demo-drawer-open, .quiz-header__nav, .combobox';
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('button');
     if (!btn || btn.closest(SKIP)) return;
@@ -270,22 +270,49 @@ const demoToast = (function initDemoToast() {
 })();
 
 // ===== User Menu =====
-// Открытие по клику, закрытие по клику вне и Escape (порт из corporate-search)
+// Открытие по клику, закрытие по клику вне и Escape (порт из corporate-search).
+// Клавиатура: фокус на первый пункт при открытии, стрелки циклично двигают
+// фокус, Home/End — края, Tab закрывает меню и отдаёт фокус дальше по умолчанию.
 (function initUserMenu() {
   document.querySelectorAll('.user-menu').forEach(menu => {
     const trigger = menu.querySelector('.user-menu__trigger');
     const dropdown = menu.querySelector('.user-menu__dropdown');
     if (!trigger || !dropdown) return;
+    const items = () => [...dropdown.querySelectorAll('.user-menu__item')];
 
     function setOpen(open) {
       menu.classList.toggle('is-open', open);
       trigger.setAttribute('aria-expanded', String(open));
       if (open) {
         dropdown.removeAttribute('hidden');
+        // Стрелочная навигация доступна сразу — фокус на первом пункте
+        items()[0]?.focus();
       } else {
         dropdown.setAttribute('hidden', '');
       }
     }
+
+    // Навигация по пунктам меню без анимации — клавиатурные действия мгновенны
+    dropdown.addEventListener('keydown', (e) => {
+      const list = items();
+      if (!list.length) return;
+      const idx = list.indexOf(document.activeElement);
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        list[(idx + 1) % list.length].focus();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        list[(idx - 1 + list.length) % list.length].focus();
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        list[0].focus();
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        list[list.length - 1].focus();
+      } else if (e.key === 'Tab') {
+        setOpen(false); // закрываем; дефолтный Tab уводит фокус дальше сам
+      }
+    });
 
     trigger.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -320,6 +347,8 @@ const demoToast = (function initDemoToast() {
     if (open === drawer.classList.contains('is-open')) return;
     drawer.classList.toggle('is-open', open);
     drawer.inert = !open;
+    // Scroll-lock: фон не прокручивается, пока открыта модальная шторка
+    document.documentElement.style.overflow = open ? 'hidden' : '';
     if (open) {
       lastFocused = document.activeElement;
       drawer.querySelector('.drawer__close')?.focus();
@@ -642,8 +671,12 @@ const demoToast = (function initDemoToast() {
 
     function bindRemove(btn) {
       btn.addEventListener('click', () => {
-        btn.closest('.row-card')?.remove();
-        renumber();
+        const card = btn.closest('.row-card');
+        if (!card || card.classList.contains('is-removing')) return;
+        // Уход с проявлением (row-card.css) + страховка для reduced-motion
+        card.classList.add('is-removing');
+        card.addEventListener('transitionend', () => { card.remove(); renumber(); }, { once: true });
+        setTimeout(() => { card.remove(); renumber(); }, 300);
       });
     }
     function renumber() {
@@ -670,6 +703,8 @@ const demoToast = (function initDemoToast() {
           '<button type="button" class="row-card__remove">Удалить</button></div>';
       }
       card.querySelectorAll('.row-card__remove, .btn-row-del').forEach(bindRemove);
+      card.classList.add('is-entering'); // вход новой строки (row-card.css)
+      card.addEventListener('animationend', () => card.classList.remove('is-entering'), { once: true });
       rows.appendChild(card);
       renumber();
       card.querySelector('input')?.focus();
@@ -705,6 +740,205 @@ const demoToast = (function initDemoToast() {
     });
     area.addEventListener('keyup', syncStates);
     area.addEventListener('mouseup', syncStates);
+  });
+})();
+
+// ===== Combobox =====
+// Дропдаун-селект витрины: одиночный выбор, поиск-фильтр, мультивыбор с тегами,
+// группировка. Открытие по триггеру, закрытие вне/Escape (guard: только когда
+// открыт). Клавиатура: ArrowDown/ArrowUp двигают подсветку по видимым опциям,
+// Enter выбирает, Escape закрывает и возвращает фокус триггеру.
+// Анимация раскрытия целиком в CSS (combobox.css) — JS только меняет классы.
+(function initCombobox() {
+  document.querySelectorAll('.combobox').forEach(box => {
+    const trigger = box.querySelector('.combobox-trigger');
+    if (!trigger) return;
+    const dropdown = box.querySelector('.combobox-dropdown');
+    const valueEl = box.querySelector('.combobox-value');
+    const searchInput = box.querySelector('.combobox-search-input');
+    const clearBtn = box.querySelector('.combobox-clear');
+    const tagsBox = box.querySelector('.combobox-tags');
+    const multi = box.classList.contains('combobox-multi');
+    // Плейсхолдер: исходный текст «Выберите…» из разметки, иначе — общий
+    const placeholder = valueEl && /^Выберите/.test(valueEl.textContent.trim())
+      ? valueEl.textContent.trim() : 'Выберите…';
+
+    const isOpen = () => box.classList.contains('is-open') || box.classList.contains('open');
+    const visibleOptions = () =>
+      [...box.querySelectorAll('.combobox-option')].filter(o => o.style.display !== 'none');
+
+    // Текст опции без служебных значков (галочка/иконка/чекбокс)
+    function optionLabel(opt) {
+      const clone = opt.cloneNode(true);
+      clone.querySelectorAll('.combobox-option-check, .combobox-option-icon, .combobox-option-checkbox')
+        .forEach(n => n.remove());
+      return clone.textContent.trim();
+    }
+
+    // Подсветка: семантический класс по спеке + .highlighted для стилей CSS
+    function clearHighlight() {
+      box.querySelectorAll('.combobox-option-highlighted').forEach(o =>
+        o.classList.remove('combobox-option-highlighted', 'highlighted'));
+    }
+    function highlight(opt) {
+      clearHighlight();
+      if (!opt) return;
+      opt.classList.add('combobox-option-highlighted', 'highlighted');
+      opt.scrollIntoView({ block: 'nearest' });
+    }
+    function moveHighlight(step) {
+      const opts = visibleOptions();
+      if (!opts.length) return;
+      const cur = opts.findIndex(o => o.classList.contains('combobox-option-highlighted'));
+      highlight(opts[(cur + step + opts.length) % opts.length]);
+    }
+
+    function setOpen(open) {
+      if (open === isOpen()) return;
+      box.classList.toggle('open', open);
+      box.classList.toggle('is-open', open);
+      trigger.setAttribute('aria-expanded', String(open));
+      if (open) {
+        // Поиск сразу в фокусе — печать без лишнего клика. Двойной rAF:
+        // до первого отрисованного кадра visibility дропдауна ещё hidden
+        // (транзишен не стартовал), и браузер отклоняет focus()
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          if (isOpen()) searchInput?.focus();
+        }));
+      } else {
+        clearHighlight();
+        if (searchInput) {
+          searchInput.value = '';
+          applyFilter('');
+        }
+      }
+    }
+
+    function markSelected(opt, on) {
+      // Оба варианта класса: combobox-option-selected (разметка) + selected (CSS)
+      opt.classList.toggle('combobox-option-selected', on);
+      opt.classList.toggle('selected', on);
+    }
+
+    // Мультивыбор: тег с кнопкой удаления, вставляется перед счётчиком «+N»
+    function addTag(label) {
+      if (!tagsBox) return;
+      const tag = document.createElement('span');
+      tag.className = 'combobox-tag';
+      tag.append(label + ' ');
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'combobox-tag-remove';
+      btn.setAttribute('aria-label', 'Убрать ' + label);
+      btn.textContent = '×';
+      tag.append(btn);
+      tagsBox.insertBefore(tag, tagsBox.querySelector('.combobox-tag-more'));
+    }
+    function removeTag(label) {
+      [...(tagsBox?.querySelectorAll('.combobox-tag') || [])].forEach(tag => {
+        if (tag.textContent.replace('×', '').trim() === label) tag.remove();
+      });
+    }
+
+    function select(opt) {
+      const label = optionLabel(opt);
+      if (multi) {
+        // Тоггл выбора; дропдаун остаётся открытым — выбирают несколько подряд
+        const on = !(opt.classList.contains('combobox-option-selected')
+          || opt.classList.contains('selected'));
+        markSelected(opt, on);
+        if (on) addTag(label); else removeTag(label);
+        return;
+      }
+      box.querySelectorAll('.combobox-option').forEach(o => markSelected(o, false));
+      markSelected(opt, true);
+      if (valueEl) {
+        valueEl.textContent = label;
+        valueEl.classList.remove('combobox-placeholder');
+      }
+      box.classList.add('has-value');
+      setOpen(false);
+      trigger.focus?.();
+    }
+
+    // Живой фильтр опций по подстроке; пустые группы прячутся целиком
+    function applyFilter(q) {
+      const query = q.trim().toLowerCase();
+      box.querySelectorAll('.combobox-option').forEach(opt => {
+        opt.style.display = !query || optionLabel(opt).toLowerCase().includes(query) ? '' : 'none';
+      });
+      box.querySelectorAll('.combobox-group').forEach(group => {
+        const any = [...group.querySelectorAll('.combobox-option')]
+          .some(o => o.style.display !== 'none');
+        group.style.display = any ? '' : 'none';
+      });
+      clearHighlight();
+    }
+    searchInput?.addEventListener('input', () => applyFilter(searchInput.value));
+    // Клик в поле поиска не закрывает дропдаун
+    searchInput?.addEventListener('click', (e) => e.stopPropagation());
+
+    // Открытие/закрытие по триггеру; крестики внутри триггера не переключают
+    trigger.addEventListener('click', (e) => {
+      if (e.target.closest('.combobox-clear, .combobox-tag-remove')) return;
+      setOpen(!isOpen());
+    });
+
+    // Выбор опции кликом (делегирование — работает и для групп)
+    dropdown?.addEventListener('click', (e) => {
+      const opt = e.target.closest('.combobox-option');
+      if (opt && !opt.classList.contains('disabled')) select(opt);
+    });
+
+    // Крестик очистки значения — сброс к плейсхолдеру
+    clearBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      box.querySelectorAll('.combobox-option').forEach(o => markSelected(o, false));
+      if (valueEl) {
+        valueEl.textContent = placeholder;
+        valueEl.classList.add('combobox-placeholder');
+      }
+      box.classList.remove('has-value');
+    });
+
+    // Удаление тегов мультивыбора (включая изначальные из разметки)
+    box.addEventListener('click', (e) => {
+      const btn = e.target.closest('.combobox-tag-remove');
+      if (!btn) return;
+      e.stopPropagation();
+      const tag = btn.closest('.combobox-tag');
+      const label = tag.textContent.replace('×', '').trim();
+      box.querySelectorAll('.combobox-option').forEach(o => {
+        if (optionLabel(o) === label) markSelected(o, false);
+      });
+      tag.remove();
+    });
+
+    // Клавиатура: стрелки — подсветка, Enter — выбор подсвеченного
+    box.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (!isOpen()) setOpen(true);
+        moveHighlight(e.key === 'ArrowDown' ? 1 : -1);
+      } else if (e.key === 'Enter' && isOpen()) {
+        const hi = box.querySelector('.combobox-option-highlighted');
+        if (hi) {
+          e.preventDefault(); // иначе кнопка-триггер своим кликом закроет дропдаун
+          select(hi);
+        }
+      }
+    });
+
+    // Закрытие по клику вне и Escape — guard: только когда открыт
+    document.addEventListener('click', (e) => {
+      if (isOpen() && !box.contains(e.target)) setOpen(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isOpen()) {
+        setOpen(false);
+        trigger.focus?.();
+      }
+    });
   });
 })();
 
@@ -877,6 +1111,74 @@ const demoToast = (function initDemoToast() {
           inputBtn.focus();
         }
       });
+    }
+
+    // Свайп-вниз закрывает мобильную шторку календаря (Apple, fluid interfaces):
+    // шторка ведётся за пальцем 1:1, вверх — упругая резинка, решение о закрытии
+    // принимается по скорости отпускания, а не только по дистанции.
+    if (!inline) {
+      const mqMobile = window.matchMedia('(max-width: 767px)');
+      const GRAB_ZONE = 56; // px от верха шторки: ручка + шапка календаря
+      let drag = null;
+
+      dropdown.addEventListener('pointerdown', (e) => {
+        // Мультитач-защита: второй палец не перехватывает начатый жест
+        if (drag || !mqMobile.matches || !picker.classList.contains('open')) return;
+        const rect = dropdown.getBoundingClientRect();
+        if (e.clientY - rect.top > GRAB_ZONE) return; // хват только за верхнюю зону
+        drag = {
+          id: e.pointerId,
+          startY: e.clientY,
+          height: rect.height,
+          prevY: e.clientY,
+          prevT: performance.now(),
+          velocity: 0,
+          offset: 0
+        };
+        // capture: жест продолжается, даже если палец ушёл за границы шторки
+        dropdown.setPointerCapture(e.pointerId);
+        dropdown.style.transition = 'none'; // палец ведёт шторку 1:1, без transition
+      });
+
+      dropdown.addEventListener('pointermove', (e) => {
+        if (!drag || e.pointerId !== drag.id) return;
+        const now = performance.now();
+        const dt = now - drag.prevT;
+        // Мгновенная скорость по последнему сэмплу — понадобится на отпускании
+        if (dt > 0) drag.velocity = (e.clientY - drag.prevY) / dt;
+        drag.prevY = e.clientY;
+        drag.prevT = now;
+        const dy = e.clientY - drag.startY;
+        // Вниз — 1:1 за пальцем; вверх — резинка (движение вдвое слабее)
+        drag.offset = dy >= 0 ? dy : dy / 2;
+        dropdown.style.transform = 'translateY(' + drag.offset + 'px)';
+      });
+
+      function endDrag(e) {
+        if (!drag || e.pointerId !== drag.id) return;
+        const { offset, velocity, height } = drag;
+        drag = null;
+        // Закрытие: быстрый флик вниз ИЛИ протянуто дальше 40% высоты —
+        // но флик ВВЕРХ в момент отпускания отменяет закрытие (жест уважается)
+        if (velocity > 0.11 || (offset > height * 0.4 && velocity >= 0)) {
+          // Инлайн-стили снимаем — CSS-транзишен шторки (ease-drawer) сам
+          // доигрывает выход с текущей позиции; путь входа и выхода совпадает
+          dropdown.style.transition = '';
+          dropdown.style.transform = '';
+          setOpen(false);
+          inputBtn?.focus();
+          return;
+        }
+        /* PURPOSE: preventing a jarring change — недотянутая шторка мягко
+           возвращается на место, а не телепортируется */
+        dropdown.style.transition = 'transform var(--duration-exit) var(--ease-out)';
+        dropdown.style.transform = '';
+        const cleanup = () => { dropdown.style.transition = ''; };
+        dropdown.addEventListener('transitionend', cleanup, { once: true });
+        setTimeout(cleanup, 200); // страховка: при reduced-motion transitionend не придёт
+      }
+      dropdown.addEventListener('pointerup', endDrag);
+      dropdown.addEventListener('pointercancel', endDrag);
     }
 
     render();

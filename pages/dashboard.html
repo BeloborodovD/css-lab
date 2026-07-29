@@ -28,7 +28,7 @@
     </a>
     <nav class="site-nav" aria-label="Разделы сайта">
       <a class="site-nav__link" href="/index.html">Главная</a>
-      <a class="site-nav__link" href="/index-v3.html">Витрина</a>
+      <a class="site-nav__link" href="/components.html">Витрина</a>
       <a class="site-nav__link" href="/pages/catalog.html">Каталог</a>
       <a class="site-nav__link" href="/pages/dashboard.html" aria-current="page">Дашборд</a>
       <a class="site-nav__link" href="/pages/login.html">Вход</a>
@@ -277,7 +277,7 @@
     <span>CSS Lab — страница-пример дашборда. Компоненты: stats · table · drawer · logs · timeline · filter-pills.</span>
     <nav class="site-footer__links" aria-label="Подвал">
       <a href="/index.html">Главная</a>
-      <a href="/index-v3.html">Витрина</a>
+      <a href="/components.html">Витрина</a>
       <a href="/pages/catalog.html">Каталог</a>
     </nav>
   </footer>
@@ -465,6 +465,8 @@
       if (open === drawer.classList.contains('is-open')) return;
       drawer.classList.toggle('is-open', open);
       drawer.inert = !open;
+      // Scroll-lock: фон не прокручивается, пока открыта модальная шторка
+      document.documentElement.style.overflow = open ? 'hidden' : '';
       if (open) {
         lastFocused = document.activeElement;
         drawer.querySelector('.drawer__close')?.focus();
@@ -511,7 +513,12 @@
       const tr = ordersBody.querySelector('tr[data-order-id="' + drawerOrder.id + '"]');
       if (tr) {
         const cell = tr.children[4];
-        cell.replaceChildren(makeStatusButton(drawerOrder));
+        const btn = makeStatusButton(drawerOrder);
+        // Новый бейдж входит с проявлением (.dash-log-new) — глаз находит
+        // изменённую строку, пока шторка закрывается
+        btn.classList.add('dash-log-new');
+        btn.addEventListener('animationend', () => btn.classList.remove('dash-log-new'), { once: true });
+        cell.replaceChildren(btn);
       }
       addLog('info', 'Заказ ' + drawerOrder.id + ' переведён в статус «В производстве»');
       applyFilter();

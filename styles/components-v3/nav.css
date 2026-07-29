@@ -51,8 +51,10 @@
   font-family: inherit;
   border: none;
   cursor: pointer;
-  transition: background var(--t-fast) var(--ease),
-              color var(--t-fast) var(--ease);
+  /* PURPOSE: state indication — ховер видят десятки раз в день, поэтому
+     переход почти незаметный: 160ms, только цвет/фон (без движения) */
+  transition: background var(--duration-press) var(--ease-out),
+              color var(--duration-press) var(--ease-out);
 }
 
 .nav-link:hover {
@@ -92,7 +94,7 @@
   color: var(--color-text-secondary);
   cursor: pointer;
   border-radius: var(--radius-sm);
-  transition: background var(--t-fast) var(--ease);
+  transition: background var(--duration-press) var(--ease-out);
 }
 
 .nav-toggle:hover {
@@ -149,8 +151,8 @@
   text-decoration: none;
   border-radius: var(--radius-sm);
   font-size: var(--fs-sm);
-  transition: background var(--t-fast) var(--ease),
-              color var(--t-fast) var(--ease);
+  transition: background var(--duration-press) var(--ease-out),
+              color var(--duration-press) var(--ease-out);
 }
 
 .page-nav-link:hover {
@@ -188,7 +190,7 @@
 .breadcrumb-link {
   color: var(--color-text-muted);
   text-decoration: none;
-  transition: color var(--t-fast) var(--ease);
+  transition: color var(--duration-press) var(--ease-out);
 }
 
 .breadcrumb-link:hover {

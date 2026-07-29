@@ -43,6 +43,16 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* Уменьшенное движение — мягче, но не ноль: шаг проявляется
+   непрозрачностью без вертикального сдвига */
+@media (prefers-reduced-motion: reduce) {
+  .fp-step-enter { animation-name: fp-step-fade; }
+}
+@keyframes fp-step-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 /* ===== Диапазон мощности «от — до» ====================================== */
 .fp-range {
   display: flex;
@@ -63,18 +73,29 @@
 /* Скрытые кнопки навигации: .btn задаёт display — перебиваем атрибут hidden */
 .fp-nav [hidden] { display: none; }
 
-/* ===== Кнопка отправки со спиннером (по образцу login-submit) =========== */
+/* ===== Кнопка отправки со спиннером (по образцу login-submit) ===========
+   Спиннер всегда в потоке (width/opacity) — текст кнопки не прыгает */
 .fp-submit { position: relative; }
 .fp-submit .spinner {
-  width: 16px;
+  display: inline-block;
+  width: 0;
   height: 16px;
   border-width: 2px;
   border-color: currentColor;
   border-top-color: transparent;
-  margin-right: var(--space-2);
-  display: none;
+  margin-right: 0;
+  opacity: 0;
+  /* PURPOSE: state indication — спиннер мягко «раздвигает» текст */
+  transition:
+    width var(--duration-press) var(--ease-out),
+    margin-right var(--duration-press) var(--ease-out),
+    opacity var(--duration-press) var(--ease-out);
 }
-.fp-submit.is-loading .spinner { display: inline-block; }
+.fp-submit.is-loading .spinner {
+  width: 16px;
+  margin-right: var(--space-2);
+  opacity: 1;
+}
 .fp-submit.is-loading { pointer-events: none; opacity: 0.85; }
 
 /* ===== Сводка шага 3 ==================================================== */

@@ -15,7 +15,7 @@
   align-items: center;
   justify-content: center;
   padding: var(--space-4);
-  background: rgba(0, 0, 0, 0.4);
+  background: var(--color-overlay);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
 }
@@ -147,17 +147,21 @@
 .modal-icon.info    { background: var(--color-info-soft);    color: var(--color-info);    }
 
 /* ==================== Animations ==================== */
-.modal-overlay.modal-enter { animation: modal-overlay-in var(--t) var(--ease) forwards; }
-.modal-overlay.modal-exit  { animation: modal-overlay-out var(--t) var(--ease) forwards; }
+/* PURPOSE: preventing a jarring change — фон гаснет/появляется вместе с окном.
+   Асимметрия: выход быстрее входа (система отвечает быстро) */
+.modal-overlay.modal-enter { animation: modal-overlay-in var(--duration-modal) var(--ease-out) forwards; }
+.modal-overlay.modal-exit  { animation: modal-overlay-out var(--duration-modal-exit) var(--ease-out) forwards; }
 
 @keyframes modal-overlay-in  { from { opacity: 0; } to { opacity: 1; } }
 @keyframes modal-overlay-out { from { opacity: 1; } to { opacity: 0; } }
 
+/* PURPOSE: state indication — окно материализуется из scale(0.97)+opacity
+   (никогда из нулевого масштаба); transform-origin: center корректен для модалок */
 .modal-enter .modal,
-.modal.modal-enter { animation: modal-scale-in var(--t) var(--ease) forwards; }
+.modal.modal-enter { animation: modal-scale-in var(--duration-modal) var(--ease-out) forwards; }
 
 .modal-exit .modal,
-.modal.modal-exit  { animation: modal-scale-out var(--t) var(--ease) forwards; }
+.modal.modal-exit  { animation: modal-scale-out var(--duration-modal-exit) var(--ease-out) forwards; }
 
 @keyframes modal-scale-in {
   from { opacity: 0; transform: scale(0.97); }
@@ -177,10 +181,11 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* PURPOSE: preventing a jarring change — вариант входа со сдвигом */
 .modal-slide-down .modal,
-.modal.modal-slide-down { animation: modal-slide-down var(--t-slow) var(--ease) forwards; }
+.modal.modal-slide-down { animation: modal-slide-down var(--duration-modal) var(--ease-out) forwards; }
 .modal-slide-up .modal,
-.modal.modal-slide-up   { animation: modal-slide-up   var(--t-slow) var(--ease) forwards; }
+.modal.modal-slide-up   { animation: modal-slide-up   var(--duration-modal) var(--ease-out) forwards; }
 
 /* ==================== Drawer ==================== */
 .modal-drawer {
@@ -195,8 +200,9 @@
 .modal-overlay.modal-drawer-right { justify-content: flex-end; }
 .modal-overlay.modal-drawer-left  { justify-content: flex-start; }
 
-.modal-drawer-right .modal-drawer { animation: modal-slide-left  var(--t-slow) var(--ease) forwards; }
-.modal-drawer-left  .modal-drawer { animation: modal-slide-right var(--t-slow) var(--ease) forwards; }
+/* PURPOSE: spatial consistency — шторка входит из-за края экрана по кривой шторки */
+.modal-drawer-right .modal-drawer { animation: modal-slide-left  var(--duration-modal) var(--ease-drawer) forwards; }
+.modal-drawer-left  .modal-drawer { animation: modal-slide-right var(--duration-modal) var(--ease-drawer) forwards; }
 
 @keyframes modal-slide-left  { from { transform: translateX(100%); }  to { transform: translateX(0); } }
 @keyframes modal-slide-right { from { transform: translateX(-100%); } to { transform: translateX(0); } }
@@ -264,21 +270,26 @@
   .modal-icon { width: 48px; height: 48px; margin-bottom: var(--space-3); }
   .modal-icon svg { width: 24px; height: 24px; }
 
-  .modal-overlay.modal-enter .modal { animation: modal-slide-up var(--t-slow) var(--ease) forwards; }
+  /* PURPOSE: spatial consistency — на мобильном модалка ведёт себя как bottom-sheet */
+  .modal-overlay.modal-enter .modal { animation: modal-slide-up var(--duration-modal) var(--ease-drawer) forwards; }
 }
 
 /* ==================== Reduced motion ==================== */
+/* Мягче, но не ноль: масштаб и слайд убираем, opacity-кроссфейд остаётся —
+   он предотвращает телепорт модалки (RULES.md §6) */
 @media (prefers-reduced-motion: reduce) {
-  .modal-overlay,
-  .modal-overlay .modal {
-    animation: none !important;
+  .modal-overlay.modal-enter,
+  .modal-overlay.modal-enter .modal {
+    animation: modal-overlay-in var(--duration-dropdown) var(--ease-out) forwards !important;
+  }
+  .modal-overlay.modal-exit,
+  .modal-overlay.modal-exit .modal {
+    animation: modal-overlay-out var(--duration-exit) var(--ease-out) forwards !important;
   }
 }
 
 /* ==================== Dark Theme ==================== */
-.dark .modal-overlay {
-  background: rgba(0, 0, 0, 0.55);
-}
+/* Оверлей в dark берётся автоматически из токена --color-overlay (variables-v2) */
 
 .dark .modal {
   /* В dark тени почти не работают — усиливаем border */

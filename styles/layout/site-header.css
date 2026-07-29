@@ -49,9 +49,16 @@
   text-decoration: none;
   border-radius: var(--radius-sm);
   white-space: nowrap;
+  /* PURPOSE: feedback — пункт отвечает на наведение и нажатие */
   transition:
     background-color var(--duration-press) var(--ease-out),
-    color var(--duration-press) var(--ease-out);
+    color var(--duration-press) var(--ease-out),
+    transform var(--duration-press) var(--ease-out);
+}
+/* PURPOSE: feedback — нав-ссылка отзывается на нажатие; масштаб едва заметный:
+   навигация используется десятки раз в день */
+.site-nav__link:active {
+  transform: scale(0.98);
 }
 @media (hover: hover) and (pointer: fine) {
   .site-nav__link:hover {
@@ -88,7 +95,13 @@
   border: var(--border-w) solid var(--color-border);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: background-color var(--duration-press) var(--ease-out);
+}
+/* PURPOSE: feedback — кнопка темы отвечает на наведение и нажатие.
+   Селектор с типом: перебивает transition из button:not([disabled]) в base/motion.css
+   (равная специфичность, каскад позже), иначе background-hover менялся рывком */
+button.site-header__theme {
+  transition: background-color var(--duration-press) var(--ease-out),
+              transform var(--duration-press) var(--ease-out);
 }
 @media (hover: hover) and (pointer: fine) {
   .site-header__theme:hover { background: var(--color-surface-hover); }
@@ -105,5 +118,11 @@
 @media (max-width: 767px) {
   .site-header { padding: 0 var(--space-3); gap: var(--space-2); }
   .site-header .brand-switcher { display: none; } /* на мобильном — только тема */
+}
+
+/* Уменьшенное движение: нав-ссылка — <a>, базовый сброс :active из
+   motion.css покрывает только button/[data-pressable] */
+@media (prefers-reduced-motion: reduce) {
+  .site-nav__link:active { transform: none; }
 }
 /* </BLOCK:layout.site-header> */

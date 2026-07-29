@@ -95,6 +95,8 @@
 .drawer__body {
   flex: 1;
   overflow-y: auto;
+  /* Скролл не «протекает» на страницу под шторкой (scroll chaining) */
+  overscroll-behavior: contain;
   padding: var(--space-5);
 }
 

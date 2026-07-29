@@ -28,8 +28,9 @@
   border: var(--border-w) solid var(--color-border);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: border-color var(--t-fast) var(--ease),
-              box-shadow var(--t-fast) var(--ease);
+  /* PURPOSE: feedback — мгновенный отклик рамки/кольца на фокус и наведение */
+  transition: border-color var(--duration-press) var(--ease-out),
+              box-shadow var(--duration-press) var(--ease-out);
 }
 
 .combobox-trigger:hover:not(:disabled) {
@@ -37,7 +38,9 @@
 }
 
 .combobox-trigger:focus,
-.combobox.open .combobox-trigger {
+.combobox-trigger:focus-visible,
+.combobox.open .combobox-trigger,
+.combobox.is-open .combobox-trigger {
   border-color: var(--color-accent);
   box-shadow: var(--shadow-focus);
   outline: none;
@@ -66,10 +69,12 @@
   margin-left: var(--space-2);
   color: var(--color-text-muted);
   flex-shrink: 0;
-  transition: transform var(--t-fast) var(--ease);
+  /* PURPOSE: state indication — стрелка разворачивается синхронно с дропдауном */
+  transition: transform var(--duration-dropdown) var(--ease-in-out);
 }
 .combobox-arrow svg { width: 16px; height: 16px; }
-.combobox.open .combobox-arrow { transform: rotate(180deg); }
+.combobox.open .combobox-arrow,
+.combobox.is-open .combobox-arrow { transform: rotate(180deg); }
 
 .combobox-clear {
   display: flex;
@@ -96,6 +101,12 @@
   background: var(--color-surface-active);
   color: var(--color-text);
 }
+/* Фокус с клавиатуры — видимое кольцо, кнопка не должна прятаться */
+.combobox-clear:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  opacity: 1;
+}
 .combobox-clear svg { width: 14px; height: 14px; }
 
 /* ==================== Dropdown ==================== */
@@ -113,16 +124,21 @@
   visibility: hidden;
   transform: translateY(-4px) scale(0.98);
   transform-origin: top center;
-  transition: opacity var(--t-fast) var(--ease),
-              visibility var(--t-fast) var(--ease),
-              transform var(--t-fast) var(--ease);
+  /* PURPOSE: preventing a jarring change — асимметрия: выход быстрее входа,
+     базовое правило задаёт тайминг закрытия */
+  transition: opacity var(--duration-exit) var(--ease-out),
+              visibility var(--duration-exit) var(--ease-out),
+              transform var(--duration-exit) var(--ease-out);
   overflow: hidden;
 }
 
-.combobox.open .combobox-dropdown {
+.combobox.open .combobox-dropdown,
+.combobox.is-open .combobox-dropdown {
   opacity: 1;
   visibility: visible;
   transform: translateY(0) scale(1);
+  /* Вход медленнее выхода — стандартный тайминг дропдауна */
+  transition-duration: var(--duration-dropdown);
 }
 
 .combobox-dropdown-top {
@@ -180,14 +196,17 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  min-height: 32px; /* touch-friendly минимум высоты опции */
   padding: var(--space-2) var(--space-3);
   margin: 0 var(--space-1);
   border-radius: var(--radius-sm);
   font-size: var(--fs-sm);
   color: var(--color-text-secondary);
   cursor: pointer;
-  transition: background var(--t-fast) var(--ease),
-              color var(--t-fast) var(--ease);
+  /* PURPOSE: feedback — подсветка и сжатие опции при нажатии */
+  transition: background var(--duration-press) var(--ease-out),
+              color var(--duration-press) var(--ease-out),
+              transform var(--duration-press) var(--ease-out);
 }
 
 .combobox-option:hover,
@@ -196,13 +215,26 @@
   color: var(--color-text);
 }
 
-.combobox-option.selected {
+/* Отклик на нажатие — интерфейс подтверждает, что услышал пользователя */
+.combobox-option:active {
+  transform: scale(0.98);
+}
+
+/* Фокус с клавиатуры по опции — кольцо через токен тени */
+.combobox-option:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.combobox-option.selected,
+.combobox-option.is-selected {
   background: var(--color-accent-soft);
   color: var(--color-accent);
   font-weight: var(--fw-medium);
 }
 
-.combobox-option.selected .combobox-option-check { opacity: 1; }
+.combobox-option.selected .combobox-option-check,
+.combobox-option.is-selected .combobox-option-check { opacity: 1; }
 
 .combobox-option-content {
   flex: 1;
@@ -236,7 +268,8 @@
   flex-shrink: 0;
 }
 .combobox-option-icon svg { width: 100%; height: 100%; }
-.combobox-option.selected .combobox-option-icon { color: var(--color-accent); }
+.combobox-option.selected .combobox-option-icon,
+.combobox-option.is-selected .combobox-option-icon { color: var(--color-accent); }
 
 .combobox-option-check {
   display: flex;
@@ -247,7 +280,8 @@
   color: var(--color-accent);
   flex-shrink: 0;
   opacity: 0;
-  transition: opacity var(--t-fast) var(--ease);
+  /* PURPOSE: state indication — галочка проявляется синхронно с выбором опции */
+  transition: opacity var(--duration-press) var(--ease-out);
 }
 .combobox-option-check svg { width: 100%; height: 100%; }
 
@@ -297,6 +331,12 @@
   opacity: 1;
   background: var(--color-accent-soft-hover);
 }
+/* Фокус с клавиатуры по кнопке удаления тега */
+.combobox-tag-remove:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  opacity: 1;
+}
 .combobox-tag-remove svg { width: 12px; height: 12px; }
 
 .combobox-tag-more {
@@ -323,12 +363,14 @@
               background var(--t-fast) var(--ease);
 }
 
-.combobox-option.selected .combobox-option-checkbox {
+.combobox-option.selected .combobox-option-checkbox,
+.combobox-option.is-selected .combobox-option-checkbox {
   background: var(--color-accent);
   border-color: var(--color-accent);
 }
 
-.combobox-option.selected .combobox-option-checkbox::after {
+.combobox-option.selected .combobox-option-checkbox::after,
+.combobox-option.is-selected .combobox-option-checkbox::after {
   content: "";
   width: 10px;
   height: 10px;
@@ -449,7 +491,8 @@
 }
 
 .combobox.error .combobox-trigger:focus,
-.combobox.error.open .combobox-trigger {
+.combobox.error.open .combobox-trigger,
+.combobox.error.is-open .combobox-trigger {
   box-shadow: var(--shadow-focus-error);
 }
 
@@ -546,8 +589,17 @@
     box-shadow: var(--shadow-lg);
     transform: translateY(100%);
     transform-origin: bottom center;
+    /* PURPOSE: spatial consistency — на мобильном дропдаун ведёт себя как шторка:
+       кривая drawer, выход быстрее входа, тот же путь входа и выхода */
+    transition: opacity var(--duration-modal-exit) var(--ease-drawer),
+                visibility var(--duration-modal-exit) var(--ease-drawer),
+                transform var(--duration-modal-exit) var(--ease-drawer);
   }
-  .combobox.open .combobox-dropdown { transform: translateY(0); }
+  .combobox.open .combobox-dropdown,
+  .combobox.is-open .combobox-dropdown {
+    transform: translateY(0);
+    transition-duration: var(--duration-modal);
+  }
   .combobox-dropdown::before {
     content: "";
     display: block;
@@ -565,14 +617,23 @@
 }
 
 /* ==================== Reduced motion ==================== */
+/* Мягче, но не ноль: движение убираем, кроссфейд открытия оставляем —
+   он помогает понять смену состояния (RULES.md §6). */
 @media (prefers-reduced-motion: reduce) {
   .combobox-trigger,
   .combobox-arrow,
   .combobox-clear,
-  .combobox-dropdown,
   .combobox-option {
     transition: none !important;
   }
+  .combobox-dropdown {
+    /* visibility в списке обязательна: без неё скрытие мгновенно и
+       обещанный кроссфейд выхода не виден */
+    transition: opacity var(--duration-exit) var(--ease-out),
+                visibility var(--duration-exit) var(--ease-out) !important;
+    transform: none !important;
+  }
+  .combobox-option:active { transform: none; }
   .combobox-spinner { animation-duration: 1.5s; }
 }
 

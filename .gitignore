@@ -12,3 +12,9 @@ dist/
 .claude/contracts/incoming/*
 .claude/contracts/outgoing/*
 !.claude/contracts/*/.gitkeep
+
+# Playwright
+node_modules/
+test-results/
+playwright-report/
+*.sarif

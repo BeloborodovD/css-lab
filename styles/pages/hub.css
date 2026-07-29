@@ -203,6 +203,10 @@
 
 @media (prefers-reduced-motion: reduce) {
   .hub-card:hover { transform: none; }
+  /* Карточка — ссылка, базовый сброс :active из motion.css её не покрывает */
+  .hub-card:active { transform: none; }
+  /* Риска меняет состояние мгновенно, без роста-движения */
+  .hub-card__tick { transition: none; }
   .hub-card__go { opacity: 1; }
 }
 /* </CONFIG:page-hub> */

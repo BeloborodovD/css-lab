@@ -1,0 +1,129 @@
+# CI css-lab: Playwright e2e-смоук сайта-витрины + сканеры безопасности + SonarQube.
+# Секреты репозитория: SONARQUBE_HOST (http://sonarqube:9000), SONARQUBE_TOKEN.
+# Внутренние адреса docker-сети devstack — LAN-адрес из job-контейнера не работает.
+
+name: Test & SonarQube
+
+on:
+  push:
+    branches: [main, master, develop, feature/lightweight-redesign]
+  pull_request:
+    branches: [main, master, develop]
+
+env:
+  NODE_VERSION: '22'
+  # Браузеры Playwright — в постоянный кэш раннера (job-контейнеры одноразовые)
+  PLAYWRIGHT_BROWSERS_PATH: /cache/playwright
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Установить браузер Playwright (chromium)
+        run: |
+          mkdir -p /cache/playwright
+          npx playwright install --with-deps chromium
+
+      # Гейт работоспособности: без continue-on-error — красный CI при падении
+      - name: E2E-смоук страниц (Playwright)
+        run: npm run test:e2e
+
+      - name: Run Trivy (CVE в зависимостях + ошибки конфигурации)
+        run: |
+          set +e
+          mkdir -p /cache/tools /cache/trivy
+          if [ ! -x /cache/tools/trivy ]; then
+            TV=0.72.0
+            curl -fsSL --retry 3 --retry-delay 5 \
+              "https://github.com/aquasecurity/trivy/releases/download/v${TV}/trivy_${TV}_Linux-64bit.tar.gz" \
+              -o /tmp/trivy.tar.gz
+            tar -xzf /tmp/trivy.tar.gz -C /cache/tools trivy
+            chmod +x /cache/tools/trivy
+          fi
+          /cache/tools/trivy --version || { echo "MISSING: trivy binary"; exit 0; }
+          /cache/tools/trivy fs . \
+            --cache-dir /cache/trivy --timeout 30m \
+            --scanners vuln,misconfig \
+            --format sarif --output trivy.sarif \
+            --skip-dirs node_modules,.git,test-results
+          [ -s trivy.sarif ] && echo "OK: trivy.sarif" || echo "MISSING: trivy.sarif"
+        continue-on-error: true
+
+      - name: Run Gitleaks (утечки секретов)
+        run: |
+          set +e
+          mkdir -p /cache/tools
+          if [ ! -x /cache/tools/gitleaks ]; then
+            GL=8.28.0
+            curl -fsSL --retry 3 --retry-delay 5 \
+              "https://github.com/gitleaks/gitleaks/releases/download/v${GL}/gitleaks_${GL}_linux_x64.tar.gz" \
+              -o /tmp/gitleaks.tar.gz
+            tar -xzf /tmp/gitleaks.tar.gz -C /cache/tools gitleaks
+            chmod +x /cache/tools/gitleaks
+          fi
+          /cache/tools/gitleaks version || { echo "MISSING: gitleaks binary"; exit 0; }
+          # Код возврата 1 = «секреты найдены», это не сбой шага
+          /cache/tools/gitleaks detect --source . --no-git \
+            --report-format sarif --report-path gitleaks.sarif --redact
+          [ -s gitleaks.sarif ] && echo "OK: gitleaks.sarif" || echo "MISSING: gitleaks.sarif"
+        continue-on-error: true
+
+      - name: Run Semgrep (правила безопасности)
+        run: |
+          set +e
+          mkdir -p /cache/pip
+          export PIP_CACHE_DIR=/cache/pip
+          python3 -m pip install --quiet semgrep
+          semgrep --version || { echo "MISSING: semgrep"; exit 0; }
+          semgrep scan --config p/ci --sarif --output semgrep.sarif \
+            --metrics=off --quiet \
+            --exclude node_modules --exclude test-results
+          [ -s semgrep.sarif ] && echo "OK: semgrep.sarif" || echo "MISSING: semgrep.sarif"
+        continue-on-error: true
+
+      - name: Report inventory
+        run: ls -la *.sarif 2>/dev/null || echo "SARIF-отчётов нет"
+        continue-on-error: true
+
+      - name: Дождаться готовности SonarQube
+        env:
+          SONAR_HOST_URL: ${{ secrets.SONARQUBE_HOST }}
+        run: |
+          for i in $(seq 1 60); do
+            if curl -fsS "$SONAR_HOST_URL/api/system/status" | grep -q '"status":"UP"'; then
+              echo "SonarQube готов (попытка $i)"; exit 0
+            fi
+            sleep 5
+          done
+          echo "SonarQube не поднялся за 5 минут"; exit 1
+
+      - name: SonarScanner
+        env:
+          SONAR_HOST_URL: ${{ secrets.SONARQUBE_HOST }}
+          SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+        run: |
+          mkdir -p /cache/tools
+          SC=5.0.1.3006
+          if [ ! -d "/cache/tools/sonar-scanner-${SC}-linux" ]; then
+            curl -sSLo /tmp/scanner.zip \
+              "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SC}-linux.zip"
+            unzip -q /tmp/scanner.zip -d /cache/tools
+          fi
+          # Гейт намеренно НЕ блокирующий: SonarQube показывает дыры,
+          # тесты добавляются отдельной работой QA (решение воркспейса 2026-07-28).
+          "/cache/tools/sonar-scanner-${SC}-linux/bin/sonar-scanner" \
+            -Dsonar.host.url="$SONAR_HOST_URL" \
+            -Dsonar.token="$SONAR_TOKEN" \
+            -Dsonar.branch.name=${{ github.ref_name }}

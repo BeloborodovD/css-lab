@@ -40,9 +40,16 @@
   font-size: var(--fs-sm);
   color: var(--color-text-secondary);
   text-decoration: none;
-  /* PURPOSE: feedback — пункт отвечает на наведение и выбор */
+  /* PURPOSE: feedback — пункт отвечает на наведение, выбор и нажатие */
   transition: background-color var(--duration-press) var(--ease-out),
-              color var(--duration-press) var(--ease-out);
+              color var(--duration-press) var(--ease-out),
+              transform var(--duration-press) var(--ease-out);
+}
+
+/* PURPOSE: feedback — пункт-ссылка отзывается на нажатие (тактильность).
+   Едва заметный масштаб: навигация используется часто */
+.dash-sidenav__link:active {
+  transform: scale(0.98);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -180,10 +187,15 @@
   }
 }
 
-/* Уменьшенное движение: запись появляется без сдвига, но остаётся видимой */
+/* Уменьшенное движение: запись появляется без сдвига, но остаётся видимой;
+   пункт-ссылка сайднава не масштабируется (базовый сброс покрывает
+   только button/[data-pressable]) */
 @media (prefers-reduced-motion: reduce) {
   .dash-log-new {
     animation: none;
+  }
+  .dash-sidenav__link:active {
+    transform: none;
   }
 }
 

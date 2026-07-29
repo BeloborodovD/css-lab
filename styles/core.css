@@ -10,7 +10,9 @@
 @import './base/fonts.css';
 @import './base/reset.css';
 @import './base/utilities.css';
-@import './base/animations.css';
+/* animations.css (легаси-зверинец: spring/bounce-кривые, 400-600ms) НЕ входит
+   в core: конкурирует с контрактом motion.css. Подключается только витриной
+   components.html отдельным <link> — как экспонат, не как библиотека. */
 @import './base/responsive.css';
 
 /* Layout — шаблоны сайта (шапка/подвал/оболочка/печатный лист) */

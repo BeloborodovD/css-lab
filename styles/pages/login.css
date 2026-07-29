@@ -55,8 +55,13 @@
 .login-form__link {
   color: var(--color-accent);
   text-decoration: none;
+  border-radius: var(--radius-xs);
 }
 .login-form__link:hover { text-decoration: underline; }
+.login-form__link:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
 
 /* Кнопка с внутренним спиннером на время отправки */
 .login-submit {

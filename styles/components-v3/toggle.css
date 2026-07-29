@@ -1,7 +1,9 @@
 /* ==========================================================================
    toggle.css — switch on/off + sizes/colors
    --------------------------------------------------------------------------
-   Без scale-эффекта на active; focus = ring через box-shadow.
+   Кноб двигается через transform (translate), не через left.
+   Press-фидбек по-эппловски: кноб растягивается к центру трека (scaleX).
+   Focus = ring через box-shadow.
    ========================================================================== */
 
 /* ====================== Container ====================== */
@@ -29,7 +31,8 @@
   height: 24px;
   background: var(--color-border-strong);
   border-radius: var(--radius-full);
-  transition: background-color var(--t) var(--ease);
+  /* PURPOSE: state indication — цвет трека меняется синхронно с движением кноба */
+  transition: background-color var(--duration-press) var(--ease-out);
 }
 
 /* ====================== Thumb ====================== */
@@ -37,15 +40,20 @@
   position: absolute;
   top: 50%;
   left: 2px;
-  transform: translateY(-50%);
+  /* Сдвиг кноба задаётся переменной на самом элементе (не на родителе) —
+     движение только через transform, left статичен */
+  --toggle-shift: 0px;
+  transform: translate(var(--toggle-shift), -50%);
+  transform-origin: left center;
   width: 20px;
   height: 20px;
   background: var(--color-surface);
   border-radius: var(--radius-full);
   box-shadow: var(--shadow-sm);
   pointer-events: none;
-  transition: left var(--t) var(--ease),
-              box-shadow var(--t-fast) var(--ease);
+  /* PURPOSE: state indication — движение кноба по экрану, ease-in-out */
+  transition: transform var(--duration-press) var(--ease-in-out),
+              box-shadow var(--duration-press) var(--ease-out);
 }
 
 /* ====================== States ====================== */
@@ -56,7 +64,14 @@
 
 .toggle.checked .toggle-thumb,
 .toggle input:checked ~ .toggle-thumb {
-  left: 24px;
+  --toggle-shift: 22px;
+  transform-origin: right center;
+}
+
+/* PURPOSE: feedback — по-эппловски: при нажатии кноб растягивается к центру
+   трека (origin у «своего» края), отпускание возвращает той же кривой */
+.toggle:active .toggle-thumb {
+  transform: translate(var(--toggle-shift), -50%) scaleX(1.15);
 }
 
 .toggle:hover .toggle-track {
@@ -84,12 +99,12 @@
 .toggle-sm .toggle-track { width: 32px; height: 18px; }
 .toggle-sm .toggle-thumb { width: 14px; height: 14px; }
 .toggle-sm.checked .toggle-thumb,
-.toggle-sm input:checked ~ .toggle-thumb { left: 16px; }
+.toggle-sm input:checked ~ .toggle-thumb { --toggle-shift: 14px; }
 
 .toggle-lg .toggle-track { width: 56px; height: 30px; }
 .toggle-lg .toggle-thumb { width: 24px; height: 24px; }
 .toggle-lg.checked .toggle-thumb,
-.toggle-lg input:checked ~ .toggle-thumb { left: 29px; }
+.toggle-lg input:checked ~ .toggle-thumb { --toggle-shift: 27px; }
 
 /* ====================== Label positions ====================== */
 .toggle-label {
@@ -125,7 +140,8 @@
   width: 14px;
   height: 14px;
   color: rgba(255, 255, 255, 0.7);
-  transition: opacity var(--t-fast) var(--ease);
+  /* PURPOSE: state indication — иконки сменяются синхронно с кнобом */
+  transition: opacity var(--duration-press) var(--ease-out);
 }
 .toggle-icons .toggle-icon-off {
   right: 6px;
@@ -152,7 +168,8 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  transition: opacity var(--t-fast) var(--ease);
+  /* PURPOSE: state indication — подписи ON/OFF сменяются синхронно с кнобом */
+  transition: opacity var(--duration-press) var(--ease-out);
 }
 .toggle-text .toggle-text-off { right: 8px; color: var(--color-text-muted); }
 .toggle-text .toggle-text-on  { left: 8px;  color: #fff; opacity: 0; }
@@ -222,8 +239,10 @@
 }
 
 /* ====================== Reduced motion ====================== */
+/* Мягче, но не ноль: движение и растяжение кноба убираем,
+   смену цвета трека и opacity-переходы оставляем (RULES.md §6). */
 @media (prefers-reduced-motion: reduce) {
-  .toggle-track,
-  .toggle-thumb { transition: none; }
+  .toggle-thumb { transition: box-shadow var(--duration-press) var(--ease-out); }
+  .toggle:active .toggle-thumb { transform: translate(var(--toggle-shift), -50%); }
   .toggle-loading .toggle-thumb::after { animation: none; }
 }

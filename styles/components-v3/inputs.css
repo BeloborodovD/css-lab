@@ -13,13 +13,15 @@
   background: var(--color-surface);
   border: var(--border-w) solid var(--color-border);
   border-radius: var(--radius-sm);
-  transition: border-color var(--t-fast) var(--ease),
-              box-shadow var(--t-fast) var(--ease),
-              background-color var(--t-fast) var(--ease);
+  /* PURPOSE: feedback — рамка и фокус-кольцо отвечают на действие мгновенно */
+  transition: border-color var(--duration-press) var(--ease-out),
+              box-shadow var(--duration-press) var(--ease-out),
+              background-color var(--duration-press) var(--ease-out);
 }
 
 .input::placeholder {
-  color: var(--color-text-disabled);
+  /* muted, а не disabled: плейсхолдер не должен читаться как выключенное поле */
+  color: var(--color-text-muted);
 }
 
 .input:hover:not(:focus):not(:disabled) {
@@ -96,8 +98,9 @@
   color: var(--color-text-muted);
   cursor: pointer;
   border-radius: var(--radius-full);
-  transition: background-color var(--t-fast) var(--ease),
-              color var(--t-fast) var(--ease);
+  /* PURPOSE: feedback — отклик кнопки очистки на наведение/нажатие */
+  transition: background-color var(--duration-press) var(--ease-out),
+              color var(--duration-press) var(--ease-out);
 }
 .input-clear:hover {
   background: var(--color-surface-hover);
@@ -120,8 +123,9 @@
   background-repeat: no-repeat;
   background-size: 1.5em 1.5em;
   cursor: pointer;
-  transition: border-color var(--t-fast) var(--ease),
-              box-shadow var(--t-fast) var(--ease);
+  /* PURPOSE: feedback — рамка и фокус-кольцо селекта, тайминг как у input */
+  transition: border-color var(--duration-press) var(--ease-out),
+              box-shadow var(--duration-press) var(--ease-out);
 }
 .select:hover:not(:focus):not(:disabled) {
   border-color: var(--color-border-strong);
@@ -183,19 +187,19 @@
   left: var(--space-3);
   top: 50%;
   transform: translateY(-50%);
+  transform-origin: left top;
   color: var(--color-text-muted);
   font-size: var(--fs-base);
   pointer-events: none;
-  transition: transform var(--t-fast) var(--ease),
-              font-size var(--t-fast) var(--ease),
-              color var(--t-fast) var(--ease),
-              top var(--t-fast) var(--ease);
+  /* PURPOSE: state indication — плавающий лейбл показывает, что поле заполняется.
+     Подъём только через transform (translateY+scale): top/font-size — layout */
+  transition: transform var(--duration-press) var(--ease-out),
+              color var(--duration-press) var(--ease-out);
 }
 .input-floating .input:focus ~ label,
 .input-floating .input:not(:placeholder-shown) ~ label {
-  top: 8px;
-  transform: translateY(0);
-  font-size: var(--fs-xs);
+  /* 12px/14px ≈ scale 0.857; подъём из центра (50%) к верхней зоне поля */
+  transform: translateY(-17px) scale(0.857);
   color: var(--color-accent);
 }
 
@@ -306,7 +310,8 @@
 }
 .dark .input::placeholder,
 [data-theme="dark"] .input::placeholder {
-  color: var(--color-text-disabled);
+  /* muted, а не disabled — тот же контраст-принцип, что и в светлой теме */
+  color: var(--color-text-muted);
 }
 .dark .input:focus,
 .dark .select:focus,

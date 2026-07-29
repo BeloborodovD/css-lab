@@ -60,8 +60,10 @@
   border-radius: var(--radius);
   text-decoration: none;
   color: var(--color-text);
-  /* PURPOSE: feedback — карточка результата отзывается на наведение */
+  /* PURPOSE: feedback — карточка результата отзывается на наведение и нажатие.
+     transform в списке обязателен: иначе press-отклик меняется рывком */
   transition:
+    transform var(--duration-press) var(--ease-out),
     border-color var(--duration-dropdown) var(--ease-out),
     box-shadow var(--duration-dropdown) var(--ease-out);
 }
@@ -78,9 +80,14 @@
 /* PURPOSE: feedback — карточка-ссылка отзывается на нажатие (тактильность) */
 .catalog-card:active {
   transform: scale(0.99);
-  transition-duration: var(--duration-press);
 }
 .catalog-card.is-hidden { display: none; }
+
+/* Уменьшенное движение: карточка — ссылка, базовый сброс :active
+   из motion.css покрывает только button/[data-pressable] */
+@media (prefers-reduced-motion: reduce) {
+  .catalog-card:active { transform: none; }
+}
 
 .catalog-card__head {
   display: flex;
@@ -135,7 +142,19 @@
 
 /* Пустой результат */
 .catalog-empty { display: none; }
-.catalog-grid.is-empty + .catalog-empty { display: block; }
+.catalog-grid.is-empty + .catalog-empty {
+  display: block;
+  /* PURPOSE: preventing a jarring change — пустое состояние проявляется,
+     а не вспыхивает; display-переключение само перезапускает анимацию */
+  animation: catalog-empty-in var(--duration-dropdown) var(--ease-out);
+}
+@keyframes catalog-empty-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .catalog-grid.is-empty + .catalog-empty { animation: none; }
+}
 
 /* ===== Адаптив ========================================================= */
 @media (max-width: 1023px) {

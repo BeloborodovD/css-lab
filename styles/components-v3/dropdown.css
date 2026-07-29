@@ -30,9 +30,11 @@
   visibility: hidden;
   transform: translateY(-4px) scale(0.98);
   transform-origin: top right;
-  transition: opacity var(--duration-dropdown) var(--ease),
-              visibility var(--duration-dropdown) var(--ease),
-              transform var(--duration-dropdown) var(--ease);
+  /* PURPOSE: preventing a jarring change — асимметрия таймингов: базовое
+     (закрытое) состояние задаёт быстрый выход 140ms, вход переопределён ниже */
+  transition: opacity var(--duration-exit) var(--ease-out),
+              visibility var(--duration-exit) var(--ease-out),
+              transform var(--duration-exit) var(--ease-out);
   z-index: var(--z-dropdown);
 }
 
@@ -40,6 +42,8 @@
   opacity: 1;
   visibility: visible;
   transform: translateY(0) scale(1);
+  /* Вход медленнее выхода: система отвечает быстро при закрытии */
+  transition-duration: var(--duration-dropdown);
 }
 
 .dropdown-left .dropdown-menu {
@@ -58,8 +62,8 @@
   border-radius: var(--radius-sm);
   cursor: pointer;
   user-select: none;
-  transition: background var(--duration-dropdown) var(--ease),
-              color var(--duration-dropdown) var(--ease);
+  transition: background var(--duration-dropdown) var(--ease-out),
+              color var(--duration-dropdown) var(--ease-out);
 }
 
 .dropdown-item:hover {
@@ -112,9 +116,11 @@
   opacity: 0;
   visibility: hidden;
   transform: translateY(-4px);
-  transition: opacity var(--duration-dropdown) var(--ease),
-              visibility var(--duration-dropdown) var(--ease),
-              transform var(--duration-dropdown) var(--ease);
+  transform-origin: top left;
+  /* PURPOSE: preventing a jarring change — выход быстрее входа (база = exit) */
+  transition: opacity var(--duration-exit) var(--ease-out),
+              visibility var(--duration-exit) var(--ease-out),
+              transform var(--duration-exit) var(--ease-out);
   z-index: var(--z-dropdown);
 }
 
@@ -122,6 +128,7 @@
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
+  transition-duration: var(--duration-dropdown);
 }
 
 .popover-row {
@@ -207,10 +214,13 @@
 }
 
 /* ==================== Reduced motion ==================== */
+/* Мягче, а не «в ноль»: движение убрано, fade по opacity остаётся —
+   мгновенное появление/исчезновение само по себе дезориентирует (RULES §6) */
 @media (prefers-reduced-motion: reduce) {
   .dropdown-menu,
   .popover {
-    transition: opacity 0.01ms, visibility 0.01ms;
+    transition: opacity var(--duration-exit) var(--ease-out),
+                visibility var(--duration-exit) var(--ease-out);
     transform: none;
   }
 }

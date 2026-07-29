@@ -28,7 +28,7 @@
     </a>
     <nav class="site-nav" aria-label="Разделы сайта">
       <a class="site-nav__link" href="/index.html">Главная</a>
-      <a class="site-nav__link" href="/index-v3.html">Витрина</a>
+      <a class="site-nav__link" href="/components.html">Витрина</a>
       <a class="site-nav__link" href="/pages/catalog.html" aria-current="page">Каталог</a>
       <a class="site-nav__link" href="/pages/login.html">Вход</a>
       <a class="site-nav__link" href="/print-forms.html">Печатные формы</a>
@@ -173,6 +173,9 @@
           <div class="empty-state-icon">🔍</div>
           <div class="empty-state-title">Ничего не подобрано</div>
           <div class="empty-state-message">Ослабьте фильтры или сбросьте их полностью</div>
+          <!-- Пустое состояние само предлагает выход (Apple: wayfinding) -->
+          <button type="button" class="btn btn-outline" style="margin-top: var(--space-3);"
+                  onclick="document.getElementById('catalog-reset-all').click()">Сбросить все фильтры</button>
         </div>
       </section>
     </div>
@@ -183,8 +186,8 @@
     <span>CSS Lab — страница-пример каталога. Панель фильтров: components-v3/filter-panel.css.</span>
     <nav class="site-footer__links" aria-label="Подвал">
       <a href="/index.html">Главная</a>
-      <a href="/index-v3.html">Витрина</a>
-      <a href="/index-v3.html#filter-pills">Компоненты фильтров</a>
+      <a href="/components.html">Витрина</a>
+      <a href="/components.html#filter-pills">Компоненты фильтров</a>
     </nav>
   </footer>
   <!-- </BLOCK:site-footer> -->

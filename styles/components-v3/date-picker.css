@@ -397,8 +397,19 @@
     box-shadow: var(--shadow-lg);
     transform: translateY(100%);
     transform-origin: bottom center;
+    /* PURPOSE: spatial consistency — bottom-sheet входит снизу и уходит вниз
+       по кривой шторки; базовое состояние = выход (быстрее входа) */
+    transition: opacity var(--duration-modal-exit) var(--ease-drawer),
+                visibility var(--duration-modal-exit) var(--ease-drawer),
+                transform var(--duration-modal-exit) var(--ease-drawer);
   }
-  .date-picker.open .date-picker-dropdown { transform: translateY(0); }
+  .date-picker.open .date-picker-dropdown {
+    transform: translateY(0);
+    transition-duration: var(--duration-modal);
+  }
+  /* Drag-handle: пока только визуальный ориентир — сам swipe-to-dismiss
+     реализуется в JS-фазе (pointer events + velocity, см. RULES.md §4).
+     Ручку оставляем: после подключения JS она станет функциональной. */
   .date-picker-dropdown::before {
     content: "";
     display: block;

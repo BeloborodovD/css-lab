@@ -5,6 +5,16 @@
    3) .tooltip-popup (programmatic JS)
    ========================================================================== */
 
+/* [CONFIG:tooltip-intent-delay]
+ * Задержка hover-intent (~400ms): производная от токенов движения
+ * (2 × --duration-dropdown), литеральные ms запрещены.
+ * Показ — с задержкой, скрытие — мгновенно (delay только на :hover-правилах).
+ */
+:root {
+  --tooltip-intent-delay: calc(2 * var(--duration-dropdown));
+}
+/* </CONFIG:tooltip-intent-delay> */
+
 /* ==========================================================================
    1. CSS-Only Tooltip
    ========================================================================== */
@@ -30,9 +40,9 @@
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
-  transition: opacity var(--duration-tooltip) var(--ease),
-              transform var(--duration-tooltip) var(--ease),
-              visibility var(--duration-tooltip) var(--ease);
+  transition: opacity var(--duration-tooltip) var(--ease-out),
+              transform var(--duration-tooltip) var(--ease-out),
+              visibility var(--duration-tooltip) var(--ease-out);
   box-shadow: var(--shadow);
 }
 
@@ -44,9 +54,9 @@
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
-  transition: opacity var(--duration-tooltip) var(--ease),
-              transform var(--duration-tooltip) var(--ease),
-              visibility var(--duration-tooltip) var(--ease);
+  transition: opacity var(--duration-tooltip) var(--ease-out),
+              transform var(--duration-tooltip) var(--ease-out),
+              visibility var(--duration-tooltip) var(--ease-out);
 }
 
 /* PURPOSE: state indication — hover-intent: показ с задержкой 400ms, чтобы
@@ -55,7 +65,7 @@
 [data-tooltip]:hover::after {
   opacity: 1;
   visibility: visible;
-  transition-delay: 400ms;
+  transition-delay: var(--tooltip-intent-delay);
 }
 /* Фокус клавиатурой — намеренный, без задержки */
 [data-tooltip]:focus::before,
@@ -65,19 +75,22 @@
 }
 
 /* --- Position: Top (default) --- */
+/* PURPOSE: preventing a jarring change — вход из scale(0.97) + смещение к триггеру;
+   transform-origin у края, обращённого к триггеру (поповер растёт от источника) */
 [data-tooltip]::before,
 [data-tooltip].tooltip-top::before,
 [data-tooltip][data-tooltip-position="top"]::before {
   bottom: 100%;
   left: 50%;
-  transform: translateX(-50%) translateY(-4px);
+  transform: translateX(-50%) translateY(-4px) scale(0.97);
+  transform-origin: 50% 100%;
   margin-bottom: var(--space-2);
 }
 [data-tooltip]:hover::before,
 [data-tooltip]:focus::before,
 [data-tooltip].tooltip-top:hover::before,
 [data-tooltip][data-tooltip-position="top"]:hover::before {
-  transform: translateX(-50%) translateY(0);
+  transform: translateX(-50%) translateY(0) scale(1);
 }
 [data-tooltip]::after,
 [data-tooltip].tooltip-top::after,
@@ -95,13 +108,14 @@
   bottom: auto;
   top: 100%;
   left: 50%;
-  transform: translateX(-50%) translateY(4px);
+  transform: translateX(-50%) translateY(4px) scale(0.97);
+  transform-origin: 50% 0%;
   margin-bottom: 0;
   margin-top: var(--space-2);
 }
 [data-tooltip].tooltip-bottom:hover::before,
 [data-tooltip][data-tooltip-position="bottom"]:hover::before {
-  transform: translateX(-50%) translateY(0);
+  transform: translateX(-50%) translateY(0) scale(1);
 }
 [data-tooltip].tooltip-bottom::after,
 [data-tooltip][data-tooltip-position="bottom"]::after {
@@ -121,13 +135,14 @@
   top: 50%;
   left: auto;
   right: 100%;
-  transform: translateY(-50%) translateX(-4px);
+  transform: translateY(-50%) translateX(-4px) scale(0.97);
+  transform-origin: 100% 50%;
   margin-bottom: 0;
   margin-right: var(--space-2);
 }
 [data-tooltip].tooltip-left:hover::before,
 [data-tooltip][data-tooltip-position="left"]:hover::before {
-  transform: translateY(-50%) translateX(0);
+  transform: translateY(-50%) translateX(0) scale(1);
 }
 [data-tooltip].tooltip-left::after,
 [data-tooltip][data-tooltip-position="left"]::after {
@@ -147,13 +162,14 @@
   bottom: auto;
   top: 50%;
   left: 100%;
-  transform: translateY(-50%) translateX(4px);
+  transform: translateY(-50%) translateX(4px) scale(0.97);
+  transform-origin: 0% 50%;
   margin-bottom: 0;
   margin-left: var(--space-2);
 }
 [data-tooltip].tooltip-right:hover::before,
 [data-tooltip][data-tooltip-position="right"]:hover::before {
-  transform: translateY(-50%) translateX(0);
+  transform: translateY(-50%) translateX(0) scale(1);
 }
 [data-tooltip].tooltip-right::after,
 [data-tooltip][data-tooltip-position="right"]::after {
@@ -230,15 +246,16 @@
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
-  transition: opacity var(--duration-tooltip) var(--ease),
-              transform var(--duration-tooltip) var(--ease),
-              visibility var(--duration-tooltip) var(--ease);
+  transition: opacity var(--duration-tooltip) var(--ease-out),
+              transform var(--duration-tooltip) var(--ease-out),
+              visibility var(--duration-tooltip) var(--ease-out);
   box-shadow: var(--shadow);
 
   /* Default: top */
   bottom: 100%;
   left: 50%;
-  transform: translateX(-50%) translateY(-4px);
+  transform: translateX(-50%) translateY(-4px) scale(0.97);
+  transform-origin: 50% 100%;
   margin-bottom: var(--space-2);
 }
 
@@ -246,18 +263,30 @@
 .has-tooltip:focus-within .tooltip-content {
   opacity: 1;
   visibility: visible;
-  transform: translateX(-50%) translateY(0);
+  transform: translateX(-50%) translateY(0) scale(1);
+}
+
+/* PURPOSE: state indication — hover-intent: показ с задержкой ~400ms,
+   чтобы тултип не мерцал при пролёте курсора; скрытие мгновенно
+   (в базовом правиле задержки нет) */
+.has-tooltip:hover .tooltip-content {
+  transition-delay: var(--tooltip-intent-delay);
+}
+/* Фокус клавиатурой — намеренный, без задержки */
+.has-tooltip:focus-within .tooltip-content {
+  transition-delay: 0s;
 }
 
 .has-tooltip.tooltip-bottom .tooltip-content {
   bottom: auto;
   top: 100%;
-  transform: translateX(-50%) translateY(4px);
+  transform: translateX(-50%) translateY(4px) scale(0.97);
+  transform-origin: 50% 0%;
   margin-bottom: 0;
   margin-top: var(--space-2);
 }
 .has-tooltip.tooltip-bottom:hover .tooltip-content {
-  transform: translateX(-50%) translateY(0);
+  transform: translateX(-50%) translateY(0) scale(1);
 }
 
 .has-tooltip.tooltip-left .tooltip-content {
@@ -265,24 +294,26 @@
   top: 50%;
   left: auto;
   right: 100%;
-  transform: translateY(-50%) translateX(-4px);
+  transform: translateY(-50%) translateX(-4px) scale(0.97);
+  transform-origin: 100% 50%;
   margin-bottom: 0;
   margin-right: var(--space-2);
 }
 .has-tooltip.tooltip-left:hover .tooltip-content {
-  transform: translateY(-50%) translateX(0);
+  transform: translateY(-50%) translateX(0) scale(1);
 }
 
 .has-tooltip.tooltip-right .tooltip-content {
   bottom: auto;
   top: 50%;
   left: 100%;
-  transform: translateY(-50%) translateX(4px);
+  transform: translateY(-50%) translateX(4px) scale(0.97);
+  transform-origin: 0% 50%;
   margin-bottom: 0;
   margin-left: var(--space-2);
 }
 .has-tooltip.tooltip-right:hover .tooltip-content {
-  transform: translateY(-50%) translateX(0);
+  transform: translateY(-50%) translateX(0) scale(1);
 }
 
 .has-tooltip.tooltip-sm .tooltip-content {
@@ -339,9 +370,29 @@ button[data-tooltip],
   white-space: nowrap;
   z-index: var(--z-tooltip);
   pointer-events: none;
-  animation: tooltipFadeIn var(--duration-tooltip) var(--ease);
+  opacity: 1;
+  transform: scale(1);
+  /* PURPOSE: preventing a jarring change — вход из scale(0.97) от триггера;
+     transition вместо keyframes — прерываемость при быстрых перезапусках.
+     transition-delay = hover-intent: элемент вставляется JS сразу, но
+     проявляется с задержкой ~400ms; скрытие (удаление из DOM) — мгновенно */
+  transition: opacity var(--duration-tooltip) var(--ease-out),
+              transform var(--duration-tooltip) var(--ease-out);
+  transition-delay: var(--tooltip-intent-delay);
+}
+@starting-style {
+  .tooltip-popup {
+    opacity: 0;
+    transform: scale(0.97);
+  }
 }
 .tooltip-interactive { pointer-events: auto; }
+
+/* Origin у края, обращённого к триггеру (класс позиции = сторона стрелки) */
+.tooltip-popup.tooltip-top    { transform-origin: 50% 100%; }
+.tooltip-popup.tooltip-bottom { transform-origin: 50% 0%; }
+.tooltip-popup.tooltip-left   { transform-origin: 100% 50%; }
+.tooltip-popup.tooltip-right  { transform-origin: 0% 50%; }
 
 .tooltip-popup::after {
   content: '';
@@ -377,11 +428,6 @@ button[data-tooltip],
   padding: var(--space-1);
   display: flex;
   gap: var(--space-1);
-}
-
-@keyframes tooltipFadeIn {
-  from { opacity: 0; transform: translateY(-4px); }
-  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ==========================================================================
@@ -420,12 +466,17 @@ button[data-tooltip],
 /* ==========================================================================
    6. Reduced motion
    ========================================================================== */
+/* Мягче, но не «выключено»: движение (transform) из перехода убрано,
+   fade по opacity остаётся — он помогает пониманию (RULES §6) */
 @media (prefers-reduced-motion: reduce) {
   [data-tooltip]::before,
   [data-tooltip]::after,
-  .tooltip-content,
+  .tooltip-content {
+    transition: opacity var(--duration-tooltip) var(--ease-out),
+                visibility var(--duration-tooltip) var(--ease-out);
+  }
   .tooltip-popup {
-    transition: none;
-    animation: none;
+    transition: opacity var(--duration-tooltip) var(--ease-out);
+    transition-delay: var(--tooltip-intent-delay);
   }
 }

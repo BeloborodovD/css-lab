@@ -17,6 +17,21 @@
   background: var(--color-surface-sunken);
   border: var(--border-w) solid var(--color-border);
   border-radius: var(--radius-sm);
+  /* PURPOSE: preventing a jarring change — строка уходит проявлением, не телепортом */
+  transition: opacity var(--duration-exit) var(--ease-out);
+}
+/* Вход новой строки (JS вешает класс на добавлении) */
+.row-card.is-entering {
+  animation: row-card-in var(--duration-dropdown) var(--ease-out);
+}
+@keyframes row-card-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+/* Выход строки (JS: класс + transitionend → remove) */
+.row-card.is-removing { opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .row-card.is-entering { animation: none; }
 }
 .row-card__head {
   display: flex;

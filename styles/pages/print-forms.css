@@ -13,7 +13,11 @@ body { background: var(--color-surface-sunken); }
   flex-wrap: wrap;
   margin-bottom: var(--space-5);
 }
-.pf-toolbar__title { margin: 0; }
+.pf-toolbar__title {
+  margin: 0;
+  /* Крупный заголовок (h1 ≥24px) — трекинг ужимается (Apple: tracking зависит от кегля) */
+  letter-spacing: var(--tracking-tight);
+}
 .pf-toolbar__sub {
   margin: var(--space-1) 0 0;
   color: var(--color-text-muted);

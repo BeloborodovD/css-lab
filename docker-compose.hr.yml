@@ -1,0 +1,30 @@
+# Деплой css-lab на HR-сервере за central nginx (dashboard.veza.ru/css-lab/).
+# Модуль: docker. Зависимости: Dockerfile (BASE_PATH), сеть frontend (внешняя).
+#
+#   docker compose -f docker-compose.hr.yml up -d --build
+#
+# Политика HR: только фиксированные общие сети (frontend/backend/database),
+# новые сети не создаём. Порт наружу не публикуется — nginx ходит по имени
+# контейнера css-lab-web внутри сети frontend.
+
+name: css-lab
+
+services:
+
+  # [CONFIG:service.css-lab-web-hr]
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_PATH: /css-lab
+    image: css-lab:hr
+    container_name: css-lab-web
+    networks:
+      - frontend
+    restart: unless-stopped
+  # </CONFIG:service.css-lab-web-hr>
+
+networks:
+  frontend:
+    external: true

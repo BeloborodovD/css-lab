@@ -1,0 +1,122 @@
+/* [CONFIG:theme-veza]
+ * Тема бренда VEZA — корпоративный зелёный Pantone 356 C.
+ * Модуль: css-lab/themes. Зависимости: base/variables-v2.css (перекрывает её токены),
+ * assets/logos/veza.svg + veza-mono-light.svg.
+ *
+ * Активация: <html data-brand="veza">. Сочетается с .dark (тёмная тема).
+ * Источник палитры: официальный брендбук VEZA
+ *   Primary   #2E8A3C — Pantone 356 C / RAL 6037 · CMYK 81/21/96/6
+ *   Secondary #5B5B5B — нейтральный серый · CMYK 80/0/0/0
+ * Типографика по брендбуку: гарнитура Roboto —
+ *   Medium (500) для заголовков и выделений, Light (300) для основного
+ *   текста. При невозможности использовать Roboto — Arial.
+ */
+
+/* [BLOCK:theme.veza.light] */
+[data-brand="veza"] {
+  /* UI-акцент затемнён до AA: белый на #2a7f37 = 5.0:1 (чистый #2e8a3c
+     даёт 4.36:1 — ниже AA для мелкого текста). Эталонный брендовый цвет
+     остаётся в --brand-veza (variables-v2) — для крупных плашек и печати */
+  --color-accent:            #2a7f37;
+  --color-accent-hover:      #257231;
+  --color-accent-active:     #1c5926;
+  --color-accent-soft:       rgba(42, 127, 55, 0.08);
+  --color-accent-soft-hover: rgba(42, 127, 55, 0.13);
+  --color-accent-text:       #ffffff;
+  --color-accent-border:     rgba(42, 127, 55, 0.32);
+  --color-text-on-accent:    #ffffff;
+
+  /* Info наследует брендовый hue вместо indigo */
+  --color-info:              #257231;
+  --color-info-hover:        #1c5926;
+  --color-info-soft:         rgba(46, 138, 60, 0.07);
+  --color-info-text:         #14532d;
+
+  /* Highlight — брендовый green-tint вместо indigo базы */
+  --color-highlight:         #f0fdf4;
+  --color-highlight-strong:  #dcfce7;
+  --color-highlight-text:    #18181b;
+
+  /* Плашка под белый логотип: всегда насыщенный бренд, не инвертируется */
+  --brand-plate-bg:          #2e8a3c;
+
+  /* Типографика бренда: Roboto, fallback Arial (по брендбуку) */
+  --font-sans:    "Roboto", Arial, -apple-system, "Segoe UI", "Helvetica Neue", sans-serif;
+  --font-display: "Roboto", Arial, -apple-system, "Segoe UI", "Helvetica Neue", sans-serif;
+
+  /* Логотип для brand-mark: цветной в light */
+  --brand-logo:        url("/assets/logos/veza.svg");
+  --brand-logo-mono:   url("/assets/logos/veza-mono-light.svg");
+  --brand-logo-aspect: 4.473;  /* тесный viewBox по контенту */
+  --brand-logo-scale:  1;
+
+  /* Вторичный фирменный серый */
+  --brand-secondary:      #5b5b5b;
+  --brand-secondary-soft: rgba(91, 91, 91, 0.08);
+}
+/* </BLOCK:theme.veza.light> */
+
+/* [BLOCK:theme.veza.headings]
+ * По брендбуку: заголовки и выделения — Roboto Medium (500),
+ * основной текст — Roboto Light (300). */
+[data-brand="veza"] h1,
+[data-brand="veza"] h2,
+[data-brand="veza"] h3,
+[data-brand="veza"] .font-display {
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+}
+/* Light (300) — только длинный основной текст; мелкие UI-надписи
+   остаются 400, иначе на 13-14px light нечитаем */
+[data-brand="veza"] p,
+[data-brand="veza"] .font-body-light {
+  font-weight: 300;
+}
+/* </BLOCK:theme.veza.headings> */
+
+/* [BLOCK:theme.veza.dark]
+ * Тёмная тема: зелёный подсвечен до AAA с сохранением брендового hue 130°
+ * (не tailwind-минт), логотип переключается на белый (mono).
+ * Селекторы покрывают оба размещения .dark: на том же элементе, что и
+ * data-brand (витрина: оба на body), и предком (тема на html). */
+.dark[data-brand="veza"],
+.dark [data-brand="veza"],
+[data-brand="veza"] .dark,
+[data-brand="veza"][data-theme="dark"] {
+  --color-accent:            #5fc16f;  /* hue 130° — 7.9:1 на #18181b, AAA */
+  --color-accent-hover:      #82d290;
+  --color-accent-active:     #4aa958;
+  --color-accent-soft:       rgba(95, 193, 111, 0.12);
+  --color-accent-soft-hover: rgba(95, 193, 111, 0.18);
+  --color-accent-text:       #052e16;  /* тёмно-зелёный текст на светлом акценте */
+  --color-accent-border:     rgba(95, 193, 111, 0.35);
+  --color-text-on-accent:    #052e16;
+
+  --color-info:              #82d290;
+  --color-info-hover:        #a8e0b3;
+  --color-info-soft:         rgba(130, 210, 144, 0.10);
+  --color-info-text:         #a8e0b3;
+
+  --brand-logo:      url("/assets/logos/veza-mono-light.svg");
+  --brand-secondary: #a1a1aa;
+  --brand-secondary-soft: rgba(161, 161, 170, 0.15);
+}
+
+/* Авто-тёмная тема ОС без класса .dark: html получает тёмный фон из
+   variables-v2 — бренд обязан подсветить акцент сам, иначе тёмный
+   #2a7f37 нечитаем на тёмном фоне */
+@media (prefers-color-scheme: dark) {
+  [data-brand="veza"]:not(.light):not([data-theme="light"]) {
+    --color-accent:            #5fc16f;
+    --color-accent-hover:      #82d290;
+    --color-accent-active:     #4aa958;
+    --color-accent-soft:       rgba(95, 193, 111, 0.12);
+    --color-accent-soft-hover: rgba(95, 193, 111, 0.18);
+    --color-accent-text:       #052e16;
+    --color-accent-border:     rgba(95, 193, 111, 0.35);
+    --color-text-on-accent:    #052e16;
+    --brand-logo:              url("/assets/logos/veza-mono-light.svg");
+  }
+}
+/* </BLOCK:theme.veza.dark> */
+/* </CONFIG:theme-veza> */

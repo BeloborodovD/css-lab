@@ -1,0 +1,32 @@
+/* [BLOCK:component.save-status]
+ * Статус автосохранения черновика формы: «сохранено» / «есть несохранённое»
+ * + индикатор «данные не отправлены» (точка-маркер).
+ * Порт из опросного листа R&D Уралэлектро (motor_rnd_request_form v0.6).
+ * Модуль: css-lab/components-v3. Зависимости: base/variables-v2.css.
+ */
+
+.save-status {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  border-radius: var(--radius-full);
+}
+.save-status--saved { color: var(--color-success-text); background: var(--color-success-soft); }
+.save-status--dirty { color: var(--color-warning-text); background: var(--color-warning-soft); }
+
+/* Индикатор «данные не отправлены» */
+.save-status__notlive {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+.save-status__notlive::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: var(--radius-full);
+  background: var(--color-warning);
+}
+/* </BLOCK:component.save-status> */

@@ -1,0 +1,70 @@
+/* [BLOCK:component.row-card]
+ * Повторяемые строки-карточки формы (применения, аналоги, вложения)
+ * с кнопками «добавить строку» / «удалить строку».
+ * Порт из опросного листа R&D Уралэлектро (motor_rnd_request_form v0.6).
+ * Модуль: css-lab/components-v3. Зависимости: base/variables-v2.css, base/motion.css.
+ */
+
+.form-rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.row-card {
+  position: relative;
+  padding: var(--space-3);
+  background: var(--color-surface-sunken);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+.row-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+}
+.row-card__n {
+  padding: 2px var(--space-2);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semi);
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border-radius: var(--radius-xs);
+}
+
+/* Кнопка «добавить строку» — элемент контейнера строк */
+.form-rows__add,
+.btn-row-add {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--fs-sm);
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border: var(--border-w) solid var(--color-accent-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .form-rows__add:hover,
+  .btn-row-add:hover { background: var(--color-accent-soft-hover); }
+}
+
+/* Кнопка «удалить строку» — элемент карточки */
+.row-card__remove,
+.btn-row-del {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--fs-sm);
+  color: var(--color-error);
+  background: var(--color-error-soft);
+  border: var(--border-w) solid var(--color-error);
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: background-color var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .row-card__remove:hover,
+  .btn-row-del:hover { background: var(--color-error-soft-hover); }
+}
+/* .btn-row-add / .btn-row-del — deprecated-алиасы, мигрировать на BEM-имена */
+/* </BLOCK:component.row-card> */

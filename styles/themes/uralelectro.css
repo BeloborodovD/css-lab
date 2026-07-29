@@ -1,0 +1,118 @@
+/* [CONFIG:theme-uralelectro]
+ * Тема бренда Уралэлектро — графитово-синий RAL 5008 (брендбук 2025).
+ * Модуль: css-lab/themes. Зависимости: base/variables-v2.css (перекрывает её токены),
+ * base/fonts.css (Wadik + NT Somic), assets/logos/uralelectro*.svg.
+ *
+ * Активация: <html data-brand="uralelectro">. Сочетается с .dark (тёмная тема).
+ * Источник палитры: брендбук АО «МЭЗ «Уралэлектро» 2025
+ *   Primary #374A51 — RGB 55/74/81 · CMYK 78/50/45/54 · RAL 5008
+ * Типографика по брендбуку:
+ *   Заголовки        — Wadik (единое начертание)
+ *   Подзаголовки     — NT Somic Medium
+ *   Основной текст   — NT Somic Regular
+ * NB: патиновая палитра #136B5C (RAL 6026) — предыдущая версия айдентики,
+ * оставлена в variables-v2.css как --brand-uralelectro-* для legacy-страниц.
+ */
+
+/* [BLOCK:theme.uralelectro.light] */
+[data-brand="uralelectro"] {
+  /* Accent → графитово-синий RAL 5008. На #fafaf9: 8.7:1 — AAA */
+  --color-accent:            #374a51;
+  --color-accent-hover:      #2d3d43;
+  --color-accent-active:     #28363b;
+  --color-accent-soft:       rgba(55, 74, 81, 0.08);
+  --color-accent-soft-hover: rgba(55, 74, 81, 0.14);
+  --color-accent-text:       #ffffff;
+  --color-accent-border:     rgba(55, 74, 81, 0.30);
+  --color-text-on-accent:    #ffffff;
+
+  /* Info наследует брендовый hue вместо indigo */
+  --color-info:              #4a6570;
+  --color-info-hover:        #374a51;
+  --color-info-soft:         rgba(55, 74, 81, 0.07);
+  --color-info-text:         #28363b;
+
+  /* Highlight — графитовый tint вместо indigo базы */
+  --color-highlight:         #edf1f2;
+  --color-highlight-strong:  #dde4e7;
+  --color-highlight-text:    #18181b;
+
+  /* Плашка под белый логотип: всегда насыщенный бренд, не инвертируется */
+  --brand-plate-bg:          #374a51;
+
+  /* Типографика бренда */
+  --font-sans:    "NT Somic", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Wadik", "NT Somic", -apple-system, "Segoe UI", sans-serif;
+
+  /* Логотип для brand-mark: цветной в light */
+  --brand-logo:        url("/assets/logos/uralelectro.svg");
+  --brand-logo-mono:   url("/assets/logos/uralelectro-mono-light.svg");
+  --brand-logo-aspect: 3.738; /* тесный viewBox по контенту — без масштабных хаков */
+  --brand-logo-scale:  1;
+
+  /* Дополнительный тон бренда (светлый графит для второстепенных блоков) */
+  --brand-secondary:      #5c757f;
+  --brand-secondary-soft: rgba(92, 117, 127, 0.10);
+}
+/* </BLOCK:theme.uralelectro.light> */
+
+/* [BLOCK:theme.uralelectro.headings]
+ * Wadik — дисплейный шрифт: только заголовки и утилита .font-display.
+ * У шрифта одно начертание — вес не задаём выше 400. */
+[data-brand="uralelectro"] h1,
+[data-brand="uralelectro"] h2,
+[data-brand="uralelectro"] h3,
+[data-brand="uralelectro"] .font-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.01em; /* Wadik широкий — не сжимаем */
+  font-synthesis-weight: none; /* у Wadik одно начертание — без faux-bold */
+}
+/* strong/b внутри заголовков не жирнеет синтетически */
+[data-brand="uralelectro"] :is(h1, h2, h3) :is(strong, b) {
+  font-weight: 400;
+}
+/* </BLOCK:theme.uralelectro.headings> */
+
+/* [BLOCK:theme.uralelectro.dark]
+ * Тёмная тема: графит подсвечен до AA на zinc-900 (hue 196° сохранён),
+ * логотип по умолчанию переключается на белый (mono). */
+.dark[data-brand="uralelectro"],
+.dark [data-brand="uralelectro"],
+[data-brand="uralelectro"] .dark,
+[data-brand="uralelectro"][data-theme="dark"] {
+  --color-accent:            #8fa6ae;  /* светлый графит — 6.4:1 на #18181b */
+  --color-accent-hover:      #a9bcc3;
+  --color-accent-active:     #7a939c;
+  --color-accent-soft:       rgba(143, 166, 174, 0.12);
+  --color-accent-soft-hover: rgba(143, 166, 174, 0.18);
+  --color-accent-text:       #10181b;  /* почти чёрный на светлом акценте */
+  --color-accent-border:     rgba(143, 166, 174, 0.35);
+  --color-text-on-accent:    #10181b;
+
+  --color-info:              #a9bcc3;
+  --color-info-hover:        #c2d1d6;
+  --color-info-soft:         rgba(169, 188, 195, 0.10);
+  --color-info-text:         #c2d1d6;
+
+  --brand-logo:      url("/assets/logos/uralelectro-mono-light.svg");
+  --brand-secondary: #a9bcc3;
+  --brand-secondary-soft: rgba(169, 188, 195, 0.14);
+}
+
+/* Авто-тёмная тема ОС без класса .dark — бренд подсвечивает акцент сам */
+@media (prefers-color-scheme: dark) {
+  [data-brand="uralelectro"]:not(.light):not([data-theme="light"]) {
+    --color-accent:            #8fa6ae;
+    --color-accent-hover:      #a9bcc3;
+    --color-accent-active:     #7a939c;
+    --color-accent-soft:       rgba(143, 166, 174, 0.12);
+    --color-accent-soft-hover: rgba(143, 166, 174, 0.18);
+    --color-accent-text:       #10181b;
+    --color-accent-border:     rgba(143, 166, 174, 0.35);
+    --color-text-on-accent:    #10181b;
+    --brand-logo:              url("/assets/logos/uralelectro-mono-light.svg");
+  }
+}
+/* </BLOCK:theme.uralelectro.dark> */
+/* </CONFIG:theme-uralelectro> */

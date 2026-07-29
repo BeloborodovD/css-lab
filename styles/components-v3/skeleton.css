@@ -1,0 +1,70 @@
+/* [BLOCK:component.skeleton]
+ * Скелетон-заглушки загрузки — порт идеи из corporate-search v2 /
+ * motor-datasheet FilterPanelSkeleton.
+ * Модуль: css-lab/components-v3. Зависимости: base/variables-v2.css, base/motion.css.
+ *
+ * Пульс через opacity (не background-position): дешёво для GPU и
+ * не задевает layout. Постоянное движение → linear (RULES.md §1).
+ */
+
+.skeleton {
+  display: block;
+  background: var(--color-surface-active);
+  border-radius: var(--radius-xs);
+  /* PURPOSE: state indication — сообщает «идёт загрузка» */
+  animation: skeleton-pulse var(--duration-pulse) linear infinite;
+}
+
+/* Формы под типовой контент */
+.skeleton--text {
+  height: 12px;
+  border-radius: var(--radius-xs);
+}
+.skeleton--text + .skeleton--text { margin-top: var(--space-2); }
+.skeleton--title { height: 20px; width: 40%; }
+.skeleton--avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+}
+.skeleton--thumb {
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-sm);
+}
+.skeleton--btn {
+  height: 36px;
+  width: 120px;
+  border-radius: var(--radius-sm);
+}
+
+/* Готовая раскладка «карточка результата» */
+.skeleton-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius);
+}
+.skeleton-card__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.skeleton-card__body { flex: 1; min-width: 0; }
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.55; }
+}
+
+/* Reduced motion: «мягче, но не ноль» — статичная приглушённая заглушка,
+   состояние загрузки остаётся различимым без движения */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+    opacity: 0.7;
+  }
+}
+/* </BLOCK:component.skeleton> */

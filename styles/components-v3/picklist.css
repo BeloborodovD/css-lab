@@ -1,0 +1,204 @@
+/* [BLOCK:component.picklist]
+ * Мульти-select пиклист: контрол с чипами выбранного + панель с чекбоксами.
+ * Порт из опросного листа R&D Уралэлектро (motor_rnd_request_form v0.6, .ms).
+ * Модуль: css-lab/components-v3. Зависимости: base/variables-v2.css, base/motion.css.
+ *
+ * Разграничение с combobox.css: combobox — одиночный выбор/автокомплит
+ * по вводу; picklist — перечислимый мультивыбор анкетных полей: чипы
+ * выбранного в контроле, чекбоксы, поиск-фильтр и поле «другое».
+ * Открытие — класс .is-open на .picklist.
+ */
+
+.picklist {
+  position: relative;
+  min-width: 0;
+}
+
+/* ===== Контрол ========================================================== */
+.picklist__control {
+  min-height: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-8) var(--space-1) var(--space-2);
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition:
+    border-color var(--duration-press) var(--ease-out),
+    box-shadow var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .picklist__control:hover { border-color: var(--color-border-strong); }
+}
+.picklist.is-open .picklist__control,
+.picklist__control:focus-visible {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-focus);
+}
+
+.picklist__placeholder {
+  color: var(--color-text-disabled);
+  font-size: var(--fs-base);
+}
+
+/* Кнопка-раскрыватель: единственная клавиатурная точка входа контрола,
+   не вложена в другой интерактив. Цель ≥24px (SC 2.5.8) */
+.picklist__toggle {
+  position: absolute;
+  right: var(--space-1);
+  top: var(--space-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+}
+.picklist__toggle:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+.picklist__caret {
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  /* PURPOSE: state indication — направление стрелки = состояние панели */
+  transition: transform var(--duration-dropdown) var(--ease-in-out);
+}
+.picklist.is-open .picklist__caret { transform: rotate(180deg); }
+
+/* Чип выбранного значения с кнопкой удаления */
+.picklist__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px var(--space-1) 2px var(--space-2);
+  font-size: var(--fs-xs);
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border: var(--border-w) solid var(--color-accent-border);
+  border-radius: var(--radius-xs);
+}
+.picklist__chip-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;   /* SC 2.5.8: цель ≥24px, визуальный крестик мельче */
+  height: 24px;
+  font-weight: var(--fw-bold);
+  color: inherit;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: background-color var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .picklist__chip-remove:hover { background: var(--color-accent-soft-hover); }
+}
+
+/* ===== Панель опций ===================================================== */
+.picklist__panel {
+  position: absolute;
+  z-index: var(--z-dropdown);
+  top: calc(100% + var(--space-1));
+  left: 0;
+  right: 0;
+  max-height: 250px;
+  overflow: auto;
+  padding: var(--space-1);
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+  transform-origin: var(--transform-origin, top center); /* раскрывается от контрола */
+  opacity: 0;
+  transform: scale(0.97);
+  visibility: hidden; /* закрытая панель вне Tab-порядка и a11y-дерева */
+  pointer-events: none;
+  /* PURPOSE: preventing a jarring change — панель появляется от контрола */
+  transition:
+    opacity var(--duration-dropdown) var(--ease-out),
+    transform var(--duration-dropdown) var(--ease-out),
+    visibility 0s linear var(--duration-dropdown);
+}
+.picklist.is-open .picklist__panel {
+  opacity: 1;
+  transform: scale(1);
+  visibility: visible;
+  pointer-events: auto;
+  transition:
+    opacity var(--duration-dropdown) var(--ease-out),
+    transform var(--duration-dropdown) var(--ease-out),
+    visibility 0s;
+}
+
+/* Поиск-фильтр по опциям — вверху панели, sticky при прокрутке */
+.picklist__search {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-raised);
+  padding-bottom: var(--space-1);
+  background: var(--color-surface);
+}
+.picklist__search input {
+  width: 100%;
+  font-size: var(--fs-sm);
+}
+/* Опция, не прошедшая фильтр поиска */
+.picklist__option.is-filtered { display: none; }
+.picklist__no-match {
+  padding: var(--space-2);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.picklist__option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  font-size: var(--fs-sm);
+  color: var(--color-text);
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: background-color var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .picklist__option:hover { background: var(--color-accent-soft); }
+}
+.picklist__option input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+  accent-color: var(--color-accent);
+}
+
+/* Поле «другое значение» внизу панели */
+.picklist__other {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-1) var(--space-1);
+  margin-top: var(--space-1);
+  border-top: var(--border-w) solid var(--color-border);
+}
+.picklist__other input {
+  flex: 1;
+  font-size: var(--fs-sm);
+}
+
+/* Reduced motion: без сдвига/масштаба */
+@media (prefers-reduced-motion: reduce) {
+  .picklist__panel { transform: none; }
+  .picklist.is-open .picklist__panel { transform: none; }
+  .picklist__caret { transition: none; }
+}
+/* </BLOCK:component.picklist> */

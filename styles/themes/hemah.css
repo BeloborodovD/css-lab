@@ -1,0 +1,135 @@
+/* [CONFIG:theme-hemah]
+ * Тема бренда HEMAH (hemah.pro) — производитель систем автоматики ОВиК.
+ * Модуль: css-lab/themes. Зависимости: base/variables-v2.css (перекрывает её токены),
+ * base/fonts.css (Manrope + Open Sans), assets/logos/hemah*.svg.
+ *
+ * Активация: <html data-brand="hemah">. Сочетается с .dark (тёмная тема).
+ * Палитра сайта hemah.pro:
+ *   Primary   #367589 — тил/синий (шапка, навигация)
+ *   Highlight #2FC6F6 — яркий голубой (CTA, подсветка данных)
+ * Типографика: Manrope — заголовки, Open Sans — основной текст.
+ * Нормализовано под единую систему data-brand (ранее — legacy-токены
+ * .hemah/[data-theme="hemah"], блок совместимости в конце файла).
+ */
+
+/* [BLOCK:theme.hemah.light] */
+[data-brand="hemah"] {
+  /* UI-акцент затемнён до AA: белый на #2d6274 = 5.5:1 (сайтовый #367589
+     даёт ~4.3:1 — ниже AA для мелкого текста; он остаётся эталоном
+     для крупных плашек через --brand-plate-bg) */
+  --color-accent:            #2d6274;
+  --color-accent-hover:      #24505f;
+  --color-accent-active:     #1d4250;
+  --color-accent-soft:       rgba(45, 98, 116, 0.08);
+  --color-accent-soft-hover: rgba(45, 98, 116, 0.14);
+  --color-accent-text:       #ffffff;
+  --color-accent-border:     rgba(45, 98, 116, 0.32);
+  --color-text-on-accent:    #ffffff;
+
+  /* Info наследует брендовый hue */
+  --color-info:              #24505f;
+  --color-info-hover:        #1d4250;
+  --color-info-soft:         rgba(54, 117, 137, 0.07);
+  --color-info-text:         #17454f;
+
+  /* Highlight — брендовый тил-tint вместо indigo базы */
+  --color-highlight:         #ebf6f9;
+  --color-highlight-strong:  #d7ecf3;
+  --color-highlight-text:    #18181b;
+
+  /* Плашка под белый логотип: всегда фирменный тил */
+  --brand-plate-bg:          #367589;
+
+  /* Типографика бренда */
+  --font-sans:    "Open Sans", -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Manrope", "Open Sans", -apple-system, "Segoe UI", sans-serif;
+
+  /* Логотип для brand-mark */
+  --brand-logo:        url("/assets/logos/hemah.svg");
+  --brand-logo-mono:   url("/assets/logos/hemah-mono-light.svg");
+  --brand-logo-aspect: 3.878;  /* тесный viewBox по контенту */
+  --brand-logo-scale:  1;
+
+  /* Дополнительный фирменный голубой — CTA/подсветка данных.
+     ⚠ #2FC6F6 как цвет текста на светлом фоне запрещён (1.9:1);
+     текст НА голубом — только --brand-secondary-text */
+  --brand-secondary:      #2fc6f6;
+  --brand-secondary-soft: rgba(47, 198, 246, 0.12);
+  --brand-secondary-text: #0d2229;  /* 8.2:1 на #2fc6f6 */
+}
+/* </BLOCK:theme.hemah.light> */
+
+/* [BLOCK:theme.hemah.headings] */
+[data-brand="hemah"] h1,
+[data-brand="hemah"] h2,
+[data-brand="hemah"] h3,
+[data-brand="hemah"] .font-display {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+}
+/* </BLOCK:theme.hemah.headings> */
+
+/* [BLOCK:theme.hemah.dark]
+ * Тёмная тема: тил подсвечен до AA, логотип — белый (mono). */
+.dark[data-brand="hemah"],
+.dark [data-brand="hemah"],
+[data-brand="hemah"] .dark,
+[data-brand="hemah"][data-theme="dark"] {
+  --color-accent:            #6fb3c7;  /* светлый тил — 6.5:1 на #18181b */
+  --color-accent-hover:      #94c8d7;
+  --color-accent-active:     #4d97ad;
+  --color-accent-soft:       rgba(111, 179, 199, 0.12);
+  --color-accent-soft-hover: rgba(111, 179, 199, 0.18);
+  --color-accent-text:       #0d2229;
+  --color-accent-border:     rgba(111, 179, 199, 0.35);
+  --color-text-on-accent:    #0d2229;
+
+  --color-info:              #94c8d7;
+  --color-info-hover:        #b7dae4;
+  --color-info-soft:         rgba(148, 200, 215, 0.10);
+  --color-info-text:         #b7dae4;
+
+  --brand-logo:      url("/assets/logos/hemah-mono-light.svg");
+  --brand-secondary: #2fc6f6;
+  --brand-secondary-text: #0d2229;
+}
+
+/* Авто-тёмная тема ОС без класса .dark — бренд подсвечивает акцент сам */
+@media (prefers-color-scheme: dark) {
+  [data-brand="hemah"]:not(.light):not([data-theme="light"]) {
+    --color-accent:            #6fb3c7;
+    --color-accent-hover:      #94c8d7;
+    --color-accent-active:     #4d97ad;
+    --color-accent-soft:       rgba(111, 179, 199, 0.12);
+    --color-accent-soft-hover: rgba(111, 179, 199, 0.18);
+    --color-accent-text:       #0d2229;
+    --color-accent-border:     rgba(111, 179, 199, 0.35);
+    --color-text-on-accent:    #0d2229;
+    --brand-logo:              url("/assets/logos/hemah-mono-light.svg");
+  }
+}
+/* </BLOCK:theme.hemah.dark> */
+
+/* [BLOCK:theme.hemah.legacy]
+ * Совместимость со старой активацией .hemah / [data-theme="hemah"]:
+ * прокидываем прежние legacy-токены на новые. Удалить после миграции
+ * страниц, использующих старые имена. */
+.hemah,
+[data-theme="hemah"] {
+  --accent:          #367589;
+  --accent-700:      #1f5a6a;
+  --accent-100:      rgba(54, 117, 137, 0.12);
+  --highlight:       #2fc6f6;
+  --font-body:       "Open Sans", system-ui, sans-serif;
+  --font-heading:    "Manrope", system-ui, sans-serif;
+}
+/* Legacy + тёмная тема: подсветлённый тил, иначе #367589 на #18181b ниже AA */
+.dark .hemah,
+.dark[data-theme="hemah"],
+.dark [data-theme="hemah"] {
+  --accent:     #6fb3c7;
+  --accent-700: #94c8d7;
+  --accent-100: rgba(111, 179, 199, 0.12);
+}
+/* </BLOCK:theme.hemah.legacy> */
+/* </CONFIG:theme-hemah> */

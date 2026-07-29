@@ -107,7 +107,8 @@
 }
 
 .alert-animate-out {
-  animation: alert-fade-out var(--t) var(--ease-in) forwards;
+  /* Выход тоже на ease-out — медленный старт кривой делает интерфейс вялым */
+  animation: alert-fade-out var(--t) var(--ease-out) forwards;
 }
 @keyframes alert-fade-out {
   0%   { opacity: 1; transform: translateX(0); }

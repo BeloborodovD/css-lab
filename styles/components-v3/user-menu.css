@@ -1,0 +1,268 @@
+/* [BLOCK:component.user-menu]
+ * Меню пользователя портала — порт из corporate-search v2 / НТБ.
+ * Модуль: css-lab/components-v3. Зависимости: base/variables-v2.css,
+ * base/motion.css, components-v3/avatar.css (аватар в триггере).
+ *
+ * Структура: .user-menu > .user-menu__trigger (аватар + имя + роль + шеврон)
+ *            + .user-menu__dropdown (identity-шапка, пункты, выход).
+ * Открытие — класс .is-open на контейнере; [hidden] остаётся для a11y.
+ * Онлайн-точка — ::after у .user-menu__avatar-wrap.
+ */
+
+.user-menu {
+  position: relative;
+  display: inline-flex;
+}
+
+/* ===== Trigger ========================================================== */
+.user-menu__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 36px;
+  padding: var(--space-px) var(--space-2) var(--space-px) var(--space-px);
+  background: transparent;
+  border: var(--border-w) solid transparent;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  color: var(--color-text);
+  font: inherit;
+  /* PURPOSE: state indication — фон подтверждает наведение/открытость */
+  transition:
+    background-color var(--duration-press) var(--ease-out),
+    border-color var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .user-menu__trigger:hover { background: var(--color-surface-hover); }
+}
+.user-menu__trigger[aria-expanded="true"] {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border);
+}
+.user-menu__trigger:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.user-menu__name {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semi);
+  color: var(--color-text);
+  white-space: nowrap;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: var(--lh-tight);
+}
+
+/* Подпись-роль под именем (на широких экранах) */
+.user-menu__caption {
+  display: none;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-px);
+  min-width: 0;
+}
+.user-menu__caption-role {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  white-space: nowrap;
+  line-height: 1;
+}
+@media (min-width: 1024px) {
+  .user-menu__caption { display: inline-flex; }
+  .user-menu__caption .user-menu__name { max-width: 180px; }
+}
+
+.user-menu__chevron {
+  width: 14px;
+  height: 14px;
+  color: var(--color-text-muted);
+  /* PURPOSE: state indication — направление шеврона = состояние меню */
+  transition: transform var(--duration-dropdown) var(--ease-in-out);
+  flex-shrink: 0;
+}
+.user-menu__trigger[aria-expanded="true"] .user-menu__chevron {
+  transform: rotate(180deg);
+}
+
+/* ===== Dropdown ========================================================= */
+.user-menu__dropdown {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  min-width: 280px;
+  z-index: var(--z-dropdown);
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-1);
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  transform-origin: var(--transform-origin, top right); /* раскрывается от триггера */
+  opacity: 0;
+  transform: scale(0.97);
+  visibility: hidden; /* закрытое меню вне Tab-порядка и a11y-дерева */
+  pointer-events: none;
+  /* PURPOSE: preventing a jarring change — меню появляется от триггера, не мигает.
+     visibility прячется с задержкой на выходе, мгновенно на входе */
+  transition:
+    opacity var(--duration-dropdown) var(--ease-out),
+    transform var(--duration-dropdown) var(--ease-out),
+    visibility 0s linear var(--duration-dropdown);
+}
+/* display:flex сохраняем ради transition; реальное скрытие — visibility выше */
+.user-menu__dropdown[hidden] { display: flex; }
+.user-menu.is-open .user-menu__dropdown {
+  opacity: 1;
+  transform: scale(1);
+  visibility: visible;
+  pointer-events: auto;
+  transition:
+    opacity var(--duration-dropdown) var(--ease-out),
+    transform var(--duration-dropdown) var(--ease-out),
+    visibility 0s;
+}
+
+/* ===== Identity-шапка =================================================== */
+.user-menu__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  margin-bottom: var(--space-1);
+}
+.user-menu__identity {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.user-menu__fullname {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semi);
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.user-menu__email {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.user-menu__role {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+  padding: 2px var(--space-2);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border-radius: var(--radius-xs);
+  width: fit-content;
+}
+
+/* ===== Пункты =========================================================== */
+.user-menu__divider {
+  height: 1px;
+  margin: var(--space-1) 0;
+  background: var(--color-border-subtle);
+  border: none;
+}
+
+.user-menu__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 36px;
+  padding: 0 var(--space-3);
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  color: var(--color-text);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-decoration: none;
+  text-align: left;
+  white-space: nowrap;
+  /* PURPOSE: state indication — подсветка активного пункта */
+  transition: background-color var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .user-menu__item:hover { background: var(--color-surface-hover); }
+}
+.user-menu__item:focus-visible {
+  background: var(--color-surface-hover);
+  outline: none;
+}
+.user-menu__item--danger { color: var(--color-error); }
+@media (hover: hover) and (pointer: fine) {
+  .user-menu__item--danger:hover { background: var(--color-error-soft); }
+}
+.user-menu__item--danger:focus-visible { background: var(--color-error-soft); }
+
+.user-menu__icon {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+.user-menu__item--danger .user-menu__icon { color: var(--color-error); }
+
+.user-menu__shortcut {
+  margin-left: auto;
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+}
+
+/* ===== Онлайн-точка на аватаре ========================================= */
+.user-menu__avatar-wrap {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+.user-menu__avatar-wrap::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 9px;
+  height: 9px;
+  border-radius: var(--radius-full);
+  background: var(--color-success);
+  border: 2px solid var(--color-surface);
+  box-shadow: 0 0 0 0.5px var(--color-border);
+}
+
+/* ===== Мобильная адаптация ============================================= */
+@media (max-width: 559px) {
+  .user-menu__name,
+  .user-menu__caption,
+  .user-menu__chevron { display: none; }
+  .user-menu__dropdown { min-width: 240px; }
+}
+@media (min-width: 560px) and (max-width: 1023px) {
+  .user-menu__caption .user-menu__caption-role { display: none; }
+}
+
+/* Reduced motion: без сдвига/масштаба, только мягкая непрозрачность */
+@media (prefers-reduced-motion: reduce) {
+  .user-menu__dropdown { transform: none; }
+  .user-menu.is-open .user-menu__dropdown { transform: none; }
+  .user-menu__chevron { transition: none; }
+}
+/* </BLOCK:component.user-menu> */

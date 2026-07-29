@@ -9,6 +9,10 @@
 
 :root {
   --sidebar-width: var(--sidebar-w);
+  /* Пер-сторонние ширины: обновляются JS при ручном ресайзе панели,
+     чтобы отступы центра пересчитывались вместе с панелью */
+  --sidebar-w-left: var(--sidebar-width);
+  --sidebar-w-right: var(--sidebar-width);
   --sidebar-transition: var(--t-slow) var(--ease);
 }
 
@@ -144,24 +148,24 @@
 
 /* :has() — push content при открытии sidebar */
 .app-layout:has(.app-sidebar.left.open) .app-content {
-  margin-left: var(--sidebar-width);
+  margin-left: var(--sidebar-w-left);
 }
 
 .app-layout:has(.app-sidebar.right.open) .app-content {
-  margin-right: var(--sidebar-width);
+  margin-right: var(--sidebar-w-right);
 }
 
 .app-layout:has(.app-sidebar.left.open):has(.app-sidebar.right.open) .app-content {
-  margin-left: var(--sidebar-width);
-  margin-right: var(--sidebar-width);
+  margin-left: var(--sidebar-w-left);
+  margin-right: var(--sidebar-w-right);
 }
 
 /* Fallback классы (для браузеров без :has()) */
-.app-content.sidebar-left-open  { margin-left: var(--sidebar-width); }
-.app-content.sidebar-right-open { margin-right: var(--sidebar-width); }
+.app-content.sidebar-left-open  { margin-left: var(--sidebar-w-left); }
+.app-content.sidebar-right-open { margin-right: var(--sidebar-w-right); }
 .app-content.sidebar-both-open {
-  margin-left: var(--sidebar-width);
-  margin-right: var(--sidebar-width);
+  margin-left: var(--sidebar-w-left);
+  margin-right: var(--sidebar-w-right);
 }
 
 .app-content .container {

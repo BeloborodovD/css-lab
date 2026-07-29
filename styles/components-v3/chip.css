@@ -20,7 +20,16 @@
   cursor: default;
   transition: background-color var(--t-fast) var(--ease),
               border-color var(--t-fast) var(--ease),
-              color var(--t-fast) var(--ease);
+              color var(--t-fast) var(--ease),
+              opacity var(--duration-tooltip) var(--ease-out),
+              transform var(--duration-tooltip) var(--ease-out);
+}
+
+/* PURPOSE: feedback — чип подтверждает удаление, а не пропадает рывком.
+   JS вешает класс и удаляет узел по transitionend */
+.chip.is-removing {
+  opacity: 0;
+  transform: scale(0.95);
 }
 
 .chip-icon {
@@ -94,6 +103,39 @@
 .chip-neutral.chip-outlined { background: transparent; border-color: var(--color-border); color: var(--color-text-muted); }
 
 /* ====================== Clickable ====================== */
+/* Контейнер-ряд чипов */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* Чип-опция (мультивыбор значений анкеты): toggle с состоянием is-active */
+.chip-choice {
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--fs-sm);
+  transition: background-color var(--duration-press) var(--ease-out),
+              border-color var(--duration-press) var(--ease-out),
+              color var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .chip-choice:hover {
+    border-color: var(--color-accent-border);
+    color: var(--color-accent);
+  }
+}
+.chip-choice:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+.chip-choice.is-active,
+.chip-choice[aria-pressed="true"] {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-accent-text);
+}
+
 .chip-clickable {
   cursor: pointer;
 }

@@ -1,0 +1,118 @@
+/* [CONFIG:brand-fonts]
+ * Фирменные шрифты брендов VEZA / Уралэлектро.
+ * Модуль: css-lab/base. Зависимости: файлы в /assets/fonts/.
+ *
+ * Уралэлектро (брендбук 2025, RAL 5008):
+ *   - Wadik      — заголовки, единое начертание (SIL OFL 1.1, автор Sasha Pavljenko,
+ *                  лицензия рядом: assets/fonts/Wadik-OFL.txt)
+ *   - NT Somic   — подзаголовки (Medium), основной текст и дисклаймеры (Regular)
+ * VEZA (брендбук):
+ *   - Roboto     — Medium для заголовков и выделений, Light для основного текста
+ *                  (Apache 2.0 / OFL, Google Fonts). Fallback — Arial.
+ */
+
+/* [BLOCK:font-face.wadik] */
+@font-face {
+  font-family: "Wadik";
+  src: url("/assets/fonts/Wadik.woff2") format("woff2"),
+       url("/assets/fonts/Wadik.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+/* </BLOCK:font-face.wadik> */
+
+/* [BLOCK:font-face.nt-somic] */
+@font-face {
+  font-family: "NT Somic";
+  src: url("/assets/fonts/NTSomic-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "NT Somic";
+  src: url("/assets/fonts/NTSomic-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "NT Somic";
+  src: url("/assets/fonts/NTSomic-Semibold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "NT Somic";
+  src: url("/assets/fonts/NTSomic-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+/* </BLOCK:font-face.nt-somic> */
+
+/* [BLOCK:font-face.roboto] */
+@font-face {
+  font-family: "Roboto";
+  src: url("/assets/fonts/Roboto-300.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("/assets/fonts/Roboto-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("/assets/fonts/Roboto-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("/assets/fonts/Roboto-700.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+/* </BLOCK:font-face.roboto> */
+
+/* [BLOCK:font-face.hemah]
+ * HEMAH (hemah.pro): Manrope — заголовки, Open Sans — основной текст. */
+@font-face {
+  font-family: "Manrope";
+  src: url("/assets/fonts/Manrope-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("/assets/fonts/Manrope-700.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Open Sans";
+  src: url("/assets/fonts/OpenSans-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Open Sans";
+  src: url("/assets/fonts/OpenSans-600.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+/* </BLOCK:font-face.hemah> */
+/* </CONFIG:brand-fonts> */

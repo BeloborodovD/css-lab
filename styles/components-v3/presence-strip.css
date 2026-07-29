@@ -1,0 +1,209 @@
+/* [BLOCK:component.presence-strip]
+ * «Кто сейчас на портале» — стек наложенных аватаров с «+N» и клик-дропдаун
+ * со списком: имя, должность, где находится (раздел портала).
+ * Порт из corporate-search v2 (presence-strip) + НТБ (OnlineBadge).
+ * Модуль: css-lab/components-v3. Зависимости: base/variables-v2.css,
+ * base/motion.css, components-v3/avatar.css.
+ * Открытие — класс .is-open на .presence-strip.
+ */
+
+.presence-strip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.presence-strip__label {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+/* ===== Триггер: стек аватаров + подпись ================================ */
+.presence-strip__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2) var(--space-1) var(--space-1);
+  background: transparent;
+  border: var(--border-w) solid transparent;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  transition:
+    background-color var(--duration-press) var(--ease-out),
+    border-color var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .presence-strip__trigger:hover { background: var(--color-surface-hover); }
+}
+.presence-strip.is-open .presence-strip__trigger {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border);
+}
+.presence-strip__trigger:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.presence-strip__list {
+  display: inline-flex;
+  align-items: center;
+  isolation: isolate;
+}
+
+/* Аватар в стеке: наложение через отрицательный отступ, обводка surface */
+.avatar.presence-strip__avatar {
+  position: relative;
+  z-index: 0;
+  width: 32px;
+  height: 32px;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semi);
+  border: 2px solid var(--color-surface);
+  margin-left: -10px;
+}
+.avatar.presence-strip__avatar:first-child { margin-left: 0; }
+
+/* «+N» — сколько ещё онлайн */
+.avatar.presence-strip__avatar--more {
+  background: var(--color-surface-active);
+  color: var(--color-text);
+}
+
+/* Пастельные варианты, чтобы аватары различались (деривативы от токенов) */
+.presence-strip__avatar--c1 {
+  background: color-mix(in srgb, var(--color-accent) 14%, var(--color-surface));
+  color: var(--color-accent);
+}
+.presence-strip__avatar--c2 {
+  background: color-mix(in srgb, var(--color-success) 14%, var(--color-surface));
+  color: var(--color-success);
+}
+.presence-strip__avatar--c3 {
+  background: color-mix(in srgb, var(--color-warning) 18%, var(--color-surface));
+  color: var(--color-warning);
+}
+.presence-strip__avatar--c4 {
+  background: color-mix(in srgb, var(--color-text) 8%, var(--color-surface));
+  color: var(--color-text);
+}
+
+/* ===== Дропдаун: имя · должность · где находится ======================= */
+.presence-strip__dropdown {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  min-width: 300px;
+  max-height: 60vh;
+  overflow-y: auto;
+  z-index: var(--z-dropdown);
+  padding: var(--space-1);
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  transform-origin: var(--transform-origin, top right);
+  opacity: 0;
+  transform: scale(0.97);
+  visibility: hidden; /* закрытый список вне Tab-порядка и a11y-дерева */
+  pointer-events: none;
+  /* PURPOSE: preventing a jarring change — список появляется от триггера */
+  transition:
+    opacity var(--duration-dropdown) var(--ease-out),
+    transform var(--duration-dropdown) var(--ease-out),
+    visibility 0s linear var(--duration-dropdown);
+}
+.presence-strip.is-open .presence-strip__dropdown {
+  opacity: 1;
+  transform: scale(1);
+  visibility: visible;
+  pointer-events: auto;
+  transition:
+    opacity var(--duration-dropdown) var(--ease-out),
+    transform var(--duration-dropdown) var(--ease-out),
+    visibility 0s;
+}
+
+.presence-strip__head {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semi);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-muted);
+}
+
+.presence-strip__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  transition: background-color var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .presence-strip__item:hover { background: var(--color-surface-hover); }
+}
+/* Аватар в списке — без наложения */
+.presence-strip__item .presence-strip__avatar { margin-left: 0; }
+
+.presence-strip__who {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-px);
+  min-width: 0;
+}
+.presence-strip__name {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semi);
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.presence-strip__role {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Где находится: точка-разделитель + раздел портала */
+.presence-strip__where {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--fs-xs);
+  color: var(--color-accent);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.presence-strip__where::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--color-success);
+  flex-shrink: 0;
+}
+
+/* ===== Адаптив ========================================================= */
+@media (max-width: 1279px) {
+  .presence-strip__label { display: none; }
+}
+@media (max-width: 1023px) {
+  .presence-strip { display: none; }
+}
+
+/* Reduced motion: без масштаба */
+@media (prefers-reduced-motion: reduce) {
+  .presence-strip__dropdown { transform: none; }
+  .presence-strip.is-open .presence-strip__dropdown { transform: none; }
+}
+/* </BLOCK:component.presence-strip> */

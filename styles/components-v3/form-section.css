@@ -1,0 +1,108 @@
+/* [BLOCK:component.form-section]
+ * Секция сложной формы: fieldset с брендовой засечкой, сетка полей,
+ * подсказки и метки. Порт из опросного листа R&D Уралэлектро
+ * (motor_rnd_request_form v0.6).
+ * Модуль: css-lab/components-v3. Зависимости: base/variables-v2.css,
+ * base/motion.css, components-v3/inputs.css (стили input/select/textarea).
+ * Смежные блоки вынесены отдельно: row-card.css (повторяемые строки),
+ * save-status.css (статус автосохранения), rte.css (редактор примечаний).
+ */
+
+/* ===== Fieldset ========================================================= */
+.form-section {
+  margin: 0 0 var(--space-6);
+  padding: var(--space-4) var(--space-5) var(--space-5);
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-border);
+  border-left: var(--border-w-thick) solid var(--color-accent);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+.form-section__legend {
+  padding: 0 var(--space-2);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semi);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-accent);
+}
+.form-section__hint {
+  margin: var(--space-px) 0 var(--space-3);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+.form-section__subtitle {
+  margin: var(--space-4) 0 var(--space-2);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semi);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-muted);
+}
+
+/* ===== Сетка полей ====================================================== */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3) var(--space-4);
+}
+.form-grid--three { grid-template-columns: repeat(3, 1fr); }
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+.form-field--full { grid-column: 1 / -1; }
+
+.form-field__label {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-secondary);
+}
+.form-field__req { color: var(--color-error); }
+.form-field__unit {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+/* Подсказка «?» — ставится РЯДОМ с label (не внутри), связь через
+   aria-describedby; размер цели ≥24px (SC 2.5.8) */
+.form-field__tip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-left: var(--space-1);
+  vertical-align: middle;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: help;
+  user-select: none;
+  transition:
+    background-color var(--duration-press) var(--ease-out),
+    color var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .form-field__tip:hover {
+    background: var(--color-accent);
+    color: var(--color-accent-text);
+  }
+}
+.form-field__tip:focus-visible {
+  outline: none;
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+}
+
+/* ===== Адаптив ========================================================== */
+@media (max-width: 720px) {
+  .form-grid,
+  .form-grid--three { grid-template-columns: 1fr; }
+}
+/* </BLOCK:component.form-section> */

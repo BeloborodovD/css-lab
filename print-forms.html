@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Печатные формы — даташит и опросный лист · CSS Lab</title>
+  <link rel="stylesheet" href="/styles/index-v3.css">
+  <style>
+    /* [BLOCK:page.print-forms] Страница печатных форм: экранная обёртка A4-листов */
+    body { background: var(--color-surface-sunken); }
+    .pf-page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: var(--space-6) var(--space-4) var(--space-16);
+    }
+    .pf-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-5);
+    }
+    .pf-toolbar__title { margin: 0; }
+    .pf-toolbar__sub {
+      margin: var(--space-1) 0 0;
+      color: var(--color-text-muted);
+      font-size: var(--fs-sm);
+    }
+    .pf-toolbar__actions { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+    /* Экранная «бумага»: белый лист с тенью, при печати — чистый A4 */
+    .pf-sheet {
+      margin-bottom: var(--space-6);
+      background: #ffffff;
+      box-shadow: var(--shadow);
+      border-radius: var(--radius-xs);
+      padding: 16mm 14mm;
+    }
+    .pf-sheet .spec-sheet {
+      border: none;
+      box-shadow: none;
+      padding: 0;
+    }
+    /* Колонтитулы страницы при печати (как в опросном листе R&D) */
+    @page {
+      size: A4 portrait;
+      margin: 12mm 14mm 14mm 16mm;
+      @bottom-left {
+        content: "CSS Lab · печатные формы";
+        font-size: 7pt;
+        color: #555555;
+      }
+      @bottom-right {
+        content: counter(page) " / " counter(pages);
+        font-size: 7pt;
+        color: #555555;
+      }
+    }
+    @media print {
+      body { background: #fff; }
+      .pf-toolbar { display: none; }
+      .pf-page { max-width: none; padding: 0; }
+      .pf-sheet {
+        box-shadow: none;
+        border-radius: 0;
+        padding: 0;
+        margin: 0;
+        break-after: page;
+      }
+      .pf-sheet:last-child { break-after: auto; }
+    }
+    /* </BLOCK:page.print-forms> */
+  </style>
+</head>
+<body data-brand="uralelectro">
+  <main class="pf-page">
+    <div class="pf-toolbar">
+      <div>
+        <h1 class="pf-toolbar__title">Печатные формы</h1>
+        <p class="pf-toolbar__sub">Даташит двигателя и опросный лист R&amp;D в стиле motor-datasheet. Бренд листа задаётся атрибутом <code>data-brand</code> на body.</p>
+      </div>
+      <div class="pf-toolbar__actions">
+        <div class="brand-switcher js-brand-switcher" role="group" aria-label="Бренд печатной формы">
+          <button type="button" class="brand-switcher__option" data-brand-value="veza" aria-pressed="false">VEZA</button>
+          <button type="button" class="brand-switcher__option" data-brand-value="uralelectro" aria-pressed="true">Уралэлектро</button>
+          <button type="button" class="brand-switcher__option" data-brand-value="hemah" aria-pressed="false">HEMAH</button>
+        </div>
+        <a class="btn btn-secondary" href="/index-v3.html">← Витрина</a>
+        <a class="btn btn-secondary" href="/ral-colors.html">Цвета RAL</a>
+        <button type="button" class="btn btn-primary" onclick="window.print()">Печать / PDF</button>
+      </div>
+    </div>
+
+    <!-- ===== Лист 1: даташит двигателя ===== -->
+    <section class="pf-sheet" aria-label="Даташит двигателя">
+      <div class="spec-sheet">
+        <div class="spec-sheet__header">
+          <div class="flex gap-4" style="align-items: center;">
+            <span class="brand-mark" role="img" aria-label="Логотип бренда"></span>
+            <h2 class="spec-sheet__title" style="margin: 0;">Электродвигатель АДМ 132 S4</h2>
+          </div>
+          <div class="spec-sheet__meta">Технический паспорт<br>29.07.2026 · v1.0</div>
+        </div>
+
+        <div class="spec-section">
+          <h3 class="spec-section__title">Номинальные данные</h3>
+          <div class="spec-grid">
+            <div class="spec-row"><span class="spec-row__label">Мощность</span><span class="spec-row__value">7,5 кВт</span></div>
+            <div class="spec-row"><span class="spec-row__label">Частота вращения</span><span class="spec-row__value">1455 об/мин</span></div>
+            <div class="spec-row"><span class="spec-row__label">Напряжение</span><span class="spec-row__value">380/660 В</span></div>
+            <div class="spec-row"><span class="spec-row__label">Частота сети</span><span class="spec-row__value">50 Гц</span></div>
+            <div class="spec-row"><span class="spec-row__label">Номинальный ток</span><span class="spec-row__value">15,1 / 8,7 А</span></div>
+            <div class="spec-row"><span class="spec-row__label">КПД</span><span class="spec-row__value">89,5 % (IE2)</span></div>
+            <div class="spec-row"><span class="spec-row__label">cos φ</span><span class="spec-row__value">0,84</span></div>
+            <div class="spec-row"><span class="spec-row__label">Масса</span><span class="spec-row__value">54 кг</span></div>
+          </div>
+        </div>
+
+        <div class="spec-section">
+          <h3 class="spec-section__title">Исполнение</h3>
+          <div class="spec-grid">
+            <div class="spec-row"><span class="spec-row__label">Степень защиты</span><span class="spec-row__value">IP55</span></div>
+            <div class="spec-row"><span class="spec-row__label">Климатическое исполнение</span><span class="spec-row__value">У2</span></div>
+            <div class="spec-row"><span class="spec-row__label">Монтажное исполнение</span><span class="spec-row__value">IM1081</span></div>
+            <div class="spec-row"><span class="spec-row__label">Класс изоляции</span><span class="spec-row__value">F</span></div>
+            <div class="spec-row"><span class="spec-row__label">Способ охлаждения</span><span class="spec-row__value">IC411</span></div>
+            <div class="spec-row"><span class="spec-row__label">Режим работы</span><span class="spec-row__value">S1</span></div>
+          </div>
+        </div>
+
+        <div class="spec-section" style="margin-bottom: 0;">
+          <h3 class="spec-section__title">Пусковые характеристики</h3>
+          <table class="spec-table">
+            <thead>
+              <tr><th>Параметр</th><th>Обозначение</th><th>Значение</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Кратность пускового момента</td><td>Mп/Mн</td><td class="spec-table__cell--highlight">2,2</td></tr>
+              <tr><td>Кратность максимального момента</td><td>Mмакс/Mн</td><td>3,0</td></tr>
+              <tr><td>Кратность пускового тока</td><td>Iп/Iн</td><td>7,0</td></tr>
+              <tr><td>Момент инерции ротора</td><td>J</td><td>0,023 кг·м²</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="spec-section" style="margin-bottom: 0; margin-top: var(--space-4);">
+          <h3 class="spec-section__title">Примечания</h3>
+          <div class="spec-sheet__text">
+            <p style="margin: 0 0 var(--space-1);">Двигатель соответствует ГОСТ IEC 60034-1-2024 и ГОСТ 31606-2024. Присоединительные размеры — по ГОСТ Р 51689.</p>
+            <ul>
+              <li>Допустимое отклонение напряжения ±10 %, частоты ±2 % (зона A по IEC 60034-1).</li>
+              <li>Подшипники: DE 6308-2RS, NDE 6206-2RS; смазка заложена на весь срок службы.</li>
+              <li>Гарантийный срок — 24 месяца с даты ввода в эксплуатацию, но не более 30 месяцев с даты отгрузки.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="spec-sheet__footer">
+          <span>АО «МЭЗ «Уралэлектро» · Технический паспорт АДМ 132 S4 · v1.0</span>
+          <span>Лист 1 из 2</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Лист 2: опросный лист R&D ===== -->
+    <section class="pf-sheet" aria-label="Опросный лист R&D">
+      <div class="spec-sheet">
+        <div class="spec-sheet__header">
+          <div class="flex gap-4" style="align-items: center;">
+            <span class="brand-mark" role="img" aria-label="Логотип бренда"></span>
+            <h2 class="spec-sheet__title" style="margin: 0;">Заявка на разработку электродвигателя (R&amp;D / ОКР)</h2>
+          </div>
+          <div class="spec-sheet__meta">Заявка RND-2026-014<br>29.07.2026</div>
+        </div>
+
+        <div class="spec-section">
+          <h3 class="spec-section__title">1. Инициатор</h3>
+          <div class="spec-grid">
+            <div class="spec-row"><span class="spec-row__label">ФИО</span><span class="spec-row__value">Ковалёва Анна Сергеевна</span></div>
+            <div class="spec-row"><span class="spec-row__label">Подразделение</span><span class="spec-row__value">Отдел продаж</span></div>
+            <div class="spec-row"><span class="spec-row__label">E-mail</span><span class="spec-row__value">a.kovaleva@uralelectro.ru</span></div>
+            <div class="spec-row"><span class="spec-row__label">Приоритет</span><span class="spec-row__value">Высокий</span></div>
+          </div>
+        </div>
+
+        <div class="spec-section">
+          <h3 class="spec-section__title">2. Техническое задание</h3>
+          <div class="spec-grid">
+            <div class="spec-row"><span class="spec-row__label">Базовый тип</span><span class="spec-row__value">AC-IM — асинхронный 3-фазный</span></div>
+            <div class="spec-row"><span class="spec-row__label">Класс исполнения</span><span class="spec-row__value">GP, HT</span></div>
+            <div class="spec-row"><span class="spec-row__label">Мощность</span><span class="spec-row__value">0,37–11 кВт</span></div>
+            <div class="spec-row"><span class="spec-row__label">Число полюсов</span><span class="spec-row__value">2, 4, 6</span></div>
+            <div class="spec-row"><span class="spec-row__label">Высота оси</span><span class="spec-row__value">71–132 мм</span></div>
+            <div class="spec-row"><span class="spec-row__label">Степень защиты</span><span class="spec-row__value">IP55</span></div>
+            <div class="spec-row"><span class="spec-row__label">Климат</span><span class="spec-row__value">У2, Т2</span></div>
+            <div class="spec-row"><span class="spec-row__label">Цвет покрытия</span><span class="spec-row__value">RAL 5008 · Серо-синий</span></div>
+            <div class="spec-row spec-row--full"><span class="spec-row__label">Особые требования</span><span class="spec-row__value">Работа в сушильной камере при температуре до +100 °C; термостойкая смазка подшипников; антиконденсатный подогрев 220 В.</span></div>
+          </div>
+        </div>
+
+        <div class="spec-section">
+          <h3 class="spec-section__title">Коды маркировки (v9.2)</h3>
+          <div class="code-panel" style="background: none; border: none; padding: 0;">
+            <div class="code-panel__string">М812+С702+С412+С601+Н602</div>
+            <table class="code-panel__table">
+              <tbody>
+                <tr><td class="code-panel__code">М812</td><td class="code-panel__param">IP55</td><td>Степень защиты корпуса</td></tr>
+                <tr><td class="code-panel__code">С702</td><td class="code-panel__param">У2</td><td>Климатическое исполнение</td></tr>
+                <tr><td class="code-panel__code">С412</td><td class="code-panel__param">380/660 В</td><td>Напряжение питания</td></tr>
+                <tr><td class="code-panel__code">Н602</td><td class="code-panel__param">IE2</td><td>Класс энергоэффективности</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="spec-section" style="margin-bottom: 0;">
+          <h3 class="spec-section__title">Рабочие точки</h3>
+          <table class="spec-table">
+            <thead>
+              <tr><th>№</th><th>P, кВт</th><th>n, об/мин</th><th>M, Н·м</th><th>Режим</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td class="spec-table__cell--highlight">7,5</td><td>1455</td><td>49,2</td><td>S1</td></tr>
+              <tr><td>2</td><td>5,5</td><td>960</td><td>54,7</td><td>S3 40%</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="spec-section" style="margin-bottom: 0; margin-top: var(--space-4);">
+          <h3 class="spec-section__title">Примечания в свободной форме</h3>
+          <div class="spec-sheet__text">
+            <p style="margin: 0 0 var(--space-1);">Черновик хранится только в браузере инициатора до формирования пакета. Пакет данных (JSON/YAML) передаётся в R&amp;D вместе с настоящим печатным представлением.</p>
+            <ol>
+              <li>Аналог-прототип: Siemens 1LE1 (каталожные данные приложены, ссылка в пакете).</li>
+              <li>Требуется оценка применимости серии АДМ-DC как базы для исполнения HT.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="spec-sheet__footer">
+          <span>АО «МЭЗ «Уралэлектро» · Заявка R&amp;D/ОКР RND-2026-014</span>
+          <span>Лист 2 из 2</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // [BLOCK:pf-brand] Переключение бренда печатной формы (data-brand на body)
+    document.querySelectorAll('.js-brand-switcher .brand-switcher__option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.body.setAttribute('data-brand', btn.dataset.brandValue);
+        document.querySelectorAll('.js-brand-switcher .brand-switcher__option').forEach(b => {
+          b.setAttribute('aria-pressed', String(b === btn));
+        });
+      });
+    });
+    // </BLOCK:pf-brand>
+  </script>
+</body>
+</html>

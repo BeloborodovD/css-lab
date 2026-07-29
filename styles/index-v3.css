@@ -2,8 +2,10 @@
 /* Все 36 компонентов переписаны под новые токены variables-v2.css. */
 /* Палитра премиальная, сдержанная — без пёстрых акцентов. */
 
-/* Base */
+/* Base — motion-токены первыми в каскаде (ui-motion-craft), затем переменные */
+@import './base/motion.css';
 @import './base/variables-v2.css';
+@import './base/fonts.css';
 @import './base/reset.css';
 @import './base/utilities.css';
 @import './base/animations.css';
@@ -50,7 +52,33 @@
 @import './components-v3/tag-cloud.css';
 
 /* Новый компонент для search-ui */
-@import './components/search-result-card.css';
+@import './components-v3/search-result-card.css';
+
+/* Компоненты, собранные с проектов воркспейса (corporate-search, ntb,
+   motor-datasheet, motor-selector, cert-data, формы Уралэлектро) */
+@import './components-v3/user-menu.css';
+@import './components-v3/presence-strip.css';
+@import './components-v3/brand-mark.css';
+@import './components-v3/skeleton.css';
+@import './components-v3/drawer.css';
+@import './components-v3/accordion.css';
+@import './components-v3/picklist.css';
+@import './components-v3/swatch-picker.css';
+@import './components-v3/quiz.css';
+@import './components-v3/form-section.css';
+@import './components-v3/row-card.css';
+@import './components-v3/save-status.css';
+@import './components-v3/rte.css';
+@import './components-v3/filter-pills.css';
+@import './components-v3/spec-sheet.css';
+@import './components-v3/code-panel.css';
 
 /* Theme dark — облегчённая (4 surface вместо 9) */
 @import './themes/dark-v3.css';
+
+/* Theme HEMAH — бренд HEMAH (hemah.pro) */
+@import './themes/hemah.css';
+
+/* Бренд-темы: VEZA (Pantone 356 C) и Уралэлектро (RAL 5008) — data-brand на <html> */
+@import './themes/veza.css';
+@import './themes/uralelectro.css';

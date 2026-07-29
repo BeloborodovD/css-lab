@@ -1,0 +1,17 @@
+# Исключения контекста сборки образа css-lab.
+# Модуль: docker. Зависимости: нет.
+# Цель — в образ попадает только статика витрины (html/css/js/assets).
+
+.git
+.gitignore
+.claude
+.playwright-mcp
+node_modules
+package-lock.json
+Makefile
+Dockerfile
+.dockerignore
+docker-compose.yml
+*.log
+*.jpeg
+*.png

@@ -1,0 +1,90 @@
+/* [BLOCK:component.code-panel]
+ * Панель сгенерированных кодов: моноширинная код-строка + таблица
+ * «код — расшифровка — источник» + предупреждения о нестандартных значениях.
+ * Порт панели «Коды маркировки» опросного листа R&D Уралэлектро (v0.5/v0.6).
+ * Модуль: css-lab/components-v3. Зависимости: base/variables-v2.css.
+ */
+
+.code-panel {
+  padding: var(--space-4) var(--space-5);
+  background: linear-gradient(0deg, var(--color-accent-soft), transparent 40%);
+  border: var(--border-w) solid var(--color-border);
+  border-left: var(--border-w-thick) solid var(--color-accent);
+  border-radius: var(--radius);
+}
+
+.code-panel__title {
+  margin: 0 0 var(--space-1);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semi);
+  color: var(--color-accent);
+}
+.code-panel__hint {
+  margin: 0 0 var(--space-3);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+.code-panel__count {
+  margin-bottom: var(--space-2);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+/* Итоговая код-строка */
+.code-panel__string {
+  margin-bottom: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  letter-spacing: var(--tracking-wide);
+  word-break: break-word;
+  color: var(--color-accent-text);
+  background: var(--color-accent);
+  border-radius: var(--radius-sm);
+}
+
+/* Таблица расшифровки кодов */
+.code-panel__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-xs);
+}
+.code-panel__table td {
+  padding: var(--space-1) var(--space-2);
+  border-bottom: var(--border-w) solid var(--color-border-subtle);
+  vertical-align: top;
+  color: var(--color-text-secondary);
+}
+/* Типы ячеек (не is-состояния): код и исходный параметр */
+.code-panel__table td.code-panel__code {
+  width: 1%;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-weight: var(--fw-bold);
+  color: var(--color-accent);
+}
+.code-panel__table td.code-panel__param {
+  width: 1%;
+  white-space: nowrap;
+  color: var(--color-text-muted);
+}
+
+/* Предупреждение о значениях без кода */
+.code-panel__warn {
+  margin-top: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--fs-xs);
+  color: var(--color-error);
+  background: var(--color-error-soft);
+  border: var(--border-w) solid var(--color-error);
+  border-radius: var(--radius-sm);
+}
+.code-panel__warn ul {
+  margin: var(--space-1) 0 0 var(--space-4);
+}
+
+.code-panel__empty {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+/* </BLOCK:component.code-panel> */

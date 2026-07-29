@@ -1,0 +1,91 @@
+/* [BLOCK:component.filter-pills]
+ * Полоса активных фильтров: пилюли «ключ: значение ×» + «Сбросить все».
+ * Порт идеи из cert-data ActiveFilterPills и motor-datasheet ActiveFilters.
+ * Модуль: css-lab/components-v3. Зависимости: base/variables-v2.css, base/motion.css.
+ *
+ * Отличие от chip: пилюля всегда удаляемая, есть метка поля и значение,
+ * полоса живёт над результатами каталога/таблицы.
+ * Нэйминг: .filter-pill — вложенный блок внутри .filter-pills (осознанно,
+ * не __pill: у пилюли свои элементы __key/__value/__remove).
+ */
+
+.filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.filter-pills__label {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-muted);
+}
+
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-1) var(--space-1) var(--space-3);
+  font-size: var(--fs-sm);
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border: var(--border-w) solid var(--color-accent-border);
+  border-radius: var(--radius-full);
+}
+.filter-pill__key {
+  font-weight: var(--fw-medium);
+  color: var(--color-text-muted);
+}
+.filter-pill__value { font-weight: var(--fw-semi); }
+
+.filter-pill__remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;   /* SC 2.5.8: цель ≥24px */
+  height: 24px;
+  color: inherit;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  /* PURPOSE: feedback — крестик подтверждает, что удаление доступно */
+  transition: background-color var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .filter-pill__remove:hover { background: var(--color-accent-soft-hover); }
+}
+.filter-pill__remove:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+.filter-pill__remove svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* «Сбросить все» — текстовая кнопка в конце полосы */
+.filter-pills__clear {
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-muted);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .filter-pills__clear:hover { color: var(--color-error); }
+}
+.filter-pills__clear:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+/* </BLOCK:component.filter-pills> */

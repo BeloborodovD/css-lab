@@ -1,0 +1,248 @@
+/* [BLOCK:component.swatch-picker]
+ * Выбор цвета из палитры образцов (RAL) — порт из опросного листа R&D
+ * Уралэлектро (motor_rnd_request_form v0.6, .ralpick).
+ * Модуль: css-lab/components-v3. Зависимости: base/variables-v2.css, base/motion.css.
+ *
+ * Контрол с чипами выбранных цветов + панель: поиск, семейства,
+ * сетка образцов с кодами. Открытие — класс .is-open.
+ */
+
+.swatch-picker {
+  position: relative;
+  min-width: 0;
+}
+
+/* ===== Контрол ========================================================== */
+.swatch-picker__control {
+  min-height: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-8) var(--space-1) var(--space-2);
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition:
+    border-color var(--duration-press) var(--ease-out),
+    box-shadow var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .swatch-picker__control:hover { border-color: var(--color-border-strong); }
+}
+.swatch-picker.is-open .swatch-picker__control,
+.swatch-picker__control:focus-visible {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-focus);
+}
+
+/* Чип выбранного цвета: образец + код + удаление */
+.swatch-picker__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px var(--space-1) 2px var(--space-1);
+  font-size: var(--fs-xs);
+  color: var(--color-text);
+  background: var(--color-surface-sunken);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius-xs);
+}
+.swatch-picker__chip-color {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-xs);
+  border: var(--border-w) solid var(--color-border-strong);
+  flex: none;
+}
+.swatch-picker__chip-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;   /* SC 2.5.8: цель ≥24px */
+  height: 24px;
+  font-weight: var(--fw-bold);
+  color: var(--color-text-muted);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: color var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .swatch-picker__chip-remove:hover { color: var(--color-error); }
+}
+
+/* Кнопка-раскрыватель (как в picklist): клавиатурная точка входа, ≥24px */
+.swatch-picker__toggle {
+  position: absolute;
+  right: var(--space-1);
+  top: var(--space-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+}
+.swatch-picker__toggle:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+.swatch-picker__caret {
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  /* PURPOSE: state indication — направление стрелки = состояние панели */
+  transition: transform var(--duration-dropdown) var(--ease-in-out);
+}
+.swatch-picker.is-open .swatch-picker__caret { transform: rotate(180deg); }
+
+/* ===== Панель =========================================================== */
+.swatch-picker__panel {
+  position: absolute;
+  z-index: var(--z-dropdown);
+  top: calc(100% + var(--space-1));
+  left: 0;
+  right: 0;
+  padding: var(--space-3);
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+  transform-origin: var(--transform-origin, top center);
+  opacity: 0;
+  transform: scale(0.97);
+  visibility: hidden; /* закрытая панель вне Tab-порядка и a11y-дерева */
+  pointer-events: none;
+  /* PURPOSE: preventing a jarring change — панель появляется от контрола */
+  transition:
+    opacity var(--duration-dropdown) var(--ease-out),
+    transform var(--duration-dropdown) var(--ease-out),
+    visibility 0s linear var(--duration-dropdown);
+}
+.swatch-picker.is-open .swatch-picker__panel {
+  opacity: 1;
+  transform: scale(1);
+  visibility: visible;
+  pointer-events: auto;
+  transition:
+    opacity var(--duration-dropdown) var(--ease-out),
+    transform var(--duration-dropdown) var(--ease-out),
+    visibility 0s;
+}
+
+.swatch-picker__search {
+  width: 100%;
+  margin-bottom: var(--space-2);
+}
+
+.swatch-picker__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(58px, 1fr));
+  gap: var(--space-2);
+  max-height: 320px;
+  overflow: auto;
+  padding: var(--space-px);
+}
+
+/* Заголовок семейства цветов — sticky внутри скролла */
+.swatch-picker__family {
+  grid-column: 1 / -1;
+  position: sticky;
+  top: calc(-1 * var(--space-px));
+  padding: var(--space-1) 0;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  background: var(--color-surface);
+}
+
+/* ===== Образец ========================================================== */
+.swatch {
+  position: relative;
+  height: 50px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: var(--space-1);
+  border: var(--border-w-strong) solid transparent;
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 0 0 1px var(--color-swatch-inset);
+  cursor: pointer;
+  /* PURPOSE: feedback — образец слегка приподнимается под курсором */
+  transition:
+    transform var(--duration-press) var(--ease-out),
+    box-shadow var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .swatch:hover {
+    transform: scale(1.06);
+    z-index: var(--z-raised);
+    box-shadow: var(--shadow);
+  }
+}
+.swatch:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+.swatch.is-selected {
+  border-color: var(--color-surface);
+  box-shadow: 0 0 0 3px var(--color-accent), inset 0 0 0 1px var(--color-swatch-inset);
+}
+/* Галочка выбора: белая с тёмной обводкой — читается на образце любой светлоты */
+.swatch.is-selected::before {
+  content: "\2713";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-60%);
+  text-align: center;
+  font-size: var(--fs-lg);
+  color: #ffffff;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.75);
+}
+/* Плашка кода — фикс-скрим, не зависит от темы (фон под ней произвольный) */
+.swatch__code {
+  background: var(--color-scrim-light);
+  border-radius: var(--radius-xs);
+  padding: 0 var(--space-1);
+  line-height: var(--lh-tight);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  color: var(--color-on-scrim);
+}
+
+.swatch-picker__hint {
+  margin-top: var(--space-2);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+/* Инлайн-вариант панели — для витрины/форм, где панель всегда развёрнута */
+.swatch-picker__panel--inline {
+  position: static;
+  opacity: 1;
+  transform: none;
+  visibility: visible;
+  pointer-events: auto;
+  box-shadow: none;
+  margin-top: var(--space-2);
+}
+
+/* Reduced motion: без масштаба на hover и сдвига панели */
+@media (prefers-reduced-motion: reduce) {
+  .swatch-picker__panel { transform: none; }
+  .swatch-picker.is-open .swatch-picker__panel { transform: none; }
+  .swatch:hover { transform: none; }
+}
+/* </BLOCK:component.swatch-picker> */

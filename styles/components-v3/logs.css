@@ -294,6 +294,21 @@
 }
 
 /* ==================== Empty ==================== */
+/* JSON-представление лога (тумблер «Вид: Текст/JSON») */
+.log-json-view {
+  margin: 0;
+  padding: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-relaxed);
+  color: var(--color-text-secondary);
+  background: var(--color-surface-sunken);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius);
+  overflow-x: auto;
+  white-space: pre;
+}
+
 .log-empty {
   display: flex;
   flex-direction: column;

@@ -7,9 +7,12 @@
   <link rel="stylesheet" href="/styles/index-v3.css">
   <style>
     /* === v3 Preview banner === */
+    :root { --banner-h: 36px; }
     .v3-banner {
       position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+      height: var(--banner-h);
       padding: 8px 16px;
+      box-sizing: border-box;
       background: var(--color-surface);
       border-bottom: 1px solid var(--color-border);
       color: var(--color-text-secondary);
@@ -20,7 +23,16 @@
     }
     .v3-banner a { color: var(--color-accent); text-decoration: none; margin-left: 16px; text-transform: none; letter-spacing: 0; }
     .v3-banner a:hover { text-decoration: underline; }
-    body { padding-top: 36px; }
+    body { padding-top: var(--banner-h); }
+    /* Шапка липнет ПОД баннером, а не под самым верхом */
+    .header { top: var(--banner-h); }
+    /* Боковые панели и оверлей начинаются ниже баннера + шапки */
+    .app-sidebar.left,
+    .app-sidebar.right {
+      top: calc(var(--header-h) + var(--banner-h));
+      height: calc(100vh - var(--header-h) - var(--banner-h));
+    }
+    .sidebar-overlay { top: calc(var(--header-h) + var(--banner-h)); }
     /* === End v3 banner === */
 
     /* Scroll Progress Bar */
@@ -52,9 +64,6 @@
 <body>
   <div class="v3-banner">
     v3 — lightweight · all components rewritten
-    <a href="/index.html">original</a>
-    <a href="/index-v2.html">v2 (legacy-mapping)</a>
-    <a href="/redesign-demo.html">mini demo</a>
   </div>
   <!-- Header -->
   <header class="header">
@@ -65,6 +74,8 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18"/><path d="M3 6h18"/><path d="M3 18h18"/></svg>
       </button>
       <span class="logo">CSS<span class="logo-accent">Lab</span></span>
+      <!-- Логотип активного бренда (паттерн хедера DeepSearch): пуст в нейтральной теме -->
+      <span class="brand-mark brand-mark--sm" id="header-brand-mark" role="img" aria-label="Логотип бренда"></span>
     </div>
 
     <div class="search-bar">
@@ -73,6 +84,70 @@
     </div>
 
     <div class="header-right">
+      <!-- Кто на портале (presence-strip) -->
+      <div class="presence-strip" id="header-presence">
+        <button type="button" class="presence-strip__trigger" aria-expanded="false" aria-label="На портале 5 человек — показать список">
+          <span class="presence-strip__list">
+            <span class="avatar presence-strip__avatar presence-strip__avatar--c1" aria-hidden="true">ДБ</span>
+            <span class="avatar presence-strip__avatar presence-strip__avatar--c2" aria-hidden="true">АК</span>
+            <span class="avatar presence-strip__avatar presence-strip__avatar--c3" aria-hidden="true">МС</span>
+            <span class="avatar presence-strip__avatar presence-strip__avatar--more" aria-hidden="true">+2</span>
+          </span>
+          <span class="presence-strip__label">5 на портале</span>
+        </button>
+        <div class="presence-strip__dropdown">
+          <div class="presence-strip__head">Сейчас на портале — 5</div>
+          <div class="presence-strip__item">
+            <span class="avatar presence-strip__avatar presence-strip__avatar--c1" aria-hidden="true">ДБ</span>
+            <span class="presence-strip__who">
+              <span class="presence-strip__name">Дмитрий Белобородов</span>
+              <span class="presence-strip__role">Администратор портала</span>
+              <span class="presence-strip__where">Админ-панель</span>
+            </span>
+          </div>
+          <div class="presence-strip__item">
+            <span class="avatar presence-strip__avatar presence-strip__avatar--c2" aria-hidden="true">АК</span>
+            <span class="presence-strip__who">
+              <span class="presence-strip__name">Анна Ковалёва</span>
+              <span class="presence-strip__role">Инженер-конструктор</span>
+              <span class="presence-strip__where">Каталог двигателей</span>
+            </span>
+          </div>
+          <div class="presence-strip__item">
+            <span class="avatar presence-strip__avatar presence-strip__avatar--c3" aria-hidden="true">МС</span>
+            <span class="presence-strip__who">
+              <span class="presence-strip__name">Михаил Соколов</span>
+              <span class="presence-strip__role">Менеджер по продажам</span>
+              <span class="presence-strip__where">Поиск</span>
+            </span>
+          </div>
+          <div class="presence-strip__item">
+            <span class="avatar presence-strip__avatar presence-strip__avatar--c4" aria-hidden="true">ЕП</span>
+            <span class="presence-strip__who">
+              <span class="presence-strip__name">Елена Петрова</span>
+              <span class="presence-strip__role">Технолог</span>
+              <span class="presence-strip__where">Опросный лист R&amp;D</span>
+            </span>
+          </div>
+          <div class="presence-strip__item">
+            <span class="avatar presence-strip__avatar presence-strip__avatar--c1" aria-hidden="true">ИН</span>
+            <span class="presence-strip__who">
+              <span class="presence-strip__name">Игорь Новиков</span>
+              <span class="presence-strip__role">Продакт-менеджер</span>
+              <span class="presence-strip__where">История запросов</span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <!-- Отдельные страницы -->
+      <a class="btn btn-secondary btn-sm" href="/print-forms.html" title="Печатные формы A4: даташит и опросный лист">📄 Формы</a>
+      <a class="btn btn-secondary btn-sm" href="/ral-colors.html" title="Справочник RAL Classic: 216 цветов с кодами">🎨 RAL</a>
+      <!-- Переключатель бренда (глобальный) -->
+      <div class="brand-switcher brand-switcher--compact js-brand-switcher" role="group" aria-label="Выбор бренда">
+        <button type="button" class="brand-switcher__option" data-brand-value="veza" aria-pressed="true">VEZA</button>
+        <button type="button" class="brand-switcher__option" data-brand-value="uralelectro" aria-pressed="false">UE</button>
+        <button type="button" class="brand-switcher__option" data-brand-value="hemah" aria-pressed="false">HEMAH</button>
+      </div>
       <!-- Info panel toggle -->
       <button class="btn btn-icon" id="info-toggle" title="Панель информации">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
@@ -138,6 +213,20 @@
           <li class="sidebar-nav-item"><a href="#date-picker" class="sidebar-nav-link">Date Picker</a></li>
           <li class="sidebar-nav-item"><a href="#command-palette" class="sidebar-nav-link">Command Palette</a></li>
           <li class="sidebar-nav-item"><a href="#notification" class="sidebar-nav-link">Notification</a></li>
+          <li class="sidebar-nav-item"><a href="#brand" class="sidebar-nav-link">Brand · VEZA / UE</a></li>
+          <li class="sidebar-nav-item"><a href="#user-menu" class="sidebar-nav-link">User Menu</a></li>
+          <li class="sidebar-nav-item"><a href="#skeleton" class="sidebar-nav-link">Skeleton</a></li>
+          <li class="sidebar-nav-item"><a href="#drawer" class="sidebar-nav-link">Drawer</a></li>
+          <li class="sidebar-nav-item"><a href="#accordion" class="sidebar-nav-link">Accordion</a></li>
+          <li class="sidebar-nav-item"><a href="#picklist" class="sidebar-nav-link">Picklist</a></li>
+          <li class="sidebar-nav-item"><a href="#swatch-picker" class="sidebar-nav-link">Swatch Picker</a></li>
+          <li class="sidebar-nav-item"><a href="#filter-pills" class="sidebar-nav-link">Filter Pills</a></li>
+          <li class="sidebar-nav-item"><a href="#quiz" class="sidebar-nav-link">Quiz</a></li>
+          <li class="sidebar-nav-item"><a href="#form-section" class="sidebar-nav-link">Form Section</a></li>
+          <li class="sidebar-nav-item"><a href="#spec-sheet" class="sidebar-nav-link">Spec Sheet · Print</a></li>
+          <li class="sidebar-nav-item"><a href="#code-panel" class="sidebar-nav-link">Code Panel</a></li>
+          <li class="sidebar-nav-item"><a href="/print-forms.html" class="sidebar-nav-link">📄 Печатные формы</a></li>
+          <li class="sidebar-nav-item"><a href="/ral-colors.html" class="sidebar-nav-link">🎨 Цвета RAL</a></li>
         </ul>
       </div>
     </aside>
@@ -298,7 +387,7 @@
             }
           </style>
 
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--space-4);">
 
             <!-- ===== VEZA brand card ===== -->
             <div class="brand-card">
@@ -338,17 +427,17 @@
               </div>
             </div>
 
-            <!-- ===== Уралэлектро brand card ===== -->
+            <!-- ===== Уралэлектро brand card (брендбук 2025) ===== -->
             <div class="brand-card">
               <h4 class="brand-card__title">Уралэлектро</h4>
-              <div class="brand-card__sub">Patina-green palette (3 тона) + NT Somic типографика.</div>
+              <div class="brand-card__sub">Графитово-синий RAL 5008 (брендбук 2025) + Wadik / NT Somic.</div>
 
               <div class="brand-swatch">
                 <span class="brand-swatch__chip" style="background: var(--brand-uralelectro)"></span>
                 <div class="brand-swatch__info">
                   <span class="brand-swatch__role">PRIMARY · --brand-uralelectro</span>
-                  <span class="brand-swatch__name">#136B5C · RGB 19 107 92 · RAL 6026</span>
-                  <span class="brand-swatch__codes">CMYK 85 / 21 / 60 / 39</span>
+                  <span class="brand-swatch__name">#374A51 · RGB 55 74 81 · RAL 5008</span>
+                  <span class="brand-swatch__codes">CMYK 78 / 50 / 45 / 54</span>
                 </div>
               </div>
 
@@ -356,8 +445,8 @@
                 <span class="brand-swatch__chip" style="background: var(--brand-uralelectro-dark)"></span>
                 <div class="brand-swatch__info">
                   <span class="brand-swatch__role">DARK · --brand-uralelectro-dark</span>
-                  <span class="brand-swatch__name">#065448 · RGB 6 84 72 · RAL 6036</span>
-                  <span class="brand-swatch__codes">CMYK 91 / 25 / 64 / 56</span>
+                  <span class="brand-swatch__name">#28363B · производный тёмный</span>
+                  <span class="brand-swatch__codes">hover / active состояния</span>
                 </div>
               </div>
 
@@ -365,21 +454,59 @@
                 <span class="brand-swatch__chip" style="background: var(--brand-uralelectro-light)"></span>
                 <div class="brand-swatch__info">
                   <span class="brand-swatch__role">LIGHT · --brand-uralelectro-light</span>
-                  <span class="brand-swatch__name">#459184 · RGB 69 145 132 · RAL 6033</span>
-                  <span class="brand-swatch__codes">CMYK 71 / 15 / 48 / 17</span>
+                  <span class="brand-swatch__name">#5C757F · производный светлый</span>
+                  <span class="brand-swatch__codes">tints / secondary-блоки</span>
                 </div>
               </div>
 
               <div class="brand-header-demo" style="background: var(--brand-uralelectro); color: var(--brand-uralelectro-text);">
                 <div style="font-weight: var(--fw-bold); font-size: var(--fs-md); letter-spacing: 0.04em;">УРАЛ ЭЛЕКТРО</div>
-                <div style="opacity: 0.85; font-size: var(--fs-xs); margin-top: 2px;">CATALOG · patina-green RAL 6026</div>
+                <div style="font-size: var(--fs-xs); margin-top: 2px;">CATALOG · графитово-синий RAL 5008</div>
+              </div>
+            </div>
+
+            <!-- ===== HEMAH brand card ===== -->
+            <div class="brand-card">
+              <h4 class="brand-card__title">HEMAH</h4>
+              <div class="brand-card__sub">Тил + яркий голубой CTA (hemah.pro) + Manrope / Open Sans.</div>
+
+              <div class="brand-swatch">
+                <span class="brand-swatch__chip" style="background: var(--brand-hemah)"></span>
+                <div class="brand-swatch__info">
+                  <span class="brand-swatch__role">PRIMARY · --brand-hemah</span>
+                  <span class="brand-swatch__name">#367589 · RGB 54 117 137</span>
+                  <span class="brand-swatch__codes">шапка, навигация, акценты</span>
+                </div>
+              </div>
+
+              <div class="brand-swatch">
+                <span class="brand-swatch__chip" style="background: var(--brand-hemah-dark)"></span>
+                <div class="brand-swatch__info">
+                  <span class="brand-swatch__role">DARK · --brand-hemah-dark</span>
+                  <span class="brand-swatch__name">#1F5A6A · тёмный тил</span>
+                  <span class="brand-swatch__codes">hover / active состояния</span>
+                </div>
+              </div>
+
+              <div class="brand-swatch">
+                <span class="brand-swatch__chip" style="background: var(--brand-hemah-highlight)"></span>
+                <div class="brand-swatch__info">
+                  <span class="brand-swatch__role">HIGHLIGHT · --brand-hemah-highlight</span>
+                  <span class="brand-swatch__name">#2FC6F6 · яркий голубой</span>
+                  <span class="brand-swatch__codes">CTA, подсветка данных; текст на нём — #0D2229</span>
+                </div>
+              </div>
+
+              <div class="brand-header-demo" style="background: var(--brand-hemah); color: var(--brand-hemah-text);">
+                <div style="font-weight: var(--fw-bold); font-size: var(--fs-md); letter-spacing: 0.04em;">HEMAH</div>
+                <div style="font-size: var(--fs-xs); margin-top: 2px;">АВТОМАТИКА ОВиК · hemah.pro</div>
               </div>
             </div>
 
           </div>
 
           <p class="text-muted" style="max-width: 720px; font-size: var(--fs-xs); margin-top: var(--space-3);">
-            <strong>Шрифты Уралэлектро:</strong> NT Somic Med (заголовки) / NT Somic (текст). На веб-страницах — fallback system-ui если шрифт не подгружен.
+            <strong>Шрифты брендов:</strong> VEZA — Roboto Medium/Light (fallback Arial); Уралэлектро (брендбук 2025) — Wadik (заголовки) / NT Somic (текст); HEMAH — Manrope (заголовки) / Open Sans (текст). Файлы в /assets/fonts/, подключены в base/fonts.css.
             <br>
             <strong>Текстура металла VEZA</strong> — поддерживается брендбуком как акцент, не реализована в css-lab (можно добавить через background-image SVG-noise).
           </p>
@@ -1081,9 +1208,9 @@
         <div class="log-controls-group">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-muted"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
           <span class="log-controls-label">Вид:</span>
-          <div class="view-mode-toggle">
-            <button class="view-mode-btn active">Текст</button>
-            <button class="view-mode-btn">JSON</button>
+          <div class="view-mode-toggle" id="demo-log-view-toggle">
+            <button class="view-mode-btn active" data-log-view="text" aria-pressed="true">Текст</button>
+            <button class="view-mode-btn" data-log-view="json" aria-pressed="false">JSON</button>
           </div>
         </div>
         <div style="flex: 1;"></div>
@@ -1095,7 +1222,16 @@
 
       <!-- Log Entry Examples -->
       <h3 class="mb-2">Log Entries</h3>
-      <div class="card mb-4" style="overflow: hidden; padding: 0;">
+      <!-- JSON-представление тех же записей (переключается тумблером «Вид») -->
+      <pre class="log-json-view mb-4" id="demo-log-json" hidden>[
+  { "ts": "2025-01-23T14:32:15.234", "level": "INFO",    "msg": "Photo processed successfully: A123BC77" },
+  { "ts": "2025-01-23T14:32:14.891", "level": "WARNING", "msg": "S3 upload retry attempt 2/3" },
+  { "ts": "2025-01-23T14:32:10.012", "level": "ERROR",   "msg": "Database connection failed: timeout after 30s" },
+  { "ts": "2025-01-23T14:32:08.567", "level": "DEBUG",   "msg": "Request payload received",
+    "logger": "app.services.photo_service", "event": "request_payload",
+    "payload": { "plate": "A123BC77", "timestamp": "2025-01-23T14:32:08", "camera_id": 1 } }
+]</pre>
+      <div class="card mb-4" id="demo-log-entries" style="overflow: hidden; padding: 0;">
         <!-- Log entry 1 - Info -->
         <div class="log-entry">
           <span class="log-entry-toggle">
@@ -2352,135 +2488,48 @@
     <!-- Date Picker Section -->
     <section id="date-picker" class="mb-4">
       <h2 class="mb-2">Date Picker</h2>
-      <p class="text-muted mb-2">Выбор даты с календарём и диапазоном</p>
+      <p class="text-muted mb-2">Календарь выпадает из поля; одиночная дата и диапазон. Генерируется JS (main.js, initDatePickers).</p>
 
-      <!-- Basic -->
+      <!-- Dropdown, одиночная дата -->
       <div class="card mb-4">
         <div class="card-header">
-          <h3 class="card-title">Выбор даты</h3>
+          <h3 class="card-title">Выбор даты (dropdown)</h3>
         </div>
-        <div class="card-body">
-          <div class="date-picker" style="width: 280px;">
-            <div class="date-picker-input">
-              <span class="date-picker-icon">📅</span>
-              <input type="text" placeholder="Выберите дату" value="23 ноября 2025">
-            </div>
+        <div class="card-body" style="min-height: 420px;">
+          <div class="date-picker" data-datepicker data-mode="single">
+            <button type="button" class="date-picker-input" aria-haspopup="dialog" aria-expanded="false" style="width: 280px;">
+              <span class="date-picker-icon" aria-hidden="true">📅</span>
+              <span class="date-picker-input-text date-picker-input-placeholder">Выберите дату</span>
+            </button>
+            <div class="date-picker-dropdown" role="dialog" aria-label="Календарь"></div>
           </div>
         </div>
       </div>
 
-      <!-- Inline Calendar -->
+      <!-- Dropdown, диапазон -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Диапазон дат (dropdown)</h3>
+        </div>
+        <div class="card-body" style="min-height: 420px;">
+          <div class="date-picker" data-datepicker data-mode="range">
+            <button type="button" class="date-picker-input" aria-haspopup="dialog" aria-expanded="false" style="width: 320px;">
+              <span class="date-picker-icon" aria-hidden="true">📅</span>
+              <span class="date-picker-input-text date-picker-input-placeholder">Выберите период</span>
+            </button>
+            <div class="date-picker-dropdown" role="dialog" aria-label="Календарь периода"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inline календарь -->
       <div class="card mb-4">
         <div class="card-header">
           <h3 class="card-title">Inline календарь</h3>
         </div>
         <div class="card-body">
-          <div class="date-picker-inline">
-            <div class="date-picker-header">
-              <button class="date-picker-nav-btn">‹</button>
-              <span class="date-picker-month-year">Ноябрь 2025</span>
-              <button class="date-picker-nav-btn">›</button>
-            </div>
-            <div class="date-picker-weekdays">
-              <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
-            </div>
-            <div class="date-picker-days">
-              <span class="other-month">28</span>
-              <span class="other-month">29</span>
-              <span class="other-month">30</span>
-              <span class="other-month">31</span>
-              <span>1</span>
-              <span>2</span>
-              <span>3</span>
-              <span>4</span>
-              <span>5</span>
-              <span>6</span>
-              <span>7</span>
-              <span>8</span>
-              <span>9</span>
-              <span>10</span>
-              <span>11</span>
-              <span>12</span>
-              <span>13</span>
-              <span>14</span>
-              <span>15</span>
-              <span>16</span>
-              <span>17</span>
-              <span>18</span>
-              <span>19</span>
-              <span>20</span>
-              <span>21</span>
-              <span>22</span>
-              <span class="today selected">23</span>
-              <span>24</span>
-              <span>25</span>
-              <span>26</span>
-              <span>27</span>
-              <span>28</span>
-              <span>29</span>
-              <span>30</span>
-              <span class="other-month">1</span>
-            </div>
-            <div class="date-picker-footer">
-              <button class="btn btn-sm">Сегодня</button>
-              <button class="btn btn-sm btn-ghost">Очистить</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Range Selection -->
-      <div class="card mb-4">
-        <div class="card-header">
-          <h3 class="card-title">Диапазон дат</h3>
-        </div>
-        <div class="card-body">
-          <div class="date-picker-inline">
-            <div class="date-picker-header">
-              <button class="date-picker-nav-btn">‹</button>
-              <span class="date-picker-month-year">Ноябрь 2025</span>
-              <button class="date-picker-nav-btn">›</button>
-            </div>
-            <div class="date-picker-weekdays">
-              <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
-            </div>
-            <div class="date-picker-days">
-              <span class="other-month">28</span>
-              <span class="other-month">29</span>
-              <span class="other-month">30</span>
-              <span class="other-month">31</span>
-              <span>1</span>
-              <span>2</span>
-              <span>3</span>
-              <span>4</span>
-              <span>5</span>
-              <span>6</span>
-              <span>7</span>
-              <span>8</span>
-              <span>9</span>
-              <span>10</span>
-              <span>11</span>
-              <span>12</span>
-              <span>13</span>
-              <span>14</span>
-              <span class="range-start">15</span>
-              <span class="in-range">16</span>
-              <span class="in-range">17</span>
-              <span class="in-range">18</span>
-              <span class="in-range">19</span>
-              <span class="in-range">20</span>
-              <span class="range-end">21</span>
-              <span>22</span>
-              <span class="today">23</span>
-              <span>24</span>
-              <span>25</span>
-              <span>26</span>
-              <span>27</span>
-              <span>28</span>
-              <span>29</span>
-              <span>30</span>
-              <span class="other-month">1</span>
-            </div>
+          <div class="date-picker" data-datepicker data-mode="single" data-inline style="display: inline-block;">
+            <div class="date-picker-dropdown date-picker-dropdown--inline"></div>
           </div>
         </div>
       </div>
@@ -2708,6 +2757,567 @@
       </div>
     </section>
 
+    <!-- ===== Brand Section: VEZA / Уралэлектро ===== -->
+    <section id="brand" class="mb-4">
+      <h2 class="mb-2">Бренды — VEZA и Уралэлектро</h2>
+      <p class="text-muted mb-2">Переключение корпоративной темы через <code>data-brand</code>: акцент, шрифты и логотип берутся из токенов темы. Сочетается со светлой/тёмной темой.</p>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Переключатель бренда</h3></div>
+        <div class="card-body">
+          <div class="brand-switcher" id="brand-switcher" role="group" aria-label="Выбор бренда">
+            <button type="button" class="brand-switcher__option" data-brand-value="veza" aria-pressed="true">VEZA</button>
+            <button type="button" class="brand-switcher__option" data-brand-value="uralelectro" aria-pressed="false">Уралэлектро</button>
+            <button type="button" class="brand-switcher__option" data-brand-value="hemah" aria-pressed="false">HEMAH</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Логотипы — корпоративный цвет и белый</h3></div>
+        <div class="card-body">
+          <div class="flex gap-6" style="flex-wrap: wrap; align-items: center;">
+            <span class="brand-mark brand-mark--lg" role="img" aria-label="Логотип бренда, корпоративный цвет"></span>
+            <span class="brand-plate">
+              <span class="brand-mark brand-mark--lg brand-mark--mono" role="img" aria-label="Логотип бренда, белый"></span>
+            </span>
+          </div>
+          <p class="text-muted mb-0" style="margin-top: var(--space-3);">Слева — цветной вариант на светлом фоне, справа — белый (mono) на брендовой плашке. Выберите бренд переключателем выше.</p>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Типографика VEZA (брендбук)</h3></div>
+        <div class="card-body" data-brand="veza">
+          <h2 class="font-display" style="margin: 0 0 var(--space-2);">Roboto Medium</h2>
+          <p style="margin: 0 0 var(--space-1);">Основной текст — Roboto Light. Во всех внутренних коммуникациях используется гарнитура Roboto; при невозможности — Arial.</p>
+          <p class="text-muted" style="font-size: var(--fs-xs); margin: 0;">Фирменные цвета: #2E8A3C · Pantone 356 C · RAL 6037 и #5B5B5B (вторичный серый).</p>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Типографика Уралэлектро (брендбук 2025)</h3></div>
+        <div class="card-body" data-brand="uralelectro">
+          <h2 class="font-display" style="margin: 0 0 var(--space-2);">ШРИФТЫ WADIK</h2>
+          <p style="font-weight: var(--fw-medium); margin: 0 0 var(--space-1);">Подзаголовок — NT Somic Medium</p>
+          <p style="margin: 0 0 var(--space-1);">Основной текст — NT Somic Regular. Нейтральный и функциональный шрифт обеспечивает высокую читаемость больших объёмов текста.</p>
+          <p class="text-muted" style="font-size: var(--fs-xs); margin: 0;">Дисклаймер — NT Somic Regular. Базовый цвет #374A51 · RAL 5008 · CMYK 78/50/45/54.</p>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Типографика HEMAH (hemah.pro)</h3></div>
+        <div class="card-body" data-brand="hemah">
+          <h2 class="font-display" style="margin: 0 0 var(--space-2);">Manrope Bold</h2>
+          <p style="margin: 0 0 var(--space-1);">Основной текст — Open Sans. Тил #367589 в навигации и акцентах, яркий голубой #2FC6F6 — CTA и подсветка данных.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== User Menu Section ===== -->
+    <section id="user-menu" class="mb-4">
+      <h2 class="mb-2">User Menu — меню пользователя портала</h2>
+      <p class="text-muted mb-2">Порт из corporate-search / НТБ: аватар с онлайн-точкой, имя и роль, дропдаун с identity-шапкой и пунктами по ролям.</p>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Триггер + дропдаун</h3></div>
+        <div class="card-body" style="min-height: 340px;">
+          <div class="flex" style="justify-content: flex-end;">
+            <div class="user-menu" id="demo-user-menu">
+              <button type="button" class="user-menu__trigger" aria-expanded="false" aria-label="Меню пользователя: Дмитрий Белобородов, в сети">
+                <span class="user-menu__avatar-wrap">
+                  <span class="avatar avatar-sm" aria-hidden="true" style="background: var(--color-accent-soft); color: var(--color-accent); font-weight: var(--fw-bold);">ДБ</span>
+                </span>
+                <span class="user-menu__caption">
+                  <span class="user-menu__name">Дмитрий Б.</span>
+                  <span class="user-menu__caption-role">Администратор</span>
+                </span>
+                <svg class="user-menu__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <!-- Disclosure-паттерн: обычные кнопки/ссылки, без role=menu
+                   (полноценный menu требует стрелочной навигации) -->
+              <div class="user-menu__dropdown" hidden>
+                <div class="user-menu__header">
+                  <span class="avatar avatar-lg" aria-hidden="true" style="background: var(--color-accent-soft); color: var(--color-accent); font-weight: var(--fw-bold);">ДБ</span>
+                  <div class="user-menu__identity">
+                    <span class="user-menu__fullname">Дмитрий Белобородов</span>
+                    <span class="user-menu__email">d.beloborodov@veza.ru</span>
+                    <span class="user-menu__role">Администратор</span>
+                  </div>
+                </div>
+                <hr class="user-menu__divider">
+                <button type="button" class="user-menu__item">
+                  <svg class="user-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                  История запросов
+                </button>
+                <button type="button" class="user-menu__item">
+                  <svg class="user-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                  Админ-панель
+                </button>
+                <hr class="user-menu__divider">
+                <button type="button" class="user-menu__item user-menu__item--danger">
+                  <svg class="user-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+                  Выйти
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Skeleton Section ===== -->
+    <section id="skeleton" class="mb-4">
+      <h2 class="mb-2">Skeleton — заглушки загрузки</h2>
+      <p class="text-muted mb-2">Пульс через opacity, reduced-motion — статичная заглушка.</p>
+      <div class="card mb-4">
+        <div class="card-body">
+          <!-- Скелетон — декорация: скрыт от AT, статус несёт role=status рядом -->
+          <div aria-busy="true" style="max-width: 480px;">
+          <p class="sr-only" role="status">Загрузка содержимого…</p>
+          <div class="skeleton-card" aria-hidden="true">
+            <div class="skeleton-card__row">
+              <span class="skeleton skeleton--avatar"></span>
+              <div class="skeleton-card__body">
+                <span class="skeleton skeleton--title"></span>
+              </div>
+            </div>
+            <span class="skeleton skeleton--text"></span>
+            <span class="skeleton skeleton--text" style="width: 85%;"></span>
+            <span class="skeleton skeleton--text" style="width: 60%;"></span>
+            <span class="skeleton skeleton--btn"></span>
+          </div>
+          </div><!-- /[aria-busy] -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Drawer Section ===== -->
+    <section id="drawer" class="mb-4">
+      <h2 class="mb-2">Drawer — выдвижная панель</h2>
+      <p class="text-muted mb-2">Slide-over справа (cert-data / corporate-search): вход и выход по одному пути, кривая --ease-drawer.</p>
+      <div class="card mb-4">
+        <div class="card-body">
+          <button type="button" class="btn btn-primary" id="demo-drawer-open">Открыть панель</button>
+        </div>
+      </div>
+      <div class="drawer" id="demo-drawer">
+        <div class="drawer__overlay" data-drawer-close></div>
+        <div class="drawer__panel" role="dialog" aria-modal="true" aria-labelledby="demo-drawer-title">
+          <div class="drawer__header">
+            <h3 class="drawer__title" id="demo-drawer-title">Карточка сертификата</h3>
+            <button type="button" class="drawer__close" data-drawer-close aria-label="Закрыть панель">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+          </div>
+          <div class="drawer__body">
+            <div class="spec-grid" style="grid-template-columns: 1fr;">
+              <div class="spec-row"><span class="spec-row__label">Номер</span><span class="spec-row__value">ЕАЭС RU С-RU.АБ58.В.01234/24</span></div>
+              <div class="spec-row"><span class="spec-row__label">Статус</span><span class="spec-row__value">Действует</span></div>
+              <div class="spec-row"><span class="spec-row__label">Действителен до</span><span class="spec-row__value">14.03.2027</span></div>
+              <div class="spec-row"><span class="spec-row__label">Продукция</span><span class="spec-row__value">Двигатели АДМ 63–132</span></div>
+            </div>
+          </div>
+          <div class="drawer__footer">
+            <button type="button" class="btn btn-secondary" data-drawer-close>Закрыть</button>
+            <button type="button" class="btn btn-primary">Скачать PDF</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Accordion Section ===== -->
+    <section id="accordion" class="mb-4">
+      <h2 class="mb-2">Accordion — сворачиваемые секции</h2>
+      <p class="text-muted mb-2">Раскрытие через grid-rows 0fr→1fr, счётчики выбранного как в фильтрах motor-datasheet.</p>
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="accordion" style="max-width: 520px;">
+            <div class="accordion__item is-open">
+              <button type="button" class="accordion__header" aria-expanded="true" aria-controls="acc-demo-1">
+                Мощность и обороты
+                <span class="accordion__count" aria-label="выбрано: 3">3</span>
+                <svg class="accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="accordion__panel" id="acc-demo-1">
+                <div class="accordion__panel-inner">
+                  <div class="accordion__body">Диапазон мощностей 0,12–315 кВт, число полюсов 2/4/6/8, синхронные обороты 3000/1500/1000/750 об/мин.</div>
+                </div>
+              </div>
+            </div>
+            <div class="accordion__item">
+              <button type="button" class="accordion__header" aria-expanded="false" aria-controls="acc-demo-2">
+                Климат и защита
+                <span class="accordion__count accordion__count--empty" aria-label="выбрано: 0">0</span>
+                <svg class="accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="accordion__panel" id="acc-demo-2">
+                <div class="accordion__panel-inner">
+                  <div class="accordion__body">Климатические исполнения У, УХЛ, Т, ОМ; степени защиты IP54–IP66.</div>
+                </div>
+              </div>
+            </div>
+            <div class="accordion__item">
+              <button type="button" class="accordion__header" aria-expanded="false" aria-controls="acc-demo-3">
+                Монтаж
+                <span class="accordion__count accordion__count--empty" aria-label="выбрано: 0">0</span>
+                <svg class="accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="accordion__panel" id="acc-demo-3">
+                <div class="accordion__panel-inner">
+                  <div class="accordion__body">Монтажные исполнения IM1001, IM1081, IM2081, IM3001, IM3081.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Picklist Section ===== -->
+    <section id="picklist" class="mb-4">
+      <h2 class="mb-2">Picklist — мульти-select пиклист</h2>
+      <p class="text-muted mb-2">Из опросного листа R&amp;D Уралэлектро: чипы выбранного в контроле, панель с чекбоксами и полем «другое».</p>
+      <div class="card mb-4">
+        <div class="card-body" style="min-height: 320px;">
+          <div class="form-field" style="max-width: 420px;">
+            <label class="form-field__label" id="demo-picklist-label">Степень защиты IP</label>
+            <div class="picklist" id="demo-picklist">
+              <!-- Контрол — обычный контейнер (клик открывает панель), клавиатура —
+                   через отдельную кнопку-раскрыватель: интерактив не вкладывается
+                   в интерактив (axe: nested-interactive) -->
+              <div class="picklist__control">
+                <span class="picklist__chip">IP54 <button type="button" class="picklist__chip-remove" aria-label="Убрать IP54">×</button></span>
+                <span class="picklist__chip">IP55 <button type="button" class="picklist__chip-remove" aria-label="Убрать IP55">×</button></span>
+                <button type="button" class="picklist__toggle" aria-expanded="false" aria-controls="demo-picklist-panel" aria-labelledby="demo-picklist-label">
+                  <svg class="picklist__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+              </div>
+              <div class="picklist__panel" id="demo-picklist-panel">
+                <div class="picklist__search">
+                  <input type="search" class="input" placeholder="Поиск по списку…" aria-label="Фильтр опций" data-picklist-search>
+                </div>
+                <label class="picklist__option"><input type="checkbox" checked> IP54</label>
+                <label class="picklist__option"><input type="checkbox" checked> IP55</label>
+                <label class="picklist__option"><input type="checkbox"> IP56</label>
+                <label class="picklist__option"><input type="checkbox"> IP65</label>
+                <label class="picklist__option"><input type="checkbox"> IP66</label>
+                <div class="picklist__no-match" hidden>Ничего не найдено</div>
+                <div class="picklist__other">
+                  <input type="text" class="input" placeholder="Другое значение…" aria-label="Другое значение">
+                  <button type="button" class="btn btn-secondary btn-sm" aria-label="Добавить своё значение">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Вариант с чипами-опциями: значения видны сразу, клик — выбрать/снять -->
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Вариант с чипами-опциями</h3></div>
+        <div class="card-body">
+          <div class="form-field" style="max-width: 560px; margin-bottom: var(--space-4);">
+            <span class="form-field__label" id="demo-chip-poles">Число полюсов</span>
+            <div class="chips" role="group" aria-labelledby="demo-chip-poles" data-chip-multi>
+              <button type="button" class="chip chip-choice is-active" aria-pressed="true">2</button>
+              <button type="button" class="chip chip-choice is-active" aria-pressed="true">4</button>
+              <button type="button" class="chip chip-choice" aria-pressed="false">6</button>
+              <button type="button" class="chip chip-choice" aria-pressed="false">8</button>
+            </div>
+          </div>
+          <div class="form-field" style="max-width: 560px;">
+            <span class="form-field__label" id="demo-chip-climate">Климатическое исполнение</span>
+            <div class="chips" role="group" aria-labelledby="demo-chip-climate" data-chip-multi>
+              <button type="button" class="chip chip-choice is-active" aria-pressed="true">У2</button>
+              <button type="button" class="chip chip-choice" aria-pressed="false">У3</button>
+              <button type="button" class="chip chip-choice" aria-pressed="false">УХЛ4</button>
+              <button type="button" class="chip chip-choice" aria-pressed="false">Т2</button>
+              <button type="button" class="chip chip-choice" aria-pressed="false">ОМ2</button>
+              <button type="button" class="chip chip-choice" aria-pressed="false">О2</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Swatch Picker Section ===== -->
+    <section id="swatch-picker" class="mb-4">
+      <h2 class="mb-2">Swatch Picker — палитра RAL</h2>
+      <p class="text-muted mb-2">Выбор цветов покрытия из палитры с образцами (опросный лист R&amp;D). <a href="/ral-colors.html"><strong>Все 216 цветов с кодами и названиями — страница «Цвета RAL» →</strong></a></p>
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="form-field" style="max-width: 480px;">
+            <label class="form-field__label" id="demo-swatch-label">Цвет покрытия RAL (можно несколько)</label>
+            <div class="swatch-picker" id="demo-swatch-picker" data-swatch-fill data-swatch-selected="5008">
+              <div class="swatch-picker__control">
+                <button type="button" class="swatch-picker__toggle" aria-expanded="false" aria-controls="demo-swatch-panel" aria-labelledby="demo-swatch-label">
+                  <svg class="swatch-picker__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+              </div>
+              <div class="swatch-picker__panel" id="demo-swatch-panel">
+                <input type="search" class="input swatch-picker__search" placeholder="Поиск: номер или название…" aria-label="Поиск цвета RAL">
+                <div class="swatch-picker__grid"></div>
+                <div class="swatch-picker__hint">Клик — выбрать/снять. Можно несколько цветов. Полный справочник — <a href="/ral-colors.html">страница RAL</a>.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Filter Pills Section ===== -->
+    <section id="filter-pills" class="mb-4">
+      <h2 class="mb-2">Filter Pills — активные фильтры</h2>
+      <p class="text-muted mb-2">Полоса применённых фильтров каталога (cert-data / motor-datasheet): пилюли с удалением и «Сбросить все».</p>
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="filter-pills" id="demo-filter-pills">
+            <span class="filter-pills__label">Фильтры:</span>
+            <span class="filter-pill"><span class="filter-pill__key">Серия:</span><span class="filter-pill__value">АДМ</span>
+              <button type="button" class="filter-pill__remove" aria-label="Убрать фильтр Серия АДМ"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></span>
+            <span class="filter-pill"><span class="filter-pill__key">Мощность:</span><span class="filter-pill__value">5,5–22 кВт</span>
+              <button type="button" class="filter-pill__remove" aria-label="Убрать фильтр мощности"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></span>
+            <span class="filter-pill"><span class="filter-pill__key">Класс:</span><span class="filter-pill__value">IE3</span>
+              <button type="button" class="filter-pill__remove" aria-label="Убрать фильтр IE3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></span>
+            <button type="button" class="filter-pills__clear">Сбросить все</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Quiz Section ===== -->
+    <section id="quiz" class="mb-4">
+      <h2 class="mb-2">Quiz — тест знаний</h2>
+      <p class="text-muted mb-2">Из теста менеджеров Уралэлектро: шапка с таймером/прогрессом/статистикой + карточки вопросов с проверкой ответа.</p>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="quiz-header mb-4" style="position: static;">
+            <div class="quiz-header__top">
+              <div>
+                <h3 class="quiz-header__title">Тест v2 — АО «МЭЗ «Уралэлектро»</h3>
+                <div class="quiz-header__sub">Электродвигатели, НВА, мотор-редукторы | 87 вопросов</div>
+              </div>
+              <div class="quiz-header__timer">00:14:32</div>
+            </div>
+            <div class="quiz-header__progress" role="progressbar" aria-valuenow="42" aria-valuemin="0" aria-valuemax="100" aria-label="Прогресс теста: 42%"><div class="quiz-header__progress-fill" style="transform: scaleX(0.42);"></div></div>
+            <div class="quiz-header__stats">
+              <span class="quiz-stat">Отвечено: 37 / 87</span>
+              <span class="quiz-stat quiz-stat--correct">Верно: 31</span>
+              <span class="quiz-stat quiz-stat--wrong">Неверно: 6</span>
+              <span class="quiz-stat">84%</span>
+            </div>
+            <div class="quiz-header__nav" role="group" aria-label="Блоки вопросов">
+              <button type="button" class="quiz-header__nav-btn is-active" aria-pressed="true">Блок 1</button>
+              <button type="button" class="quiz-header__nav-btn" aria-pressed="false">Блок 2</button>
+              <button type="button" class="quiz-header__nav-btn" aria-pressed="false">Блок 3</button>
+              <button type="button" class="quiz-header__nav-btn" aria-pressed="false">Блок 4</button>
+            </div>
+          </div>
+
+          <div class="quiz-question is-correct">
+            <div class="quiz-question__id">1.03 <span class="quiz-result quiz-result--ok">Верно</span></div>
+            <div class="quiz-question__text">Какая серия является базовой общепромышленной в размерах ГОСТ?</div>
+            <div class="quiz-options">
+              <button type="button" class="quiz-option is-disabled"><span class="quiz-option__letter">а)</span><span>АДЭМ</span></button>
+              <button type="button" class="quiz-option is-correct is-disabled"><span class="quiz-option__letter">б)</span><span>АДМ</span></button>
+              <button type="button" class="quiz-option is-disabled"><span class="quiz-option__letter">в)</span><span>ВАДМ-М</span></button>
+            </div>
+          </div>
+
+          <div class="quiz-question" id="demo-quiz-live">
+            <!-- aria-live: результат «Верно/Неверно» объявляется скринридеру -->
+            <div class="quiz-question__id" aria-live="polite">1.04</div>
+            <div class="quiz-question__text">Какая серия является IEC-аналогом серии АДМ?</div>
+            <div class="quiz-options">
+              <button type="button" class="quiz-option" data-quiz-answer="wrong"><span class="quiz-option__letter">а)</span><span>IMEM</span></button>
+              <button type="button" class="quiz-option" data-quiz-answer="correct"><span class="quiz-option__letter">б)</span><span>IMM</span></button>
+              <button type="button" class="quiz-option" data-quiz-answer="wrong"><span class="quiz-option__letter">в)</span><span>IMMT</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Form Section ===== -->
+    <section id="form-section" class="mb-4">
+      <h2 class="mb-2">Form Section — секции сложной формы</h2>
+      <p class="text-muted mb-2">Из опросного листа R&amp;D: fieldset с брендовой засечкой, сетка полей, повторяемые строки, статус автосохранения.</p>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="flex mb-4" style="justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-2);">
+            <span class="save-status save-status--saved">Черновик сохраняется автоматически</span>
+            <span class="save-status__notlive">Данные только в этом браузере</span>
+          </div>
+
+          <fieldset class="form-section">
+            <legend class="form-section__legend">1. Инициатор и контактное лицо</legend>
+            <div class="form-section__hint">Кто ставит задачу и с кем согласовывать технические вопросы.</div>
+            <div class="form-grid">
+              <div class="form-field">
+                <label class="form-field__label" for="fs-demo-name">ФИО инициатора <span class="form-field__req" aria-hidden="true">*</span></label>
+                <!-- Подсказка вне label: не попадает в имя поля, связь через describedby -->
+                <button type="button" class="form-field__tip" aria-label="Подсказка к полю ФИО" aria-describedby="fs-demo-name-tip">?</button>
+                <span class="sr-only" id="fs-demo-name-tip">Полностью: фамилия, имя, отчество инициатора заявки</span>
+                <input id="fs-demo-name" class="input" placeholder="Иванов Иван Иванович" autocomplete="name" required>
+              </div>
+              <div class="form-field">
+                <label class="form-field__label" for="fs-demo-mail">E-mail <span class="form-field__req" aria-hidden="true">*</span></label>
+                <input id="fs-demo-mail" class="input" type="email" placeholder="name@company.ru" autocomplete="email" required>
+              </div>
+              <div class="form-field form-field--full">
+                <label class="form-field__label" for="fs-demo-note">Бизнес-обоснование</label>
+                <textarea id="fs-demo-note" class="textarea" placeholder="Замещение импорта, запрос клиента…" aria-describedby="fs-demo-note-unit"></textarea>
+                <span class="form-field__unit" id="fs-demo-note-unit">целевая / рыночная</span>
+              </div>
+            </div>
+
+            <h4 class="form-section__subtitle">Аналоги / прототипы</h4>
+            <div class="form-rows mb-2" id="demo-form-rows" data-row-label="Аналог">
+              <div class="row-card">
+                <div class="row-card__head">
+                  <span class="row-card__n">Аналог 1</span>
+                  <button type="button" class="row-card__remove">Удалить</button>
+                </div>
+                <div class="form-grid">
+                  <div class="form-field">
+                    <label class="form-field__label" for="fs-demo-analog">Производитель / модель</label>
+                    <input id="fs-demo-analog" class="input" placeholder="напр. Siemens 1LE1">
+                  </div>
+                  <div class="form-field">
+                    <label class="form-field__label" for="fs-demo-link">Ссылка на материалы</label>
+                    <input id="fs-demo-link" class="input" placeholder="https://…">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="form-rows__add" data-rows-target="demo-form-rows">+ Добавить аналог</button>
+          </fieldset>
+
+          <fieldset class="form-section" style="margin-bottom: 0;">
+            <legend class="form-section__legend">12. Примечания в свободной форме</legend>
+            <div class="rte-toolbar" role="toolbar" aria-label="Форматирование" data-rte-for="demo-rte-area">
+              <button type="button" class="rte-toolbar__btn rte-toolbar__btn--b" data-rte-cmd="bold" aria-label="Полужирный" aria-pressed="false">Ж</button>
+              <button type="button" class="rte-toolbar__btn rte-toolbar__btn--i" data-rte-cmd="italic" aria-label="Курсив" aria-pressed="false">К</button>
+              <button type="button" class="rte-toolbar__btn" data-rte-cmd="underline" style="text-decoration: underline;" aria-label="Подчёркнутый" aria-pressed="false">Ч</button>
+              <button type="button" class="rte-toolbar__btn" data-rte-cmd="strikeThrough" style="text-decoration: line-through;" aria-label="Зачёркнутый" aria-pressed="false">З</button>
+              <span class="rte-toolbar__sep"></span>
+              <button type="button" class="rte-toolbar__btn" data-rte-cmd="insertUnorderedList" aria-label="Маркированный список">• Список</button>
+              <button type="button" class="rte-toolbar__btn" data-rte-cmd="insertOrderedList" aria-label="Нумерованный список">1. Список</button>
+              <span class="rte-toolbar__sep"></span>
+              <button type="button" class="rte-toolbar__btn" data-rte-cmd="removeFormat" aria-label="Убрать форматирование">✕ Формат</button>
+            </div>
+            <div class="rte-area" id="demo-rte-area" contenteditable="true" data-placeholder="Введите примечания…" role="textbox" aria-multiline="true" aria-label="Примечания"></div>
+          </fieldset>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Spec Sheet Section ===== -->
+    <section id="spec-sheet" class="mb-4">
+      <h2 class="mb-2">Spec Sheet — печатная форма / даташит</h2>
+      <p class="text-muted mb-2">Печатные формы motor-datasheet и опросного листа: строки «параметр — значение», таблица, карточки параметров, IE-бейджи. При печати — A4 c тонкими линейками. <a href="/print-forms.html"><strong>Полные листы с шапкой и подвалом — страница «Печатные формы» →</strong></a></p>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="flex gap-2 mb-4" style="flex-wrap: wrap;">
+            <span class="ie-badge ie-badge--ie1">IE1</span>
+            <span class="ie-badge ie-badge--ie2">IE2</span>
+            <span class="ie-badge ie-badge--ie3">IE3</span>
+            <span class="ie-badge ie-badge--ie4">IE4</span>
+            <span class="ie-badge ie-badge--ex">Ex db IIB T4</span>
+          </div>
+
+          <div class="param-grid mb-4">
+            <div class="param-card">
+              <span class="param-card__icon" aria-hidden="true">⚡</span>
+              <div>
+                <div class="param-card__label">Мощность</div>
+                <div class="param-card__value">7,5 кВт</div>
+              </div>
+            </div>
+            <div class="param-card">
+              <span class="param-card__icon" aria-hidden="true">🔄</span>
+              <div>
+                <div class="param-card__label">Обороты</div>
+                <div class="param-card__value">1455 об/мин</div>
+              </div>
+            </div>
+            <div class="param-card">
+              <span class="param-card__icon" aria-hidden="true">📐</span>
+              <div>
+                <div class="param-card__label">Габарит</div>
+                <div class="param-card__value">132S</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="spec-sheet">
+            <div class="spec-sheet__header">
+              <div class="flex gap-4" style="align-items: center;">
+                <span class="brand-mark" role="img" aria-label="Логотип бренда"></span>
+                <h3 class="spec-sheet__title" style="margin: 0;">Опросный лист · АДМ 132 S4</h3>
+              </div>
+              <div class="spec-sheet__meta">Заявка RND-2026-014<br>29.07.2026</div>
+            </div>
+            <div class="spec-section">
+              <h4 class="spec-section__title">Технические характеристики</h4>
+              <div class="spec-grid">
+                <div class="spec-row"><span class="spec-row__label">Мощность</span><span class="spec-row__value">7,5 кВт</span></div>
+                <div class="spec-row"><span class="spec-row__label">Число полюсов</span><span class="spec-row__value">4</span></div>
+                <div class="spec-row"><span class="spec-row__label">Напряжение</span><span class="spec-row__value">380/660 В</span></div>
+                <div class="spec-row"><span class="spec-row__label">Частота</span><span class="spec-row__value">50 Гц</span></div>
+                <div class="spec-row"><span class="spec-row__label">Степень защиты</span><span class="spec-row__value">IP55</span></div>
+                <div class="spec-row"><span class="spec-row__label">Климат</span><span class="spec-row__value">У2</span></div>
+                <div class="spec-row spec-row--full"><span class="spec-row__label">Особые требования</span><span class="spec-row__value">Антиконденсатный подогрев 220 В, изолированный подшипник NDE для работы от ПЧ.</span></div>
+              </div>
+            </div>
+            <div class="spec-section" style="margin-bottom: 0;">
+              <h4 class="spec-section__title">Рабочие точки</h4>
+              <table class="spec-table">
+                <thead>
+                  <tr><th>№</th><th>P, кВт</th><th>n, об/мин</th><th>M, Н·м</th><th>Режим</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>1</td><td class="spec-table__cell--highlight">7,5</td><td>1455</td><td>49,2</td><td>S1</td></tr>
+                  <tr><td>2</td><td>5,5</td><td>960</td><td>54,7</td><td>S3 40%</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Code Panel Section ===== -->
+    <section id="code-panel" class="mb-4">
+      <h2 class="mb-2">Code Panel — коды маркировки</h2>
+      <p class="text-muted mb-2">Панель автогенерации кодов из выбранных параметров (спецификация v9.2, опросный лист R&amp;D).</p>
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="code-panel" style="max-width: 640px;">
+            <h4 class="code-panel__title">Коды маркировки (спецификация v9.2)</h4>
+            <p class="code-panel__hint">Автоматически из выбранных параметров ТЗ по PRISM-каталогу. Значения без кода помечаются как нестандартные.</p>
+            <div class="code-panel__string">М812+С702+С412+С601+Н602+М501</div>
+            <table class="code-panel__table">
+              <tbody>
+                <tr><td class="code-panel__code">М812</td><td class="code-panel__param">IP55</td><td>Степень защиты корпуса</td></tr>
+                <tr><td class="code-panel__code">С702</td><td class="code-panel__param">У2</td><td>Климатическое исполнение</td></tr>
+                <tr><td class="code-panel__code">С412</td><td class="code-panel__param">380/660 В</td><td>Напряжение питания</td></tr>
+                <tr><td class="code-panel__code">Н602</td><td class="code-panel__param">IE2</td><td>Класс энергоэффективности</td></tr>
+              </tbody>
+            </table>
+            <div class="code-panel__warn">
+              <b>Нестандартные значения (Конвенция 00):</b>
+              <ul><li>Частота 400 Гц — кода в каталоге нет</li></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
       </div><!-- /.container -->
     </main><!-- /.app-content -->
 
@@ -2725,12 +3335,12 @@
           <div class="sidebar-widget-title">Статистика</div>
           <div class="sidebar-stats">
             <div class="sidebar-stat">
-              <div class="sidebar-stat-value">29</div>
+              <div class="sidebar-stat-value">42</div>
               <div class="sidebar-stat-label">Компонентов</div>
             </div>
             <div class="sidebar-stat">
-              <div class="sidebar-stat-value">2</div>
-              <div class="sidebar-stat-label">Темы</div>
+              <div class="sidebar-stat-value">4</div>
+              <div class="sidebar-stat-label">Бренда</div>
             </div>
           </div>
         </div>
@@ -3010,5 +3620,7 @@
       });
     });
   </script>
+  <!-- Интерактив компонентов: чипы, тосты, модалки -->
+  <script src="/main.js"></script>
 </body>
 </html>

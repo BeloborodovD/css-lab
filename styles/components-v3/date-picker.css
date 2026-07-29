@@ -84,6 +84,15 @@
   transform-origin: top right;
 }
 
+/* Инлайн-вариант: календарь всегда развёрнут в потоке (витрина, фильтры) */
+.date-picker-dropdown--inline {
+  position: static;
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  box-shadow: none;
+}
+
 /* ==================== Header ==================== */
 .date-picker-header {
   display: flex;

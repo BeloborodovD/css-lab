@@ -1,0 +1,111 @@
+/* [BLOCK:component.accordion]
+ * Сворачиваемые секции (accordion / collapsible) — порт идеи из
+ * motor-datasheet CollapsibleSection / FilterSection.
+ * Модуль: css-lab/components-v3. Зависимости: base/variables-v2.css, base/motion.css.
+ *
+ * Высота анимируется через grid-template-rows 0fr→1fr — без анимации
+ * height/margin. Открытие — класс .is-open или details[open].
+ */
+
+.accordion {
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  overflow: hidden;
+}
+
+.accordion__item + .accordion__item {
+  border-top: var(--border-w) solid var(--color-border-subtle);
+}
+
+.accordion__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-semi);
+  color: var(--color-text);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .accordion__header:hover { background: var(--color-surface-hover); }
+}
+.accordion__header:focus-visible {
+  outline: none;
+  box-shadow: inset var(--shadow-focus);
+}
+
+/* Счётчик выбранного (как в фильтрах motor-datasheet) */
+.accordion__count {
+  margin-left: auto;
+  min-width: 20px;
+  padding: var(--space-px) var(--space-2);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semi);
+  text-align: center;
+  color: var(--color-accent-text);
+  background: var(--color-accent);
+  border-radius: var(--radius-full);
+}
+.accordion__count--empty {
+  color: var(--color-text-muted);
+  background: var(--color-surface-active);
+}
+
+.accordion__chevron {
+  width: 16px;
+  height: 16px;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  /* PURPOSE: state indication — направление шеврона = свёрнуто/раскрыто */
+  transition: transform var(--duration-dropdown) var(--ease-in-out);
+}
+.accordion__item.is-open > .accordion__header .accordion__chevron {
+  transform: rotate(180deg);
+}
+
+/* Контент: grid-rows 0fr → 1fr, содержимое с min-height:0.
+   ОСОЗНАННОЕ ИСКЛЮЧЕНИЕ из правила «только transform/opacity»: паттерн
+   0fr→1fr — стандарт для сворачиваемых секций; reflow локализован через
+   contain, контент секций короткий */
+.accordion__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  contain: layout style;
+  /* PURPOSE: preventing a jarring change — секция раскрывается, а не мигает */
+  transition: grid-template-rows var(--duration-dropdown) var(--ease-in-out);
+}
+.accordion__item.is-open > .accordion__panel {
+  grid-template-rows: 1fr;
+}
+.accordion__panel-inner {
+  min-height: 0;
+  overflow: hidden;
+  /* Свёрнутый контент скрыт и от скринридера */
+  visibility: hidden;
+  transition: visibility 0s linear var(--duration-dropdown);
+}
+.accordion__item.is-open > .accordion__panel > .accordion__panel-inner {
+  visibility: visible;
+  transition: visibility 0s;
+}
+.accordion__body {
+  padding: 0 var(--space-4) var(--space-4);
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--lh-relaxed);
+}
+
+/* Reduced motion: мгновенное раскрытие, шеврон без поворота */
+@media (prefers-reduced-motion: reduce) {
+  .accordion__panel { transition: none; }
+  .accordion__chevron { transition: none; }
+}
+/* </BLOCK:component.accordion> */

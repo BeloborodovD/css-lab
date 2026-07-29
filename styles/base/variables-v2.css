@@ -86,6 +86,7 @@
   --color-error:            #b91c1c;  /* red-700 — не red-600 */
   --color-error-hover:      #991b1b;  /* red-800 */
   --color-error-soft:       rgba(185, 28, 28, 0.07);
+  --color-error-soft-hover: rgba(185, 28, 28, 0.13);
   --color-error-text:       #7f1d1d;  /* red-900 */
 
   /* Info — тот же hue что accent (indigo), на 1 шаг светлее.
@@ -138,12 +139,13 @@
        NB: цвет #374A51 (slate-teal) из motor-datasheet — НЕ корпоративный
        VEZA, это был стиль конкретного datasheet-документа.
 
-     ── Уралэлектро ──────────────────────────────────────────────
-       Primary  #136B5C — RAL 6026 patina-green (CMYK 85/21/60/39)
-       Dark     #065448 — RAL 6036 deep teal (CMYK 91/25/64/56)
-       Light    #459184 — RAL 6033 mint patina (CMYK 71/15/48/17)
-       Шрифты:  NT Somic Med (заголовки), NT Somic (текст)
-       Источник: официальный брендбук Уралэлектро
+     ── Уралэлектро (брендбук 2025) ──────────────────────────────
+       Primary  #374A51 — RAL 5008 графитово-синий (CMYK 78/50/45/54)
+       Dark     #28363B — производный тёмный тон (hover/active)
+       Light    #5C757F — производный светлый тон (tints/secondary)
+       Шрифты:  Wadik (заголовки, одно начертание), NT Somic (текст)
+       NB: патиновая палитра #136B5C (RAL 6026) — предыдущая айдентика,
+       при необходимости берётся из истории git.
      ====================================================================== */
 
   /* VEZA — emerald green Pantone 356 C + neutral grey */
@@ -154,14 +156,24 @@
   --brand-veza-secondary-soft:        rgba(91, 91, 91, 0.08);
   --brand-veza-secondary-text:        #ffffff;  /* AAA 7.0:1 на grey */
 
-  /* Уралэлектро — patina-green palette (3 тона) */
-  --brand-uralelectro:                #136b5c;  /* primary RAL 6026 — AA 6.5:1 на white */
-  --brand-uralelectro-soft:           rgba(19, 107, 92, 0.08);
-  --brand-uralelectro-text:           #ffffff;  /* белый на primary green */
-  --brand-uralelectro-dark:           #065448;  /* RAL 6036 deep teal — для hover/active, AAA 8:1 на white */
-  --brand-uralelectro-dark-soft:      rgba(6, 84, 72, 0.08);
-  --brand-uralelectro-light:          #459184;  /* RAL 6033 mint — для tints/secondary blocks */
-  --brand-uralelectro-light-soft:     rgba(69, 145, 132, 0.10);
+  /* Уралэлектро — графитово-синяя палитра RAL 5008 (брендбук 2025) */
+  --brand-uralelectro:                #374a51;  /* primary RAL 5008 — AAA 8.7:1 на white */
+  --brand-uralelectro-soft:           rgba(55, 74, 81, 0.08);
+  --brand-uralelectro-text:           #ffffff;  /* белый на primary графите */
+  --brand-uralelectro-dark:           #28363b;  /* производный тёмный — hover/active */
+  --brand-uralelectro-dark-soft:      rgba(40, 54, 59, 0.08);
+  --brand-uralelectro-light:          #5c757f;  /* производный светлый — tints/secondary */
+  --brand-uralelectro-light-soft:     rgba(92, 117, 127, 0.10);
+
+  /* HEMAH (hemah.pro) — тил + яркий голубой CTA */
+  --brand-hemah:                      #367589;  /* primary тил — шапка/навигация сайта */
+  --brand-hemah-soft:                 rgba(54, 117, 137, 0.08);
+  --brand-hemah-text:                 #ffffff;  /* белый на тиле — для крупного текста/плашек */
+  --brand-hemah-dark:                 #1f5a6a;  /* тёмный тил — hover/active */
+  --brand-hemah-dark-soft:            rgba(31, 90, 106, 0.08);
+  --brand-hemah-highlight:            #2fc6f6;  /* CTA/подсветка данных; текст на нём — только #0D2229 */
+  --brand-hemah-highlight-soft:       rgba(47, 198, 246, 0.12);
+  --brand-hemah-highlight-text:       #0d2229;  /* 8.2:1 на голубом */
 
   /* ======================================================================
      RADIUS — увеличенные углы (Open WebUI / motor-datasheet style)
@@ -193,9 +205,27 @@
   --shadow-xl:    0 24px 48px -12px rgba(16, 24, 40, 0.18),
                   0 8px 16px -4px rgba(16, 24, 40, 0.08);
                   /* modals */
-  --shadow-focus: 0 0 0 3px rgba(55, 48, 163, 0.18);
-                  /* focus ring — на --color-accent (indigo-800) */
-  --shadow-focus-error: 0 0 0 3px rgba(185, 28, 28, 0.18);
+  /* Фокус-кольцо: двухслойное (surface-разрыв + сплошной accent) — иначе
+     полупрозрачное кольцо не проходит non-text contrast 3:1 (WCAG 2.4.13).
+     Автоматически перекрашивается бренд-темами через --color-accent. */
+  --shadow-focus: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-accent);
+  --shadow-focus-error: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-error);
+
+  /* ======================================================================
+     OVERLAYS — оверлей модалок/шторок и полупрозрачные слои НА акценте.
+     on-accent-* задуманы для плашек с background: var(--color-accent):
+     в light акцент тёмный → белые слои, в dark акцент светлый → тёмные. */
+  --color-overlay:            rgba(24, 24, 27, 0.45);
+  --color-on-accent-soft:     rgba(255, 255, 255, 0.15);
+  --color-on-accent-strong:   rgba(255, 255, 255, 0.30);
+  --color-on-accent-border:   rgba(255, 255, 255, 0.30);
+  --color-on-accent-dim:      rgba(24, 24, 27, 0.28);
+
+  /* Плашка-подпись поверх произвольного цвета (код RAL-образца):
+     значения фиксированы и НЕ зависят от темы — фон под ними произвольный */
+  --color-scrim-light:        rgba(255, 255, 255, 0.85);
+  --color-on-scrim:           #18181b;
+  --color-swatch-inset:       rgba(24, 24, 27, 0.10);
 
   /* ======================================================================
      BORDER WIDTH */
@@ -224,6 +254,8 @@
      TYPOGRAPHY */
   --font-sans:  -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono:  ui-monospace, SFMono-Regular, "Fira Code", Menlo, Consolas, monospace;
+  /* Дисплейный шрифт: в нейтральной теме = основной; бренд-темы перекрывают */
+  --font-display: var(--font-sans);
 
   /* Font sizes — основной 14px (corporate-search), не 16px.
      Промышленный UI с плотной информацией читается лучше при 14px. */
@@ -253,18 +285,16 @@
   --tracking-wide:   0.03em;  /* uppercase labels */
 
   /* ======================================================================
-     TRANSITIONS — Material standard easing */
+     TRANSITIONS — длительности-легаси. Кривые НЕ объявляются здесь:
+     единственный источник кривых — base/motion.css (ui-motion-craft).
+     --ease оставлен как легаси-алиас для старых компонентов. */
   --t-instant:  0;
   --t-fast:     0.12s;
   --t:          0.18s;
   --t-slow:     0.28s;
   --t-slower:   0.4s;
 
-  --ease:           cubic-bezier(0.4, 0, 0.2, 1);   /* Material standard */
-  --ease-in:        cubic-bezier(0.4, 0, 1, 1);
-  --ease-out:       cubic-bezier(0, 0, 0.2, 1);
-  --ease-in-out:    cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-spring:    cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease:           var(--ease-out);   /* легаси-алиас → кривая motion.css */
 
   /* ======================================================================
      Z-INDEX SCALE — диапазоны, не точные значения, чтобы можно было вставлять */
@@ -411,22 +441,32 @@
      (контраст < 3:1). Поднимаем на 2-3 шага светлее, сохраняя hue.
      RAL/Pantone эталоны остаются для печати — light-варианты в брендбуке. */
 
-  /* VEZA dark — подсветлённый green */
-  --brand-veza:                       #4ade80;  /* green-400 — AA 7.5:1 на dark */
-  --brand-veza-soft:                  rgba(74, 222, 128, 0.15);
+  /* VEZA dark — подсветлённый green (hue 130° бренда, не tailwind-минт) */
+  --brand-veza:                       #5fc16f;  /* AAA 7.9:1 на dark, hue сохранён */
+  --brand-veza-soft:                  rgba(95, 193, 111, 0.15);
   --brand-veza-text:                  #18181b;  /* near-black на светлом green */
   --brand-veza-secondary:             #a1a1aa;  /* zinc-400 — подсветлённый neutral grey */
   --brand-veza-secondary-soft:        rgba(161, 161, 170, 0.15);
   --brand-veza-secondary-text:        #18181b;
 
-  /* Уралэлектро dark — patina-green подсветлён до AA */
-  --brand-uralelectro:                #5cb8a4;  /* подсветлён до AA на dark — primary patina */
-  --brand-uralelectro-soft:           rgba(92, 184, 164, 0.15);
-  --brand-uralelectro-text:           #18181b;  /* near-black на светлом teal */
-  --brand-uralelectro-dark:           #459184;  /* light-вариант из light-палитры — на dark он "primary" */
-  --brand-uralelectro-dark-soft:      rgba(69, 145, 132, 0.15);
-  --brand-uralelectro-light:          #7ec9b8;  /* ещё светлее — для secondary/tints */
-  --brand-uralelectro-light-soft:     rgba(126, 201, 184, 0.18);
+  /* Уралэлектро dark — графит RAL 5008 подсветлён до AA (hue 196° сохранён) */
+  --brand-uralelectro:                #8fa6ae;  /* светлый графит — 6.9:1 на dark */
+  --brand-uralelectro-soft:           rgba(143, 166, 174, 0.15);
+  --brand-uralelectro-text:           #10181b;  /* near-black на светлом графите */
+  --brand-uralelectro-dark:           #7a939c;  /* на dark играет роль hover/active */
+  --brand-uralelectro-dark-soft:      rgba(122, 147, 156, 0.15);
+  --brand-uralelectro-light:          #a9bcc3;  /* ещё светлее — для secondary/tints */
+  --brand-uralelectro-light-soft:     rgba(169, 188, 195, 0.18);
+
+  /* HEMAH dark — тил подсветлён до AA, голубой CTA остаётся */
+  --brand-hemah:                      #6fb3c7;  /* светлый тил — 6.5:1 на dark */
+  --brand-hemah-soft:                 rgba(111, 179, 199, 0.15);
+  --brand-hemah-text:                 #0d2229;  /* near-black на светлом тиле */
+  --brand-hemah-dark:                 #4d97ad;
+  --brand-hemah-dark-soft:            rgba(77, 151, 173, 0.15);
+  --brand-hemah-highlight:            #2fc6f6;
+  --brand-hemah-highlight-soft:       rgba(47, 198, 246, 0.18);
+  --brand-hemah-highlight-text:       #0d2229;
 
   /* Shadows — в dark менее эффективны. Усилены alpha, но в основном
      полагаемся на border */
@@ -439,8 +479,18 @@
                   0 4px 8px -2px rgba(0, 0, 0, 0.30);
   --shadow-xl:    0 24px 48px -12px rgba(0, 0, 0, 0.60),
                   0 8px 16px -4px rgba(0, 0, 0, 0.40);
-  --shadow-focus: 0 0 0 3px rgba(129, 140, 248, 0.25);
-  --shadow-focus-error: 0 0 0 3px rgba(248, 113, 113, 0.25);
+  --shadow-focus: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-accent);
+  --shadow-focus-error: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-error);
+
+  /* Оверлеи в dark: подложка глубже, on-accent слои инвертированы
+     (акцент в dark светлый → слои на нём тёмные) */
+  --color-overlay:            rgba(0, 0, 0, 0.60);
+  --color-on-accent-soft:     rgba(24, 24, 27, 0.14);
+  --color-on-accent-strong:   rgba(24, 24, 27, 0.26);
+  --color-on-accent-border:   rgba(24, 24, 27, 0.30);
+  --color-on-accent-dim:      rgba(255, 255, 255, 0.30);
+  --color-swatch-inset:       rgba(255, 255, 255, 0.14);
+  --color-error-soft-hover:   rgba(248, 113, 113, 0.16);
 
   /* Legacy mapping для dark */
   --bg:           var(--color-bg);
@@ -489,13 +539,7 @@
 }
 
 /* ==========================================================================
-   REDUCED MOTION — accessibility
+   REDUCED MOTION — обрабатывается единственной стратегией в base/motion.css
+   («мягче, но не ноль»: transition-duration 200ms). Дублирующий сброс --t-*
+   в 0.001s удалён — он конфликтовал с motion.css и убивал обратную связь.
    ========================================================================== */
-@media (prefers-reduced-motion: reduce) {
-  :root {
-    --t-fast:   0.001s;
-    --t:        0.001s;
-    --t-slow:   0.001s;
-    --t-slower: 0.001s;
-  }
-}

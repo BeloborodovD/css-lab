@@ -30,9 +30,9 @@
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
-  transition: opacity var(--t-fast) var(--ease),
-              transform var(--t-fast) var(--ease),
-              visibility var(--t-fast) var(--ease);
+  transition: opacity var(--duration-tooltip) var(--ease),
+              transform var(--duration-tooltip) var(--ease),
+              visibility var(--duration-tooltip) var(--ease);
   box-shadow: var(--shadow);
 }
 
@@ -44,13 +44,20 @@
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
-  transition: opacity var(--t-fast) var(--ease),
-              transform var(--t-fast) var(--ease),
-              visibility var(--t-fast) var(--ease);
+  transition: opacity var(--duration-tooltip) var(--ease),
+              transform var(--duration-tooltip) var(--ease),
+              visibility var(--duration-tooltip) var(--ease);
 }
 
+/* PURPOSE: state indication — hover-intent: показ с задержкой 400ms, чтобы
+   тултипы не мерцали при пролёте курсора; скрытие — мгновенно (delay 0 в базе) */
 [data-tooltip]:hover::before,
-[data-tooltip]:hover::after,
+[data-tooltip]:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 400ms;
+}
+/* Фокус клавиатурой — намеренный, без задержки */
 [data-tooltip]:focus::before,
 [data-tooltip]:focus::after {
   opacity: 1;
@@ -223,9 +230,9 @@
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
-  transition: opacity var(--t-fast) var(--ease),
-              transform var(--t-fast) var(--ease),
-              visibility var(--t-fast) var(--ease);
+  transition: opacity var(--duration-tooltip) var(--ease),
+              transform var(--duration-tooltip) var(--ease),
+              visibility var(--duration-tooltip) var(--ease);
   box-shadow: var(--shadow);
 
   /* Default: top */
@@ -332,7 +339,7 @@ button[data-tooltip],
   white-space: nowrap;
   z-index: var(--z-tooltip);
   pointer-events: none;
-  animation: tooltipFadeIn var(--t-fast) var(--ease);
+  animation: tooltipFadeIn var(--duration-tooltip) var(--ease);
 }
 .tooltip-interactive { pointer-events: auto; }
 

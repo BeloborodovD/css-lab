@@ -4,75 +4,38 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Печатные формы — даташит и опросный лист · CSS Lab</title>
-  <link rel="stylesheet" href="/styles/index-v3.css">
-  <style>
-    /* [BLOCK:page.print-forms] Страница печатных форм: экранная обёртка A4-листов */
-    body { background: var(--color-surface-sunken); }
-    .pf-page {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: var(--space-6) var(--space-4) var(--space-16);
-    }
-    .pf-toolbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-3);
-      flex-wrap: wrap;
-      margin-bottom: var(--space-5);
-    }
-    .pf-toolbar__title { margin: 0; }
-    .pf-toolbar__sub {
-      margin: var(--space-1) 0 0;
-      color: var(--color-text-muted);
-      font-size: var(--fs-sm);
-    }
-    .pf-toolbar__actions { display: flex; gap: var(--space-2); flex-wrap: wrap; }
-    /* Экранная «бумага»: белый лист с тенью, при печати — чистый A4 */
-    .pf-sheet {
-      margin-bottom: var(--space-6);
-      background: #ffffff;
-      box-shadow: var(--shadow);
-      border-radius: var(--radius-xs);
-      padding: 16mm 14mm;
-    }
-    .pf-sheet .spec-sheet {
-      border: none;
-      box-shadow: none;
-      padding: 0;
-    }
-    /* Колонтитулы страницы при печати (как в опросном листе R&D) */
-    @page {
-      size: A4 portrait;
-      margin: 12mm 14mm 14mm 16mm;
-      @bottom-left {
-        content: "CSS Lab · печатные формы";
-        font-size: 7pt;
-        color: #555555;
-      }
-      @bottom-right {
-        content: counter(page) " / " counter(pages);
-        font-size: 7pt;
-        color: #555555;
-      }
-    }
-    @media print {
-      body { background: #fff; }
-      .pf-toolbar { display: none; }
-      .pf-page { max-width: none; padding: 0; }
-      .pf-sheet {
-        box-shadow: none;
-        border-radius: 0;
-        padding: 0;
-        margin: 0;
-        break-after: page;
-      }
-      .pf-sheet:last-child { break-after: auto; }
-    }
-    /* </BLOCK:page.print-forms> */
-  </style>
+  <link rel="stylesheet" href="/styles/core.css">
+  <link rel="stylesheet" href="/styles/pages/print-forms.css">
 </head>
 <body data-brand="uralelectro">
+
+  <!-- [BLOCK:site-header] -->
+  <header class="site-header no-print">
+    <a class="site-header__brand" href="/index.html">
+      <span class="site-header__wordmark">CSS<span>Lab</span></span>
+      <span class="brand-mark brand-mark--sm" role="img" aria-label="Логотип бренда"></span>
+    </a>
+    <nav class="site-nav" aria-label="Разделы сайта">
+      <a class="site-nav__link" href="/index.html">Главная</a>
+      <a class="site-nav__link" href="/index-v3.html">Витрина</a>
+      <a class="site-nav__link" href="/pages/catalog.html">Каталог</a>
+      <a class="site-nav__link" href="/pages/login.html">Вход</a>
+      <a class="site-nav__link" href="/print-forms.html" aria-current="page">Печатные формы</a>
+      <a class="site-nav__link" href="/ral-colors.html">Цвета RAL</a>
+    </nav>
+    <div class="site-header__tools">
+      <div class="brand-switcher js-brand-switcher" role="group" aria-label="Выбор бренда">
+        <button type="button" class="brand-switcher__option" data-brand-value="veza" aria-pressed="false">VEZA</button>
+        <button type="button" class="brand-switcher__option" data-brand-value="uralelectro" aria-pressed="false">UE</button>
+        <button type="button" class="brand-switcher__option" data-brand-value="hemah" aria-pressed="false">HEMAH</button>
+      </div>
+      <button type="button" class="site-header__theme" aria-label="Переключить тему">
+        <svg class="icon-light" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg class="icon-dark" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+  <!-- </BLOCK:site-header> -->
   <main class="pf-page">
     <div class="pf-toolbar">
       <div>
@@ -245,17 +208,7 @@
     </section>
   </main>
 
-  <script>
-    // [BLOCK:pf-brand] Переключение бренда печатной формы (data-brand на body)
-    document.querySelectorAll('.js-brand-switcher .brand-switcher__option').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.body.setAttribute('data-brand', btn.dataset.brandValue);
-        document.querySelectorAll('.js-brand-switcher .brand-switcher__option').forEach(b => {
-          b.setAttribute('aria-pressed', String(b === btn));
-        });
-      });
-    });
-    // </BLOCK:pf-brand>
-  </script>
+  <!-- Переключение бренда/темы — общий js/site.js (биндит все .js-brand-switcher) -->
+  <script src="/js/site.js"></script>
 </body>
 </html>

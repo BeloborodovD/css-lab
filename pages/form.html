@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Опросный лист R&amp;D — страница-пример · CSS Lab</title>
+  <link rel="stylesheet" href="/styles/core.css">
+  <link rel="stylesheet" href="/styles/pages/form.css">
+  <script>
+    (function () {
+      try {
+        var b = localStorage.getItem('css-lab-brand');
+        document.addEventListener('DOMContentLoaded', function () {
+          if (b) document.body.setAttribute('data-brand', b);
+          if (localStorage.getItem('css-lab-theme') === 'dark') document.body.classList.add('dark');
+        });
+      } catch (e) { /* приватный режим */ }
+    })();
+  </script>
+</head>
+<body data-brand="uralelectro">
+
+  <!-- [BLOCK:site-header] -->
+  <header class="site-header">
+    <a class="site-header__brand" href="/index.html">
+      <span class="site-header__wordmark">CSS<span>Lab</span></span>
+      <span class="brand-mark brand-mark--sm" role="img" aria-label="Логотип бренда"></span>
+    </a>
+    <nav class="site-nav" aria-label="Разделы сайта">
+      <a class="site-nav__link" href="/index.html">Главная</a>
+      <a class="site-nav__link" href="/index-v3.html">Витрина</a>
+      <a class="site-nav__link" href="/pages/catalog.html">Каталог</a>
+      <a class="site-nav__link" href="/pages/login.html">Вход</a>
+      <a class="site-nav__link" href="/pages/form.html" aria-current="page">Опросный лист</a>
+      <a class="site-nav__link" href="/print-forms.html">Печатные формы</a>
+      <a class="site-nav__link" href="/ral-colors.html">Цвета RAL</a>
+    </nav>
+    <div class="site-header__tools">
+      <div class="brand-switcher js-brand-switcher" role="group" aria-label="Выбор бренда">
+        <button type="button" class="brand-switcher__option" data-brand-value="veza" aria-pressed="false">VEZA</button>
+        <button type="button" class="brand-switcher__option" data-brand-value="uralelectro" aria-pressed="true">UE</button>
+        <button type="button" class="brand-switcher__option" data-brand-value="hemah" aria-pressed="false">HEMAH</button>
+      </div>
+      <button type="button" class="site-header__theme" aria-label="Переключить тему">
+        <svg class="icon-light" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg class="icon-dark" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+  <!-- </BLOCK:site-header> -->
+
+  <main class="page-shell fp-wrap">
+    <h1 class="page-shell__title">Опросный лист на разработку электродвигателя</h1>
+    <p class="page-shell__sub">Страница-пример: трёхшаговый мастер из steps + form-section + chips + spec-sheet. Заполните шаг 1 — без обязательных полей дальше не пустит.</p>
+
+    <div class="fp-topbar">
+      <span class="save-status save-status--saved" id="fp-save-status" role="status">Черновик сохранён</span>
+      <span class="save-status__notlive">данные не отправлены в КБ</span>
+    </div>
+
+    <div class="fp-steps">
+      <div class="steps" id="fp-steps-indicator">
+        <div class="step active">
+          <div class="step-number"></div>
+          <div class="step-title">Инициатор</div>
+          <div class="step-description">Контакты заявителя</div>
+          <div class="step-connector"></div>
+        </div>
+        <div class="step pending">
+          <div class="step-number"></div>
+          <div class="step-title">Требования</div>
+          <div class="step-description">Параметры двигателя</div>
+          <div class="step-connector"></div>
+        </div>
+        <div class="step pending">
+          <div class="step-number"></div>
+          <div class="step-title">Проверка</div>
+          <div class="step-description">Сводка и отправка</div>
+          <div class="step-connector"></div>
+        </div>
+      </div>
+    </div>
+
+    <form id="fp-form" novalidate>
+      <!-- Шаг 1. Инициатор -->
+      <fieldset class="form-section fp-step" data-step="1">
+        <legend class="form-section__legend">Шаг 1. Инициатор заявки</legend>
+        <p class="form-section__hint">Кто подаёт опросный лист. Поля со звёздочкой обязательны.</p>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-field__label" for="fp-name">ФИО <span class="form-field__req" aria-hidden="true">*</span></label>
+            <input id="fp-name" class="input" type="text" placeholder="Кузнецов Андрей Викторович" autocomplete="name" required>
+          </div>
+          <div class="form-field">
+            <label class="form-field__label" for="fp-email">Рабочий e-mail <span class="form-field__req" aria-hidden="true">*</span></label>
+            <input id="fp-email" class="input" type="email" placeholder="a.kuznetsov@uralelectro.ru" autocomplete="email" required>
+          </div>
+          <div class="form-field">
+            <label class="form-field__label" for="fp-dept">Подразделение <span class="form-field__req" aria-hidden="true">*</span></label>
+            <select id="fp-dept" class="select" required>
+              <option value="">— выберите —</option>
+              <option>КБ электрических машин</option>
+              <option>Отдел главного конструктора</option>
+              <option>Служба главного технолога</option>
+              <option>Отдел продаж</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label class="form-field__label" for="fp-priority">Приоритет</label>
+            <select id="fp-priority" class="select">
+              <option>Обычный</option>
+              <option>Высокий</option>
+              <option>Критичный — срыв поставки</option>
+            </select>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Шаг 2. Требования -->
+      <fieldset class="form-section fp-step" data-step="2" hidden>
+        <legend class="form-section__legend">Шаг 2. Требования к двигателю</legend>
+        <p class="form-section__hint">Отметьте подходящие варианты — допускается несколько значений.</p>
+        <div class="form-grid">
+          <div class="form-field form-field--full">
+            <span class="form-field__label" id="fp-poles-label">Число полюсов</span>
+            <div class="chips" data-chip-group="poles" role="group" aria-labelledby="fp-poles-label">
+              <button type="button" class="chip chip-choice" data-value="2 (3000 об/мин)" aria-pressed="false">2 (3000 об/мин)</button>
+              <button type="button" class="chip chip-choice" data-value="4 (1500 об/мин)" aria-pressed="false">4 (1500 об/мин)</button>
+              <button type="button" class="chip chip-choice" data-value="6 (1000 об/мин)" aria-pressed="false">6 (1000 об/мин)</button>
+              <button type="button" class="chip chip-choice" data-value="8 (750 об/мин)" aria-pressed="false">8 (750 об/мин)</button>
+            </div>
+          </div>
+          <div class="form-field form-field--full">
+            <span class="form-field__label" id="fp-climate-label">Климатическое исполнение</span>
+            <div class="chips" data-chip-group="climate" role="group" aria-labelledby="fp-climate-label">
+              <button type="button" class="chip chip-choice" data-value="У1" aria-pressed="false">У1</button>
+              <button type="button" class="chip chip-choice" data-value="У2" aria-pressed="false">У2</button>
+              <button type="button" class="chip chip-choice" data-value="УХЛ4" aria-pressed="false">УХЛ4</button>
+              <button type="button" class="chip chip-choice" data-value="Т2" aria-pressed="false">Т2</button>
+            </div>
+          </div>
+          <div class="form-field form-field--full">
+            <label class="form-field__label" for="fp-power-min">Диапазон мощности <span class="form-field__unit">кВт</span></label>
+            <div class="fp-range">
+              <input id="fp-power-min" class="input" type="number" min="0" step="0.1" placeholder="от 5,5" aria-label="Мощность от, кВт">
+              <span class="fp-range__dash" aria-hidden="true">—</span>
+              <input id="fp-power-max" class="input" type="number" min="0" step="0.1" placeholder="до 15" aria-label="Мощность до, кВт">
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Шаг 3. Проверка -->
+      <fieldset class="form-section fp-step fp-summary" data-step="3" hidden>
+        <legend class="form-section__legend">Шаг 3. Проверка и отправка</legend>
+        <p class="form-section__hint">Сводка заявки. Вернитесь назад, если нужно что-то поправить.</p>
+        <div class="spec-grid">
+          <div class="spec-row"><span class="spec-row__label">ФИО</span><span class="spec-row__value" data-summary="name">—</span></div>
+          <div class="spec-row"><span class="spec-row__label">E-mail</span><span class="spec-row__value" data-summary="email">—</span></div>
+          <div class="spec-row"><span class="spec-row__label">Подразделение</span><span class="spec-row__value" data-summary="dept">—</span></div>
+          <div class="spec-row"><span class="spec-row__label">Приоритет</span><span class="spec-row__value" data-summary="priority">—</span></div>
+          <div class="spec-row"><span class="spec-row__label">Число полюсов</span><span class="spec-row__value" data-summary="poles">—</span></div>
+          <div class="spec-row"><span class="spec-row__label">Климатическое исполнение</span><span class="spec-row__value" data-summary="climate">—</span></div>
+          <div class="spec-row"><span class="spec-row__label">Мощность</span><span class="spec-row__value" data-summary="power">—</span></div>
+        </div>
+      </fieldset>
+
+      <!-- Навигация мастера -->
+      <div class="fp-nav">
+        <button type="button" class="btn btn-outline" id="fp-back" disabled>← Назад</button>
+        <button type="button" class="btn btn-primary" id="fp-next">Далее →</button>
+        <button type="submit" class="btn btn-primary fp-submit" id="fp-submit" hidden>
+          <span class="spinner" aria-hidden="true"></span>
+          Отправить заявку
+        </button>
+      </div>
+    </form>
+  </main>
+
+  <!-- [BLOCK:site-footer] -->
+  <footer class="site-footer">
+    <span>CSS Lab — страница-пример опросного листа. Мастер: steps + form-section + chips + spec-sheet.</span>
+    <nav class="site-footer__links" aria-label="Подвал">
+      <a href="/index.html">Главная</a>
+      <a href="/index-v3.html">Витрина</a>
+      <a href="/pages/catalog.html">Каталог</a>
+    </nav>
+  </footer>
+  <!-- </BLOCK:site-footer> -->
+
+  <script src="/js/site.js"></script>
+  <script>
+    // [BLOCK:form-page] Трёхшаговый мастер опросного листа R&D
+    (function () {
+      const form = document.getElementById('fp-form');
+      const sections = Array.from(form.querySelectorAll('.fp-step'));
+      const steps = Array.from(document.querySelectorAll('#fp-steps-indicator .step'));
+      const backBtn = document.getElementById('fp-back');
+      const nextBtn = document.getElementById('fp-next');
+      const submitBtn = document.getElementById('fp-submit');
+      const saveStatus = document.getElementById('fp-save-status');
+      let current = 0;
+      let saveTimer = null;
+
+      // Мини-хелпер тостов (по образцу demoToast из main.js)
+      function fpToast(message, title) {
+        let box = document.querySelector('.fp-toasts');
+        if (!box) {
+          box = document.createElement('div');
+          box.className = 'toast-container bottom-right fp-toasts';
+          document.body.appendChild(box);
+        }
+        const toast = document.createElement('div');
+        toast.className = 'toast success toast-enter';
+        toast.setAttribute('role', 'status');
+        const icon = document.createElement('span');
+        icon.className = 'toast-icon';
+        // Статичная svg-иконка успеха (не пользовательские данные)
+        icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>';
+        const content = document.createElement('div');
+        content.className = 'toast-content';
+        if (title) {
+          const t = document.createElement('div');
+          t.className = 'toast-title';
+          t.textContent = title;
+          content.appendChild(t);
+        }
+        const m = document.createElement('div');
+        m.className = 'toast-message';
+        m.textContent = message;
+        content.appendChild(m);
+        toast.appendChild(icon);
+        toast.appendChild(content);
+        box.appendChild(toast);
+        setTimeout(() => toast.remove(), 3200);
+        // Не копим стек больше трёх
+        while (box.children.length > 3) box.firstChild.remove();
+      }
+
+      // Имитация автосохранения черновика: dirty → через паузу снова saved
+      function markDirty() {
+        saveStatus.className = 'save-status save-status--dirty';
+        saveStatus.textContent = 'Есть несохранённые изменения';
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(() => {
+          saveStatus.className = 'save-status save-status--saved';
+          saveStatus.textContent = 'Черновик сохранён';
+        }, 900);
+      }
+      form.addEventListener('input', markDirty);
+
+      // Чипы-опции: собственный toggle is-active + aria-pressed
+      form.querySelectorAll('.chips .chip-choice').forEach(chip => {
+        chip.addEventListener('click', () => {
+          const on = !chip.classList.contains('is-active');
+          chip.classList.toggle('is-active', on);
+          chip.setAttribute('aria-pressed', String(on));
+          markDirty();
+        });
+      });
+
+      function chipValues(group) {
+        return Array.from(
+          form.querySelectorAll('[data-chip-group="' + group + '"] .chip-choice.is-active')
+        ).map(c => c.dataset.value);
+      }
+
+      // Валидация обязательных полей текущего шага
+      function validateStep(idx) {
+        const fields = sections[idx].querySelectorAll('input, select');
+        for (const f of fields) {
+          if (!f.checkValidity()) {
+            f.reportValidity();
+            return false;
+          }
+        }
+        return true;
+      }
+
+      // Сводка шага 3 из текущих значений формы
+      function fillSummary() {
+        const val = id => document.getElementById(id).value.trim();
+        const set = (key, text) => {
+          form.querySelector('[data-summary="' + key + '"]').textContent = text || '—';
+        };
+        set('name', val('fp-name'));
+        set('email', val('fp-email'));
+        set('dept', val('fp-dept'));
+        set('priority', val('fp-priority'));
+        set('poles', chipValues('poles').join(', '));
+        set('climate', chipValues('climate').join(', '));
+        const pMin = val('fp-power-min');
+        const pMax = val('fp-power-max');
+        set('power', (pMin || pMax) ? (pMin || '…') + ' — ' + (pMax || '…') + ' кВт' : '');
+      }
+
+      // Переключение шага: секции, индикатор, кнопки навигации
+      function goTo(idx) {
+        current = idx;
+        sections.forEach((s, i) => {
+          s.hidden = i !== idx;
+          s.classList.remove('fp-step-enter');
+        });
+        void sections[idx].offsetWidth; // перезапуск анимации входа
+        sections[idx].classList.add('fp-step-enter');
+        steps.forEach((s, i) => {
+          s.classList.toggle('completed', i < idx);
+          s.classList.toggle('active', i === idx);
+          s.classList.toggle('pending', i > idx);
+        });
+        backBtn.disabled = idx === 0;
+        nextBtn.hidden = idx === sections.length - 1;
+        submitBtn.hidden = idx !== sections.length - 1;
+        if (idx === sections.length - 1) fillSummary();
+      }
+
+      nextBtn.addEventListener('click', () => {
+        if (!validateStep(current)) return;
+        goTo(Math.min(sections.length - 1, current + 1));
+      });
+      backBtn.addEventListener('click', () => goTo(Math.max(0, current - 1)));
+
+      // Отправка: спиннер в кнопке (по образцу login-submit) + тост успеха
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!validateStep(0)) { goTo(0); return; }
+        submitBtn.classList.add('is-loading');
+        setTimeout(() => {
+          submitBtn.classList.remove('is-loading');
+          fpToast('Заявка № РНД-2607-118 передана в КБ электрических машин.', 'Опросный лист отправлен');
+          saveStatus.className = 'save-status save-status--saved';
+          saveStatus.textContent = 'Отправлено в КБ';
+        }, 1100);
+      });
+
+      goTo(0);
+    })();
+    // </BLOCK:form-page>
+  </script>
+</body>
+</html>

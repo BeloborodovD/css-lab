@@ -112,6 +112,106 @@ if (document.readyState === 'loading') {
   initSidebarResize();
 }
 
+// ===== Demo Toast =====
+// Универсальный отклик демо-кнопок: любая кнопка без собственного обработчика
+// показывает тост — «кнопка подразумевает нажатие → есть действие».
+const demoToast = (function initDemoToast() {
+  let container = null;
+  function ensureContainer() {
+    if (!container) {
+      container = document.createElement('div');
+      container.className = 'toast-container';
+      document.body.appendChild(container);
+    }
+    return container;
+  }
+  // Уход тоста: exit-анимация + страховочный remove (reduced-motion)
+  function dismissToast(toast) {
+    if (!toast.isConnected || toast.classList.contains('toast-exit')) return;
+    toast.classList.remove('toast-enter');
+    toast.classList.add('toast-exit');
+    toast.addEventListener('animationend', () => toast.remove(), { once: true });
+    setTimeout(() => toast.remove(), 400);
+  }
+  return function demoToast(message, title) {
+    const box = ensureContainer();
+    const toast = document.createElement('div');
+    toast.className = 'toast toast-compact toast-enter';
+    toast.setAttribute('role', 'status');
+    const content = document.createElement('div');
+    content.className = 'toast-content';
+    if (title) {
+      const t = document.createElement('div');
+      t.className = 'toast-title';
+      t.textContent = title;
+      content.appendChild(t);
+    }
+    const m = document.createElement('div');
+    m.className = 'toast-message';
+    m.textContent = message;
+    content.appendChild(m);
+    toast.appendChild(content);
+    box.appendChild(toast);
+
+    // Таймер жизни паузится на hover по стеку (принцип Sonner)
+    let timer = setTimeout(() => dismissToast(toast), 2600);
+    box.addEventListener('mouseenter', () => clearTimeout(timer));
+    box.addEventListener('mouseleave', () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => dismissToast(toast), 1200);
+    });
+
+    // Не копим стек больше трёх — старший уходит с exit-анимацией
+    while (box.children.length > 3) dismissToast(box.firstChild);
+  };
+})();
+
+// Фолбэк-действие: кнопки в демо-контенте без обработчика откликаются тостом.
+// Слушатель на document в фазе bubbling — «настоящие» обработчики выигрывают
+// и помечают событие defaultPrevented/stopPropagation, либо кнопка в списке исключений.
+(function initDemoButtonFallback() {
+  const SKIP = '.user-menu, .picklist, .swatch-picker, .drawer, .accordion, ' +
+    '.quiz-options, .brand-switcher, .presence-strip, .rte-toolbar, .date-picker, ' +
+    '.filter-pills, .chips, #demo-log-view-toggle, .form-rows__add, .row-card__remove, ' +
+    '.chip-remove, .modal, .dropdown, .tree-item, .toast, #theme-toggle, #width-control, ' +
+    '#burger-menu, #info-toggle, .sidebar-close, .tab, .toggle, [data-datepicker], ' +
+    '#demo-drawer-open, .quiz-header__nav';
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn || btn.closest(SKIP)) return;
+    if (!btn.closest('.app-content')) return; // только демо-контент витрины
+    demoToast('Кнопка «' + (btn.textContent.trim().slice(0, 40) || 'без названия') + '» нажата', 'Демо-действие');
+  });
+})();
+
+// ===== Header Search =====
+// Поиск в шапке фильтрует меню компонентов; Enter — переход к первому совпадению
+(function initHeaderSearch() {
+  const input = document.querySelector('.search-bar .input');
+  const btn = document.querySelector('.search-bar .btn');
+  if (!input) return;
+  const items = () => [...document.querySelectorAll('.app-sidebar.left .sidebar-nav-item')];
+
+  function applyFilter() {
+    const q = input.value.trim().toLowerCase();
+    let first = null;
+    items().forEach(li => {
+      const hit = !q || li.textContent.toLowerCase().includes(q);
+      li.style.display = hit ? '' : 'none';
+      if (hit && !first && q) first = li.querySelector('a');
+    });
+    return first;
+  }
+  function go() {
+    const first = applyFilter();
+    if (first) first.click();
+    else if (input.value.trim()) demoToast('Компонент не найден: ' + input.value.trim(), 'Поиск');
+  }
+  input.addEventListener('input', applyFilter);
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') go(); });
+  btn?.addEventListener('click', (e) => { e.stopPropagation(); go(); });
+})();
+
 // ===== Brand Switcher =====
 // Переключение корпоративной темы (data-brand на body) + localStorage.
 // Групп на странице может быть несколько (хедер + секция) — состояния синхронны.
@@ -278,32 +378,55 @@ if (document.readyState === 'loading') {
       if (e.key === 'Escape' && picklist.classList.contains('is-open')) setOpen(false);
     });
 
-    // Чипы ↔ чекбоксы: чипы перерисовываются из отмеченных опций
+    // Чипы в контроле ↔ выбранные опции панели. Поддерживаются два вида
+    // опций: чекбоксы (.picklist__option input) и чипы-опции (.chip-choice)
+    function selectedItems() {
+      const boxes = [...panel.querySelectorAll('.picklist__option input:checked')]
+        .map(input => ({
+          label: input.closest('.picklist__option').textContent.trim(),
+          clear() {
+            input.checked = false;
+            input.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+        }));
+      const chips = [...panel.querySelectorAll('.chip-choice.is-active')]
+        .map(opt => ({
+          label: opt.dataset.value || opt.textContent.trim(),
+          clear() {
+            opt.classList.remove('is-active');
+            opt.setAttribute('aria-pressed', 'false');
+            syncChips();
+          }
+        }));
+      return boxes.concat(chips);
+    }
     function syncChips() {
       control.querySelectorAll('.picklist__chip').forEach(chip => chip.remove());
       // Чипы вставляются перед кнопкой-раскрывателем (прямой потомок контрола)
       const caret = control.querySelector('.picklist__toggle');
-      panel.querySelectorAll('.picklist__option input:checked').forEach(input => {
-        const label = input.closest('.picklist__option').textContent.trim();
+      selectedItems().forEach(item => {
         const chip = document.createElement('span');
         chip.className = 'picklist__chip';
-        chip.append(label + ' ');
+        chip.append(item.label + ' ');
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'picklist__chip-remove';
-        btn.setAttribute('aria-label', 'Убрать ' + label);
+        btn.setAttribute('aria-label', 'Убрать ' + item.label);
         btn.textContent = '×';
-        btn.addEventListener('click', () => {
-          input.checked = false;
-          // Событие change — чтобы внешние подписчики узнали о снятии
-          input.dispatchEvent(new Event('change', { bubbles: true }));
-        });
+        btn.addEventListener('click', item.clear);
         chip.append(btn);
         control.insertBefore(chip, caret);
       });
     }
     panel.querySelectorAll('.picklist__option input').forEach(input => {
       input.addEventListener('change', syncChips);
+    });
+    panel.querySelectorAll('.chip-choice').forEach(opt => {
+      opt.addEventListener('click', () => {
+        const active = opt.classList.toggle('is-active');
+        opt.setAttribute('aria-pressed', String(active));
+        syncChips();
+      });
     });
     // Начальные чипы из разметки заменяем на синхронизированные
     syncChips();
@@ -314,7 +437,7 @@ if (document.readyState === 'loading') {
       search.addEventListener('input', () => {
         const q = search.value.trim().toLowerCase();
         let visible = 0;
-        panel.querySelectorAll('.picklist__option').forEach(opt => {
+        panel.querySelectorAll('.picklist__option, .chip-choice').forEach(opt => {
           const match = opt.textContent.toLowerCase().includes(q);
           opt.classList.toggle('is-filtered', !match);
           if (match) visible++;
@@ -329,22 +452,25 @@ if (document.readyState === 'loading') {
 })();
 
 // ===== Swatch Picker =====
-// Дропдаун палитры RAL: наполнение сетки из данных, выбор/снятие образца,
+// Дропдаун палитры RAL: наполнение сетки ВСЕМИ цветами RAL Classic из общего
+// файла assets/ral-data.js (RAL_DATA/RAL_NAMES/FAMILIES), выбор/снятие образца,
 // чипы синхронизируются с выбранным, поиск фильтрует по коду и названию.
 (function initSwatchPicker() {
-  // Демо-набор RAL по семействам (подмножество RAL Classic — хватает для скролла)
-  const SWATCH_DATA = [
-    ['Жёлтые (1000)', [['1003', '#F9A900', 'Сигнальный жёлтый'], ['1013', '#E3D9C7', 'Жемчужно-белый'], ['1018', '#FACA31', 'Цинково-жёлтый'], ['1021', '#F6B600', 'Рапсово-жёлтый'], ['1028', '#FF9C00', 'Дынно-жёлтый']]],
-    ['Оранжевые (2000)', [['2004', '#E25304', 'Чистый оранжевый'], ['2009', '#DE5308', 'Транспортный оранжевый'], ['2011', '#E26E0F', 'Насыщенный оранжевый']]],
-    ['Красные (3000)', [['3000', '#A72920', 'Огненно-красный'], ['3003', '#861A22', 'Рубиново-красный'], ['3005', '#59191F', 'Винно-красный'], ['3020', '#BB1F11', 'Транспортный красный']]],
-    ['Синие (5000)', [['5000', '#304F6E', 'Фиолетово-синий'], ['5002', '#00387A', 'Ультрамарин'], ['5005', '#005387', 'Сигнальный синий'], ['5008', '#2B3A44', 'Серо-синий'], ['5010', '#004F7C', 'Горечавково-синий'], ['5012', '#0089B6', 'Голубой'], ['5015', '#007CAF', 'Небесно-синий'], ['5021', '#007577', 'Водно-синий']]],
-    ['Зелёные (6000)', [['6002', '#325928', 'Лиственно-зелёный'], ['6005', '#114232', 'Зелёный мох'], ['6018', '#60993B', 'Жёлто-зелёный'], ['6026', '#005F4E', 'Опаловый зелёный'], ['6029', '#006F3D', 'Мятно-зелёный'], ['6033', '#45877F', 'Мятно-бирюзовый'], ['6037', '#008B29', 'Чистый зелёный']]],
-    ['Серые (7000)', [['7004', '#9A9B9B', 'Сигнальный серый'], ['7016', '#383E42', 'Антрацитово-серый'], ['7024', '#45494E', 'Графитовый серый'], ['7035', '#C5C7C4', 'Светло-серый'], ['7040', '#989EA1', 'Оконно-серый'], ['7047', '#C8C8C7', 'Телегрей 4']]],
-    ['Коричневые (8000)', [['8004', '#8D4931', 'Медно-коричневый'], ['8017', '#442F29', 'Шоколадно-коричневый'], ['8028', '#513A2A', 'Терракотовый']]],
-    ['Белые и чёрные (9000)', [['9003', '#ECECE7', 'Сигнальный белый'], ['9005', '#0E0E10', 'Чёрный янтарный'], ['9006', '#A1A1A0', 'Бело-алюминиевый'], ['9010', '#F1EDE1', 'Чисто-белый'], ['9016', '#F1F1EA', 'Транспортный белый']]]
-  ];
+  // Полный набор из общих данных, сгруппированный по семействам
+  const SWATCH_DATA = (function buildFromShared() {
+    if (typeof RAL_DATA === 'undefined') return [];
+    const byFam = {};
+    RAL_DATA.split(',').forEach(pair => {
+      const [code, hex] = pair.split(':');
+      const num = code.slice(3);
+      (byFam[num[0]] = byFam[num[0]] || []).push([num, '#' + hex, RAL_NAMES[num] || '']);
+    });
+    return Object.keys(byFam).sort().map(fam => {
+      byFam[fam].sort((a, b) => a[0].localeCompare(b[0]));
+      return [(typeof FAMILIES !== 'undefined' && FAMILIES[fam]) || fam, byFam[fam]];
+    });
+  })();
 
-  // Светлота для контраста плашки-кода не нужна (скрим), но нужна для галочки
   document.querySelectorAll('.swatch-picker').forEach(picker => {
     const control = picker.querySelector('.swatch-picker__control');
     const grid = picker.querySelector('.swatch-picker__grid');
@@ -447,6 +573,23 @@ if (document.readyState === 'loading') {
       // Клик в поле поиска не закрывает панель
       search.addEventListener('click', (e) => e.stopPropagation());
     }
+  });
+})();
+
+// ===== Quiz Nav =====
+// Кнопки блоков в шапке теста: переключение активного блока
+(function initQuizNav() {
+  document.querySelectorAll('.quiz-header__nav').forEach(nav => {
+    nav.querySelectorAll('.quiz-header__nav-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        nav.querySelectorAll('.quiz-header__nav-btn').forEach(b => {
+          const active = b === btn;
+          b.classList.toggle('is-active', active);
+          b.setAttribute('aria-pressed', String(active));
+        });
+      });
+    });
   });
 })();
 
@@ -648,6 +791,9 @@ if (document.readyState === 'loading') {
           e.stopPropagation();
           view = new Date(y, m + step, 1);
           render();
+          // render() пересоздаёт DOM — возвращаем фокус на ту же кнопку,
+          // иначе листать месяцы с клавиатуры невозможно
+          dropdown.querySelector('.date-picker-nav-btn:' + (step < 0 ? 'first-child' : 'last-child'))?.focus();
         });
         nav.appendChild(b);
       });

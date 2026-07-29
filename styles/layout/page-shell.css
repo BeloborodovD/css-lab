@@ -1,0 +1,21 @@
+/* [BLOCK:layout.page-shell]
+ * Оболочка контента страницы-примера: ширина, паддинги.
+ * Модуль: css-lab/layout. Зависимости: base/variables-v2.css.
+ */
+
+.page-shell {
+  max-width: var(--max-content-w);
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4) var(--space-16);
+}
+.page-shell--narrow { max-width: 720px; }
+.page-shell--wide { max-width: none; padding-left: var(--space-6); padding-right: var(--space-6); }
+
+.page-shell__title { margin: 0 0 var(--space-1); }
+.page-shell__sub {
+  margin: 0 0 var(--space-5);
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+  max-width: 72ch;
+}
+/* </BLOCK:layout.page-shell> */

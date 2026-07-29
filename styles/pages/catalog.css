@@ -1,0 +1,145 @@
+/* [CONFIG:page-catalog]
+ * Страница-пример «Каталог с фильтрами» (по мотивам motor-datasheet).
+ * Префикс страницы: .catalog-*. Селекторы вне префикса запрещены;
+ * подстройка компонентов — только var-хуками на контейнерах страницы.
+ */
+
+.catalog-layout {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: start;
+}
+.catalog-aside {
+  position: sticky;
+  top: calc(var(--header-h) + var(--space-4));
+}
+
+/* Тулбар над результатами: счётчик, сортировка */
+.catalog-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-3);
+}
+.catalog-count {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.catalog-sort {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+/* Полоса активных фильтров над сеткой */
+.catalog-active {
+  margin-bottom: var(--space-4);
+  min-height: 32px;
+}
+
+/* ===== Сетка карточек товаров ========================================== */
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--space-4);
+}
+
+.catalog-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: var(--color-text);
+  /* PURPOSE: feedback — карточка результата отзывается на наведение */
+  transition:
+    border-color var(--duration-dropdown) var(--ease-out),
+    box-shadow var(--duration-dropdown) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .catalog-card:hover {
+    border-color: var(--color-accent-border);
+    box-shadow: var(--shadow);
+  }
+}
+.catalog-card:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+/* PURPOSE: feedback — карточка-ссылка отзывается на нажатие (тактильность) */
+.catalog-card:active {
+  transform: scale(0.99);
+  transition-duration: var(--duration-press);
+}
+.catalog-card.is-hidden { display: none; }
+
+.catalog-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.catalog-card__series {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-muted);
+}
+.catalog-card__title {
+  margin: 0;
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semi);
+  line-height: var(--lh-snug);
+}
+.catalog-card__params {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-1) var(--space-3);
+  margin: var(--space-1) 0;
+  font-size: var(--fs-sm);
+}
+.catalog-card__param {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+  color: var(--color-text-secondary);
+}
+.catalog-card__param b {
+  font-weight: var(--fw-semi);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+}
+.catalog-card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-top: auto;
+  padding-top: var(--space-2);
+  border-top: var(--border-w) solid var(--color-border-subtle);
+}
+.catalog-card__price {
+  font-weight: var(--fw-semi);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Пустой результат */
+.catalog-empty { display: none; }
+.catalog-grid.is-empty + .catalog-empty { display: block; }
+
+/* ===== Адаптив ========================================================= */
+@media (max-width: 1023px) {
+  .catalog-layout { grid-template-columns: 1fr; }
+  .catalog-aside { position: static; }
+}
+/* </CONFIG:page-catalog> */

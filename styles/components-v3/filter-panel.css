@@ -1,0 +1,195 @@
+/* [BLOCK:component.filter-panel]
+ * Панель фильтров каталога — порт из motor-datasheet (FilterPanel + filters.css):
+ * градиентная шапка со счётчиком «N из M», быстрые пресеты (пунктирные чипы),
+ * группы фильтров (чипы-опции / селекты / диапазон) со сбросом по группе,
+ * кнопка «Сбросить все».
+ * Модуль: css-lab/components-v3. Зависимости: base/variables-v2.css,
+ * base/motion.css, components-v3/chip.css (.chips/.chip-choice),
+ * components-v3/inputs.css (select/input).
+ */
+
+.filter-panel {
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+/* ===== Шапка: градиент бренда + счётчик результатов ===================== */
+.filter-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-active) 100%);
+  color: var(--color-accent-text);
+}
+.filter-panel__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: var(--fw-semi);
+}
+.filter-panel__title svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+.filter-panel__stats {
+  font-size: var(--fs-sm);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ===== Быстрые пресеты: пунктирные чипы ================================= */
+.filter-panel__quick {
+  padding: var(--space-3) var(--space-5);
+  background: var(--color-accent-soft);
+  border-bottom: var(--border-w) solid var(--color-border);
+}
+.filter-panel__quick-label {
+  margin-bottom: var(--space-2);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semi);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-muted);
+}
+.filter-preset {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  font: inherit;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--color-accent);
+  background: var(--color-surface);
+  border: var(--border-w) dashed var(--color-accent-border);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  /* PURPOSE: state indication — пресет «собирается» в сплошной при наведении */
+  transition:
+    background-color var(--duration-press) var(--ease-out),
+    color var(--duration-press) var(--ease-out),
+    border-color var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .filter-preset:hover {
+    background: var(--color-accent);
+    color: var(--color-accent-text);
+    border-style: solid;
+  }
+}
+.filter-preset:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+.filter-preset svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ===== Тело: группы фильтров =========================================== */
+.filter-panel__body {
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.filter-group__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+.filter-group__label {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semi);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-muted);
+}
+/* Сброс одной группы — появляется только при активном фильтре */
+.filter-group__reset {
+  display: none;
+  min-height: 24px; /* цель касания ≥24px (SC 2.5.8) */
+  padding: var(--space-1);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color var(--duration-press) var(--ease-out);
+}
+.filter-group.has-active .filter-group__reset { display: inline; }
+@media (hover: hover) and (pointer: fine) {
+  .filter-group__reset:hover { color: var(--color-error); }
+}
+
+/* Счётчик вариантов на чипе-опции */
+.chip-choice__count {
+  min-width: 18px;
+  padding: 0 var(--space-1);
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  color: var(--color-text-muted);
+  background: var(--color-surface-sunken);
+  border-radius: var(--radius-full);
+}
+.chip-choice.is-active .chip-choice__count {
+  color: var(--color-accent);
+  background: var(--color-surface);
+}
+
+/* Диапазон «от — до» */
+.filter-range {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.filter-range .input { flex: 1; min-width: 0; }
+.filter-range__dash { color: var(--color-text-muted); }
+
+/* ===== Подвал: сброс всех ============================================== */
+.filter-panel__footer {
+  padding: var(--space-3) var(--space-5) var(--space-4);
+  border-top: var(--border-w) solid var(--color-border-subtle);
+}
+.filter-panel__reset-all {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  justify-content: center;
+  padding: var(--space-2) var(--space-3);
+  font: inherit;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-muted);
+  background: var(--color-surface-sunken);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition:
+    color var(--duration-press) var(--ease-out),
+    border-color var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .filter-panel__reset-all:hover {
+    color: var(--color-error);
+    border-color: var(--color-error);
+  }
+}
+.filter-panel__reset-all:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+/* </BLOCK:component.filter-panel> */

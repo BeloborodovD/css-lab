@@ -1,0 +1,208 @@
+/* [CONFIG:page-dashboard]
+ * Страница-пример «Дашборд / админка» (домен Уралэлектро/VEZA: заказы на
+ * двигатели АДМ/АДЭМ и вентиляторы, импорт каталога, журнал событий).
+ * Префикс страницы: .dash-*. Селекторы вне префикса запрещены;
+ * компоненты (stats, table, drawer, logs, timeline, filter-pills) не
+ * перестилизуются — только раскладка и собственные элементы страницы.
+ * Зависимости: base/variables-v2.css, base/motion.css, components-v3/*.
+ */
+
+/* ===== Каркас: узкий сайднав слева + контент ============================ */
+.dash-layout {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  gap: var(--space-6);
+  align-items: start;
+}
+
+/* ===== Сайднав разделов ================================================= */
+.dash-sidenav {
+  position: sticky;
+  top: calc(var(--header-h) + var(--space-4));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.dash-sidenav__title {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.dash-sidenav__link {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  /* PURPOSE: feedback — пункт отвечает на наведение и выбор */
+  transition: background-color var(--duration-press) var(--ease-out),
+              color var(--duration-press) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .dash-sidenav__link:hover {
+    background: var(--color-surface-hover);
+    color: var(--color-text);
+  }
+}
+
+.dash-sidenav__link:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.dash-sidenav__link.is-active {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-weight: var(--fw-medium);
+}
+
+/* ===== Секции контента ================================================== */
+.dash-section {
+  margin-bottom: var(--space-8);
+  /* Якорные переходы из сайднава не прячут заголовок под шапкой */
+  scroll-margin-top: calc(var(--header-h) + var(--space-4));
+}
+
+.dash-section__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-4);
+}
+
+.dash-section__title {
+  margin: 0;
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-semi);
+  color: var(--color-text);
+}
+
+.dash-section__sub {
+  margin: var(--space-1) 0 0;
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+/* ===== Полоса активных фильтров над таблицей ============================ */
+.dash-pills {
+  margin-bottom: var(--space-3);
+  min-height: 34px;
+}
+
+/* Статус в таблице — нажимаемый бейдж (клик = фильтр по статусу).
+   Наследует вид .log-badge, здесь только сброс кнопочных дефолтов. */
+.dash-status {
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.dash-status:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+/* Числовые колонки таблицы заказов */
+.dash-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===== Нижний двухколоночный ряд: журнал + лента активности ============= */
+.dash-cols {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.dash-panel {
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  scroll-margin-top: calc(var(--header-h) + var(--space-4));
+}
+
+.dash-panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: var(--border-w) solid var(--color-border);
+}
+
+.dash-panel__title {
+  margin: 0;
+  font-size: var(--fs-base);
+  font-weight: var(--fw-semi);
+  color: var(--color-text);
+}
+
+.dash-panel__body--scroll {
+  max-height: 340px;
+  overflow-y: auto;
+}
+
+.dash-panel__body--pad {
+  padding: var(--space-4);
+}
+
+/* Компактнее штамп времени в журнале — колонка уже, чем в полноэкранном логе */
+.dash-panel .log-entry-timestamp {
+  min-width: 128px;
+}
+
+/* Новая запись журнала входит мягко.
+   PURPOSE: state indication — глаз ловит только что добавленную строку */
+.dash-log-new {
+  animation: dash-log-in var(--duration-dropdown) var(--ease-out) both;
+}
+
+@keyframes dash-log-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Уменьшенное движение: запись появляется без сдвига, но остаётся видимой */
+@media (prefers-reduced-motion: reduce) {
+  .dash-log-new {
+    animation: none;
+  }
+}
+
+/* ===== Адаптив ========================================================== */
+@media (max-width: 960px) {
+  .dash-layout {
+    grid-template-columns: 1fr;
+  }
+  .dash-sidenav {
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+  }
+  .dash-sidenav__title {
+    flex-basis: 100%;
+  }
+  .dash-cols {
+    grid-template-columns: 1fr;
+  }
+}
+/* </CONFIG:page-dashboard> */

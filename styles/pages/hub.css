@@ -1,0 +1,208 @@
+/* [CONFIG:page-hub]
+ * Страница-хаб (index.html): hero с tech-подписью, штамп-статистика,
+ * нумерованные карточки разделов (референс — engcalc/frontend).
+ * Префикс страницы: .hub-*. Селекторы вне префикса запрещены.
+ */
+
+.hub-hero {
+  padding: var(--space-10) 0 var(--space-8);
+}
+/* Моно-подпись «как на чертеже» */
+.hub-tech-label {
+  margin: 0 0 var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-muted);
+}
+.hub-title {
+  margin: 0 0 var(--space-4);
+  max-width: 24ch;
+  font-size: var(--fs-4xl);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-tight);
+}
+.hub-title__mark {
+  position: relative;
+  white-space: nowrap;
+}
+/* Штрих-подчёркивание «от руки» */
+.hub-title__stroke {
+  position: absolute;
+  left: 0;
+  bottom: -0.12em;
+  width: 100%;
+  color: var(--color-accent);
+}
+.hub-lead {
+  margin: 0 0 var(--space-5);
+  max-width: 60ch;
+  color: var(--color-text-muted);
+}
+
+/* Штамп-статистика: как основная надпись чертежа */
+.hub-stamp {
+  display: inline-flex;
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  overflow: hidden;
+}
+.hub-stamp__cell {
+  padding: var(--space-2) var(--space-5);
+  border-left: var(--border-w) solid var(--color-border);
+}
+.hub-stamp__cell:first-child { border-left: none; }
+.hub-stamp__value {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-semi);
+  color: var(--color-accent);
+}
+.hub-stamp__label {
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-muted);
+}
+
+/* ===== Сетка карточек-разделов ========================================= */
+.hub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-4);
+}
+
+.hub-card {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  padding: var(--space-6);
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: var(--color-text);
+  /* PURPOSE: feedback — карточка-раздел отзывается на наведение приподнятием */
+  transition:
+    transform var(--duration-dropdown) var(--ease-out),
+    border-color var(--duration-dropdown) var(--ease-out),
+    box-shadow var(--duration-dropdown) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .hub-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-accent-border);
+    box-shadow: var(--shadow);
+  }
+}
+.hub-card:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+/* PURPOSE: feedback — карточка-ссылка отзывается на нажатие (тактильность) */
+.hub-card:active {
+  transform: translateY(-1px) scale(0.99);
+  transition-duration: var(--duration-press);
+}
+
+/* Гигантский номер-«водяной знак» в углу */
+.hub-card__num {
+  position: absolute;
+  right: -6px;
+  top: -22px;
+  pointer-events: none;
+  font-family: var(--font-mono);
+  font-size: 88px;
+  font-weight: var(--fw-semi);
+  line-height: 1;
+  color: var(--color-accent);
+  opacity: 0.07;
+  transition: opacity var(--duration-dropdown) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .hub-card:hover .hub-card__num { opacity: 0.12; }
+}
+
+.hub-card__label {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-muted);
+}
+.hub-card__title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--fs-xl);
+  line-height: var(--lh-snug);
+}
+.hub-card__desc {
+  margin: 0 0 var(--space-3);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+.hub-card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.hub-card__go {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--color-accent);
+  opacity: 0;
+  transition: opacity var(--duration-dropdown) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .hub-card:hover .hub-card__go { opacity: 1; }
+}
+/* На тач-устройствах стрелка видна всегда — hover-интента нет */
+@media (hover: none) {
+  .hub-card__go { opacity: 1; }
+}
+
+/* Брендовая риска слева, вырастает при наведении */
+.hub-card__tick {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: var(--color-accent);
+  transform: scaleY(0);
+  transform-origin: center;
+  transition: transform var(--duration-dropdown) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .hub-card:hover .hub-card__tick { transform: scaleY(1); }
+}
+
+/* Широкая инвертированная карточка (витрина компонентов) */
+.hub-card--invert {
+  grid-column: 1 / -1;
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-accent-text);
+}
+.hub-card--invert .hub-card__label,
+.hub-card--invert .hub-card__desc { color: inherit; opacity: 0.8; }
+.hub-card--invert .hub-card__num { color: var(--color-accent-text); }
+.hub-card--invert .hub-card__go { color: inherit; }
+
+/* Пометка «в работе» */
+.hub-card--soon { pointer-events: none; }
+.hub-card--soon .hub-card__title,
+.hub-card--soon .hub-card__desc { opacity: 0.55; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hub-card:hover { transform: none; }
+  .hub-card__go { opacity: 1; }
+}
+/* </CONFIG:page-hub> */

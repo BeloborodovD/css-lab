@@ -24,6 +24,12 @@
   /* Расширение css-lab: цикл фоновых индикаторов (skeleton-пульс).
      Постоянное движение — linear (RULES.md §1). */
   --duration-pulse: 1.6s;
+
+  /* Расширение css-lab: асимметрия таймингов — выход быстрее входа
+     (система отвечает быстро). Поповеры: вход 200 / выход 140;
+     шторки: вход 300 / выход 240. */
+  --duration-exit: 140ms;
+  --duration-modal-exit: 240ms;
 }
 
 /* Обратная связь на нажатие — обязательна для любого нажимаемого элемента. */
@@ -40,15 +46,24 @@ button:not([disabled]):active,
   transform: scale(0.97);
 }
 
-/* Уменьшенное движение — мягче, но не «выключено»: непрозрачность остаётся. */
+/* Уменьшенное движение — мягче, но не «выключено»: непрозрачность остаётся.
+   ВАЖНО: animation-iteration-count здесь НЕ сбрасывается — это замораживало
+   бесконечные индикаторы (спиннеры, прогресс). Loading-индикация — state
+   indication и обязана оставаться различимой; компоненты при желании
+   смягчают её собственными reduced-motion блоками. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
-    animation-delay: 0ms !important;
-    animation-iteration-count: 1 !important;
     transition-duration: 200ms !important;
     scroll-behavior: auto !important;
+  }
+
+  /* Декоративные входные каскады — без задержек и повторов */
+  [class*="stagger"],
+  [class*="entrance"] {
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
   }
 
   [data-pressable]:active,

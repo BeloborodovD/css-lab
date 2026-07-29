@@ -2,12 +2,203 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <!-- Корень сайта → витрина компонентов (вместо листинга файлов live-server) -->
-  <meta http-equiv="refresh" content="0; url=/index-v3.html">
-  <title>CSS Lab — переход к витрине…</title>
-  <script>location.replace('/index-v3.html');</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Lab — дизайн-система VEZA · Уралэлектро · HEMAH</title>
+  <link rel="stylesheet" href="/styles/core.css">
+  <link rel="stylesheet" href="/styles/pages/hub.css">
+  <!-- Анти-FOUC: бренд и тема из localStorage до первой отрисовки -->
+  <script>
+    (function () {
+      try {
+        var b = localStorage.getItem('css-lab-brand');
+        document.addEventListener('DOMContentLoaded', function () {
+          if (b) document.body.setAttribute('data-brand', b);
+          if (localStorage.getItem('css-lab-theme') === 'dark') document.body.classList.add('dark');
+        });
+      } catch (e) { /* приватный режим */ }
+    })();
+  </script>
 </head>
-<body>
-  <p><a href="/index-v3.html">Перейти к витрине CSS Lab</a></p>
+<body data-brand="veza">
+
+  <!-- [BLOCK:site-header] -->
+  <header class="site-header">
+    <a class="site-header__brand" href="/index.html" aria-current="page">
+      <span class="site-header__wordmark">CSS<span>Lab</span></span>
+      <span class="brand-mark brand-mark--sm" role="img" aria-label="Логотип бренда"></span>
+    </a>
+    <nav class="site-nav" aria-label="Разделы сайта">
+      <a class="site-nav__link" href="/index.html" aria-current="page">Главная</a>
+      <a class="site-nav__link" href="/index-v3.html">Витрина</a>
+      <a class="site-nav__link" href="/pages/catalog.html">Каталог</a>
+      <a class="site-nav__link" href="/pages/login.html">Вход</a>
+      <a class="site-nav__link" href="/print-forms.html">Печатные формы</a>
+      <a class="site-nav__link" href="/ral-colors.html">Цвета RAL</a>
+    </nav>
+    <div class="site-header__tools">
+      <div class="brand-switcher js-brand-switcher" role="group" aria-label="Выбор бренда">
+        <button type="button" class="brand-switcher__option" data-brand-value="veza" aria-pressed="true">VEZA</button>
+        <button type="button" class="brand-switcher__option" data-brand-value="uralelectro" aria-pressed="false">UE</button>
+        <button type="button" class="brand-switcher__option" data-brand-value="hemah" aria-pressed="false">HEMAH</button>
+      </div>
+      <button type="button" class="site-header__theme" aria-label="Переключить тему">
+        <svg class="icon-light" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg class="icon-dark" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+  <!-- </BLOCK:site-header> -->
+
+  <main class="page-shell">
+    <!-- Hero -->
+    <section class="hub-hero">
+      <p class="hub-tech-label">Дизайн-система · VEZA / Уралэлектро / HEMAH · light + dark</p>
+      <h1 class="hub-title">
+        Интерфейсы как по
+        <span class="hub-title__mark">чертежу
+          <svg class="hub-title__stroke" viewBox="0 0 200 8" fill="none" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M2 6 C60 1 140 1 198 5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </h1>
+      <p class="hub-lead">
+        Витрина компонентов и готовые страницы-примеры на одной системе токенов:
+        собрано из corporate-search, НТБ, motor-datasheet, опросных листов R&amp;D
+        и каталогов Уралэлектро. Берите страницу целиком — бренд, темы и движение
+        уже согласованы.
+      </p>
+      <div class="hub-stamp" role="group" aria-label="Статистика">
+        <div class="hub-stamp__cell">
+          <div class="hub-stamp__value">42+</div>
+          <div class="hub-stamp__label">компонента</div>
+        </div>
+        <div class="hub-stamp__cell">
+          <div class="hub-stamp__value">3</div>
+          <div class="hub-stamp__label">бренда</div>
+        </div>
+        <div class="hub-stamp__cell">
+          <div class="hub-stamp__value">216</div>
+          <div class="hub-stamp__label">цветов RAL</div>
+        </div>
+        <div class="hub-stamp__cell">
+          <div class="hub-stamp__value">A4</div>
+          <div class="hub-stamp__label">печать</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Карточки разделов -->
+    <section class="hub-grid" aria-label="Разделы">
+      <a class="hub-card hub-card--invert" href="/index-v3.html">
+        <span class="hub-card__num" aria-hidden="true">00</span>
+        <span class="hub-card__tick" aria-hidden="true"></span>
+        <p class="hub-card__label">00 · library</p>
+        <h2 class="hub-card__title">Витрина компонентов</h2>
+        <p class="hub-card__desc">42 секции: от кнопок и чипов до пиклистов с поиском, quiz-движка и панели «кто на портале». Светлая и тёмная тема, три бренда.</p>
+        <span class="hub-card__meta">
+          <span class="badge badge-outline" style="border-color: currentColor; color: inherit;">index-v3.html</span>
+          <span class="hub-card__go">Открыть →</span>
+        </span>
+      </a>
+
+      <a class="hub-card" href="/pages/catalog.html">
+        <span class="hub-card__num" aria-hidden="true">01</span>
+        <span class="hub-card__tick" aria-hidden="true"></span>
+        <p class="hub-card__label">01 · catalog</p>
+        <h2 class="hub-card__title">Каталог с фильтрами</h2>
+        <p class="hub-card__desc">Панель фильтров motor-datasheet: пресеты, чипы со счётчиками, диапазон мощности, живой пересчёт «N из M».</p>
+        <span class="hub-card__meta">
+          <span class="badge badge-subtle">страница-пример</span>
+          <span class="hub-card__go">Открыть →</span>
+        </span>
+      </a>
+
+      <a class="hub-card" href="/pages/login.html">
+        <span class="hub-card__num" aria-hidden="true">02</span>
+        <span class="hub-card__tick" aria-hidden="true"></span>
+        <p class="hub-card__label">02 · auth</p>
+        <h2 class="hub-card__title">Вход в портал</h2>
+        <p class="hub-card__desc">Центрированная карточка входа: бренд-марка, поля с валидацией, спиннер в кнопке, восстановление пароля.</p>
+        <span class="hub-card__meta">
+          <span class="badge badge-subtle">страница-пример</span>
+          <span class="hub-card__go">Открыть →</span>
+        </span>
+      </a>
+
+      <a class="hub-card" href="/print-forms.html">
+        <span class="hub-card__num" aria-hidden="true">03</span>
+        <span class="hub-card__tick" aria-hidden="true"></span>
+        <p class="hub-card__label">03 · print</p>
+        <h2 class="hub-card__title">Печатные формы A4</h2>
+        <p class="hub-card__desc">Даташит двигателя и опросный лист R&amp;D: шапка с логотипом, таблицы, подвал «Лист N из M», колонтитулы @page.</p>
+        <span class="hub-card__meta">
+          <span class="badge badge-subtle">страница-пример</span>
+          <span class="hub-card__go">Открыть →</span>
+        </span>
+      </a>
+
+      <a class="hub-card" href="/ral-colors.html">
+        <span class="hub-card__num" aria-hidden="true">04</span>
+        <span class="hub-card__tick" aria-hidden="true"></span>
+        <p class="hub-card__label">04 · reference</p>
+        <h2 class="hub-card__title">Справочник RAL Classic</h2>
+        <p class="hub-card__desc">216 цветов с кодами, русскими названиями и HEX: поиск, копирование кода, печатная сетка.</p>
+        <span class="hub-card__meta">
+          <span class="badge badge-subtle">страница-пример</span>
+          <span class="hub-card__go">Открыть →</span>
+        </span>
+      </a>
+
+      <a class="hub-card" href="/pages/datasheet.html">
+        <span class="hub-card__num" aria-hidden="true">05</span>
+        <span class="hub-card__tick" aria-hidden="true"></span>
+        <p class="hub-card__label">05 · datasheet</p>
+        <h2 class="hub-card__title">Карточка изделия</h2>
+        <p class="hub-card__desc">Экранный даташит АДМ 132 S4: вкладки характеристик, param-карточки, документы, переход к печатной версии.</p>
+        <span class="hub-card__meta">
+          <span class="badge badge-subtle">страница-пример</span>
+          <span class="hub-card__go">Открыть →</span>
+        </span>
+      </a>
+
+      <a class="hub-card" href="/pages/dashboard.html">
+        <span class="hub-card__num" aria-hidden="true">06</span>
+        <span class="hub-card__tick" aria-hidden="true"></span>
+        <p class="hub-card__label">06 · dashboard</p>
+        <h2 class="hub-card__title">Дашборд / админка</h2>
+        <p class="hub-card__desc">Статистика, таблица заказов со статусами, журнал, timeline и drawer деталей заказа.</p>
+        <span class="hub-card__meta">
+          <span class="badge badge-subtle">страница-пример</span>
+          <span class="hub-card__go">Открыть →</span>
+        </span>
+      </a>
+
+      <a class="hub-card" href="/pages/form.html">
+        <span class="hub-card__num" aria-hidden="true">07</span>
+        <span class="hub-card__tick" aria-hidden="true"></span>
+        <p class="hub-card__label">07 · form</p>
+        <h2 class="hub-card__title">Форма-анкета</h2>
+        <p class="hub-card__desc">Многошаговый опросный лист R&amp;D: шаги, чипы-опции, сводка перед отправкой, тост успеха.</p>
+        <span class="hub-card__meta">
+          <span class="badge badge-subtle">страница-пример</span>
+          <span class="hub-card__go">Открыть →</span>
+        </span>
+      </a>
+    </section>
+  </main>
+
+  <!-- [BLOCK:site-footer] -->
+  <footer class="site-footer">
+    <span>CSS Lab — библиотека стилей воркспейса. Токены · движение · бренды.</span>
+    <nav class="site-footer__links" aria-label="Подвал">
+      <a href="/index.html">Главная</a>
+      <a href="/index-v3.html">Витрина</a>
+      <a href="/print-forms.html">Печатные формы</a>
+      <a href="/ral-colors.html">Цвета RAL</a>
+    </nav>
+  </footer>
+  <!-- </BLOCK:site-footer> -->
+
+  <script src="/js/site.js"></script>
 </body>
 </html>

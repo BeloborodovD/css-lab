@@ -60,6 +60,15 @@
   font-weight: var(--fw-medium);
   color: var(--color-text-secondary);
 }
+/* Ряд «метка + подсказка»: кнопка-tip живёт РЯДОМ с label, не внутри и не
+   отдельной строкой — колонки сетки остаются выровненными */
+.form-field__label-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 24px; /* высота ряда стабильна и без кнопки-подсказки */
+}
+.form-field__label-row .form-field__tip { margin-left: 0; }
 .form-field__req { color: var(--color-error); }
 .form-field__unit {
   font-size: var(--fs-xs);

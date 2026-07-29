@@ -121,11 +121,12 @@
   transform: scale(0.97);
   visibility: hidden; /* закрытая панель вне Tab-порядка и a11y-дерева */
   pointer-events: none;
-  /* PURPOSE: preventing a jarring change — панель появляется от контрола */
+  /* PURPOSE: preventing a jarring change — панель появляется от контрола.
+     Базовое состояние = выход: быстрее входа */
   transition:
-    opacity var(--duration-dropdown) var(--ease-out),
-    transform var(--duration-dropdown) var(--ease-out),
-    visibility 0s linear var(--duration-dropdown);
+    opacity var(--duration-exit) var(--ease-out),
+    transform var(--duration-exit) var(--ease-out),
+    visibility 0s linear var(--duration-exit);
 }
 .swatch-picker.is-open .swatch-picker__panel {
   opacity: 1;

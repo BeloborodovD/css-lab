@@ -25,8 +25,8 @@
   font-size: var(--fs-base);
   cursor: pointer;
   min-width: 180px;
-  transition: border-color var(--t-fast) var(--ease),
-              box-shadow var(--t-fast) var(--ease);
+  transition: border-color var(--duration-dropdown) var(--ease),
+              box-shadow var(--duration-dropdown) var(--ease);
 }
 
 .date-picker-input:hover { border-color: var(--color-border-strong); }
@@ -46,7 +46,7 @@
   flex-shrink: 0;
   width: 18px;
   height: 18px;
-  transition: color var(--t-fast) var(--ease);
+  transition: color var(--duration-dropdown) var(--ease);
 }
 
 .date-picker.open .date-picker-icon { color: var(--color-accent); }
@@ -65,9 +65,9 @@
   visibility: hidden;
   transform: translateY(-4px) scale(0.98);
   transform-origin: top left;
-  transition: opacity var(--t-fast) var(--ease),
-              visibility var(--t-fast) var(--ease),
-              transform var(--t-fast) var(--ease);
+  transition: opacity var(--duration-dropdown) var(--ease),
+              visibility var(--duration-dropdown) var(--ease),
+              transform var(--duration-dropdown) var(--ease);
   z-index: var(--z-dropdown);
   overflow: hidden;
 }
@@ -112,7 +112,7 @@
   cursor: pointer;
   padding: var(--space-1) var(--space-2);
   border-radius: var(--radius-sm);
-  transition: background var(--t-fast) var(--ease);
+  transition: background var(--duration-dropdown) var(--ease);
 }
 .date-picker-title:hover { background: var(--color-surface-hover); }
 
@@ -135,14 +135,22 @@
   color: var(--color-text-muted);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: background var(--t-fast) var(--ease),
-              color var(--t-fast) var(--ease);
+  transition: background var(--duration-dropdown) var(--ease),
+              color var(--duration-dropdown) var(--ease);
 }
 .date-picker-nav-btn:hover {
   background: var(--color-surface-hover);
   color: var(--color-text);
 }
 .date-picker-nav-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+/* Видимый фокус для клавиатурной навигации по календарю */
+.date-picker-nav-btn:focus-visible,
+.date-picker-day:focus-visible,
+.date-picker-today-btn:focus-visible,
+.date-picker-clear-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
 
 /* ==================== Weekdays ==================== */
 .date-picker-weekdays {
@@ -184,8 +192,8 @@
   font-variant-numeric: tabular-nums;
   border-radius: var(--radius-full);
   cursor: pointer;
-  transition: background var(--t-fast) var(--ease),
-              color var(--t-fast) var(--ease);
+  transition: background var(--duration-dropdown) var(--ease),
+              color var(--duration-dropdown) var(--ease);
 }
 
 .date-picker-day:hover:not(:disabled):not(.selected):not(.range-start):not(.range-end) {
@@ -282,8 +290,8 @@
   font-size: var(--fs-sm);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: background var(--t-fast) var(--ease),
-              color var(--t-fast) var(--ease);
+  transition: background var(--duration-dropdown) var(--ease),
+              color var(--duration-dropdown) var(--ease);
 }
 
 .date-picker-month-item:hover,
@@ -329,7 +337,7 @@
   font-weight: var(--fw-medium);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: background var(--t-fast) var(--ease);
+  transition: background var(--duration-dropdown) var(--ease);
 }
 
 .date-picker-today-btn { color: var(--color-accent); }

@@ -30,9 +30,9 @@
   visibility: hidden;
   transform: translateY(-4px) scale(0.98);
   transform-origin: top right;
-  transition: opacity var(--t-fast) var(--ease),
-              visibility var(--t-fast) var(--ease),
-              transform var(--t-fast) var(--ease);
+  transition: opacity var(--duration-dropdown) var(--ease),
+              visibility var(--duration-dropdown) var(--ease),
+              transform var(--duration-dropdown) var(--ease);
   z-index: var(--z-dropdown);
 }
 
@@ -58,14 +58,16 @@
   border-radius: var(--radius-sm);
   cursor: pointer;
   user-select: none;
-  transition: background var(--t-fast) var(--ease),
-              color var(--t-fast) var(--ease);
+  transition: background var(--duration-dropdown) var(--ease),
+              color var(--duration-dropdown) var(--ease);
 }
 
 .dropdown-item:hover {
   background: var(--color-surface-hover);
   color: var(--color-text);
 }
+/* PURPOSE: feedback — пункт меню отзывается на нажатие (тактильность) */
+.dropdown-item:active { background: var(--color-surface-active); }
 
 .dropdown-item:focus-visible {
   outline: none;
@@ -110,9 +112,9 @@
   opacity: 0;
   visibility: hidden;
   transform: translateY(-4px);
-  transition: opacity var(--t-fast) var(--ease),
-              visibility var(--t-fast) var(--ease),
-              transform var(--t-fast) var(--ease);
+  transition: opacity var(--duration-dropdown) var(--ease),
+              visibility var(--duration-dropdown) var(--ease),
+              transform var(--duration-dropdown) var(--ease);
   z-index: var(--z-dropdown);
 }
 

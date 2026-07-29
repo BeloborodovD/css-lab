@@ -1,0 +1,29 @@
+/* [BLOCK:layout.site-footer]
+ * Общий подвал сайта-примеров: ссылка на hub и витрину, подпись.
+ * Модуль: css-lab/layout. Зависимости: base/variables-v2.css.
+ * Разметка копируется между маркерами <!-- [BLOCK:site-footer] -->.
+ */
+
+.site-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  margin-top: var(--space-16);
+  padding: var(--space-5);
+  border-top: var(--border-w) solid var(--color-border);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+.site-footer__links {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+.site-footer__links a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+.site-footer__links a:hover { color: var(--color-accent); }
+/* </BLOCK:layout.site-footer> */

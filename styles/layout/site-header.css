@@ -1,0 +1,109 @@
+/* [BLOCK:layout.site-header]
+ * Общая шапка сайта-примеров: лого CSSLab + бренд-марка, навигация по
+ * страницам, справа — переключатели бренда и темы.
+ * Модуль: css-lab/layout. Зависимости: base/variables-v2.css, base/motion.css,
+ * components-v3/brand-mark.css (лого и brand-switcher).
+ * Разметка копируется между страницами между маркерами
+ * <!-- [BLOCK:site-header] --> … <!-- </BLOCK:site-header> --> (grep-цель),
+ * поведение — js/site.js. Активный пункт — aria-current="page".
+ */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  height: var(--header-h);
+  padding: 0 var(--space-5);
+  background: var(--color-surface);
+  border-bottom: var(--border-w) solid var(--color-border);
+}
+
+.site-header__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  text-decoration: none;
+  color: var(--color-text);
+}
+.site-header__wordmark {
+  font-weight: var(--fw-bold);
+  white-space: nowrap;
+}
+.site-header__wordmark span { color: var(--color-accent); }
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+  overflow-x: auto;
+}
+.site-nav__link {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  transition:
+    background-color var(--duration-press) var(--ease-out),
+    color var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .site-nav__link:hover {
+    color: var(--color-text);
+    background: var(--color-surface-hover);
+  }
+}
+.site-nav__link:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+.site-nav__link[aria-current="page"] {
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+.site-header__tools {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* Кнопка темы (light/dark) в шапке сайта */
+.site-header__theme {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .site-header__theme:hover { background: var(--color-surface-hover); }
+}
+.site-header__theme:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+/* Иконки темы: показывается противоположная текущей */
+.site-header__theme .icon-dark { display: none; }
+.dark .site-header__theme .icon-light { display: none; }
+.dark .site-header__theme .icon-dark { display: inline; }
+
+@media (max-width: 767px) {
+  .site-header { padding: 0 var(--space-3); gap: var(--space-2); }
+  .site-header .brand-switcher { display: none; } /* на мобильном — только тема */
+}
+/* </BLOCK:layout.site-header> */

@@ -15,7 +15,7 @@
   z-index: var(--z-modal);
   pointer-events: none;
   visibility: hidden; /* закрытый drawer вне Tab-порядка и a11y-дерева */
-  transition: visibility 0s linear var(--duration-modal);
+  transition: visibility 0s linear var(--duration-modal-exit);
 }
 .drawer.is-open {
   visibility: visible;
@@ -43,13 +43,17 @@
   border-left: var(--border-w) solid var(--color-border);
   box-shadow: var(--shadow-xl);
   transform: translateX(100%);
-  /* PURPOSE: spatial consistency — панель живёт за правым краем экрана */
-  transition: transform var(--duration-modal) var(--ease-drawer);
+  /* PURPOSE: spatial consistency — панель живёт за правым краем экрана.
+     Базовое состояние = выход (dismiss): быстрее входа */
+  transition: transform var(--duration-modal-exit) var(--ease-drawer);
 }
 
 .drawer.is-open { pointer-events: auto; }
 .drawer.is-open .drawer__overlay { opacity: 1; }
-.drawer.is-open .drawer__panel { transform: translateX(0); }
+.drawer.is-open .drawer__panel {
+  transform: translateX(0);
+  transition-duration: var(--duration-modal);
+}
 
 /* ===== Внутренняя структура ============================================ */
 .drawer__header {

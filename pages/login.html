@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вход в портал — страница-пример · CSS Lab</title>
+  <link rel="stylesheet" href="/styles/core.css">
+  <link rel="stylesheet" href="/styles/pages/login.css">
+  <script>
+    (function () {
+      try {
+        var b = localStorage.getItem('css-lab-brand');
+        document.addEventListener('DOMContentLoaded', function () {
+          if (b) document.body.setAttribute('data-brand', b);
+          if (localStorage.getItem('css-lab-theme') === 'dark') document.body.classList.add('dark');
+        });
+      } catch (e) { /* приватный режим */ }
+    })();
+  </script>
+</head>
+<body data-brand="veza">
+
+  <!-- [BLOCK:site-header] -->
+  <header class="site-header">
+    <a class="site-header__brand" href="/index.html">
+      <span class="site-header__wordmark">CSS<span>Lab</span></span>
+      <span class="brand-mark brand-mark--sm" role="img" aria-label="Логотип бренда"></span>
+    </a>
+    <nav class="site-nav" aria-label="Разделы сайта">
+      <a class="site-nav__link" href="/index.html">Главная</a>
+      <a class="site-nav__link" href="/index-v3.html">Витрина</a>
+      <a class="site-nav__link" href="/pages/catalog.html">Каталог</a>
+      <a class="site-nav__link" href="/pages/login.html" aria-current="page">Вход</a>
+      <a class="site-nav__link" href="/print-forms.html">Печатные формы</a>
+      <a class="site-nav__link" href="/ral-colors.html">Цвета RAL</a>
+    </nav>
+    <div class="site-header__tools">
+      <div class="brand-switcher js-brand-switcher" role="group" aria-label="Выбор бренда">
+        <button type="button" class="brand-switcher__option" data-brand-value="veza" aria-pressed="true">VEZA</button>
+        <button type="button" class="brand-switcher__option" data-brand-value="uralelectro" aria-pressed="false">UE</button>
+        <button type="button" class="brand-switcher__option" data-brand-value="hemah" aria-pressed="false">HEMAH</button>
+      </div>
+      <button type="button" class="site-header__theme" aria-label="Переключить тему">
+        <svg class="icon-light" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg class="icon-dark" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+  <!-- </BLOCK:site-header> -->
+
+  <main class="login-wrap">
+    <div class="login-card">
+      <div class="login-card__logo">
+        <span class="brand-mark" role="img" aria-label="Логотип бренда"></span>
+      </div>
+      <h1 class="login-card__title">Вход в портал</h1>
+      <p class="login-card__sub">Корпоративная учётная запись</p>
+
+      <div class="alert-box error" id="login-error" hidden>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
+        <span class="alert-box-content">Неверный логин или пароль. Демо: любой e-mail и пароль от 6 символов.</span>
+      </div>
+
+      <form class="login-form" id="login-form" novalidate>
+        <div class="form-field">
+          <label class="form-field__label" for="login-email">E-mail</label>
+          <input id="login-email" class="input" type="email" placeholder="name@company.ru" autocomplete="username" required>
+        </div>
+        <div class="form-field">
+          <label class="form-field__label" for="login-password">Пароль</label>
+          <input id="login-password" class="input" type="password" placeholder="••••••••" autocomplete="current-password" minlength="6" required>
+        </div>
+        <div class="login-form__row">
+          <label style="display: inline-flex; align-items: center; gap: var(--space-2); cursor: pointer;">
+            <input type="checkbox" checked> Запомнить меня
+          </label>
+          <a class="login-form__link" href="#" onclick="alert('Демо: восстановление пароля'); return false;">Забыли пароль?</a>
+        </div>
+        <button type="submit" class="btn btn-primary login-submit" id="login-submit">
+          <span class="spinner" aria-hidden="true"></span>
+          Войти
+        </button>
+      </form>
+
+      <p class="login-footnote">Страница-пример CSS Lab: карточка + inputs + alert + спиннер в кнопке. Смените бренд в шапке — форма перекрасится.</p>
+    </div>
+  </main>
+
+  <script src="/js/site.js"></script>
+  <script>
+    // [BLOCK:login-page] Демо-сабмит: валидация, спиннер, ошибка/успех
+    const form = document.getElementById('login-form');
+    const submit = document.getElementById('login-submit');
+    const errorBox = document.getElementById('login-error');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      errorBox.hidden = true;
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      submit.classList.add('is-loading');
+      submit.setAttribute('aria-busy', 'true');
+      submit.lastChild.textContent = ' Входим…';
+      setTimeout(() => {
+        submit.classList.remove('is-loading');
+        submit.removeAttribute('aria-busy');
+        submit.lastChild.textContent = ' Войти';
+        const pass = document.getElementById('login-password').value;
+        if (pass.length >= 6) {
+          window.location.href = '/pages/catalog.html';
+        } else {
+          errorBox.hidden = false;
+        }
+      }, 900);
+    });
+    // </BLOCK:login-page>
+  </script>
+</body>
+</html>

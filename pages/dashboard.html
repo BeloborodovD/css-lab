@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Дашборд производства — страница-пример · CSS Lab</title>
+  <link rel="stylesheet" href="/styles/core.css">
+  <link rel="stylesheet" href="/styles/pages/dashboard.css">
+  <script>
+    (function () {
+      try {
+        var b = localStorage.getItem('css-lab-brand');
+        document.addEventListener('DOMContentLoaded', function () {
+          if (b) document.body.setAttribute('data-brand', b);
+          if (localStorage.getItem('css-lab-theme') === 'dark') document.body.classList.add('dark');
+        });
+      } catch (e) { /* приватный режим */ }
+    })();
+  </script>
+</head>
+<body data-brand="veza">
+
+  <!-- [BLOCK:site-header] -->
+  <header class="site-header">
+    <a class="site-header__brand" href="/index.html">
+      <span class="site-header__wordmark">CSS<span>Lab</span></span>
+      <span class="brand-mark brand-mark--sm" role="img" aria-label="Логотип бренда"></span>
+    </a>
+    <nav class="site-nav" aria-label="Разделы сайта">
+      <a class="site-nav__link" href="/index.html">Главная</a>
+      <a class="site-nav__link" href="/index-v3.html">Витрина</a>
+      <a class="site-nav__link" href="/pages/catalog.html">Каталог</a>
+      <a class="site-nav__link" href="/pages/dashboard.html" aria-current="page">Дашборд</a>
+      <a class="site-nav__link" href="/pages/login.html">Вход</a>
+      <a class="site-nav__link" href="/print-forms.html">Печатные формы</a>
+      <a class="site-nav__link" href="/ral-colors.html">Цвета RAL</a>
+    </nav>
+    <div class="site-header__tools">
+      <div class="brand-switcher js-brand-switcher" role="group" aria-label="Выбор бренда">
+        <button type="button" class="brand-switcher__option" data-brand-value="veza" aria-pressed="true">VEZA</button>
+        <button type="button" class="brand-switcher__option" data-brand-value="uralelectro" aria-pressed="false">UE</button>
+        <button type="button" class="brand-switcher__option" data-brand-value="hemah" aria-pressed="false">HEMAH</button>
+      </div>
+      <button type="button" class="site-header__theme" aria-label="Переключить тему">
+        <svg class="icon-light" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg class="icon-dark" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+  <!-- </BLOCK:site-header> -->
+
+  <main class="page-shell page-shell--wide">
+    <h1 class="page-shell__title">Дашборд производства</h1>
+    <p class="page-shell__sub">Страница-пример админки: сводка, заказы с фильтрацией по статусу, шторка деталей, журнал событий и лента активности.</p>
+
+    <div class="dash-layout">
+      <!-- ===== Сайднав разделов ===== -->
+      <nav class="dash-sidenav" aria-label="Разделы дашборда">
+        <span class="dash-sidenav__title">Разделы</span>
+        <a class="dash-sidenav__link is-active" href="#dash-overview">Обзор</a>
+        <a class="dash-sidenav__link" href="#dash-orders">Заказы</a>
+        <a class="dash-sidenav__link" href="#dash-import">Импорт</a>
+        <a class="dash-sidenav__link" href="#dash-logs">Логи</a>
+      </nav>
+
+      <!-- ===== Контент ===== -->
+      <div>
+        <!-- ===== Обзор: stat-карточки ===== -->
+        <section class="dash-section" id="dash-overview" aria-labelledby="dash-overview-title">
+          <div class="dash-section__head">
+            <div>
+              <h2 class="dash-section__title" id="dash-overview-title">Обзор</h2>
+              <p class="dash-section__sub">Сводка по заказам на 29 июля 2026, склад Медногорск</p>
+            </div>
+            <button type="button" class="btn btn-sm" id="dash-refresh-stats">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+              Обновить
+            </button>
+          </div>
+
+          <div class="stats-grid stats-grid-4">
+            <div class="stat-card stat-card-primary">
+              <span class="stat-value" id="dash-stat-work">47</span>
+              <span class="stat-label">Заказов в производстве</span>
+              <span class="stat-trend up">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m17 7-10 10M17 17V7H7"/></svg>
+                +6 за неделю
+              </span>
+            </div>
+            <div class="stat-card stat-card-success">
+              <span class="stat-value" id="dash-stat-shipped">128</span>
+              <span class="stat-label">Отгружено за месяц</span>
+              <span class="stat-trend up">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m17 7-10 10M17 17V7H7"/></svg>
+                +12% к июню
+              </span>
+            </div>
+            <div class="stat-card stat-card-warning">
+              <span class="stat-value" id="dash-stat-pay">9</span>
+              <span class="stat-label">Ожидают оплаты</span>
+              <span class="stat-trend neutral">на 4,1 млн ₽</span>
+            </div>
+            <div class="stat-card stat-card-error">
+              <span class="stat-value" id="dash-stat-overdue">3</span>
+              <span class="stat-label">Просроченных отгрузок</span>
+              <span class="stat-trend down">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 7h10v10M17 17 7 7"/></svg>
+                максимум — 4 дня
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== Заказы: фильтры + таблица ===== -->
+        <section class="dash-section" id="dash-orders" aria-labelledby="dash-orders-title">
+          <div class="dash-section__head">
+            <div>
+              <h2 class="dash-section__title" id="dash-orders-title">Заказы</h2>
+              <p class="dash-section__sub">Клик по статусу в таблице добавляет фильтр; «Детали» открывает шторку заказа</p>
+            </div>
+          </div>
+
+          <div class="filter-pills dash-pills" id="dash-pills" aria-live="polite">
+            <span class="filter-pills__label">Фильтры:</span>
+            <button type="button" class="filter-pills__clear" id="dash-pills-clear" hidden>Сбросить все</button>
+          </div>
+
+          <div class="table-wrap">
+            <div class="table-responsive">
+              <table class="table table--hover">
+                <thead>
+                  <tr>
+                    <th>№ заказа</th>
+                    <th>Заказчик</th>
+                    <th>Изделие</th>
+                    <th class="align-right">Кол-во</th>
+                    <th>Статус</th>
+                    <th class="align-right">Сумма</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="dash-orders-body">
+                  <!-- Строки генерирует dashboard-page script из DASH_ORDERS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== Нижний ряд: журнал + активность ===== -->
+        <div class="dash-cols">
+          <section class="dash-panel" id="dash-logs" aria-labelledby="dash-logs-title">
+            <div class="dash-panel__head">
+              <h2 class="dash-panel__title" id="dash-logs-title">Журнал событий</h2>
+              <button type="button" class="log-refresh-btn" id="dash-log-refresh">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                Обновить
+              </button>
+            </div>
+            <div class="dash-panel__body--scroll" id="dash-log-list">
+              <div class="log-entry">
+                <span class="log-entry-timestamp">29.07 09:12:04</span>
+                <span class="log-entry-level"><span class="log-badge info">Info</span></span>
+                <span class="log-entry-message">Импорт каталога АДМ завершён: 45 позиций обновлено</span>
+              </div>
+              <div class="log-entry">
+                <span class="log-entry-timestamp">29.07 09:03:41</span>
+                <span class="log-entry-level"><span class="log-badge warning">Warn</span></span>
+                <span class="log-entry-message">Заказ VZ-1101: срок отгрузки просрочен на 4 дня</span>
+              </div>
+              <div class="log-entry">
+                <span class="log-entry-timestamp">29.07 08:57:19</span>
+                <span class="log-entry-level"><span class="log-badge success">OK</span></span>
+                <span class="log-entry-message">Резерв по заказу UE-2418 подтверждён складом</span>
+              </div>
+              <div class="log-entry">
+                <span class="log-entry-timestamp">29.07 08:40:02</span>
+                <span class="log-entry-level"><span class="log-badge error">Error</span></span>
+                <span class="log-entry-message">Ошибка синхронизации с 1С: тайм-аут соединения</span>
+              </div>
+              <div class="log-entry">
+                <span class="log-entry-timestamp">29.07 08:30:00</span>
+                <span class="log-entry-level"><span class="log-badge debug">Debug</span></span>
+                <span class="log-entry-message">Планировщик задач запущен (cron 08:30)</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="dash-panel" id="dash-import" aria-labelledby="dash-import-title">
+            <div class="dash-panel__head">
+              <h2 class="dash-panel__title" id="dash-import-title">Импорт и активность</h2>
+            </div>
+            <div class="dash-panel__body--pad">
+              <div class="timeline timeline-compact">
+                <div class="timeline-item info">
+                  <span class="timeline-dot"></span>
+                  <div class="timeline-content">
+                    <div class="timeline-time">09:15</div>
+                    <div class="timeline-title">Начат импорт прайс-листа ВЕЗА</div>
+                    <div class="timeline-description">1 240 позиций в очереди, оценка — 12 минут</div>
+                  </div>
+                </div>
+                <div class="timeline-item success">
+                  <span class="timeline-dot"></span>
+                  <div class="timeline-content">
+                    <div class="timeline-time">08:52</div>
+                    <div class="timeline-title">Заказ VZ-1093 отгружен</div>
+                    <div class="timeline-description">ТК «Деловые Линии», 8 мест, накладная № 481-207</div>
+                  </div>
+                </div>
+                <div class="timeline-item warning">
+                  <span class="timeline-dot"></span>
+                  <div class="timeline-content">
+                    <div class="timeline-time">08:20</div>
+                    <div class="timeline-title">Остаток АДМ 132 M4 ниже неснижаемого</div>
+                    <div class="timeline-description">6 шт на складе при норме 15 шт — заявка в производство</div>
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <span class="timeline-dot"></span>
+                  <div class="timeline-content">
+                    <div class="timeline-time">Вчера, 17:40</div>
+                    <div class="timeline-title">Ночная синхронизация каталога</div>
+                    <div class="timeline-description">Запланирована на 02:00, источник — Pimcore PIM</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== Шторка деталей заказа ===== -->
+  <div class="drawer" id="dash-drawer" role="dialog" aria-modal="true" aria-labelledby="dash-drawer-title">
+    <div class="drawer__overlay" data-drawer-close></div>
+    <div class="drawer__panel">
+      <div class="drawer__header">
+        <h2 class="drawer__title" id="dash-drawer-title">Заказ</h2>
+        <button type="button" class="drawer__close" data-drawer-close aria-label="Закрыть шторку">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <div class="drawer__body">
+        <div class="spec-section">
+          <h3 class="spec-section__title">Основное</h3>
+          <div class="spec-grid">
+            <div class="spec-row"><span class="spec-row__label">Заказчик</span><span class="spec-row__value" data-dash-spec="customer"></span></div>
+            <div class="spec-row"><span class="spec-row__label">Менеджер</span><span class="spec-row__value" data-dash-spec="manager"></span></div>
+            <div class="spec-row"><span class="spec-row__label">Дата заказа</span><span class="spec-row__value" data-dash-spec="date"></span></div>
+            <div class="spec-row"><span class="spec-row__label">Срок отгрузки</span><span class="spec-row__value" data-dash-spec="due"></span></div>
+            <div class="spec-row"><span class="spec-row__label">Статус</span><span class="spec-row__value" data-dash-spec="status"></span></div>
+            <div class="spec-row"><span class="spec-row__label">Склад</span><span class="spec-row__value" data-dash-spec="warehouse"></span></div>
+          </div>
+        </div>
+        <div class="spec-section">
+          <h3 class="spec-section__title">Позиция</h3>
+          <div class="spec-grid">
+            <div class="spec-row"><span class="spec-row__label">Изделие</span><span class="spec-row__value" data-dash-spec="product"></span></div>
+            <div class="spec-row"><span class="spec-row__label">Количество</span><span class="spec-row__value" data-dash-spec="qty"></span></div>
+            <div class="spec-row"><span class="spec-row__label">Сумма</span><span class="spec-row__value" data-dash-spec="sum"></span></div>
+            <div class="spec-row"><span class="spec-row__label">НДС 20%</span><span class="spec-row__value" data-dash-spec="vat"></span></div>
+            <div class="spec-row spec-row--full"><span class="spec-row__label">Примечание</span><span class="spec-row__value" data-dash-spec="note"></span></div>
+          </div>
+        </div>
+      </div>
+      <div class="drawer__footer">
+        <button type="button" class="btn" data-drawer-close>Закрыть</button>
+        <button type="button" class="btn btn-primary" id="dash-drawer-work">Взять в производство</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- [BLOCK:site-footer] -->
+  <footer class="site-footer">
+    <span>CSS Lab — страница-пример дашборда. Компоненты: stats · table · drawer · logs · timeline · filter-pills.</span>
+    <nav class="site-footer__links" aria-label="Подвал">
+      <a href="/index.html">Главная</a>
+      <a href="/index-v3.html">Витрина</a>
+      <a href="/pages/catalog.html">Каталог</a>
+    </nav>
+  </footer>
+  <!-- </BLOCK:site-footer> -->
+
+  <script src="/js/site.js"></script>
+  <script>
+    // [BLOCK:dashboard-page] Демо-данные заказов, фильтр по статусу, шторка деталей, живой журнал
+    const STATUS_META = {
+      new:     { label: 'Новый',           cls: 'debug' },
+      work:    { label: 'В производстве',  cls: 'info' },
+      pay:     { label: 'Ожидает оплаты',  cls: 'warning' },
+      shipped: { label: 'Отгружен',        cls: 'success' },
+      overdue: { label: 'Просрочен',       cls: 'error' }
+    };
+
+    const DASH_ORDERS = [
+      { id: 'UE-2418', customer: 'Уралэлектро-Сбыт',  product: 'АДМ 132 M4, 11 кВт',              qty: 24, status: 'work',    sum: '1 300 800 ₽', vat: '216 800 ₽', manager: 'Ковалёва А. С.', date: '21.07.2026', due: '04.08.2026', warehouse: 'Медногорск', note: 'Резерв подтверждён складом. Отгрузка одной партией.' },
+      { id: 'VZ-1093', customer: 'ВЕЗА-Инжиниринг',   product: 'Вентилятор ВР 86-77-6,3',          qty: 8,  status: 'shipped', sum: '976 400 ₽',   vat: '162 733 ₽', manager: 'Смирнов П. Н.',  date: '14.07.2026', due: '28.07.2026', warehouse: 'Кимры',      note: 'Отгружен 28.07, ТК «Деловые Линии», накладная № 481-207.' },
+      { id: 'UE-2421', customer: 'ПромВентСервис',    product: 'АДЭМ 112 M4, 5,5 кВт',             qty: 40, status: 'pay',     sum: '1 180 000 ₽', vat: '196 667 ₽', manager: 'Ковалёва А. С.', date: '23.07.2026', due: '11.08.2026', warehouse: 'Медногорск', note: 'Счёт № 1187 выставлен 24.07, срок оплаты — 3 банковских дня.' },
+      { id: 'VZ-1101', customer: 'СтройКлимат СПб',   product: 'Клапан КПУ-1Н-О 800×500',          qty: 60, status: 'overdue', sum: '742 500 ₽',   vat: '123 750 ₽', manager: 'Смирнов П. Н.',  date: '08.07.2026', due: '25.07.2026', warehouse: 'Кимры',      note: 'Просрочка 4 дня: ожидание комплектующих привода. Клиент уведомлён.' },
+      { id: 'UE-2430', customer: 'Энергомаш-Урал',    product: 'АДМ 100 S6, 2,2 кВт',              qty: 12, status: 'new',     sum: '207 600 ₽',   vat: '34 600 ₽',  manager: 'Гареев Р. Ф.',   date: '28.07.2026', due: '18.08.2026', warehouse: 'Медногорск', note: 'Новый заказ, требуется подтверждение конструкторским отделом.' },
+      { id: 'VZ-1104', customer: 'КлиматПроф Казань', product: 'Вентилятор ВО 06-300-5 с АДМ 71 B4', qty: 16, status: 'work',  sum: '518 400 ₽',   vat: '86 400 ₽',  manager: 'Гареев Р. Ф.',   date: '27.07.2026', due: '14.08.2026', warehouse: 'Кимры',      note: 'Комплектация двигателями из партии АДМ-2607.' }
+    ];
+
+    // ===== Журнал: добавление записи =====
+    const logList = document.getElementById('dash-log-list');
+
+    function dashTimestamp() {
+      const d = new Date();
+      const p = n => String(n).padStart(2, '0');
+      return p(d.getDate()) + '.' + p(d.getMonth() + 1) + ' ' +
+             p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
+    }
+
+    function addLog(level, message) {
+      const entry = document.createElement('div');
+      entry.className = 'log-entry dash-log-new';
+
+      const ts = document.createElement('span');
+      ts.className = 'log-entry-timestamp';
+      ts.textContent = dashTimestamp();
+
+      const levelWrap = document.createElement('span');
+      levelWrap.className = 'log-entry-level';
+      const badge = document.createElement('span');
+      badge.className = 'log-badge ' + level;
+      badge.textContent = { info: 'Info', warning: 'Warn', error: 'Error', success: 'OK', debug: 'Debug' }[level] || level;
+      levelWrap.appendChild(badge);
+
+      const msg = document.createElement('span');
+      msg.className = 'log-entry-message';
+      msg.textContent = message;
+
+      entry.append(ts, levelWrap, msg);
+      logList.prepend(entry);
+    }
+
+    // ===== Таблица заказов =====
+    const ordersBody = document.getElementById('dash-orders-body');
+    const activeStatuses = new Set();
+
+    function makeStatusButton(order) {
+      const meta = STATUS_META[order.status];
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'log-badge dash-status ' + meta.cls;
+      btn.textContent = meta.label;
+      btn.title = 'Фильтровать по статусу «' + meta.label + '»';
+      btn.addEventListener('click', () => {
+        if (activeStatuses.has(order.status)) activeStatuses.delete(order.status);
+        else activeStatuses.add(order.status);
+        applyFilter();
+      });
+      return btn;
+    }
+
+    function renderRow(order) {
+      const tr = document.createElement('tr');
+      tr.dataset.orderId = order.id;
+
+      const tdId = document.createElement('td');
+      tdId.textContent = order.id;
+
+      const tdCustomer = document.createElement('td');
+      tdCustomer.textContent = order.customer;
+
+      const tdProduct = document.createElement('td');
+      tdProduct.textContent = order.product;
+
+      const tdQty = document.createElement('td');
+      tdQty.className = 'dash-num';
+      tdQty.textContent = order.qty + ' шт';
+
+      const tdStatus = document.createElement('td');
+      tdStatus.appendChild(makeStatusButton(order));
+
+      const tdSum = document.createElement('td');
+      tdSum.className = 'dash-num';
+      tdSum.textContent = order.sum;
+
+      const tdAction = document.createElement('td');
+      tdAction.className = 'align-right';
+      const details = document.createElement('button');
+      details.type = 'button';
+      details.className = 'btn btn-sm btn-ghost';
+      details.textContent = 'Детали';
+      details.addEventListener('click', () => openDrawer(order, details));
+      tdAction.appendChild(details);
+
+      tr.append(tdId, tdCustomer, tdProduct, tdQty, tdStatus, tdSum, tdAction);
+      return tr;
+    }
+
+    DASH_ORDERS.forEach(order => ordersBody.appendChild(renderRow(order)));
+
+    // ===== Полоса filter-pills =====
+    const pillsStrip = document.getElementById('dash-pills');
+    const pillsClear = document.getElementById('dash-pills-clear');
+
+    function renderPills() {
+      pillsStrip.querySelectorAll('.filter-pill').forEach(p => p.remove());
+      activeStatuses.forEach(status => {
+        const meta = STATUS_META[status];
+        const pill = document.createElement('span');
+        pill.className = 'filter-pill';
+
+        const key = document.createElement('span');
+        key.className = 'filter-pill__key';
+        key.textContent = 'Статус:';
+
+        const value = document.createElement('span');
+        value.className = 'filter-pill__value';
+        value.textContent = meta.label;
+
+        const rm = document.createElement('button');
+        rm.type = 'button';
+        rm.className = 'filter-pill__remove';
+        rm.setAttribute('aria-label', 'Убрать фильтр ' + meta.label);
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('viewBox', '0 0 24 24');
+        svg.setAttribute('fill', 'none');
+        svg.setAttribute('stroke', 'currentColor');
+        svg.setAttribute('stroke-width', '2.5');
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', 'M18 6 6 18M6 6l12 12');
+        svg.appendChild(path);
+        rm.appendChild(svg);
+        rm.addEventListener('click', () => {
+          activeStatuses.delete(status);
+          applyFilter();
+        });
+
+        pill.append(key, value, rm);
+        pillsStrip.insertBefore(pill, pillsClear);
+      });
+      pillsClear.hidden = activeStatuses.size === 0;
+    }
+
+    pillsClear.addEventListener('click', () => {
+      activeStatuses.clear();
+      applyFilter();
+    });
+
+    function applyFilter() {
+      ordersBody.querySelectorAll('tr').forEach(tr => {
+        const order = DASH_ORDERS.find(o => o.id === tr.dataset.orderId);
+        const show = activeStatuses.size === 0 || activeStatuses.has(order.status);
+        tr.hidden = !show;
+      });
+      renderPills();
+    }
+
+    // ===== Шторка деталей заказа (по образцу initDrawer из main.js) =====
+    const drawer = document.getElementById('dash-drawer');
+    const drawerTitle = document.getElementById('dash-drawer-title');
+    const drawerWorkBtn = document.getElementById('dash-drawer-work');
+    let drawerOrder = null;
+    let lastFocused = null;
+
+    drawer.inert = true;
+    drawer.removeAttribute('aria-hidden');
+
+    function setDrawerOpen(open) {
+      if (open === drawer.classList.contains('is-open')) return;
+      drawer.classList.toggle('is-open', open);
+      drawer.inert = !open;
+      if (open) {
+        lastFocused = document.activeElement;
+        drawer.querySelector('.drawer__close')?.focus();
+      } else {
+        (lastFocused || document.body).focus?.();
+      }
+    }
+
+    function fillSpec(name, value) {
+      const el = drawer.querySelector('[data-dash-spec="' + name + '"]');
+      if (el) el.textContent = value;
+    }
+
+    function openDrawer(order, trigger) {
+      drawerOrder = order;
+      lastFocused = trigger;
+      drawerTitle.textContent = 'Заказ ' + order.id;
+      fillSpec('customer', order.customer);
+      fillSpec('manager', order.manager);
+      fillSpec('date', order.date);
+      fillSpec('due', order.due);
+      fillSpec('status', STATUS_META[order.status].label);
+      fillSpec('warehouse', order.warehouse);
+      fillSpec('product', order.product);
+      fillSpec('qty', order.qty + ' шт');
+      fillSpec('sum', order.sum);
+      fillSpec('vat', order.vat);
+      fillSpec('note', order.note);
+      drawerWorkBtn.disabled = order.status === 'work' || order.status === 'shipped';
+      setDrawerOpen(true);
+    }
+
+    drawer.querySelectorAll('[data-drawer-close]').forEach(el => {
+      el.addEventListener('click', () => setDrawerOpen(false));
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && drawer.classList.contains('is-open')) setDrawerOpen(false);
+    });
+
+    // «Взять в производство» — меняет статус заказа в таблице и пишет в журнал
+    drawerWorkBtn.addEventListener('click', () => {
+      if (!drawerOrder) return;
+      drawerOrder.status = 'work';
+      const tr = ordersBody.querySelector('tr[data-order-id="' + drawerOrder.id + '"]');
+      if (tr) {
+        const cell = tr.children[4];
+        cell.replaceChildren(makeStatusButton(drawerOrder));
+      }
+      addLog('info', 'Заказ ' + drawerOrder.id + ' переведён в статус «В производстве»');
+      applyFilter();
+      setDrawerOpen(false);
+    });
+
+    // ===== Кнопка «Обновить» в обзоре: пересчёт сводки + запись в журнал =====
+    document.getElementById('dash-refresh-stats').addEventListener('click', () => {
+      const bump = (id, delta) => {
+        const el = document.getElementById(id);
+        el.textContent = String(Math.max(0, parseInt(el.textContent, 10) + delta));
+      };
+      bump('dash-stat-work', Math.floor(Math.random() * 3) - 1);
+      bump('dash-stat-shipped', Math.floor(Math.random() * 2));
+      addLog('info', 'Сводка обзора обновлена вручную');
+    });
+
+    // ===== Кнопка «Обновить» журнала: спиннер + свежая запись =====
+    const logRefreshBtn = document.getElementById('dash-log-refresh');
+    logRefreshBtn.addEventListener('click', () => {
+      const icon = logRefreshBtn.querySelector('svg');
+      logRefreshBtn.disabled = true;
+      icon.classList.add('spinning');
+      setTimeout(() => {
+        icon.classList.remove('spinning');
+        logRefreshBtn.disabled = false;
+        addLog('success', 'Журнал синхронизирован, новых критических событий нет');
+      }, 600);
+    });
+
+    // ===== Сайднав: подсветка выбранного раздела =====
+    document.querySelectorAll('.dash-sidenav__link').forEach(link => {
+      link.addEventListener('click', () => {
+        document.querySelectorAll('.dash-sidenav__link').forEach(l => l.classList.remove('is-active'));
+        link.classList.add('is-active');
+      });
+    });
+    // </BLOCK:dashboard-page>
+  </script>
+</body>
+</html>

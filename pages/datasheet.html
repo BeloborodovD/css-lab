@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>АДМ 132 S4 — карточка изделия · CSS Lab</title>
+  <link rel="stylesheet" href="/styles/core.css">
+  <link rel="stylesheet" href="/styles/pages/datasheet.css">
+  <!-- Анти-FOUC: бренд и тема из localStorage до первой отрисовки -->
+  <script>
+    (function () {
+      try {
+        var b = localStorage.getItem('css-lab-brand');
+        document.addEventListener('DOMContentLoaded', function () {
+          if (b) document.body.setAttribute('data-brand', b);
+          if (localStorage.getItem('css-lab-theme') === 'dark') document.body.classList.add('dark');
+        });
+      } catch (e) { /* приватный режим */ }
+    })();
+  </script>
+</head>
+<body data-brand="uralelectro">
+
+  <!-- [BLOCK:site-header] -->
+  <header class="site-header">
+    <a class="site-header__brand" href="/index.html">
+      <span class="site-header__wordmark">CSS<span>Lab</span></span>
+      <span class="brand-mark brand-mark--sm" role="img" aria-label="Логотип бренда"></span>
+    </a>
+    <nav class="site-nav" aria-label="Разделы сайта">
+      <a class="site-nav__link" href="/index.html">Главная</a>
+      <a class="site-nav__link" href="/index-v3.html">Витрина</a>
+      <a class="site-nav__link" href="/pages/catalog.html">Каталог</a>
+      <a class="site-nav__link" href="/pages/datasheet.html" aria-current="page">Даташит</a>
+      <a class="site-nav__link" href="/pages/login.html">Вход</a>
+      <a class="site-nav__link" href="/print-forms.html">Печатные формы</a>
+      <a class="site-nav__link" href="/ral-colors.html">Цвета RAL</a>
+    </nav>
+    <div class="site-header__tools">
+      <div class="brand-switcher js-brand-switcher" role="group" aria-label="Выбор бренда">
+        <button type="button" class="brand-switcher__option" data-brand-value="veza" aria-pressed="false">VEZA</button>
+        <button type="button" class="brand-switcher__option" data-brand-value="uralelectro" aria-pressed="true">UE</button>
+        <button type="button" class="brand-switcher__option" data-brand-value="hemah" aria-pressed="false">HEMAH</button>
+      </div>
+      <button type="button" class="site-header__theme" aria-label="Переключить тему">
+        <svg class="icon-light" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg class="icon-dark" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+  <!-- </BLOCK:site-header> -->
+
+  <main class="page-shell">
+    <nav class="breadcrumbs" aria-label="Хлебные крошки" style="margin-bottom: var(--space-4);">
+      <a href="/index.html" class="breadcrumb-item">Главная</a>
+      <span class="breadcrumb-separator">/</span>
+      <a href="/pages/catalog.html" class="breadcrumb-item">Каталог</a>
+      <span class="breadcrumb-separator">/</span>
+      <span class="breadcrumb-item active" aria-current="page">АДМ 132 S4</span>
+    </nav>
+
+    <!-- ===== Шапка изделия ===== -->
+    <section class="ds-hero" aria-label="Карточка изделия АДМ 132 S4">
+      <div class="ds-hero__top">
+        <div class="ds-hero__info">
+          <span class="ds-hero__series">Серия АДМ · трёхфазный асинхронный</span>
+          <div class="ds-hero__title-row">
+            <h1 class="ds-hero__name">АДМ 132 S4</h1>
+            <span class="ie-badge ie-badge--ie2">IE2</span>
+          </div>
+          <p class="ds-hero__desc">
+            Электродвигатель асинхронный с короткозамкнутым ротором, 7,5&nbsp;кВт,
+            1455&nbsp;об/мин, 380/660&nbsp;В, 50&nbsp;Гц. Общепромышленное исполнение,
+            привод вентиляторов, насосов и компрессоров.
+          </p>
+          <div class="ds-hero__chips">
+            <span class="chip chip-sm chip-neutral" title="Степень защиты оболочки">IP55</span>
+            <span class="chip chip-sm chip-neutral" title="Климатическое исполнение">У2</span>
+            <span class="chip chip-sm chip-neutral" title="Монтажное исполнение: на лапах">IM1081</span>
+          </div>
+        </div>
+        <div class="ds-hero__aside">
+          <span class="brand-mark brand-mark--lg" role="img" aria-label="Логотип бренда"></span>
+          <div class="ds-hero__actions">
+            <a class="btn" href="/print-forms.html">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              Печатная версия
+            </a>
+            <button type="button" class="btn btn-primary" id="ds-pick-btn" aria-pressed="false">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+              <span id="ds-pick-label">В подбор</span>
+            </button>
+          </div>
+          <span class="ds-hero__status" id="ds-pick-status" role="status" aria-live="polite"></span>
+        </div>
+      </div>
+
+      <!-- Ключевые параметры -->
+      <div class="ds-hero__params">
+        <div class="param-grid">
+          <div class="param-card">
+            <span class="param-card__icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </span>
+            <div>
+              <div class="param-card__label">Мощность</div>
+              <div class="param-card__value">7,5 кВт</div>
+            </div>
+          </div>
+          <div class="param-card">
+            <span class="param-card__icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.2-8.56"/><path d="M21 3v6h-6"/></svg>
+            </span>
+            <div>
+              <div class="param-card__label">Частота вращения</div>
+              <div class="param-card__value">1455 об/мин</div>
+            </div>
+          </div>
+          <div class="param-card">
+            <span class="param-card__icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2v20M17 7l-5-5-5 5M7 17l5 5 5-5"/></svg>
+            </span>
+            <div>
+              <div class="param-card__label">Ток при 380 В</div>
+              <div class="param-card__value">14,9 А</div>
+            </div>
+          </div>
+          <div class="param-card">
+            <span class="param-card__icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 18h12M6 18a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2M12 6v12"/></svg>
+            </span>
+            <div>
+              <div class="param-card__label">Масса</div>
+              <div class="param-card__value">57 кг</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Вкладки ===== -->
+    <section class="ds-tabs-section" aria-label="Технические данные">
+      <div class="tabs tabs-underline">
+        <div class="tabs-list" role="tablist" aria-label="Разделы даташита">
+          <button type="button" class="tab active" id="ds-tab-specs" role="tab"
+                  aria-selected="true" aria-controls="ds-panel-specs">Характеристики</button>
+          <button type="button" class="tab" id="ds-tab-start" role="tab"
+                  aria-selected="false" aria-controls="ds-panel-start" tabindex="-1">Пусковые</button>
+          <button type="button" class="tab" id="ds-tab-docs" role="tab"
+                  aria-selected="false" aria-controls="ds-panel-docs" tabindex="-1">
+            Документы <span class="tab-badge">4</span>
+          </button>
+        </div>
+
+        <!-- Вкладка 1: полный лист характеристик -->
+        <div class="tab-panel fade active" id="ds-panel-specs" role="tabpanel" aria-labelledby="ds-tab-specs">
+          <div class="spec-sheet">
+            <div class="spec-section">
+              <h2 class="spec-section__title">Электрические параметры</h2>
+              <div class="spec-grid">
+                <div class="spec-row"><span class="spec-row__label">Номинальная мощность</span><span class="spec-row__value">7,5 кВт</span></div>
+                <div class="spec-row"><span class="spec-row__label">Напряжение питания</span><span class="spec-row__value">380/660 В, Δ/Y</span></div>
+                <div class="spec-row"><span class="spec-row__label">Частота сети</span><span class="spec-row__value">50 Гц</span></div>
+                <div class="spec-row"><span class="spec-row__label">Номинальный ток (380 В)</span><span class="spec-row__value">14,9 А</span></div>
+                <div class="spec-row"><span class="spec-row__label">КПД</span><span class="spec-row__value">88,1 % (IE2)</span></div>
+                <div class="spec-row"><span class="spec-row__label">Коэффициент мощности cos φ</span><span class="spec-row__value">0,86</span></div>
+                <div class="spec-row"><span class="spec-row__label">Число полюсов</span><span class="spec-row__value">4</span></div>
+                <div class="spec-row"><span class="spec-row__label">Скольжение</span><span class="spec-row__value">3,0 %</span></div>
+              </div>
+            </div>
+            <div class="spec-section">
+              <h2 class="spec-section__title">Конструктивное исполнение</h2>
+              <div class="spec-grid">
+                <div class="spec-row"><span class="spec-row__label">Монтажное исполнение</span><span class="spec-row__value">IM1081 (на лапах)</span></div>
+                <div class="spec-row"><span class="spec-row__label">Степень защиты</span><span class="spec-row__value">IP55</span></div>
+                <div class="spec-row"><span class="spec-row__label">Класс нагревостойкости изоляции</span><span class="spec-row__value">F (нагрев по B)</span></div>
+                <div class="spec-row"><span class="spec-row__label">Режим работы</span><span class="spec-row__value">S1</span></div>
+                <div class="spec-row"><span class="spec-row__label">Климатическое исполнение</span><span class="spec-row__value">У2 (−45…+40 °C)</span></div>
+                <div class="spec-row"><span class="spec-row__label">Диаметр вала</span><span class="spec-row__value">38 мм</span></div>
+                <div class="spec-row"><span class="spec-row__label">Подшипники</span><span class="spec-row__value">6308 ZZ C3 / 6308 ZZ C3</span></div>
+                <div class="spec-row"><span class="spec-row__label">Уровень звука LwA</span><span class="spec-row__value">82 дБ(А)</span></div>
+                <div class="spec-row"><span class="spec-row__label">Масса</span><span class="spec-row__value">57 кг</span></div>
+                <div class="spec-row"><span class="spec-row__label">Момент инерции ротора</span><span class="spec-row__value">0,028 кг·м²</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Вкладка 2: пусковые характеристики -->
+        <div class="tab-panel fade" id="ds-panel-start" role="tabpanel" aria-labelledby="ds-tab-start" hidden>
+          <div class="spec-sheet">
+            <div class="spec-section">
+              <h2 class="spec-section__title">Пусковые характеристики</h2>
+              <table class="spec-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Параметр</th>
+                    <th scope="col">Обозначение</th>
+                    <th scope="col">Значение</th>
+                    <th scope="col">Примечание</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Кратность пускового тока</td>
+                    <td>I<sub>п</sub>/I<sub>н</sub></td>
+                    <td class="spec-table__cell--highlight">7,5</td>
+                    <td>прямой пуск от сети</td>
+                  </tr>
+                  <tr>
+                    <td>Кратность пускового момента</td>
+                    <td>M<sub>п</sub>/M<sub>н</sub></td>
+                    <td class="spec-table__cell--highlight">2,2</td>
+                    <td>при номинальном напряжении</td>
+                  </tr>
+                  <tr>
+                    <td>Кратность максимального момента</td>
+                    <td>M<sub>max</sub>/M<sub>н</sub></td>
+                    <td>3,0</td>
+                    <td>критический момент</td>
+                  </tr>
+                  <tr>
+                    <td>Кратность минимального момента</td>
+                    <td>M<sub>min</sub>/M<sub>н</sub></td>
+                    <td>1,6</td>
+                    <td>в процессе разгона</td>
+                  </tr>
+                  <tr>
+                    <td>Номинальный момент</td>
+                    <td>M<sub>н</sub></td>
+                    <td>49,2 Н·м</td>
+                    <td>при 1455 об/мин</td>
+                  </tr>
+                  <tr>
+                    <td>Допустимое число пусков</td>
+                    <td>—</td>
+                    <td>3 подряд</td>
+                    <td>из холодного состояния</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p class="ds-note">
+                Значения приведены для схемы Δ при 380 В, 50 Гц и температуре окружающей среды +40 °C.
+                При пуске от преобразователя частоты кратности тока и момента определяются настройками ПЧ.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Вкладка 3: документы -->
+        <div class="tab-panel fade" id="ds-panel-docs" role="tabpanel" aria-labelledby="ds-tab-docs" hidden>
+          <div class="ds-docs">
+            <article class="ds-doc">
+              <span class="ds-doc__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+              </span>
+              <div class="ds-doc__body">
+                <h3 class="ds-doc__title">Опросный лист АДМ 132 S4</h3>
+                <p class="ds-doc__meta">PDF · 0,4 МБ · ред. 03.2026</p>
+              </div>
+              <span class="ds-doc__action" title="Демо-страница: файлы не подключены">
+                <button type="button" class="btn btn-sm" disabled>Скачать</button>
+              </span>
+            </article>
+            <article class="ds-doc">
+              <span class="ds-doc__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              </span>
+              <div class="ds-doc__body">
+                <h3 class="ds-doc__title">Габаритно-присоединительный чертёж</h3>
+                <p class="ds-doc__meta">DWG + PDF · 1,2 МБ · ред. 11.2025</p>
+              </div>
+              <span class="ds-doc__action" title="Демо-страница: файлы не подключены">
+                <button type="button" class="btn btn-sm" disabled>Скачать</button>
+              </span>
+            </article>
+            <article class="ds-doc">
+              <span class="ds-doc__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+              </span>
+              <div class="ds-doc__body">
+                <h3 class="ds-doc__title">Декларация соответствия ТР ТС 004/2011, 020/2011</h3>
+                <p class="ds-doc__meta">PDF · 0,2 МБ · действует до 14.08.2028</p>
+              </div>
+              <span class="ds-doc__action" title="Демо-страница: файлы не подключены">
+                <button type="button" class="btn btn-sm" disabled>Скачать</button>
+              </span>
+            </article>
+            <article class="ds-doc">
+              <span class="ds-doc__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+              </span>
+              <div class="ds-doc__body">
+                <h3 class="ds-doc__title">Руководство по эксплуатации АДМ 56–132</h3>
+                <p class="ds-doc__meta">PDF · 2,8 МБ · ред. 06.2025</p>
+              </div>
+              <span class="ds-doc__action" title="Демо-страница: файлы не подключены">
+                <button type="button" class="btn btn-sm" disabled>Скачать</button>
+              </span>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FAQ ===== -->
+    <section class="ds-faq" aria-label="Вопросы и ответы">
+      <h2 class="ds-faq__title">Вопросы и ответы</h2>
+      <div class="accordion" id="ds-faq">
+        <div class="accordion__item">
+          <button type="button" class="accordion__header" aria-expanded="false">
+            Чем АДМ 132 S4 отличается от АИР 132 S4?
+            <svg class="accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="accordion__panel">
+            <div class="accordion__panel-inner">
+              <div class="accordion__body">
+                Присоединительные и габаритные размеры полностью взаимозаменяемы: высота оси
+                вращения 132 мм, вал 38 мм, лапы по ГОСТ 31606. АДМ отличается обмоточными
+                данными под класс энергоэффективности IE2 и усиленной изоляцией системы F,
+                поэтому допускает длительную работу при повышенной температуре окружающей среды.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion__item">
+          <button type="button" class="accordion__header" aria-expanded="false">
+            Можно ли питать двигатель от преобразователя частоты?
+            <svg class="accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="accordion__panel">
+            <div class="accordion__panel-inner">
+              <div class="accordion__body">
+                Да, в диапазоне 5–50 Гц при постоянном моменте и до 60 Гц при постоянной
+                мощности. Ниже 25 Гц требуется независимая вентиляция или снижение нагрузки,
+                так как самовентиляция теряет эффективность. Для длины кабеля свыше 50 м
+                рекомендуется du/dt-фильтр на выходе преобразователя.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion__item">
+          <button type="button" class="accordion__header" aria-expanded="false">
+            Какая гарантия и как проводится обслуживание?
+            <svg class="accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="accordion__panel">
+            <div class="accordion__panel-inner">
+              <div class="accordion__body">
+                Гарантийный срок — 24 месяца с даты ввода в эксплуатацию, но не более
+                30 месяцев с даты отгрузки. Подшипники закрытого типа с заложенной смазкой,
+                дозаправка в течение срока службы не требуется. Регламент сводится к
+                периодической очистке рёбер охлаждения и контролю сопротивления изоляции
+                (не менее 1 МОм в холодном состоянии).
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- [BLOCK:site-footer] -->
+  <footer class="site-footer">
+    <span>CSS Lab — страница-пример карточки изделия. Лист данных: components-v3/spec-sheet.css.</span>
+    <nav class="site-footer__links" aria-label="Подвал">
+      <a href="/index.html">Главная</a>
+      <a href="/index-v3.html">Витрина</a>
+      <a href="/pages/catalog.html">Каталог</a>
+    </nav>
+  </footer>
+  <!-- </BLOCK:site-footer> -->
+
+  <script src="/js/site.js"></script>
+  <script>
+    // [BLOCK:datasheet-page] Вкладки, аккордеон FAQ и кнопка «В подбор»
+
+    // ===== Вкладки: клик + стрелки влево/вправо (roving tabindex) =====
+    const dsTabs = [...document.querySelectorAll('.ds-tabs-section .tab')];
+    const dsPanels = dsTabs.map(tab => document.getElementById(tab.getAttribute('aria-controls')));
+
+    function dsSelectTab(index, focus) {
+      dsTabs.forEach((tab, i) => {
+        const active = i === index;
+        tab.classList.toggle('active', active);
+        tab.setAttribute('aria-selected', String(active));
+        tab.tabIndex = active ? 0 : -1;
+        dsPanels[i].classList.toggle('active', active);
+        dsPanels[i].hidden = !active;
+      });
+      if (focus) dsTabs[index].focus();
+    }
+
+    dsTabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => dsSelectTab(i, false));
+      tab.addEventListener('keydown', e => {
+        if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+        e.preventDefault();
+        const delta = e.key === 'ArrowRight' ? 1 : -1;
+        dsSelectTab((i + delta + dsTabs.length) % dsTabs.length, true);
+      });
+    });
+
+    // ===== Аккордеон FAQ =====
+    document.querySelectorAll('#ds-faq .accordion__header').forEach(header => {
+      header.addEventListener('click', () => {
+        const item = header.closest('.accordion__item');
+        const open = item.classList.toggle('is-open');
+        header.setAttribute('aria-expanded', String(open));
+      });
+    });
+
+    // ===== Кнопка «В подбор»: переключение состояния + живой статус =====
+    const pickBtn = document.getElementById('ds-pick-btn');
+    const pickLabel = document.getElementById('ds-pick-label');
+    const pickStatus = document.getElementById('ds-pick-status');
+
+    pickBtn.addEventListener('click', () => {
+      const picked = pickBtn.getAttribute('aria-pressed') !== 'true';
+      pickBtn.setAttribute('aria-pressed', String(picked));
+      pickBtn.classList.toggle('btn-primary', !picked);
+      pickBtn.classList.toggle('btn-outline', picked);
+      pickLabel.textContent = picked ? 'В подборе ✓' : 'В подбор';
+      pickStatus.textContent = picked
+        ? 'АДМ 132 S4 добавлен в список подбора'
+        : '';
+    });
+    // </BLOCK:datasheet-page>
+  </script>
+</body>
+</html>

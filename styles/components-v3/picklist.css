@@ -124,11 +124,12 @@
   transform: scale(0.97);
   visibility: hidden; /* закрытая панель вне Tab-порядка и a11y-дерева */
   pointer-events: none;
-  /* PURPOSE: preventing a jarring change — панель появляется от контрола */
+  /* PURPOSE: preventing a jarring change — панель появляется от контрола.
+     Базовое состояние = выход: быстрее входа */
   transition:
-    opacity var(--duration-dropdown) var(--ease-out),
-    transform var(--duration-dropdown) var(--ease-out),
-    visibility 0s linear var(--duration-dropdown);
+    opacity var(--duration-exit) var(--ease-out),
+    transform var(--duration-exit) var(--ease-out),
+    visibility 0s linear var(--duration-exit);
 }
 .picklist.is-open .picklist__panel {
   opacity: 1;
@@ -176,11 +177,20 @@
 @media (hover: hover) and (pointer: fine) {
   .picklist__option:hover { background: var(--color-accent-soft); }
 }
+/* PURPOSE: feedback — пункт-label отзывается на нажатие (глобальный press
+   ловит только button/[role=button]) */
+.picklist__option:active { background: var(--color-accent-soft-hover); }
 .picklist__option input[type="checkbox"] {
   width: auto;
   margin: 0;
   accent-color: var(--color-accent);
 }
+
+/* Вариант панели с чипами-опциями вместо чекбоксов */
+.picklist__chip-options {
+  padding: var(--space-1);
+}
+.picklist__chip-options .chip-choice.is-filtered { display: none; }
 
 /* Поле «другое значение» внизу панели */
 .picklist__other {

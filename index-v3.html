@@ -73,9 +73,12 @@
       <button class="btn btn-icon" id="burger-menu" title="Меню компонентов">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18"/><path d="M3 6h18"/><path d="M3 18h18"/></svg>
       </button>
-      <span class="logo">CSS<span class="logo-accent">Lab</span></span>
-      <!-- Логотип активного бренда (паттерн хедера DeepSearch): пуст в нейтральной теме -->
-      <span class="brand-mark brand-mark--sm" id="header-brand-mark" role="img" aria-label="Логотип бренда"></span>
+      <!-- Возврат на главную: словомарка — ссылка на hub -->
+      <a href="/index.html" style="display: inline-flex; align-items: center; gap: var(--space-3); text-decoration: none; color: inherit;" title="На главную">
+        <span class="logo">CSS<span class="logo-accent">Lab</span></span>
+        <span class="brand-mark brand-mark--sm" id="header-brand-mark" role="img" aria-label="Логотип бренда"></span>
+      </a>
+      <a class="btn btn-secondary btn-sm" href="/index.html">← Главная</a>
     </div>
 
     <div class="search-bar">
@@ -3013,28 +3016,37 @@
         </div>
       </div>
 
-      <!-- Вариант с чипами-опциями: значения видны сразу, клик — выбрать/снять -->
+      <!-- Выпадающий вариант: в панели вместо чекбоксов — чипы-опции -->
       <div class="card mb-4">
-        <div class="card-header"><h3 class="card-title">Вариант с чипами-опциями</h3></div>
-        <div class="card-body">
-          <div class="form-field" style="max-width: 560px; margin-bottom: var(--space-4);">
-            <span class="form-field__label" id="demo-chip-poles">Число полюсов</span>
-            <div class="chips" role="group" aria-labelledby="demo-chip-poles" data-chip-multi>
-              <button type="button" class="chip chip-choice is-active" aria-pressed="true">2</button>
-              <button type="button" class="chip chip-choice is-active" aria-pressed="true">4</button>
-              <button type="button" class="chip chip-choice" aria-pressed="false">6</button>
-              <button type="button" class="chip chip-choice" aria-pressed="false">8</button>
-            </div>
-          </div>
-          <div class="form-field" style="max-width: 560px;">
-            <span class="form-field__label" id="demo-chip-climate">Климатическое исполнение</span>
-            <div class="chips" role="group" aria-labelledby="demo-chip-climate" data-chip-multi>
-              <button type="button" class="chip chip-choice is-active" aria-pressed="true">У2</button>
-              <button type="button" class="chip chip-choice" aria-pressed="false">У3</button>
-              <button type="button" class="chip chip-choice" aria-pressed="false">УХЛ4</button>
-              <button type="button" class="chip chip-choice" aria-pressed="false">Т2</button>
-              <button type="button" class="chip chip-choice" aria-pressed="false">ОМ2</button>
-              <button type="button" class="chip chip-choice" aria-pressed="false">О2</button>
+        <div class="card-header"><h3 class="card-title">Выпадающий вариант с чипами-опциями</h3></div>
+        <div class="card-body" style="min-height: 300px;">
+          <div class="form-field" style="max-width: 420px;">
+            <label class="form-field__label" id="demo-picklist-chips-label">Климатическое исполнение</label>
+            <div class="picklist" id="demo-picklist-chips" data-picklist-chips>
+              <div class="picklist__control">
+                <span class="picklist__chip">У2 <button type="button" class="picklist__chip-remove" aria-label="Убрать У2">×</button></span>
+                <button type="button" class="picklist__toggle" aria-expanded="false" aria-controls="demo-picklist-chips-panel" aria-labelledby="demo-picklist-chips-label">
+                  <svg class="picklist__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+              </div>
+              <div class="picklist__panel" id="demo-picklist-chips-panel">
+                <div class="picklist__search">
+                  <input type="search" class="input" placeholder="Поиск по списку…" aria-label="Фильтр опций" data-picklist-search>
+                </div>
+                <div class="chips picklist__chip-options" role="group" aria-label="Варианты климата">
+                  <button type="button" class="chip chip-choice is-active" data-value="У2" aria-pressed="true">У2</button>
+                  <button type="button" class="chip chip-choice" data-value="У3" aria-pressed="false">У3</button>
+                  <button type="button" class="chip chip-choice" data-value="УХЛ1" aria-pressed="false">УХЛ1</button>
+                  <button type="button" class="chip chip-choice" data-value="УХЛ4" aria-pressed="false">УХЛ4</button>
+                  <button type="button" class="chip chip-choice" data-value="Т2" aria-pressed="false">Т2</button>
+                  <button type="button" class="chip chip-choice" data-value="Т3" aria-pressed="false">Т3</button>
+                  <button type="button" class="chip chip-choice" data-value="ОМ1" aria-pressed="false">ОМ1</button>
+                  <button type="button" class="chip chip-choice" data-value="ОМ2" aria-pressed="false">ОМ2</button>
+                  <button type="button" class="chip chip-choice" data-value="О2" aria-pressed="false">О2</button>
+                  <button type="button" class="chip chip-choice" data-value="В5" aria-pressed="false">В5</button>
+                </div>
+                <div class="picklist__no-match" hidden>Ничего не найдено</div>
+              </div>
             </div>
           </div>
         </div>
@@ -3157,14 +3169,18 @@
             <div class="form-section__hint">Кто ставит задачу и с кем согласовывать технические вопросы.</div>
             <div class="form-grid">
               <div class="form-field">
-                <label class="form-field__label" for="fs-demo-name">ФИО инициатора <span class="form-field__req" aria-hidden="true">*</span></label>
-                <!-- Подсказка вне label: не попадает в имя поля, связь через describedby -->
-                <button type="button" class="form-field__tip" aria-label="Подсказка к полю ФИО" aria-describedby="fs-demo-name-tip">?</button>
-                <span class="sr-only" id="fs-demo-name-tip">Полностью: фамилия, имя, отчество инициатора заявки</span>
+                <!-- Подсказка вне label (не попадает в имя поля), но в одном ряду с ним -->
+                <span class="form-field__label-row">
+                  <label class="form-field__label" for="fs-demo-name">ФИО инициатора <span class="form-field__req" aria-hidden="true">*</span></label>
+                  <button type="button" class="form-field__tip" aria-label="Подсказка к полю ФИО" aria-describedby="fs-demo-name-tip">?</button>
+                  <span class="sr-only" id="fs-demo-name-tip">Полностью: фамилия, имя, отчество инициатора заявки</span>
+                </span>
                 <input id="fs-demo-name" class="input" placeholder="Иванов Иван Иванович" autocomplete="name" required>
               </div>
               <div class="form-field">
-                <label class="form-field__label" for="fs-demo-mail">E-mail <span class="form-field__req" aria-hidden="true">*</span></label>
+                <span class="form-field__label-row">
+                  <label class="form-field__label" for="fs-demo-mail">E-mail <span class="form-field__req" aria-hidden="true">*</span></label>
+                </span>
                 <input id="fs-demo-mail" class="input" type="email" placeholder="name@company.ru" autocomplete="email" required>
               </div>
               <div class="form-field form-field--full">
@@ -3620,6 +3636,8 @@
       });
     });
   </script>
+  <!-- Данные RAL Classic (общие со страницей ral-colors) -->
+  <script src="/assets/ral-data.js"></script>
   <!-- Интерактив компонентов: чипы, тосты, модалки -->
   <script src="/main.js"></script>
 </body>

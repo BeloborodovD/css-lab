@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Каталог электродвигателей — страница-пример · CSS Lab</title>
+  <link rel="stylesheet" href="/styles/core.css">
+  <link rel="stylesheet" href="/styles/pages/catalog.css">
+  <script>
+    (function () {
+      try {
+        var b = localStorage.getItem('css-lab-brand');
+        document.addEventListener('DOMContentLoaded', function () {
+          if (b) document.body.setAttribute('data-brand', b);
+          if (localStorage.getItem('css-lab-theme') === 'dark') document.body.classList.add('dark');
+        });
+      } catch (e) { /* приватный режим */ }
+    })();
+  </script>
+</head>
+<body data-brand="uralelectro">
+
+  <!-- [BLOCK:site-header] -->
+  <header class="site-header">
+    <a class="site-header__brand" href="/index.html">
+      <span class="site-header__wordmark">CSS<span>Lab</span></span>
+      <span class="brand-mark brand-mark--sm" role="img" aria-label="Логотип бренда"></span>
+    </a>
+    <nav class="site-nav" aria-label="Разделы сайта">
+      <a class="site-nav__link" href="/index.html">Главная</a>
+      <a class="site-nav__link" href="/index-v3.html">Витрина</a>
+      <a class="site-nav__link" href="/pages/catalog.html" aria-current="page">Каталог</a>
+      <a class="site-nav__link" href="/pages/login.html">Вход</a>
+      <a class="site-nav__link" href="/print-forms.html">Печатные формы</a>
+      <a class="site-nav__link" href="/ral-colors.html">Цвета RAL</a>
+    </nav>
+    <div class="site-header__tools">
+      <div class="brand-switcher js-brand-switcher" role="group" aria-label="Выбор бренда">
+        <button type="button" class="brand-switcher__option" data-brand-value="veza" aria-pressed="false">VEZA</button>
+        <button type="button" class="brand-switcher__option" data-brand-value="uralelectro" aria-pressed="true">UE</button>
+        <button type="button" class="brand-switcher__option" data-brand-value="hemah" aria-pressed="false">HEMAH</button>
+      </div>
+      <button type="button" class="site-header__theme" aria-label="Переключить тему">
+        <svg class="icon-light" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg class="icon-dark" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+  <!-- </BLOCK:site-header> -->
+
+  <main class="page-shell page-shell--wide">
+    <nav class="breadcrumbs" aria-label="Хлебные крошки" style="margin-bottom: var(--space-4);">
+      <a href="/index.html" class="breadcrumb-item">Главная</a>
+      <span class="breadcrumb-separator">/</span>
+      <span class="breadcrumb-item active" aria-current="page">Каталог электродвигателей</span>
+    </nav>
+
+    <h1 class="page-shell__title">Каталог электродвигателей</h1>
+    <p class="page-shell__sub">Страница-пример: панель фильтров из motor-datasheet + карточки результатов. Фильтры живые — счётчик и сетка пересчитываются.</p>
+
+    <div class="catalog-layout">
+      <!-- ===== Панель фильтров ===== -->
+      <aside class="catalog-aside">
+        <div class="filter-panel" id="catalog-filters">
+          <div class="filter-panel__header">
+            <span class="filter-panel__title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+              Фильтры
+            </span>
+            <span class="filter-panel__stats" id="catalog-stats" role="status">12 из 12</span>
+          </div>
+
+          <div class="filter-panel__quick">
+            <div class="filter-panel__quick-label">Быстрый подбор</div>
+            <div class="chips">
+              <button type="button" class="filter-preset" data-preset='{"ie":["IE3"]}'>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 20h20M4 20V8l6 4V8l6 4V4l4 3v13"/></svg>
+                Промышленный
+              </button>
+              <button type="button" class="filter-preset" data-preset='{"ie":["IE2"]}'>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                Стандарт
+              </button>
+              <button type="button" class="filter-preset" data-preset='{"ie":["IE4"]}'>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18M3 12h18"/></svg>
+                Высокий КПД
+              </button>
+            </div>
+          </div>
+
+          <div class="filter-panel__body">
+            <div class="filter-group" data-filter="series">
+              <div class="filter-group__head">
+                <span class="filter-group__label">Серия</span>
+                <button type="button" class="filter-group__reset">сбросить</button>
+              </div>
+              <div class="chips">
+                <button type="button" class="chip chip-choice" data-value="АДМ" aria-pressed="false">АДМ <span class="chip-choice__count">6</span></button>
+                <button type="button" class="chip chip-choice" data-value="АДЭМ" aria-pressed="false">АДЭМ <span class="chip-choice__count">3</span></button>
+                <button type="button" class="chip chip-choice" data-value="ВАДМ-М" aria-pressed="false">ВАДМ-М <span class="chip-choice__count">2</span></button>
+                <button type="button" class="chip chip-choice" data-value="АДМ-DC" aria-pressed="false">АДМ-DC <span class="chip-choice__count">1</span></button>
+              </div>
+            </div>
+
+            <div class="filter-group" data-filter="poles">
+              <div class="filter-group__head">
+                <span class="filter-group__label">Число полюсов</span>
+                <button type="button" class="filter-group__reset">сбросить</button>
+              </div>
+              <div class="chips">
+                <button type="button" class="chip chip-choice" data-value="2" aria-pressed="false">2</button>
+                <button type="button" class="chip chip-choice" data-value="4" aria-pressed="false">4</button>
+                <button type="button" class="chip chip-choice" data-value="6" aria-pressed="false">6</button>
+                <button type="button" class="chip chip-choice" data-value="8" aria-pressed="false">8</button>
+              </div>
+            </div>
+
+            <div class="filter-group" data-filter="ie">
+              <div class="filter-group__head">
+                <span class="filter-group__label">Класс энергоэффективности</span>
+                <button type="button" class="filter-group__reset">сбросить</button>
+              </div>
+              <div class="chips">
+                <button type="button" class="chip chip-choice" data-value="IE1" aria-pressed="false">IE1</button>
+                <button type="button" class="chip chip-choice" data-value="IE2" aria-pressed="false">IE2</button>
+                <button type="button" class="chip chip-choice" data-value="IE3" aria-pressed="false">IE3</button>
+                <button type="button" class="chip chip-choice" data-value="IE4" aria-pressed="false">IE4</button>
+              </div>
+            </div>
+
+            <div class="filter-group" data-filter="power">
+              <div class="filter-group__head">
+                <span class="filter-group__label">Мощность, кВт</span>
+                <button type="button" class="filter-group__reset">сбросить</button>
+              </div>
+              <div class="filter-range">
+                <input type="number" class="input" id="catalog-power-min" placeholder="от" min="0" step="0.1" aria-label="Мощность от, кВт">
+                <span class="filter-range__dash">—</span>
+                <input type="number" class="input" id="catalog-power-max" placeholder="до" min="0" step="0.1" aria-label="Мощность до, кВт">
+              </div>
+            </div>
+          </div>
+
+          <div class="filter-panel__footer">
+            <button type="button" class="filter-panel__reset-all" id="catalog-reset-all">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+              Сбросить все фильтры
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ===== Результаты ===== -->
+      <section aria-label="Результаты каталога">
+        <div class="catalog-toolbar">
+          <span class="catalog-count" id="catalog-count">Найдено: 12 двигателей</span>
+          <label class="catalog-sort">Сортировка
+            <select class="select" id="catalog-sort" aria-label="Сортировка результатов">
+              <option value="power">по мощности</option>
+              <option value="name">по названию</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="filter-pills catalog-active" id="catalog-pills" aria-live="polite">
+          <span class="filter-pills__label">Фильтры:</span>
+        </div>
+
+        <div class="catalog-grid" id="catalog-grid">
+          <!-- Карточки генерирует catalog-page script из CATALOG_DATA -->
+        </div>
+        <div class="empty-state catalog-empty">
+          <div class="empty-state-icon">🔍</div>
+          <div class="empty-state-title">Ничего не подобрано</div>
+          <div class="empty-state-message">Ослабьте фильтры или сбросьте их полностью</div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- [BLOCK:site-footer] -->
+  <footer class="site-footer">
+    <span>CSS Lab — страница-пример каталога. Панель фильтров: components-v3/filter-panel.css.</span>
+    <nav class="site-footer__links" aria-label="Подвал">
+      <a href="/index.html">Главная</a>
+      <a href="/index-v3.html">Витрина</a>
+      <a href="/index-v3.html#filter-pills">Компоненты фильтров</a>
+    </nav>
+  </footer>
+  <!-- </BLOCK:site-footer> -->
+
+  <script src="/js/site.js"></script>
+  <script>
+    // [BLOCK:catalog-page] Демо-данные и живая фильтрация каталога
+    const CATALOG_DATA = [
+      { name: 'АДМ 71 A2',    series: 'АДМ',    poles: 2, ie: 'IE1', power: 0.75, rpm: 2820, ip: 'IP54', price: '9 400 ₽' },
+      { name: 'АДМ 80 B4',    series: 'АДМ',    poles: 4, ie: 'IE1', power: 1.1,  rpm: 1400, ip: 'IP54', price: '11 200 ₽' },
+      { name: 'АДМ 90 L4',    series: 'АДМ',    poles: 4, ie: 'IE2', power: 2.2,  rpm: 1410, ip: 'IP55', price: '14 800 ₽' },
+      { name: 'АДМ 100 S6',   series: 'АДМ',    poles: 6, ie: 'IE2', power: 2.2,  rpm: 940,  ip: 'IP55', price: '17 300 ₽' },
+      { name: 'АДМ 132 S4',   series: 'АДМ',    poles: 4, ie: 'IE2', power: 7.5,  rpm: 1455, ip: 'IP55', price: '32 900 ₽' },
+      { name: 'АДМ 160 M8',   series: 'АДМ',    poles: 8, ie: 'IE1', power: 7.5,  rpm: 730,  ip: 'IP55', price: '48 100 ₽' },
+      { name: 'АДЭМ 90 L2',   series: 'АДЭМ',   poles: 2, ie: 'IE3', power: 3.0,  rpm: 2850, ip: 'IP55', price: '21 700 ₽' },
+      { name: 'АДЭМ 112 M4',  series: 'АДЭМ',   poles: 4, ie: 'IE3', power: 5.5,  rpm: 1440, ip: 'IP55', price: '29 500 ₽' },
+      { name: 'АДЭМ 132 M4',  series: 'АДЭМ',   poles: 4, ie: 'IE4', power: 11,   rpm: 1460, ip: 'IP55', price: '54 200 ₽' },
+      { name: 'ВАДМ-М 80 B4', series: 'ВАДМ-М', poles: 4, ie: 'IE1', power: 1.1,  rpm: 1395, ip: 'IP66', price: '36 800 ₽' },
+      { name: 'ВАДМ-М 112 M2',series: 'ВАДМ-М', poles: 2, ie: 'IE2', power: 7.5,  rpm: 2900, ip: 'IP66', price: '61 500 ₽' },
+      { name: 'АДМ-DC 100 L6',series: 'АДМ-DC', poles: 6, ie: 'IE2', power: 1.5,  rpm: 930,  ip: 'IP55', price: '24 600 ₽' }
+    ];
+
+    const state = { series: [], poles: [], ie: [], powerMin: null, powerMax: null };
+    const grid = document.getElementById('catalog-grid');
+    const stats = document.getElementById('catalog-stats');
+    const count = document.getElementById('catalog-count');
+    const pills = document.getElementById('catalog-pills');
+    const emptyBlock = document.querySelector('.catalog-empty');
+
+    // Рендер карточек один раз; фильтрация — скрытием
+    CATALOG_DATA.forEach(m => {
+      const card = document.createElement('a');
+      card.className = 'catalog-card';
+      card.href = '/print-forms.html';
+      card.dataset.series = m.series;
+      card.dataset.poles = m.poles;
+      card.dataset.ie = m.ie;
+      card.dataset.power = m.power;
+      card.dataset.name = m.name;
+      card.innerHTML =
+        '<div class="catalog-card__head"><span class="catalog-card__series">' + m.series + '</span>' +
+        '<span class="ie-badge ie-badge--' + m.ie.toLowerCase() + '">' + m.ie + '</span></div>' +
+        '<h3 class="catalog-card__title">' + m.name + '</h3>' +
+        '<div class="catalog-card__params">' +
+        '<span class="catalog-card__param">Мощность <b>' + m.power + ' кВт</b></span>' +
+        '<span class="catalog-card__param">Обороты <b>' + m.rpm + '</b></span>' +
+        '<span class="catalog-card__param">Полюса <b>' + m.poles + '</b></span>' +
+        '<span class="catalog-card__param">Защита <b>' + m.ip + '</b></span>' +
+        '</div>' +
+        '<div class="catalog-card__foot"><span class="catalog-card__price">' + m.price + '</span>' +
+        '<span class="badge badge-subtle">даташит →</span></div>';
+      grid.appendChild(card);
+    });
+
+    const FILTER_LABELS = { series: 'Серия', poles: 'Полюса', ie: 'Класс' };
+
+    function matches(card) {
+      if (state.series.length && !state.series.includes(card.dataset.series)) return false;
+      if (state.poles.length && !state.poles.includes(card.dataset.poles)) return false;
+      if (state.ie.length && !state.ie.includes(card.dataset.ie)) return false;
+      const p = parseFloat(card.dataset.power);
+      if (state.powerMin !== null && p < state.powerMin) return false;
+      if (state.powerMax !== null && p > state.powerMax) return false;
+      return true;
+    }
+
+    function renderPills() {
+      pills.querySelectorAll('.filter-pill').forEach(p => p.remove());
+      const add = (key, value, clear) => {
+        const pill = document.createElement('span');
+        pill.className = 'filter-pill';
+        pill.innerHTML = '<span class="filter-pill__key">' + FILTER_LABELS[key] + ':</span>' +
+          '<span class="filter-pill__value"></span>';
+        pill.querySelector('.filter-pill__value').textContent = value;
+        const rm = document.createElement('button');
+        rm.type = 'button';
+        rm.className = 'filter-pill__remove';
+        rm.setAttribute('aria-label', 'Убрать фильтр ' + value);
+        rm.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
+        rm.addEventListener('click', clear);
+        pill.appendChild(rm);
+        pills.appendChild(pill);
+      };
+      ['series', 'poles', 'ie'].forEach(key => {
+        state[key].forEach(v => add(key, v, () => {
+          toggleChip(key, v, false);
+          apply();
+        }));
+      });
+      if (state.powerMin !== null || state.powerMax !== null) {
+        const label = (state.powerMin ?? '…') + '–' + (state.powerMax ?? '…') + ' кВт';
+        const pill = document.createElement('span');
+        pill.className = 'filter-pill';
+        pill.innerHTML = '<span class="filter-pill__key">Мощность:</span><span class="filter-pill__value">' + label + '</span>';
+        const rm = document.createElement('button');
+        rm.type = 'button';
+        rm.className = 'filter-pill__remove';
+        rm.setAttribute('aria-label', 'Убрать фильтр мощности');
+        rm.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
+        rm.addEventListener('click', () => {
+          state.powerMin = state.powerMax = null;
+          document.getElementById('catalog-power-min').value = '';
+          document.getElementById('catalog-power-max').value = '';
+          apply();
+        });
+        pill.appendChild(rm);
+        pills.appendChild(pill);
+      }
+    }
+
+    function apply() {
+      let visible = 0;
+      grid.querySelectorAll('.catalog-card').forEach(card => {
+        const ok = matches(card);
+        card.classList.toggle('is-hidden', !ok);
+        if (ok) visible++;
+      });
+      stats.textContent = visible + ' из ' + CATALOG_DATA.length;
+      count.textContent = 'Найдено: ' + visible + ' двигателей';
+      grid.classList.toggle('is-empty', visible === 0);
+      document.querySelectorAll('.filter-group').forEach(g => {
+        const key = g.dataset.filter;
+        const active = key === 'power'
+          ? (state.powerMin !== null || state.powerMax !== null)
+          : state[key].length > 0;
+        g.classList.toggle('has-active', active);
+      });
+      renderPills();
+    }
+
+    function toggleChip(key, value, on) {
+      const group = document.querySelector('.filter-group[data-filter="' + key + '"]');
+      const chip = group?.querySelector('.chip-choice[data-value="' + value + '"]');
+      const idx = state[key].indexOf(value);
+      const enable = on ?? idx < 0;
+      if (enable && idx < 0) state[key].push(value);
+      if (!enable && idx >= 0) state[key].splice(idx, 1);
+      chip?.classList.toggle('is-active', enable);
+      chip?.setAttribute('aria-pressed', String(enable));
+    }
+
+    // Чипы групп
+    document.querySelectorAll('.filter-group .chip-choice').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const key = chip.closest('.filter-group').dataset.filter;
+        toggleChip(key, chip.dataset.value);
+        apply();
+      });
+    });
+    // Сброс группы
+    document.querySelectorAll('.filter-group__reset').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const g = btn.closest('.filter-group');
+        const key = g.dataset.filter;
+        if (key === 'power') {
+          state.powerMin = state.powerMax = null;
+          document.getElementById('catalog-power-min').value = '';
+          document.getElementById('catalog-power-max').value = '';
+        } else {
+          [...state[key]].forEach(v => toggleChip(key, v, false));
+        }
+        apply();
+      });
+    });
+    // Диапазон мощности
+    document.getElementById('catalog-power-min').addEventListener('input', e => {
+      state.powerMin = e.target.value === '' ? null : parseFloat(e.target.value);
+      apply();
+    });
+    document.getElementById('catalog-power-max').addEventListener('input', e => {
+      state.powerMax = e.target.value === '' ? null : parseFloat(e.target.value);
+      apply();
+    });
+    // Пресеты
+    document.querySelectorAll('.filter-preset').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const preset = JSON.parse(btn.dataset.preset);
+        ['series', 'poles', 'ie'].forEach(key => [...state[key]].forEach(v => toggleChip(key, v, false)));
+        Object.entries(preset).forEach(([key, values]) => values.forEach(v => toggleChip(key, v, true)));
+        apply();
+      });
+    });
+    // Сброс всех
+    document.getElementById('catalog-reset-all').addEventListener('click', () => {
+      ['series', 'poles', 'ie'].forEach(key => [...state[key]].forEach(v => toggleChip(key, v, false)));
+      state.powerMin = state.powerMax = null;
+      document.getElementById('catalog-power-min').value = '';
+      document.getElementById('catalog-power-max').value = '';
+      apply();
+    });
+    // Сортировка
+    document.getElementById('catalog-sort').addEventListener('change', e => {
+      const by = e.target.value;
+      [...grid.querySelectorAll('.catalog-card')]
+        .sort((a, b) => by === 'power'
+          ? parseFloat(a.dataset.power) - parseFloat(b.dataset.power)
+          : a.dataset.name.localeCompare(b.dataset.name, 'ru'))
+        .forEach(card => grid.appendChild(card));
+    });
+
+    apply();
+    // </BLOCK:catalog-page>
+  </script>
+</body>
+</html>

@@ -56,6 +56,14 @@ user-menu, presence-strip («кто на портале»: стек аватар
 - Ссылки на страницы: кнопки «📄 Формы» и «🎨 RAL» в шапке + сайдбар + из секций.
 - HEMAH добавлен в палитру (`--brand-hemah-*` в variables-v2, light/dark) и в переключатель print-forms.
 
+### Сайт-витрина (архитектура агентов dev-ux + dev-css, реализация workflow)
+
+- Слои: `styles/core.css` (единый бандл base→layout→components→themes; index-v3.css — алиас), `styles/layout/` (site-header/site-footer/page-shell/print-sheet), `styles/pages/<name>.css` (по-страничные, префиксы .hub-/.catalog-/.ds-/.dash-/.fp-/.login-/.pf-/.ral-), `js/site.js` (бренд+тема из localStorage, шапка).
+- **Страницы**: `index.html` — hub в стиле engcalc (hero+штамп+нумерованные карточки); `pages/catalog.html` (живые фильтры motor-datasheet: filter-panel.css, пресеты, счётчики, диапазон, пилюли, сортировка); `pages/login.html`; `pages/datasheet.html`, `pages/dashboard.html`, `pages/form.html` (построены workflow: 3 агента параллельно). Все 9 страниц прошли Playwright-верификацию (PASS, без ошибок консоли).
+- Шапка сайта копируется между маркерами `[BLOCK:site-header]`; бренд/тема живут в localStorage (css-lab-brand/-theme), анти-FOUC сниппет в head.
+- **Тёмные темы**: решение зафиксировано — одна нейтральная zinc-база + брендовые акценты (аргументы в отчёте dev-css).
+- **Emil/Apple-аудит** (14 находок) применён: тактильность ссылок-карточек и пунктов (:active), фокус и focus-visible в date-picker, exit-анимация и hover-пауза тостов, hover-intent тултипов (delay 400ms), асимметрия enter/exit поповеров (`--duration-exit` 140ms / `--duration-modal-exit` 240ms в motion.css), toast-progress через scaleX, цели ≥24px, login-спиннер без сдвига. Не применены (низкий приоритет): свайп мобильного date-picker, стрелочная навигация user-menu, кнопка в пустом состоянии каталога.
+
 ## Следующий шаг
 
-Закоммитить (`git add -A` + commit), затем по желанию: консолидация чипов, миграция combobox-нэйминга, тёмная тема для страниц print-forms/ral-colors.
+Закоммитить, затем по желанию: доделки аудита (свайп bottom-sheet, стрелки в меню), консолидация чипов, миграция combobox-нэйминга.

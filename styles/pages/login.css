@@ -1,0 +1,96 @@
+/* [CONFIG:page-login]
+ * Страница-пример «Вход в портал»: центрированная карточка, бренд-марка,
+ * поля с валидацией, спиннер в кнопке.
+ * Префикс страницы: .login-*.
+ */
+
+.login-wrap {
+  min-height: calc(100vh - var(--header-h));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6) var(--space-4);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  padding: var(--space-8) var(--space-6);
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+
+.login-card__logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-5);
+}
+.login-card__title {
+  margin: 0 0 var(--space-1);
+  text-align: center;
+  font-size: var(--fs-2xl);
+}
+.login-card__sub {
+  margin: 0 0 var(--space-6);
+  text-align: center;
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.login-form__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  font-size: var(--fs-sm);
+}
+.login-form__link {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+.login-form__link:hover { text-decoration: underline; }
+
+/* Кнопка с внутренним спиннером на время отправки */
+.login-submit {
+  position: relative;
+}
+/* Спиннер всегда в потоке (width/opacity), чтобы текст кнопки не прыгал
+   в момент, когда пользователь смотрит на неё */
+.login-submit .spinner {
+  display: inline-block;
+  width: 0;
+  height: 16px;
+  border-width: 2px;
+  border-color: currentColor;
+  border-top-color: transparent;
+  margin-right: 0;
+  opacity: 0;
+  /* PURPOSE: state indication — спиннер мягко «раздвигает» текст */
+  transition:
+    width var(--duration-press) var(--ease-out),
+    margin-right var(--duration-press) var(--ease-out),
+    opacity var(--duration-press) var(--ease-out);
+}
+.login-submit.is-loading .spinner {
+  width: 16px;
+  margin-right: var(--space-2);
+  opacity: 1;
+}
+.login-submit.is-loading { pointer-events: none; opacity: 0.85; }
+
+.login-card .alert-box { margin-bottom: 0; }
+.login-footnote {
+  margin-top: var(--space-5);
+  text-align: center;
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+/* </CONFIG:page-login> */

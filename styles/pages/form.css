@@ -1,0 +1,91 @@
+/* [CONFIG:page-form]
+ * Страница-пример «Опросный лист R&D» — трёхшаговый мастер:
+ * индикатор шагов, секции формы, чипы-опции, сводка и отправка со спиннером.
+ * Префикс страницы: .fp-*.
+ * Модуль: css-lab/styles/pages. Зависимости: core.css (steps, form-section,
+ * inputs, chip, spec-sheet, save-status, toast, buttons, spinner) +
+ * base/variables-v2.css, base/motion.css.
+ */
+
+/* ===== Контейнер страницы =============================================== */
+.fp-wrap { max-width: 880px; }
+
+/* Верхняя строка над формой: статус черновика + маркер «не отправлено» */
+.fp-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+/* ===== Индикатор шагов ================================================== */
+.fp-steps {
+  margin-bottom: var(--space-6);
+  padding: var(--space-4) var(--space-5) var(--space-5);
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ===== Секции-шаги ====================================================== */
+/* Скрытый шаг: страхуемся от перекрытия hidden-атрибута компонентными display */
+.fp-step[hidden] { display: none; }
+
+/* PURPOSE: continuity — новый шаг появляется мягко, а не сменяется рывком.
+   Анимируются только opacity и transform */
+.fp-step-enter {
+  animation: fp-step-in var(--duration-dropdown) var(--ease-out);
+}
+@keyframes fp-step-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Диапазон мощности «от — до» ====================================== */
+.fp-range {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.fp-range .input { flex: 1; min-width: 0; }
+.fp-range__dash { color: var(--color-text-muted); }
+
+/* ===== Панель навигации между шагами ==================================== */
+.fp-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+/* Скрытые кнопки навигации: .btn задаёт display — перебиваем атрибут hidden */
+.fp-nav [hidden] { display: none; }
+
+/* ===== Кнопка отправки со спиннером (по образцу login-submit) =========== */
+.fp-submit { position: relative; }
+.fp-submit .spinner {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+  border-color: currentColor;
+  border-top-color: transparent;
+  margin-right: var(--space-2);
+  display: none;
+}
+.fp-submit.is-loading .spinner { display: inline-block; }
+.fp-submit.is-loading { pointer-events: none; opacity: 0.85; }
+
+/* ===== Сводка шага 3 ==================================================== */
+.fp-summary .spec-grid { margin-top: var(--space-2); }
+
+/* ===== Адаптив ========================================================== */
+@media (max-width: 720px) {
+  .fp-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+}
+/* </CONFIG:page-form> */

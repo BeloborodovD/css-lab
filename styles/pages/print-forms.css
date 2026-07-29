@@ -1,0 +1,64 @@
+/* [BLOCK:page.print-forms] Страница печатных форм: экранная обёртка A4-листов */
+body { background: var(--color-surface-sunken); }
+.pf-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4) var(--space-16);
+}
+.pf-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-5);
+}
+.pf-toolbar__title { margin: 0; }
+.pf-toolbar__sub {
+  margin: var(--space-1) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+}
+.pf-toolbar__actions { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+/* Экранная «бумага»: белый лист с тенью, при печати — чистый A4 */
+.pf-sheet {
+  margin-bottom: var(--space-6);
+  background: #ffffff;
+  box-shadow: var(--shadow);
+  border-radius: var(--radius-xs);
+  padding: 16mm 14mm;
+}
+.pf-sheet .spec-sheet {
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+/* Колонтитулы страницы при печати (как в опросном листе R&D) */
+@page {
+  size: A4 portrait;
+  margin: 12mm 14mm 14mm 16mm;
+  @bottom-left {
+    content: "CSS Lab · печатные формы";
+    font-size: 7pt;
+    color: #555555;
+  }
+  @bottom-right {
+    content: counter(page) " / " counter(pages);
+    font-size: 7pt;
+    color: #555555;
+  }
+}
+@media print {
+  body { background: #fff; }
+  .pf-toolbar { display: none; }
+  .pf-page { max-width: none; padding: 0; }
+  .pf-sheet {
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+    break-after: page;
+  }
+  .pf-sheet:last-child { break-after: auto; }
+}
+/* </BLOCK:page.print-forms> */

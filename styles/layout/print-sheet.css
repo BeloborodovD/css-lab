@@ -1,0 +1,30 @@
+/* [BLOCK:layout.print-sheet]
+ * «Бумага» A4: экранный лист с тенью, при печати — чистая страница.
+ * Общий слой печати для print-forms, datasheet и справочников.
+ * Модуль: css-lab/layout. Зависимости: base/variables-v2.css.
+ */
+
+.print-sheet {
+  margin-bottom: var(--space-6);
+  background: #ffffff;
+  box-shadow: var(--shadow);
+  border-radius: var(--radius-xs);
+  padding: 16mm 14mm;
+}
+
+@media print {
+  body { background: #fff; }
+  .print-sheet {
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+    break-after: page;
+  }
+  .print-sheet:last-child { break-after: auto; }
+  /* Служебный хром страниц на печать не идёт */
+  .site-header,
+  .site-footer,
+  .no-print { display: none !important; }
+}
+/* </BLOCK:layout.print-sheet> */

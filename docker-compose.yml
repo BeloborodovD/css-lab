@@ -15,27 +15,27 @@ services:
     image: node:22-alpine
     container_name: css-lab-dev
     working_dir: /app
-    command: npx --yes live-server@1.2.2 --port=80 --host=0.0.0.0 --no-browser --entry-file=index-v3.html
+    command: npx --yes live-server@1.2.2 --port=80 --host=0.0.0.0 --no-browser --entry-file=index.html
     ports:
       - "48621:80"
     volumes:
-      - ./index-v3.html:/app/index-v3.html:ro
-      - ./main.js:/app/main.js:ro
-      - ./styles:/app/styles:ro
-      - ./assets:/app/assets:ro
+      - .:/app:ro
     restart: unless-stopped
   # </CONFIG:service.css-lab-dev>
 
   # [CONFIG:service.css-lab-web]
   # Боевой режим: статика запечена в образ, отдаётся nginx.
+  # BASE_PATH — префикс за reverse-proxy (пример HR: /css-lab); локально пусто.
   web:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        BASE_PATH: ${BASE_PATH:-}
     image: css-lab:latest
     container_name: css-lab-web
     profiles: ["prod"]
     ports:
-      - "48620:80"
+      - "${WEB_PORT:-48620}:80"
     restart: unless-stopped
   # </CONFIG:service.css-lab-web>

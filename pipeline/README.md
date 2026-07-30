@@ -70,7 +70,7 @@ e2e-тест), **и только потом применяется в целев
 | 04 Применение | [steps/04-apply.md](steps/04-apply.md) | `dev-css` + `dev-frontend` (параллельно, файлы не пересекаются) | целевой проект на токенах и компонентах css-lab |
 | 05 Движение | [steps/05-motion.md](steps/05-motion.md) | `dev-web-animation` | анимации по RULES.md ui-motion-craft |
 | 06 Доступность | [steps/06-a11y.md](steps/06-a11y.md) | `dev-accessibility` | WCAG 2.2 AA: фокус, клавиатура, контраст |
-| 07 Верификация | [steps/07-verify.md](steps/07-verify.md) | `loop-evaluator` (глобальный скептик) | PASS/REJECT; при PASS — git → push → deploy |
+| 07 Верификация | [steps/07-verify.md](steps/07-verify.md) | `loop-evaluator` (скептик, копия в `.claude/agents/`) | PASS/REJECT; при PASS — git → push → deploy |
 
 Шаги 01–02 читающие, идут параллельно двумя агентами. Шаг 03 выполняется только при
 непустом списке `new` из маппинга. Шаги 04–06 последовательны (общие файлы). После

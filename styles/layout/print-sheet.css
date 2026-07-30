@@ -5,7 +5,19 @@
  */
 
 .print-sheet {
-  margin-bottom: var(--space-6);
+  /* Механизм донора motor-datasheet (generateDatasheetHTML.ts):
+     лист держит физическую геометрию A4 (210×297mm), а подвал прижимается
+     к нижней кромке ЛИСТА, а не контента. Адаптация: вместо absolute-подвала
+     донора — flex-колонка, подвал листа получает margin-top:auto и остаётся
+     в потоке (при переполнении не наезжает на контент). Конвенция для
+     страниц-потребителей: свой элемент подвала пиновать margin-top:auto,
+     внутреннюю обёртку контента растягивать flex:1 0 auto. */
+  display: flex;
+  flex-direction: column;
+  width: 210mm;            /* физическая ширина листа A4 */
+  max-width: 100%;
+  min-height: 297mm;       /* физическая высота листа A4 — экранное превью держит пропорции */
+  margin: 0 auto var(--space-6);
   background: #ffffff;
   box-shadow: var(--shadow);
   border-radius: var(--radius-xs);
@@ -19,6 +31,10 @@
     border-radius: 0;
     padding: 0;
     margin: 0;
+    /* Ширину и поля печатного листа задаёт @page страницы-потребителя;
+       она же обязана переопределить min-height: 297mm минус вертикальные
+       поля своего @page (см. styles/pages/print-forms.css) */
+    width: auto;
     break-after: page;
   }
   .print-sheet:last-child { break-after: auto; }

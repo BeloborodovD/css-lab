@@ -24,9 +24,19 @@ body { background: var(--color-surface-sunken); }
   font-size: var(--fs-sm);
 }
 .pf-toolbar__actions { display: flex; gap: var(--space-2); flex-wrap: wrap; }
-/* Экранная «бумага»: белый лист с тенью, при печати — чистый A4 */
+/* Экранная «бумага»: белый лист с тенью, при печати — чистый A4.
+   Механизм донора motor-datasheet: лист держит геометрию A4, подвал
+   («Лист N из M») прижат к нижней кромке листа. Адаптация: flex-колонка
+   + margin-top:auto у подвала вместо absolute-подвала донора — подвал
+   остаётся в потоке и при переполнении уходит ПОСЛЕ контента,
+   не наезжая на него на промежуточных страницах. */
 .pf-sheet {
-  margin-bottom: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  width: 210mm;            /* физическая ширина листа A4 */
+  max-width: 100%;
+  min-height: 297mm;       /* физическая высота листа A4 — подвал у нижней кромки даже при коротком контенте */
+  margin: 0 auto var(--space-6);
   background: #ffffff;
   box-shadow: var(--shadow);
   border-radius: var(--radius-xs);
@@ -36,7 +46,14 @@ body { background: var(--color-surface-sunken); }
   border: none;
   box-shadow: none;
   padding: 0;
+  /* Внутренний лист растягивается на всю высоту «бумаги», чтобы его подвал
+     мог прижаться к нижней кромке */
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
 }
+/* Подвал листа — к нижней кромке (пустое место уходит НАД подвалом) */
+.pf-sheet .spec-sheet__footer { margin-top: auto; }
 /* Колонтитулы страницы при печати (как в опросном листе R&D) */
 @page {
   size: A4 portrait;
@@ -61,6 +78,11 @@ body { background: var(--color-surface-sunken); }
     border-radius: 0;
     padding: 0;
     margin: 0;
+    width: auto;         /* горизонтальные поля задаёт @page */
+    /* Высота печатного листа = 297mm минус вертикальные поля @page
+       (12mm сверху + 14mm снизу); min-height, а не height: при переполнении
+       лист растёт на следующую страницу, подвал остаётся после контента */
+    min-height: 271mm;
     break-after: page;
   }
   .pf-sheet:last-child { break-after: auto; }

@@ -59,10 +59,10 @@
 }
 /* </BLOCK:theme.hemah.light> */
 
-/* [BLOCK:theme.hemah.headings] */
-[data-brand="hemah"] h1,
-[data-brand="hemah"] h2,
-[data-brand="hemah"] h3,
+/* [BLOCK:theme.hemah.headings]
+ * Заголовки — Manrope, все уровни h1–h6: иначе h4–h6 остаются
+ * в Open Sans (браузерный дефолт) — противоречие брендбуку. */
+[data-brand="hemah"] :is(h1, h2, h3, h4, h5, h6),
 [data-brand="hemah"] .font-display {
   font-family: var(--font-display);
   font-weight: var(--fw-bold);

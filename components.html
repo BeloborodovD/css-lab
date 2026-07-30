@@ -184,6 +184,7 @@
       </div>
       <div class="sidebar-body">
         <ul class="sidebar-nav">
+          <li class="sidebar-nav-item"><a href="#typography" class="sidebar-nav-link">Typography</a></li>
           <li class="sidebar-nav-item"><a href="#buttons" class="sidebar-nav-link">Buttons</a></li>
           <li class="sidebar-nav-item"><a href="#cards" class="sidebar-nav-link">Cards</a></li>
           <li class="sidebar-nav-item"><a href="#inputs" class="sidebar-nav-link">Inputs</a></li>
@@ -515,6 +516,120 @@
           </p>
         </section>
         <!-- ===== End Palette Section ===== -->
+
+        <!-- [BLOCK:section-typography] -->
+        <!-- ===== Typography Section ===== -->
+        <section id="typography" class="mb-4">
+          <h2 class="mb-2">Типографика</h2>
+          <p class="text-muted mb-4" style="max-width: 720px;">
+            Шкала заголовков H1–H6 и текстовые стили. Образцы рендерятся шрифтами активного
+            бренда — переключите бренд в шапке или в разделе Brand
+            (VEZA — Roboto Medium/Light; Уралэлектро — H1 Wadik, H2+ и текст NT Somic;
+            HEMAH — Manrope + Open Sans).
+          </p>
+
+          <div class="card mb-4">
+            <div class="card-header"><h3 class="card-title">Шкала заголовков и текста</h3></div>
+            <div class="card-body">
+              <div class="type-specimen">
+                <div class="type-specimen__row">
+                  <span class="type-specimen__label">h1</span>
+                  <div class="type-specimen__sample"><h1>Заголовок первого уровня</h1></div>
+                  <span class="type-specimen__meta">2em (UA) · гайд --fs-3xl 24px</span>
+                </div>
+                <div class="type-specimen__row">
+                  <span class="type-specimen__label">h2</span>
+                  <div class="type-specimen__sample"><h2>Заголовок второго уровня</h2></div>
+                  <span class="type-specimen__meta">1.5em (UA) · гайд --fs-2xl 20px</span>
+                </div>
+                <div class="type-specimen__row">
+                  <span class="type-specimen__label">h3</span>
+                  <div class="type-specimen__sample"><h3>Заголовок третьего уровня</h3></div>
+                  <span class="type-specimen__meta">1.17em (UA) · гайд --fs-xl 18px</span>
+                </div>
+                <div class="type-specimen__row">
+                  <span class="type-specimen__label">h4</span>
+                  <div class="type-specimen__sample"><h4>Заголовок четвёртого уровня</h4></div>
+                  <span class="type-specimen__meta">1em (UA) · гайд --fs-lg 16px</span>
+                </div>
+                <div class="type-specimen__row">
+                  <span class="type-specimen__label">h5</span>
+                  <div class="type-specimen__sample"><h5>Заголовок пятого уровня</h5></div>
+                  <span class="type-specimen__meta">0.83em (UA)</span>
+                </div>
+                <div class="type-specimen__row">
+                  <span class="type-specimen__label">h6</span>
+                  <div class="type-specimen__sample"><h6>Заголовок шестого уровня</h6></div>
+                  <span class="type-specimen__meta">0.67em (UA)</span>
+                </div>
+                <div class="type-specimen__row">
+                  <span class="type-specimen__label">p</span>
+                  <div class="type-specimen__sample">
+                    <p>Дизайн-система задаёт единый язык интерфейсов трёх брендов: токены цвета, шрифтов и движения живут в одном месте. Компоненты не знают о брендах — тема переопределяет токены, и витрина перекрашивается целиком.</p>
+                  </div>
+                  <span class="type-specimen__meta">1rem · 16px (html)</span>
+                </div>
+                <div class="type-specimen__row">
+                  <span class="type-specimen__label">p.text-muted</span>
+                  <div class="type-specimen__sample">
+                    <p class="text-muted">Вторичный текст: пояснения, подписи и метаданные, которые не должны спорить с основным содержимым.</p>
+                  </div>
+                  <span class="type-specimen__meta">1rem · --color-text-muted</span>
+                </div>
+                <div class="type-specimen__row">
+                  <span class="type-specimen__label">small</span>
+                  <div class="type-specimen__sample">
+                    <small>Мелкий текст: дисклаймеры, сноски и юридические примечания.</small>
+                  </div>
+                  <span class="type-specimen__meta">0.83em (UA)</span>
+                </div>
+                <div class="type-specimen__row">
+                  <span class="type-specimen__label">code</span>
+                  <div class="type-specimen__sample">
+                    <p>Токен акцента задаётся переменной <code>--color-accent</code> в теме бренда.</p>
+                  </div>
+                  <span class="type-specimen__meta">--font-mono</span>
+                </div>
+                <div class="type-specimen__row">
+                  <span class="type-specimen__label">strong · em</span>
+                  <div class="type-specimen__sample">
+                    <p>Акценты в тексте: <strong>жирное выделение</strong> для ключевых терминов и <em>курсив</em> для интонационных нюансов.</p>
+                  </div>
+                  <span class="type-specimen__meta">700 · italic (UA)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mb-4">
+            <div class="card-header"><h3 class="card-title">Типографика по брендам</h3></div>
+            <div class="mb-2" style="padding: var(--space-3) var(--space-4) 0;">
+              <p class="text-muted" style="font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.08em; margin: 0;">VEZA</p>
+            </div>
+            <div class="card-body" data-brand="veza">
+              <h1 style="margin: 0 0 var(--space-2);">Вентиляционные системы</h1>
+              <h2 style="margin: 0 0 var(--space-2);">Центральные кондиционеры и агрегаты</h2>
+              <p style="margin: 0;">Заголовки — Roboto Medium; текст — Roboto Light (fallback Arial).</p>
+            </div>
+            <div class="mb-2" style="padding: var(--space-3) var(--space-4) 0;">
+              <p class="text-muted" style="font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.08em; margin: 0;">Уралэлектро</p>
+            </div>
+            <div class="card-body" data-brand="uralelectro">
+              <h1 style="margin: 0 0 var(--space-2);">Электродвигатели АДМ</h1>
+              <h2 style="margin: 0 0 var(--space-2);">Асинхронные двигатели общего назначения</h2>
+              <p style="margin: 0;">H1 — Wadik; H2 и далее, подзаголовки — NT Somic Medium; текст — NT Somic Regular.</p>
+            </div>
+            <div class="mb-2" style="padding: var(--space-3) var(--space-4) 0;">
+              <p class="text-muted" style="font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.08em; margin: 0;">HEMAH</p>
+            </div>
+            <div class="card-body" data-brand="hemah">
+              <h1 style="margin: 0 0 var(--space-2);">Автоматика ОВиК</h1>
+              <h2 style="margin: 0 0 var(--space-2);">Щиты управления и контроллеры</h2>
+              <p style="margin: 0;">Заголовки — Manrope; текст — Open Sans.</p>
+            </div>
+          </div>
+        </section>
+        <!-- </BLOCK:section-typography> -->
 
         <!-- Buttons Section -->
     <section id="buttons" class="mb-4">

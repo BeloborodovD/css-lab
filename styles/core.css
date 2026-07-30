@@ -80,6 +80,7 @@
 @import './components-v3/filter-panel.css';
 @import './components-v3/spec-sheet.css';
 @import './components-v3/code-panel.css';
+@import './components-v3/typography.css';
 
 /* Themes — последними: перекрывают токены, страницы работают поверх тем */
 @import './themes/dark-v3.css';

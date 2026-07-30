@@ -1,0 +1,73 @@
+/* [CONFIG:component-type-specimen]
+ * Type specimen — витринный блок «образцы типографики»: строки вида
+ * «тег | живой образец | разрешённый шрифт». Показывает, каким шрифтом
+ * реально рендерятся h1–h6/p/small в активном бренде.
+ * Модуль: css-lab/components-v3. Зависимости: base/variables-v2.css
+ * (токены шрифтов, цвета, отступов). Компонент живёт внутри .card-body
+ * витрины — собственной поверхности/тени не имеет.
+ * Движение не предусмотрено: спецификация статична (gate ui-motion-craft).
+ */
+
+/* [BLOCK:type-specimen.container] */
+.type-specimen {
+  display: flex;
+  flex-direction: column;
+}
+/* </BLOCK:type-specimen.container> */
+
+/* [BLOCK:type-specimen.row] */
+/* Строка образца: сетка «метка | образец | мета», ряды разделены 1px линией */
+.type-specimen__row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.type-specimen__row:last-child {
+  border-bottom: none;
+}
+/* </BLOCK:type-specimen.row> */
+
+/* [BLOCK:type-specimen.label] */
+/* Имя тега (h1/h2/p/small…) — моноширинная колонка фиксированной ширины */
+.type-specimen__label {
+  min-width: var(--space-16); /* 64px — колонка меток выровнена по всем строкам */
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+/* </BLOCK:type-specimen.label> */
+
+/* [BLOCK:type-specimen.sample] */
+/* Образец сохраняет естественный брендовый шрифт элемента;
+   сбрасываем только внешние отступы вложенных заголовков/абзацев */
+.type-specimen__sample > * {
+  margin: 0;
+}
+/* </BLOCK:type-specimen.sample> */
+
+/* [BLOCK:type-specimen.meta] */
+/* Текст с разрешённым шрифтом («Wadik 400», «NT Somic Medium»…) */
+.type-specimen__meta {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  text-align: right;
+  white-space: nowrap;
+}
+/* </BLOCK:type-specimen.meta> */
+
+/* [BLOCK:type-specimen.responsive] */
+/* Узкие экраны: строка складывается в одну колонку, мета скрыта
+   (информация о шрифте вторична, образец важнее) */
+@media (max-width: 720px) {
+  .type-specimen__row {
+    grid-template-columns: 1fr;
+  }
+  .type-specimen__meta {
+    display: none;
+  }
+}
+/* </BLOCK:type-specimen.responsive> */
+/* </CONFIG:component-type-specimen> */

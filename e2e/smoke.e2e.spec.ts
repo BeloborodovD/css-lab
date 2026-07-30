@@ -126,4 +126,22 @@ test('печатные формы: два листа с логотипом бр�
   await expect(page.locator('.pf-sheet')).toHaveCount(2);
   await expect(page.locator('.spec-sheet__footer').first()).toContainText('Лист 1 из 2');
 });
+
+test('типографика: у UE заголовок H1 — Wadik, H2 — NT Somic', async ({ page }) => {
+  await page.goto('/components.html');
+  await page.click('.js-brand-switcher [data-brand-value="uralelectro"]');
+  await expect(page.locator('body')).toHaveAttribute('data-brand', 'uralelectro');
+  await expect(page.locator('#typography .type-specimen')).toBeVisible();
+  const fonts = await page.evaluate(() => {
+    const h1 = document.querySelector('#typography .type-specimen__sample h1');
+    const h2 = document.querySelector('#typography .type-specimen__sample h2');
+    return {
+      h1: h1 ? getComputedStyle(h1).fontFamily : '',
+      h2: h2 ? getComputedStyle(h2).fontFamily : '',
+    };
+  });
+  expect(fonts.h1).toContain('Wadik');
+  expect(fonts.h2).not.toContain('Wadik');
+  expect(fonts.h2).toContain('NT Somic');
+});
 // </TEST:e2e.smoke>

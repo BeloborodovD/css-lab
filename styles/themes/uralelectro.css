@@ -7,9 +7,9 @@
  * Источник палитры: брендбук АО «МЭЗ «Уралэлектро» 2025
  *   Primary #374A51 — RGB 55/74/81 · CMYK 78/50/45/54 · RAL 5008
  * Типографика по брендбуку:
- *   Заголовки        — Wadik (единое начертание)
- *   Подзаголовки     — NT Somic Medium
- *   Основной текст   — NT Somic Regular
+ *   Заголовок H1        — Wadik (единое начертание)
+ *   H2+ и подзаголовки  — NT Somic Medium
+ *   Основной текст      — NT Somic Regular
  * NB: патиновая палитра #136B5C (RAL 6026) — предыдущая версия айдентики,
  * оставлена в variables-v2.css как --brand-uralelectro-* для legacy-страниц.
  */
@@ -57,20 +57,25 @@
 /* </BLOCK:theme.uralelectro.light> */
 
 /* [BLOCK:theme.uralelectro.headings]
- * Wadik — дисплейный шрифт: только заголовки и утилита .font-display.
- * У шрифта одно начертание — вес не задаём выше 400. */
+ * Wadik — дисплейный шрифт: ТОЛЬКО H1 и утилита .font-display (брендбук 2025).
+ * У шрифта одно начертание — вес не задаём выше 400.
+ * H2–H6 и подзаголовки — NT Somic Medium, трекинг обычный. */
 [data-brand="uralelectro"] h1,
-[data-brand="uralelectro"] h2,
-[data-brand="uralelectro"] h3,
 [data-brand="uralelectro"] .font-display {
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: var(--fw-regular);
   letter-spacing: 0.01em; /* Wadik широкий — не сжимаем */
   font-synthesis-weight: none; /* у Wadik одно начертание — без faux-bold */
 }
-/* strong/b внутри заголовков не жирнеет синтетически */
-[data-brand="uralelectro"] :is(h1, h2, h3) :is(strong, b) {
-  font-weight: 400;
+/* H2–H6 — NT Somic Medium */
+[data-brand="uralelectro"] :is(h2, h3, h4, h5, h6) {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-medium);
+  letter-spacing: normal;
+}
+/* strong/b внутри H1 не жирнеет синтетически (у Wadik одно начертание) */
+[data-brand="uralelectro"] h1 :is(strong, b) {
+  font-weight: var(--fw-regular);
 }
 /* </BLOCK:theme.uralelectro.headings> */
 

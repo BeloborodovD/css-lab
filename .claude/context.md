@@ -64,6 +64,22 @@ user-menu, presence-strip («кто на портале»: стек аватар
 - **Тёмные темы**: решение зафиксировано — одна нейтральная zinc-база + брендовые акценты (аргументы в отчёте dev-css).
 - **Emil/Apple-аудит** (14 находок) применён: тактильность ссылок-карточек и пунктов (:active), фокус и focus-visible в date-picker, exit-анимация и hover-пауза тостов, hover-intent тултипов (delay 400ms), асимметрия enter/exit поповеров (`--duration-exit` 140ms / `--duration-modal-exit` 240ms в motion.css), toast-progress через scaleX, цели ≥24px, login-спиннер без сдвига. Не применены (низкий приоритет): свайп мобильного date-picker, стрелочная навигация user-menu, кнопка в пустом состоянии каталога.
 
+### CI, репозитории, деплой (2026-07-29)
+
+- **Витрина переименована**: index-v3.html → components.html (редирект на старом адресе), вход сайта — index.html (hub).
+- **Полный скилл-проход Эмиля** (все 8 разделов emilkowalski/skills): двумя workflow применены emil-design-eng/apple-design по зонам + JS-фаза (combobox 4 демо, стрелки user-menu, scroll-lock, свайп календаря с velocity 0.11 и отменой фликом вверх); find-animation-opportunities/review-animations/improve-animations/pick-ui-library — отчёты применены (3 блокера review исправлены, animations.css изолирован из core, вердикты по библиотекам для React-проектов: Sonner/base-ui/react-day-picker — стили брать отсюда темой).
+- **Тесты**: e2e Playwright — e2e/smoke.e2e.spec.ts (19 тестов), playwright.config.ts (webServer http-server :5173), локально 19/19.
+- **Gitea devstack**: repo gitea_admin/css-lab, Actions on, секреты SONARQUBE_HOST/TOKEN; CI .gitea/workflows/ci.yml: e2e-гейт + Trivy/Gitleaks/Semgrep (SARIF) + SonarScanner (гейт не блокирующий). Run 2 success; Sonar: 22k строк, замечания безопасности устранены (Dockerfile → nginx-unprivileged :8080 non-root; th-заголовки таблиц; localeCompare; Math.random hotspots → SAFE, демо-данные).
+- **GitLab**: gitlab.veza.ru/beloborodov.dv/css-lab (id 482), ветки main/master/feature; майнтейнеры kolosov.ao, buryakov.dv.
+- **Деплой HR**: ~/docker/css-lab (клон main GitLab), docker-compose.hr.yml (сеть frontend, BASE_PATH=/css-lab); при BASE_PATH файлы переезжают в физическую подпапку образа (alias+try_files — ловушка); central nginx: блок [CONFIG:nginx_css_lab] в n8n-ip.conf → css-lab-web:8080. **<https://dashboard.veza.ru/css-lab/> работает** (ModSec режет curl-UA — проверять браузерным). Обновление: git pull + docker compose -f docker-compose.hr.yml up -d --build + nginx -s reload.
+
+### Типографика (2026-07-30)
+
+- Уточнение брендбука УЭ: **Wadik только для H1**; h2–h6 → NT Somic Medium (`uralelectro.css`, анти-faux-bold сужен до h1). Попутно закрыт пробел: h4–h6 нигде не были покрыты — селекторы veza/hemah расширены до `:is(h1..h6)` (раньше h4+ падали в браузерный bold).
+- Новый раздел витрины `#typography` (components.html после палитры, ссылка в сайдбаре): шкала h1–h6 + p/muted/small/code/акценты на компоненте `.type-specimen` (`components-v3/typography.css`, ряды label|sample|meta), карточка «по брендам» с data-brand-блоками. Заголовки без явной шкалы — в meta указаны UA-размеры (2em…0.67em); токен-шкалы `--fs-*` заголовкам НЕ назначены (кандидат на доработку).
+- e2e-тест №20 «у UE h1 — Wadik, h2 — NT Somic» (getComputedStyle). Прогон 20/20. `.font-display` перебивает новое правило по специфичности — карточка «ШРИФТЫ WADIK» живёт.
+- Корневой `CLAUDE.md` создан (/init): команды, каскад, брендинг, CI/деплой; ссылается на `.claude/CLAUDE.md`.
+
 ## Следующий шаг
 
-Закоммитить, затем по желанию: доделки аудита (свайп bottom-sheet, стрелки в меню), консолидация чипов, миграция combobox-нэйминга.
+По желанию: консолидация 4 реализаций чипов, миграция combobox-нэйминга на is-*, тёмная тема print-forms/ral-colors, gap-filler тостов (Sonner) при переводе на transitions.

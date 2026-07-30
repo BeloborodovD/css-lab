@@ -58,10 +58,9 @@
 
 /* [BLOCK:theme.veza.headings]
  * По брендбуку: заголовки и выделения — Roboto Medium (500),
- * основной текст — Roboto Light (300). */
-[data-brand="veza"] h1,
-[data-brand="veza"] h2,
-[data-brand="veza"] h3,
+ * основной текст — Roboto Light (300). Все уровни h1–h6: иначе h4–h6
+ * падают в браузерный bold 700 — противоречие брендбуку. */
+[data-brand="veza"] :is(h1, h2, h3, h4, h5, h6),
 [data-brand="veza"] .font-display {
   font-family: var(--font-display);
   font-weight: var(--fw-medium);

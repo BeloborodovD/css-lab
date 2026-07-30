@@ -26,7 +26,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Локальные скиллы
 
-Главные: `ui-motion-craft` (свод правил движения `RULES.md` — читается первым, значения копируются буквально; принудительно проверяет хук `.claude/hooks/motion-lint.py`), `emil-design-eng` и `apple-design` (проработка компонентов, жесты, тактильность), `review-animations` / `improve-animations` / `find-animation-opportunities` (ревью и аудит движения), `pick-ui-library` (готовая библиотека вместо самописного), `wcag-accessibility`, `responsive-design`, `frontend-design`, `theme-factory`, `brand-guidelines`, `prototype`, `animation-vocabulary`, `web-artifacts-builder`.
+Два свода правил обязательны к чтению перед любым кодом стилей:
+
+- **`css-architecture-craft`** — закон оформления: таксономия токенов, BEM (`--модификатор` = вариант от автора разметки, `is-*` = состояние от JS), каскад, доктрина глобальное/локальное, белый список литералов. Enforcement — `naming-lint.py` внутри скилла.
+- **`ui-motion-craft`** — закон движения; значения копируются буквально, принудительно проверяет хук `.claude/hooks/motion-lint.py`.
+
+Остальные: `emil-design-eng` и `apple-design` (проработка компонентов, жесты, тактильность), `review-animations` / `improve-animations` / `find-animation-opportunities` (ревью и аудит движения), `pick-ui-library` (готовая библиотека вместо самописного), `wcag-accessibility`, `responsive-design`, `frontend-design`, `theme-factory`, `brand-guidelines`, `prototype`, `animation-vocabulary`, `web-artifacts-builder`.
+
+### Реестр компонентов
+
+`docs/components.yaml` — паспорт каждого компонента: назначение, когда применять и когда нет, чем отличается от соседних (`instead_use`), анатомия BEM, контракт поведения, потребляемые токены, якорь витрины. **Это источник истины о содержимом библиотеки**: маппинг при редизайне (шаг 02) читает его, а не исходники. Новый компонент без паспорта считается недоделанным. Паспорта самодостаточны — рассчитаны на потребителя, у которого есть только этот репозиторий.
+
+Отложенные находки — `pipeline/backlog.md`; чинить их посреди другой задачи запрещено.
+
+`CHANGELOG.md` в корне — резюме изменений для потребителей библиотеки: одна-две строки на смысловое изменение, на языке пользователя, без номеров коммитов и списков файлов. Пополнил библиотеку — добавь строку (правила в `pipeline/steps/07-verify.md`). Внутренние правки процесса и тестов туда не попадают.
 
 ### Пайплайн редизайна внешних проектов
 
@@ -69,7 +82,7 @@ make up / make prod / make health   # docker: dev :48621 / prod nginx :48620 / �
 ## Страницы
 
 - `index.html` — хаб (вход сайта), `components.html` — витрина компонентов (`index-v3.html` — редирект-заглушка на неё), `pages/*` — примеры (catalog, login, datasheet, dashboard, form), `print-forms.html`, `ral-colors.html`.
-- Каждая страница: `core.css` + свой `styles/pages/<name>.css` с уникальным префиксом классов (`.hub-`, `.catalog-`, `.ds-`, `.dash-`, `.fp-`, `.pf-`, `.ral-`). Шапка сайта копируется между маркерами `[BLOCK:site-header]`.
+- Каждая страница: `core.css` + свой `styles/pages/<name>.css` с уникальным префиксом классов (`.hub-`, `.catalog-`, `.ds-`, `.dash-`, `.fp-`, `.login-`, `.pf-`, `.ral-`). Шапка сайта копируется между маркерами `[BLOCK:site-header]`.
 - Интерактив витрины — `main.js` (только components.html), общий хром страниц — `js/site.js`. Данные RAL — общий `assets/ral-data.js` (216 цветов).
 - Чек-лист добавления страницы — в `.claude/context.md`.
 

@@ -55,13 +55,15 @@
 .text-center { text-align: center; }
 .text-left { text-align: left; }
 .text-right { text-align: right; }
-.text-sm { font-size: 0.85rem; }
-.text-lg { font-size: 1.1rem; }
-.text-xl { font-size: 1.25rem; }
-.text-2xl { font-size: 1.5rem; }
-.font-bold { font-weight: 700; }
-.font-semibold { font-weight: 600; }
-.font-medium { font-weight: 500; }
+/* Кегли утилит — ступени шкалы --fs-*. Были rem-литералы (0.85/1.1/1.25/1.5),
+   каждый мимо шкалы на доли пикселя: 13.6 → 13, 17.6 → 18, 20 → 20, 24 → 24 */
+.text-sm { font-size: var(--fs-sm); }
+.text-lg { font-size: var(--fs-xl); }
+.text-xl { font-size: var(--fs-2xl); }
+.text-2xl { font-size: var(--fs-3xl); }
+.font-bold { font-weight: var(--fw-bold); }
+.font-semibold { font-weight: var(--fw-semi); }
+.font-medium { font-weight: var(--fw-medium); }
 .text-muted { color: var(--muted); }
 .text-accent { color: var(--accent); }
 .truncate {
@@ -131,25 +133,17 @@
 .select-none { user-select: none; }
 .select-text { user-select: text; }
 
-/* Z-index */
-.z-10 { z-index: 10; }
-.z-20 { z-index: 20; }
-.z-50 { z-index: 50; }
-.z-100 { z-index: 100; }
+/* Z-index — только ступени шкалы --z-*. Утилиты .z-20 и .z-50 удалены:
+   их значений в шкале нет, а собственные слои утилита заводить не вправе */
+.z-10 { z-index: var(--z-raised); }
+.z-100 { z-index: var(--z-sticky); }
 
-/* Animations (from autoTrassir) */
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.animate-pulse { animation: pulse 2s ease-in-out infinite; }
-.animate-spin { animation: spin 1s linear infinite; }
+/* Анимаций здесь больше нет. @keyframes pulse и spin (порт autoTrassir)
+   были третьей и четвёртой реализациями одного и того же: пульс-заглушка
+   живёт в components/skeleton.css (@keyframes skeleton-pulse,
+   --duration-pulse, linear), вращение — в самих спиннерах компонентов.
+   Классы .animate-pulse / .animate-spin остаются экспонатами витрины —
+   base/animations.css, который подключает только components.html. */
 
 /* ==================== Mobile Responsive Grid Overrides ==================== */
 

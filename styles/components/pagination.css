@@ -26,10 +26,10 @@
   border: var(--border-w) solid var(--color-border);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: color var(--t-fast) var(--ease),
-              background-color var(--t-fast) var(--ease),
-              border-color var(--t-fast) var(--ease),
-              box-shadow var(--t-fast) var(--ease);
+  transition: color var(--duration-press) var(--ease-out),
+              background-color var(--duration-press) var(--ease-out),
+              border-color var(--duration-press) var(--ease-out),
+              box-shadow var(--duration-press) var(--ease-out);
 }
 
 .page-btn:hover:not(:disabled):not(.active) {
@@ -104,8 +104,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color var(--t-fast) var(--ease),
-              color var(--t-fast) var(--ease);
+  transition: background-color var(--duration-press) var(--ease-out),
+              color var(--duration-press) var(--ease-out);
 }
 
 .pagination-btn:hover:not(:disabled) {

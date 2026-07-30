@@ -164,7 +164,8 @@
     var(--color-surface-hover) 50%,
     transparent 100%
   );
-  animation: card-shimmer 1.5s var(--ease-in-out) infinite;
+  /* Бесконечный блик заглушки — только linear (ui-motion-craft §1) */
+  animation: card-shimmer var(--duration-pulse) linear infinite;
 }
 @keyframes card-shimmer {
   0%   { transform: translateX(-100%); }

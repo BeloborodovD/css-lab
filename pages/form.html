@@ -211,7 +211,7 @@
           document.body.appendChild(box);
         }
         const toast = document.createElement('div');
-        toast.className = 'toast success toast-enter';
+        toast.className = 'toast success is-entering';
         toast.setAttribute('role', 'status');
         const icon = document.createElement('span');
         icon.className = 'toast-icon';
@@ -232,11 +232,11 @@
         toast.appendChild(icon);
         toast.appendChild(content);
         box.appendChild(toast);
-        // Выход тем же краем, что вход (.toast-exit из toast.css) + страховка
+        // Выход тем же краем, что вход (.toast.is-exiting из toast.css) + страховка
         function dismiss(t) {
-          if (!t.isConnected || t.classList.contains('toast-exit')) return;
-          t.classList.remove('toast-enter');
-          t.classList.add('toast-exit');
+          if (!t.isConnected || t.classList.contains('is-exiting')) return;
+          t.classList.remove('is-entering');
+          t.classList.add('is-exiting');
           t.addEventListener('animationend', () => t.remove(), { once: true });
           setTimeout(() => t.remove(), 400);
         }

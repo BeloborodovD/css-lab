@@ -24,8 +24,8 @@
   border-radius: var(--radius);
   overflow: hidden;
   cursor: pointer;
-  transition: border-color var(--t) var(--ease),
-              box-shadow var(--t) var(--ease);
+  transition: border-color var(--duration-dropdown) var(--ease-out),
+              box-shadow var(--duration-dropdown) var(--ease-out);
 }
 
 .photo-card:hover {
@@ -44,7 +44,9 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--t-slower) var(--ease);
+  /* 0.4s (легаси --t-slower) выходило за бюджет UI-анимации (RULES §2:
+     до 300ms) — взят потолок бюджета --duration-modal */
+  transition: transform var(--duration-modal) var(--ease-out);
 }
 
 .photo-card:hover .photo-card-image img {
@@ -54,12 +56,14 @@
 .photo-card-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  /* Подложка под подписью кадра — пользовательская фотография, у неё нет
+     ни темы, ни токена; затемняющий слой берётся из --color-overlay */
+  background: linear-gradient(to top, var(--color-overlay), transparent);
   padding: var(--space-3);
   display: flex;
   align-items: flex-end;
   opacity: 0;
-  transition: opacity var(--t) var(--ease);
+  transition: opacity var(--duration-dropdown) var(--ease-out);
 }
 
 .photo-card:hover .photo-card-overlay {
@@ -102,7 +106,7 @@
   display: flex;
   gap: var(--space-1);
   opacity: 0;
-  transition: opacity var(--t-fast) var(--ease);
+  transition: opacity var(--duration-press) var(--ease-out);
 }
 
 .photo-card:hover .quick-actions {
@@ -116,9 +120,9 @@
   color: var(--color-text-muted);
   border: var(--border-w) solid var(--color-border);
   cursor: pointer;
-  transition: background var(--t-fast) var(--ease),
-              color var(--t-fast) var(--ease),
-              border-color var(--t-fast) var(--ease);
+  transition: background var(--duration-press) var(--ease-out),
+              color var(--duration-press) var(--ease-out),
+              border-color var(--duration-press) var(--ease-out);
 }
 
 .quick-action-btn:hover {

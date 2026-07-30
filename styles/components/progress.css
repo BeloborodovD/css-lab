@@ -19,12 +19,14 @@
   height: 100%;
   background: var(--color-accent);
   border-radius: var(--radius-full);
-  transition: width var(--t-slow) var(--ease-out);
+  transition: width var(--duration-modal) var(--ease-out);
   position: relative;
   overflow: hidden;
 }
 
-/* Shimmer-эффект поверх progress-bar */
+/* Shimmer-эффект поверх progress-bar.
+   Блик лежит НА акцентной заливке — слой берётся из --color-on-accent-*.
+   Постоянное движение → linear (ui-motion-craft §1). */
 .progress-shimmer .progress-bar::after {
   content: '';
   position: absolute;
@@ -32,10 +34,10 @@
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255, 255, 255, 0.3) 50%,
+    var(--color-on-accent-strong) 50%,
     transparent 100%
   );
-  animation: progress-shimmer 1.5s var(--ease-in-out) infinite;
+  animation: progress-shimmer var(--duration-pulse) linear infinite;
 }
 @keyframes progress-shimmer {
   0%   { transform: translateX(-100%); }
@@ -59,11 +61,11 @@
 .progress-striped .progress-bar {
   background-image: linear-gradient(
     45deg,
-    rgba(255, 255, 255, 0.18) 25%,
+    var(--color-on-accent-soft) 25%,
     transparent 25%,
     transparent 50%,
-    rgba(255, 255, 255, 0.18) 50%,
-    rgba(255, 255, 255, 0.18) 75%,
+    var(--color-on-accent-soft) 50%,
+    var(--color-on-accent-soft) 75%,
     transparent 75%,
     transparent
   );
@@ -95,11 +97,13 @@
   min-width: 32px;
 }
 
+/* Подпись лежит на акцентной заливке: текст — «на акценте», тень —
+   затемняющий слой того же семейства (--color-on-accent-dim) */
 .progress-label {
   font-size: var(--fs-xs);
   font-weight: var(--fw-semi);
-  color: #fff;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  color: var(--color-text-on-accent);
+  text-shadow: 0 1px 2px var(--color-on-accent-dim);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
@@ -118,10 +122,12 @@
   text-align: right;
 }
 
-/* ====================== Indeterminate ====================== */
+/* ====================== Indeterminate ======================
+   Все три анимации бесконечны и равномерны — кривая только linear
+   (ui-motion-craft §1: constant motion → linear) */
 .progress-indeterminate .progress-bar {
   width: 30% !important;
-  animation: progress-indeterminate 1.5s var(--ease-in-out) infinite;
+  animation: progress-indeterminate var(--duration-pulse) linear infinite;
 }
 @keyframes progress-indeterminate {
   0%   { transform: translateX(-100%); }
@@ -132,7 +138,7 @@
 .progress-indeterminate-dual .progress-bar {
   position: absolute;
   width: 0;
-  animation: progress-indeterminate-primary 2s infinite var(--ease-out);
+  animation: progress-indeterminate-primary 2s infinite linear;
 }
 .progress-indeterminate-dual::after {
   content: '';
@@ -142,7 +148,7 @@
   left: 0;
   background: var(--color-accent);
   border-radius: var(--radius-full);
-  animation: progress-indeterminate-secondary 2s infinite var(--ease-out);
+  animation: progress-indeterminate-secondary 2s infinite linear;
   animation-delay: 0.5s;
 }
 @keyframes progress-indeterminate-primary {
@@ -204,7 +210,7 @@
   stroke: var(--color-accent);
   stroke-width: 4;
   stroke-linecap: round;
-  transition: stroke-dashoffset var(--t-slow) var(--ease-out);
+  transition: stroke-dashoffset var(--duration-modal) var(--ease-out);
 }
 .progress-circle-value {
   position: absolute;
@@ -221,7 +227,8 @@
 .progress-circle-sm { width: 32px; height: 32px; }
 .progress-circle-sm .progress-circle-track,
 .progress-circle-sm .progress-circle-bar { stroke-width: 3; }
-.progress-circle-sm .progress-circle-value { font-size: 10px; }
+/* 10px в шкале --fs-* нет — взята ближайшая ступень --fs-xs (12px) */
+.progress-circle-sm .progress-circle-value { font-size: var(--fs-xs); }
 
 .progress-circle-lg { width: 64px; height: 64px; }
 .progress-circle-lg .progress-circle-track,

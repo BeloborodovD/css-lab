@@ -1392,74 +1392,15 @@
    25. Loading State Animations
    ============================================= */
 
-/* --- Skeleton Wave Animation --- */
-
-@keyframes skeleton-wave {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-@keyframes skeleton-shimmer-wave {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-.skeleton-wave {
-  position: relative;
-  overflow: hidden;
-  background: var(--bg-muted, #e5e5e5);
-}
-
-.skeleton-wave::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.4) 50%,
-    transparent 100%
-  );
-  animation: skeleton-wave 1.5s var(--ease-standard) infinite;
-  will-change: transform;
-}
-
-/* Alternative: gradient-based skeleton shimmer */
-.skeleton-shimmer {
-  background: linear-gradient(
-    90deg,
-    var(--bg-muted, #e5e5e5) 0%,
-    var(--bg-muted, #e5e5e5) 40%,
-    var(--bg, #f5f5f5) 50%,
-    var(--bg-muted, #e5e5e5) 60%,
-    var(--bg-muted, #e5e5e5) 100%
-  );
-  background-size: 200% 100%;
-  animation: skeleton-shimmer-wave 1.5s linear infinite;
-  will-change: background-position;
-}
-
-/* Skeleton shapes */
-.skeleton-text {
-  height: 1em;
-  border-radius: 4px;
-}
-
-.skeleton-avatar {
-  border-radius: 50%;
-}
-
-.skeleton-card {
-  border-radius: 8px;
-}
+/* --- Заглушки загрузки: сюда не возвращать ---
+   Здесь жил параллельный скелетон: @keyframes skeleton-wave и
+   skeleton-shimmer-wave плюс классы .skeleton-wave / .skeleton-shimmer /
+   .skeleton-text / .skeleton-avatar / .skeleton-card. Витрина подключает
+   этот файл ПОСЛЕ core.css, поэтому его .skeleton-card перебивал скругление
+   и раскладку настоящего компонента (components/skeleton.css), а имена
+   .skeleton-text/-avatar расходились с его контрактом (.skeleton--text,
+   .skeleton--avatar). Скелетон в библиотеке один — components/skeleton.css:
+   пульс через opacity, --duration-pulse, linear. */
 
 /* --- Dots Bounce Loading --- */
 
@@ -1767,16 +1708,6 @@
   }
 
   /* Loading states - static appearance */
-  .skeleton-wave::after {
-    animation: none !important;
-    background: rgba(255, 255, 255, 0.2);
-  }
-
-  .skeleton-shimmer {
-    animation: none !important;
-    background: var(--bg-muted, #e5e5e5);
-  }
-
   .dots-loading .dot {
     animation: none !important;
     opacity: 1;
@@ -1844,14 +1775,6 @@
 }
 
 /* Loading states */
-.force-animations .skeleton-wave::after {
-  animation: skeleton-wave 1.5s var(--ease-standard) infinite !important;
-}
-
-.force-animations .skeleton-shimmer {
-  animation: skeleton-shimmer-wave 1.5s linear infinite !important;
-}
-
 .force-animations .dots-loading .dot {
   animation: dots-bounce 1.4s var(--ease-standard) infinite both !important;
 }

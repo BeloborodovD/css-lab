@@ -33,7 +33,7 @@
 .footer-link {
   color: var(--color-text-muted);
   text-decoration: none;
-  transition: color var(--t-fast) var(--ease);
+  transition: color var(--duration-press) var(--ease-out);
 }
 
 .footer-link:hover {
@@ -52,7 +52,7 @@
   color: var(--color-text-muted);
   text-decoration: none;
   font-size: var(--fs-xs);
-  transition: color var(--t-fast) var(--ease);
+  transition: color var(--duration-press) var(--ease-out);
 }
 
 .footer-nav a:hover {
@@ -80,8 +80,8 @@
   border-radius: var(--radius-full);
   background: var(--color-surface-sunken);
   color: var(--color-text-muted);
-  transition: background var(--t-fast) var(--ease),
-              color var(--t-fast) var(--ease);
+  transition: background var(--duration-press) var(--ease-out),
+              color var(--duration-press) var(--ease-out);
 }
 
 .footer-social-link:hover {
@@ -183,7 +183,7 @@
   color: var(--color-text-muted);
   text-decoration: none;
   font-size: var(--fs-sm);
-  transition: color var(--t-fast) var(--ease);
+  transition: color var(--duration-press) var(--ease-out);
 }
 
 .footer-column-links a:hover {
@@ -213,16 +213,17 @@
     gap: var(--space-3) var(--space-4);
   }
 
+  /* Тач-цели на мобильном — токен --touch-target-min (44px) */
   .footer-nav a {
     padding: var(--space-2) var(--space-1);
-    min-height: 44px;
+    min-height: var(--touch-target-min);
     display: inline-flex;
     align-items: center;
   }
 
   .footer-social-link {
-    width: 44px;
-    height: 44px;
+    width: var(--touch-target-min);
+    height: var(--touch-target-min);
   }
 
   .footer-social-link svg { width: 20px; height: 20px; }

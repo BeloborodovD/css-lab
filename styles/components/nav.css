@@ -117,9 +117,9 @@
     gap: 2px;
   }
 
-  /* Канон — .is-open; .open остаётся до снятия последнего потребителя (RULES §2.4) */
-  .nav-menu.is-open,
-  .nav-menu.open { display: flex; }
+  /* Единственное написание состояния — .is-open (§2.4): легаси-двойник .open
+     снят вместе с последним потребителем в main.js */
+  .nav-menu.is-open { display: flex; }
 
   .nav-link {
     width: 100%;

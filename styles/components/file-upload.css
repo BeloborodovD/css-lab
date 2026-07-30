@@ -2,7 +2,10 @@
    file-upload.css — Lightweight redesign
    --------------------------------------------------------------------------
    - dropzone: surface + 2px dashed border
-   - drag-over: accent-soft + solid accent border (без двойного box-shadow)
+   - перетаскивание: accent-soft + solid accent border (без двойного box-shadow).
+     Носитель состояния — атрибут [data-drag-over="true"]; класса-двойника
+     .drag-over больше нет (§2.3.3: состояние с готовым носителем классом
+     не дублируется), а прежний класс не ставил никто.
    - убран transform: scale(1.1) у icon на hover (тяжело)
    - file-icon types через семантические токены (success/warning/error)
    ========================================================================== */
@@ -26,8 +29,8 @@
   border: var(--border-w-strong) dashed var(--color-border-strong);
   border-radius: var(--radius-lg);
   cursor: pointer;
-  transition: border-color var(--t) var(--ease),
-              background var(--t) var(--ease);
+  transition: border-color var(--duration-dropdown) var(--ease-out),
+              background var(--duration-dropdown) var(--ease-out);
 }
 
 .file-dropzone:hover {
@@ -42,7 +45,6 @@
   box-shadow: var(--shadow-focus);
 }
 
-.file-dropzone.drag-over,
 .file-dropzone[data-drag-over="true"] {
   border-color: var(--color-accent);
   border-style: solid;
@@ -59,12 +61,12 @@
   background: var(--color-accent-soft);
   border-radius: var(--radius-full);
   color: var(--color-accent);
-  font-size: 24px;
-  transition: background var(--t) var(--ease);
+  font-size: var(--fs-3xl);
+  transition: background var(--duration-dropdown) var(--ease-out);
 }
 
 .file-dropzone:hover .file-dropzone-icon,
-.file-dropzone.drag-over .file-dropzone-icon {
+.file-dropzone[data-drag-over="true"] .file-dropzone-icon {
   background: var(--color-accent-soft-hover);
 }
 
@@ -109,7 +111,7 @@
 .file-dropzone-sm .file-dropzone-icon {
   width: 40px;
   height: 40px;
-  font-size: 18px;
+  font-size: var(--fs-xl);
   margin-bottom: var(--space-3);
 }
 
@@ -121,7 +123,8 @@
 .file-dropzone-lg .file-dropzone-icon {
   width: 72px;
   height: 72px;
-  font-size: 32px;
+  /* 32px в шкале --fs-* нет — ближайшая ступень --fs-4xl (30px) */
+  font-size: var(--fs-4xl);
   margin-bottom: var(--space-5);
 }
 
@@ -140,8 +143,8 @@
   background: var(--color-surface);
   border: var(--border-w) solid var(--color-border);
   border-radius: var(--radius);
-  transition: border-color var(--t) var(--ease),
-              box-shadow var(--t) var(--ease);
+  transition: border-color var(--duration-dropdown) var(--ease-out),
+              box-shadow var(--duration-dropdown) var(--ease-out);
 }
 
 .file-item:hover {
@@ -159,7 +162,7 @@
   background: var(--color-accent-soft);
   border-radius: var(--radius-sm);
   color: var(--color-accent);
-  font-size: 18px;
+  font-size: var(--fs-xl);
   flex-shrink: 0;
 }
 
@@ -249,8 +252,8 @@
   border-radius: var(--radius-sm);
   color: var(--color-text-muted);
   cursor: pointer;
-  transition: background var(--t-fast) var(--ease),
-              color var(--t-fast) var(--ease);
+  transition: background var(--duration-press) var(--ease-out),
+              color var(--duration-press) var(--ease-out);
 }
 
 .file-action:hover {
@@ -280,7 +283,7 @@
   height: 100%;
   background: var(--color-accent);
   border-radius: var(--radius-full);
-  transition: width var(--t) var(--ease);
+  transition: width var(--duration-dropdown) var(--ease-out);
 }
 
 .file-progress-text {
@@ -301,7 +304,8 @@
 
 .file-progress-indeterminate .file-progress-bar {
   width: 30%;
-  animation: file-progress-indeterminate 1.5s var(--ease-in-out) infinite;
+  /* Бесконечный индикатор — linear и общий --duration-pulse (RULES §1) */
+  animation: file-progress-indeterminate var(--duration-pulse) linear infinite;
 }
 
 @keyframes file-progress-indeterminate {
@@ -334,7 +338,7 @@
   justify-content: center;
   background: var(--color-overlay);
   opacity: 0;
-  transition: opacity var(--t) var(--ease);
+  transition: opacity var(--duration-dropdown) var(--ease-out);
 }
 
 .file-preview:hover .file-preview-overlay {
@@ -403,8 +407,8 @@
   color: #fff;
   cursor: pointer;
   opacity: 0;
-  transition: opacity var(--t) var(--ease),
-              background var(--t) var(--ease);
+  transition: opacity var(--duration-dropdown) var(--ease-out),
+              background var(--duration-dropdown) var(--ease-out);
 }
 
 .file-preview-card:hover .file-preview-card-remove { opacity: 1; }
@@ -486,7 +490,7 @@
 .file-item-compact .file-icon {
   width: 32px;
   height: 32px;
-  font-size: 14px;
+  font-size: var(--fs-base);
 }
 
 .file-item-compact .file-name {

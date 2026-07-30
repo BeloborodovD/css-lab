@@ -18,9 +18,9 @@
   border: var(--border-w) solid transparent;
   border-radius: var(--radius-full);
   cursor: default;
-  transition: background-color var(--t-fast) var(--ease),
-              border-color var(--t-fast) var(--ease),
-              color var(--t-fast) var(--ease),
+  transition: background-color var(--duration-press) var(--ease-out),
+              border-color var(--duration-press) var(--ease-out),
+              color var(--duration-press) var(--ease-out),
               opacity var(--duration-tooltip) var(--ease-out),
               transform var(--duration-tooltip) var(--ease-out);
 }
@@ -83,19 +83,19 @@
 .chip-primary.chip-outlined { background: transparent; border-color: var(--color-accent); color: var(--color-accent); }
 
 .chip-success       { background: var(--color-success-soft); color: var(--color-success-text); }
-.chip-success.chip-filled   { background: var(--color-success); color: #fff; }
+.chip-success.chip-filled   { background: var(--color-success); color: var(--color-text-on-accent); }
 .chip-success.chip-outlined { background: transparent; border-color: var(--color-success); color: var(--color-success-text); }
 
 .chip-warning       { background: var(--color-warning-soft); color: var(--color-warning-text); }
-.chip-warning.chip-filled   { background: var(--color-warning); color: #fff; }
+.chip-warning.chip-filled   { background: var(--color-warning); color: var(--color-text-on-accent); }
 .chip-warning.chip-outlined { background: transparent; border-color: var(--color-warning); color: var(--color-warning-text); }
 
 .chip-error         { background: var(--color-error-soft); color: var(--color-error-text); }
-.chip-error.chip-filled     { background: var(--color-error); color: #fff; }
+.chip-error.chip-filled     { background: var(--color-error); color: var(--color-text-on-accent); }
 .chip-error.chip-outlined   { background: transparent; border-color: var(--color-error); color: var(--color-error-text); }
 
 .chip-info          { background: var(--color-info-soft); color: var(--color-info-text); }
-.chip-info.chip-filled      { background: var(--color-info); color: #fff; }
+.chip-info.chip-filled      { background: var(--color-info); color: var(--color-text-on-accent); }
 .chip-info.chip-outlined    { background: transparent; border-color: var(--color-info); color: var(--color-info-text); }
 
 .chip-neutral       { background: var(--color-surface-sunken); color: var(--color-text-muted); }
@@ -157,8 +157,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
+  /* WCAG SC 2.5.8: цель нажатия ≥24px — тот же квадрат, что у
+     .picklist__chip-remove, .filter-pill__remove и .alert-close */
+  width: 24px;
+  height: 24px;
   margin-right: -2px;
   padding: 0;
   border: none;
@@ -167,12 +169,12 @@
   color: inherit;
   opacity: 0.6;
   cursor: pointer;
-  transition: opacity var(--t-fast) var(--ease),
-              background-color var(--t-fast) var(--ease);
+  transition: opacity var(--duration-press) var(--ease-out),
+              background-color var(--duration-press) var(--ease-out);
 }
 .chip-remove:hover {
   opacity: 1;
-  background: rgba(0, 0, 0, 0.08);
+  background: var(--color-accent-soft-hover);
 }
 .chip-remove:focus-visible {
   outline: var(--border-w-strong) solid transparent;
@@ -183,7 +185,8 @@
 .chip-remove svg { width: 14px; height: 14px; }
 
 .chip-filled .chip-remove:hover {
-  background: rgba(255, 255, 255, 0.25);
+  /* Слой поверх акцентной заливки: в light он светлый, в dark инвертирован */
+  background: var(--color-on-accent-strong);
 }
 
 /* ====================== Group ====================== */
@@ -212,7 +215,10 @@
 }
 
 /* ====================== Selected ====================== */
-.chip-selected {
+/* .chip-clickable.is-active — состояние, которое ставит JS (прежнее имя
+   .chip-active не имело в CSS ни одного правила и ничего не показывало) */
+.chip-selected,
+.chip-clickable.is-active {
   background: var(--color-accent);
   color: var(--color-text-on-accent);
   border-color: var(--color-accent);
@@ -246,11 +252,16 @@
   border-color: var(--color-accent);
   color: var(--color-accent);
 }
-.dark .chip-remove:hover,
-[data-theme="dark"] .chip-remove:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
+/* Отдельного dark-правила у .chip-remove:hover больше нет: подложка берётся
+   из --color-accent-soft-hover, а он уже инвертирован темой */
+/* Заливку здесь приходится повторять: правило .dark .chip выше имеет ту же
+   специфичность (0,2,0) и стоит позже, поэтому иначе оно возвращает
+   выбранному чипу тихий accent-soft вместе с тёмной подписью */
 .dark .chip-selected,
-[data-theme="dark"] .chip-selected {
+.dark .chip-clickable.is-active,
+[data-theme="dark"] .chip-selected,
+[data-theme="dark"] .chip-clickable.is-active {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
   color: var(--color-accent-text);
 }

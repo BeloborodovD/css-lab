@@ -50,10 +50,10 @@ test('витрина: combobox открывается и выбирает опц
   await page.goto('/components.html');
   const combo = page.locator('#combobox .combobox').first();
   await combo.locator('.combobox-trigger').click();
-  await expect(combo).toHaveClass(/open/);
+  await expect(combo).toHaveClass(/is-open/);
   await combo.locator('.combobox-option', { hasText: 'Опция 3' }).click();
   await expect(combo.locator('.combobox-value')).toHaveText('Опция 3');
-  await expect(combo).not.toHaveClass(/open/);
+  await expect(combo).not.toHaveClass(/is-open/);
 });
 
 test('витрина: user-menu открывается и закрывается по Escape', async ({ page }) => {
@@ -426,8 +426,8 @@ test('витрина: опция с обёрткой __option-body и перек
   await expect(panel).toBeVisible();
   await expect(panel.locator('.picklist__option-body .picklist__option-desc').first()).toBeVisible();
 
-  await group.locator('[data-panel-variant="picklist__panel--top"]').click();
-  await expect(panel).toHaveClass(/picklist__panel--top/);
+  await group.locator('[data-panel-variant="is-flipped"]').click();
+  await expect(panel).toHaveClass(/is-flipped/);
   // Открытие вверх: панель прижата низом к контролу. computed top у
   // позиционированного элемента браузер отдаёт использованным значением,
   // а не 'auto', поэтому размещение проверяем геометрией
@@ -451,7 +451,7 @@ test('витрина: опция с обёрткой __option-body и перек
 
   await group.locator('[data-panel-variant="picklist__panel--sheet"]').click();
   await expect(panel).toHaveClass(/picklist__panel--sheet/);
-  await expect(panel).not.toHaveClass(/picklist__panel--top/);
+  await expect(panel).not.toHaveClass(/is-flipped/);
 });
 
 test('витрина: из размещения «вверх» можно выйти на узком экране', async ({ page }) => {
@@ -461,8 +461,8 @@ test('витрина: из размещения «вверх» можно вый
 
   for (const width of PLACEMENT_VIEWPORTS) {
     await page.setViewportSize({ width, height: 800 });
-    await group.locator('[data-panel-variant="picklist__panel--top"]').click();
-    await expect(panel).toHaveClass(/picklist__panel--top/);
+    await group.locator('[data-panel-variant="is-flipped"]').click();
+    await expect(panel).toHaveClass(/is-flipped/);
 
     const panelBox = await panel.boundingBox();
     const groupBox = await group.boundingBox();
@@ -476,7 +476,7 @@ test('витрина: из размещения «вверх» можно вый
     // Клик без force: Playwright сам проверяет hit-target, поэтому перекрытая
     // панелью группа чипов провалит шаг — ровно так демо и становится тупиком
     await group.locator('[data-panel-variant=""]').click();
-    await expect(panel).not.toHaveClass(/picklist__panel--top/);
+    await expect(panel).not.toHaveClass(/is-flipped/);
   }
 });
 
@@ -636,18 +636,18 @@ test('витрина: чип размещения не глушит осталь
   await page.goto('/components.html');
   const combo = page.locator('#combobox .combobox').first();
   await combo.locator('.combobox-trigger').click();
-  await expect(combo).toHaveClass(/open/);
+  await expect(combo).toHaveClass(/is-open/);
 
   // Клик по чипу переключателя обязан всплыть до document: на нём висят
   // «закрытия по клику вне» комбобокса, меню, календаря и пресенса
   const group = page.locator('[data-panel-switch="demo-picklist-place-panel"]');
-  await group.locator('[data-panel-variant="picklist__panel--top"]').click();
-  await expect(combo, 'комбобокс закрывается кликом по чипу размещения').not.toHaveClass(/open/);
+  await group.locator('[data-panel-variant="is-flipped"]').click();
+  await expect(combo, 'комбобокс закрывается кликом по чипу размещения').not.toHaveClass(/is-open/);
 
   // При этом собственная панель пикера остаётся открытой — иначе выбранное
   // размещение не увидеть
   await expect(page.locator('#demo-picklist-place')).toHaveClass(/is-open/);
-  await expect(page.locator('#demo-picklist-place-panel')).toHaveClass(/picklist__panel--top/);
+  await expect(page.locator('#demo-picklist-place-panel')).toHaveClass(/is-flipped/);
 });
 
 // Текст печатного листа: бумага белая всегда, а токены текста в тёмной теме

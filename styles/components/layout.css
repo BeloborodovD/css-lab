@@ -59,16 +59,17 @@
   min-width: 200px;
 }
 
-/* Fallback классы ширины (браузеры без :has()) — ставит JS витрины */
-.header .search-bar.sidebar-both-open {
+/* Fallback классы ширины (браузеры без :has()) — ставит JS витрины,
+   поэтому имя состояния каноническое, с префиксом is- (§2.2) */
+.header .search-bar.is-sidebar-both-open {
   max-width: calc((100% - var(--sidebar-width, 280px) * 2 - 200px) * 0.9);
 }
 
-.header .search-bar.sidebar-one-open {
+.header .search-bar.is-sidebar-one-open {
   max-width: calc((100% - var(--sidebar-width, 280px) - 200px) * 0.9);
 }
 
-.header .search-bar.sidebar-none-open {
+.header .search-bar.is-sidebar-none-open {
   max-width: calc((100% - 200px) * 0.9);
 }
 
@@ -264,24 +265,12 @@ body:not(:has(> .app-layout > .sidebar--left.is-open)):not(:has(> .app-layout > 
   padding: var(--space-6);
 }
 
-/* ==================== Overlay ==================== */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: var(--color-overlay);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity var(--t) var(--ease),
-              visibility var(--t) var(--ease);
-  z-index: calc(var(--z-drawer) - 1);
-}
-
-.overlay.active {
-  opacity: 1;
-  visibility: visible;
-}
+/* ==================== Overlay ====================
+   Подложки здесь больше нет. Универсальный `.overlay` был третьей реализацией
+   рядом с `.sidebar-overlay` (components/sidebar.css) и `.drawer__overlay`
+   (components/drawer.css), не имел ни одного вхождения в разметке и держал
+   собственное состояние `.active` без сеттера. Подложка панели — у панели,
+   подложка шторки — у шторки. */
 
 /* ==================== Container ==================== */
 .container {

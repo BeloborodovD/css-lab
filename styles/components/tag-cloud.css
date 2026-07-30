@@ -93,7 +93,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: color var(--t-fast) var(--ease);
+  transition: color var(--duration-press) var(--ease-out);
 }
 .trending-list__link:hover {
   color: var(--color-accent);
@@ -180,8 +180,8 @@
   border-radius: var(--radius-xs);
   cursor: pointer;
   text-decoration: none;
-  transition: color var(--t-fast) var(--ease),
-              background-color var(--t-fast) var(--ease);
+  transition: color var(--duration-press) var(--ease-out),
+              background-color var(--duration-press) var(--ease-out);
 }
 .tag-cloud__tag:hover {
   color: var(--color-accent);
@@ -248,8 +248,10 @@
   }
 }
 
-/* ====================== Mobile ====================== */
-@media (max-width: 640px) {
+/* ====================== Mobile ======================
+   640px в шкале --breakpoint-* нет: взята ближайшая ступень 767px
+   (соседний min-width 768 минус 1px, §5.4) */
+@media (max-width: 767px) {
   .trending-list__item {
     font-size: var(--fs-sm);
     padding: var(--space-px) 0;

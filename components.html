@@ -833,7 +833,7 @@
         <button class="btn dropdown-trigger">Open Dropdown ▼</button>
         <div class="dropdown-menu">
           <a href="#" class="dropdown-item">Action 1</a>
-          <a href="#" class="dropdown-item active">Active Item</a>
+          <a href="#" class="dropdown-item is-active">Active Item</a>
           <a href="#" class="dropdown-item">Action 3</a>
           <div class="dropdown-divider"></div>
           <a href="#" class="dropdown-item">Separated Action</a>
@@ -1655,8 +1655,8 @@
           <span class="spinner spinner-sm spinner-white"></span>
           Загрузка...
         </button>
-        <button class="btn btn-loading btn-primary">Отправить</button>
-        <button class="btn btn-loading">Сохранить</button>
+        <button class="btn btn-primary is-loading">Отправить</button>
+        <button class="btn is-loading">Сохранить</button>
       </div>
     </section>
 
@@ -2271,7 +2271,7 @@
         </div>
         <div class="card-body">
           <div class="flex gap-2 flex-wrap">
-            <button class="chip chip-clickable chip-active">Все</button>
+            <button class="chip chip-clickable is-active">Все</button>
             <button class="chip chip-clickable">Активные</button>
             <button class="chip chip-clickable">Завершённые</button>
             <button class="chip chip-clickable">Архив</button>
@@ -2621,7 +2621,7 @@
             <div class="combobox-dropdown">
               <div class="combobox-options">
                 <div class="combobox-option">Опция 1</div>
-                <div class="combobox-option combobox-option-selected">Опция 2</div>
+                <div class="combobox-option is-selected">Опция 2</div>
                 <div class="combobox-option">Опция 3</div>
               </div>
             </div>
@@ -2648,7 +2648,7 @@
                 <input type="text" class="combobox-search-input" placeholder="Поиск...">
               </div>
               <div class="combobox-options">
-                <div class="combobox-option combobox-option-selected">
+                <div class="combobox-option is-selected">
                   <span class="combobox-option-check">✓</span>
                   React
                 </div>
@@ -2677,8 +2677,8 @@
             </div>
             <div class="combobox-dropdown">
               <div class="combobox-options">
-                <div class="combobox-option combobox-option-selected"><span class="combobox-option-check">✓</span> JavaScript</div>
-                <div class="combobox-option combobox-option-selected"><span class="combobox-option-check">✓</span> TypeScript</div>
+                <div class="combobox-option is-selected"><span class="combobox-option-check">✓</span> JavaScript</div>
+                <div class="combobox-option is-selected"><span class="combobox-option-check">✓</span> TypeScript</div>
                 <div class="combobox-option">Python</div>
                 <div class="combobox-option">Go</div>
                 <div class="combobox-option">Rust</div>
@@ -3476,7 +3476,7 @@
               <div class="chips" role="group" aria-labelledby="demo-picklist-place-switch"
                 data-panel-switch="demo-picklist-place-panel">
                 <button type="button" class="chip chip-choice is-active" data-panel-variant="" aria-pressed="true">Вниз (авто)</button>
-                <button type="button" class="chip chip-choice" data-panel-variant="picklist__panel--top" aria-pressed="false">Вверх</button>
+                <button type="button" class="chip chip-choice" data-panel-variant="is-flipped" aria-pressed="false">Вверх</button>
                 <button type="button" class="chip chip-choice" data-panel-variant="picklist__panel--sheet" aria-pressed="false">Лист снизу</button>
               </div>
               <p class="text-muted text-sm m-0">
@@ -3615,7 +3615,7 @@
               <div class="chips" role="group" aria-labelledby="demo-swatch-place-switch"
                 data-panel-switch="demo-swatch-place-panel">
                 <button type="button" class="chip chip-choice is-active" data-panel-variant="" aria-pressed="true">Вниз (авто)</button>
-                <button type="button" class="chip chip-choice" data-panel-variant="swatch-picker__panel--top" aria-pressed="false">Вверх</button>
+                <button type="button" class="chip chip-choice" data-panel-variant="is-flipped" aria-pressed="false">Вверх</button>
                 <button type="button" class="chip chip-choice" data-panel-variant="swatch-picker__panel--sheet" aria-pressed="false">Лист снизу</button>
               </div>
               <p class="text-muted text-sm m-0">
@@ -5058,7 +5058,7 @@
                 </div>
                 <div class="sidebar-body">
                   <ul class="sidebar-nav">
-                    <li class="sidebar-nav-item"><a class="sidebar-nav-link active" href="#app-layout" aria-current="page">Заявки</a></li>
+                    <li class="sidebar-nav-item"><a class="sidebar-nav-link is-active" href="#app-layout" aria-current="page">Заявки</a></li>
                     <li class="sidebar-nav-item"><a class="sidebar-nav-link" href="#app-layout">Каталог</a></li>
                     <li class="sidebar-nav-item"><a class="sidebar-nav-link" href="#app-layout">Отчёты</a></li>
                   </ul>
@@ -5109,7 +5109,7 @@
                 </div>
                 <div class="sidebar-body">
                   <ul class="sidebar-nav">
-                    <li class="sidebar-nav-item"><a class="sidebar-nav-link active" href="#app-layout" aria-current="page">Заявки</a></li>
+                    <li class="sidebar-nav-item"><a class="sidebar-nav-link is-active" href="#app-layout" aria-current="page">Заявки</a></li>
                     <li class="sidebar-nav-item"><a class="sidebar-nav-link" href="#app-layout">Каталог</a></li>
                   </ul>
                 </div>
@@ -5153,7 +5153,7 @@
                     <div class="sidebar-section-title">Навигация</div>
                     <ul class="sidebar-nav">
                       <li class="sidebar-nav-item">
-                        <a class="sidebar-nav-link active" href="#sidebar" aria-current="page">
+                        <a class="sidebar-nav-link is-active" href="#sidebar" aria-current="page">
                           Входящие <span class="sidebar-nav-badge">12</span>
                         </a>
                       </li>
@@ -5179,7 +5179,7 @@
                   <div class="sidebar-widget">
                     <div class="sidebar-widget-title">Метки</div>
                     <div class="sidebar-tags">
-                      <span class="sidebar-tag active">срочные</span>
+                      <span class="sidebar-tag is-active">срочные</span>
                       <span class="sidebar-tag">типовые</span>
                     </div>
                   </div>
@@ -5256,7 +5256,7 @@
         <div class="sidebar-widget">
           <div class="sidebar-widget-title">Источники</div>
           <div class="sidebar-tags">
-            <span class="sidebar-tag active">mdm_terms</span>
+            <span class="sidebar-tag is-active">mdm_terms</span>
             <span class="sidebar-tag">autoTrassir</span>
             <span class="sidebar-tag">DeepSearch</span>
           </div>
@@ -5428,20 +5428,21 @@
       burgerMenu?.setAttribute('aria-expanded', String(!!leftOpen));
       infoToggle?.setAttribute('aria-expanded', String(!!rightOpen));
 
-      // Fallback classes for browsers without :has() support
-      appContent?.classList.toggle('sidebar-left-open', leftOpen);
-      appContent?.classList.toggle('sidebar-right-open', rightOpen);
-      appContent?.classList.toggle('sidebar-both-open', leftOpen && rightOpen);
-      widthControlBtn?.classList.toggle('sidebar-right-open', rightOpen);
+      // Fallback classes for browsers without :has() support.
+      // Имена состояний канонические (is-*): их ставит JS
+      appContent?.classList.toggle('is-sidebar-left-open', leftOpen);
+      appContent?.classList.toggle('is-sidebar-right-open', rightOpen);
+      appContent?.classList.toggle('is-sidebar-both-open', leftOpen && rightOpen);
+      widthControlBtn?.classList.toggle('is-sidebar-right-open', rightOpen);
 
       // Update search bar width (fallback for :has())
-      searchBar?.classList.remove('sidebar-both-open', 'sidebar-one-open', 'sidebar-none-open');
+      searchBar?.classList.remove('is-sidebar-both-open', 'is-sidebar-one-open', 'is-sidebar-none-open');
       if (leftOpen && rightOpen) {
-        searchBar?.classList.add('sidebar-both-open');
+        searchBar?.classList.add('is-sidebar-both-open');
       } else if (leftOpen || rightOpen) {
-        searchBar?.classList.add('sidebar-one-open');
+        searchBar?.classList.add('is-sidebar-one-open');
       } else {
-        searchBar?.classList.add('sidebar-none-open');
+        searchBar?.classList.add('is-sidebar-none-open');
       }
     }
 
@@ -5533,9 +5534,9 @@
       });
 
       navLinks.forEach(link => {
-        link.classList.remove('active');
+        link.classList.remove('is-active');
         if (link.getAttribute('href') === '#' + current) {
-          link.classList.add('active');
+          link.classList.add('is-active');
         }
       });
     });

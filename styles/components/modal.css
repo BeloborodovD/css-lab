@@ -79,8 +79,8 @@
   color: var(--color-text-muted);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: background var(--t-fast) var(--ease),
-              color var(--t-fast) var(--ease);
+  transition: background var(--duration-press) var(--ease-out),
+              color var(--duration-press) var(--ease-out);
 }
 
 .modal-close:hover {

@@ -91,19 +91,21 @@
   visibility: hidden;
   transform: translateY(-8px) scale(0.98);
   transform-origin: top right;
-  transition: opacity var(--t-fast) var(--ease),
-              visibility var(--t-fast) var(--ease),
-              transform var(--t-fast) var(--ease-out);
+  transition: opacity var(--duration-exit) var(--ease-out),
+              visibility var(--duration-exit) var(--ease-out),
+              transform var(--duration-exit) var(--ease-out);
   z-index: var(--z-dropdown);
   overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
-.notification-badge.open .notification-panel {
+.notification-badge.is-open .notification-panel {
   opacity: 1;
   visibility: visible;
   transform: translateY(0) scale(1);
+  /* Вход медленнее выхода — тайминг дропдауна (RULES §2) */
+  transition-duration: var(--duration-dropdown);
 }
 
 .notification-panel-left {
@@ -113,11 +115,13 @@
 }
 
 /* ====================== Header ====================== */
+/* Вертикальные поля панели: 14px в шкале --space-* нет, взята ближайшая
+   ступень --space-3 (12px) — та же, что у мобильной раскладки ниже */
 .notification-panel-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px var(--space-4);
+  padding: var(--space-3) var(--space-4);
   border-bottom: var(--border-w) solid var(--color-border);
   flex-shrink: 0;
 }
@@ -152,7 +156,7 @@
   padding: var(--notification-item-padding);
   border-bottom: var(--border-w) solid var(--color-border-subtle);
   cursor: pointer;
-  transition: background-color var(--t-fast) var(--ease);
+  transition: background-color var(--duration-press) var(--ease-out);
 }
 .notification-item:last-child { border-bottom: none; }
 
@@ -163,7 +167,7 @@
 /* Unread state */
 .notification-item-unread {
   background: var(--color-accent-soft);
-  padding-left: 20px;
+  padding-left: var(--space-5);
 }
 .notification-item-unread:hover {
   background: var(--color-accent-soft-hover);
@@ -241,7 +245,7 @@
   align-items: flex-start;
   gap: var(--space-1);
   opacity: 0;
-  transition: opacity var(--t-fast) var(--ease);
+  transition: opacity var(--duration-press) var(--ease-out);
 }
 .notification-item:hover .notification-item-actions {
   opacity: 1;
@@ -258,8 +262,8 @@
   color: var(--color-text-muted);
   border-radius: var(--radius-xs);
   cursor: pointer;
-  transition: background-color var(--t-fast) var(--ease),
-              color var(--t-fast) var(--ease);
+  transition: background-color var(--duration-press) var(--ease-out),
+              color var(--duration-press) var(--ease-out);
 }
 .notification-item-action:hover {
   background: var(--color-surface-active);
@@ -299,7 +303,7 @@
   border-radius: var(--radius-xs);
   cursor: pointer;
   text-decoration: none;
-  transition: background-color var(--t-fast) var(--ease);
+  transition: background-color var(--duration-press) var(--ease-out);
 }
 .notification-mark-read:hover,
 .notification-view-all:hover {
@@ -388,7 +392,7 @@
                 visibility 0s linear var(--duration-exit);
     transform: translateY(0) scale(1);
   }
-  .notification-badge.open .notification-panel {
+  .notification-badge.is-open .notification-panel {
     transition: opacity var(--duration-dropdown) var(--ease-out),
                 visibility 0s;
   }
@@ -403,9 +407,9 @@
 
 /* ====================== Force animations override ====================== */
 .force-animations .notification-panel {
-  transition: opacity var(--t-fast) var(--ease),
-              visibility var(--t-fast) var(--ease),
-              transform var(--t-fast) var(--ease-out) !important;
+  transition: opacity var(--duration-exit) var(--ease-out),
+              visibility var(--duration-exit) var(--ease-out),
+              transform var(--duration-exit) var(--ease-out) !important;
 }
 .force-animations .notification-badge-pulse::after {
   animation: notification-ripple var(--duration-pulse) linear infinite !important;
@@ -426,7 +430,7 @@
     transform: translateY(100%);
     transform-origin: bottom center;
   }
-  .notification-badge.open .notification-panel {
+  .notification-badge.is-open .notification-panel {
     transform: translateY(0);
   }
   .notification-panel-left {
@@ -451,10 +455,10 @@
   .notification-panel-title { font-size: var(--fs-lg); }
 
   .notification-item {
-    padding: 14px var(--space-4);
+    padding: var(--space-3) var(--space-4);
     min-height: 64px;
   }
-  .notification-item-unread { padding-left: 24px; }
+  .notification-item-unread { padding-left: var(--space-6); }
   .notification-item-unread::before {
     left: 8px;
     width: 8px;
@@ -475,7 +479,7 @@
   .notification-item-action  { width: 36px; height: 36px; }
 
   .notification-panel-footer {
-    padding: 14px var(--space-4) calc(14px + env(safe-area-inset-bottom));
+    padding: var(--space-3) var(--space-4) calc(var(--space-3) + env(safe-area-inset-bottom));
     flex-direction: column;
     gap: var(--space-2);
   }
@@ -484,7 +488,7 @@
     width: 100%;
     text-align: center;
     padding: var(--space-3) var(--space-4);
-    min-height: 44px;
+    min-height: var(--touch-target-min);
   }
 
   .notification-empty       { padding: var(--space-12) var(--space-6); }
@@ -494,7 +498,7 @@
 
 @media (max-width: 479px) {
   .notification-item {
-    padding: var(--space-3) 14px;
+    padding: var(--space-3);
     gap: var(--space-2);
   }
   .notification-item-icon  { width: 40px; height: 40px; }

@@ -43,6 +43,16 @@
   color: var(--color-text-secondary);
 }
 
+/* Subtle — самый тихий бейдж: акцентный tint вместо заливки. Применяется
+   там, где пометка сопровождает заголовок и не должна с ним спорить
+   (карточки витрины index.html, ссылка на даташит в каталоге).
+   Класс был в разметке двух страниц, но правила в библиотеке не имел —
+   бейдж рисовался сплошной акцентной заливкой. */
+.badge-subtle {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
 /* Semantic */
 .badge-success { background: var(--color-success); }
 .badge-warning { background: var(--color-warning); }
@@ -83,10 +93,31 @@
   border: var(--border-w-strong) solid var(--color-surface);
 }
 
-/* ====================== Тёмная тема ====================== */
+/* ====================== Тёмная тема ======================
+   В dark заливки светлые, поэтому подпись становится тёмной. Базовое
+   правило относится к АКЦЕНТНОМУ бейджу и берёт его парный токен;
+   семантические варианты перечислены отдельно и красятся near-black
+   --color-bg (приём .dark .btn-danger из buttons.css): --color-accent-text
+   это индиго-950, и на зелёной или красной заливке он читается как чужой
+   оттенок, а не как «текст на акценте». */
 .dark .badge,
 [data-theme="dark"] .badge {
   color: var(--color-accent-text);
+}
+.dark .badge-success,
+.dark .badge-warning,
+.dark .badge-error,
+.dark .badge-info,
+[data-theme="dark"] .badge-success,
+[data-theme="dark"] .badge-warning,
+[data-theme="dark"] .badge-error,
+[data-theme="dark"] .badge-info {
+  color: var(--color-bg);  /* near-black на светлой семантической заливке */
+}
+.dark .badge-subtle,
+[data-theme="dark"] .badge-subtle {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
 }
 .dark .badge-secondary,
 [data-theme="dark"] .badge-secondary {

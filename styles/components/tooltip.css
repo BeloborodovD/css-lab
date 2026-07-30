@@ -32,11 +32,17 @@
    ========================================================================== */
 
 /* Палитра пузыря. Стрелка берёт цвет отсюда же — отдельного списка цветов
-   на каждую сторону и каждый вариант больше нет. */
+   на каждую сторону и каждый вариант больше нет.
+   Полукатет стрелки — тоже локальное свойство блока (тот же приём слоя 4,
+   что и у цвета): величина не принадлежит ни одной глобальной шкале
+   (--space-* начинается с 4px и растёт шагом 4), а перечислять её числом
+   в семи правилах — ровно тот дефект, из-за которого файл держал матрицу
+   «сторона × размер». Размеры sm/lg переопределяют только это свойство. */
 [data-tooltip],
 .tooltip-popup {
   --tooltip-bg: var(--color-text);
   --tooltip-fg: var(--color-surface);
+  --tooltip-arrow: 5px;
 }
 
 [data-tooltip]::before,
@@ -59,7 +65,7 @@
 .tooltip-popup::after {
   content: '';
   position: absolute;
-  border: 5px solid transparent;
+  border: var(--tooltip-arrow) solid transparent;
 }
 
 /* ==========================================================================
@@ -266,21 +272,21 @@ button[data-tooltip],
 /* ==========================================================================
    4. Размеры и цветовые варианты — общие для обоих носителей
    ========================================================================== */
+[data-tooltip].tooltip-sm,
+.tooltip-popup.tooltip-sm { --tooltip-arrow: 4px; }
 [data-tooltip].tooltip-sm::before,
 .tooltip-popup.tooltip-sm {
   padding: var(--space-1) var(--space-2);
   font-size: var(--fs-xs);
 }
-[data-tooltip].tooltip-sm::after,
-.tooltip-popup.tooltip-sm::after { border-width: 4px; }
 
+[data-tooltip].tooltip-lg,
+.tooltip-popup.tooltip-lg { --tooltip-arrow: 6px; }
 [data-tooltip].tooltip-lg::before,
 .tooltip-popup.tooltip-lg {
   padding: var(--space-3) var(--space-4);
   font-size: var(--fs-sm);
 }
-[data-tooltip].tooltip-lg::after,
-.tooltip-popup.tooltip-lg::after { border-width: 6px; }
 
 /* Light — светлая панель поверх контента: elevation уровень 2 */
 [data-tooltip].tooltip-light,

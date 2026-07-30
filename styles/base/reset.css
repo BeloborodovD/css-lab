@@ -8,6 +8,8 @@
   box-sizing: border-box;
 }
 
+/* 16px — корень шкалы rem, а не ступень типографики: токеном не выражается
+   (токены --fs-* сами задаются в px от него) */
 html {
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
@@ -17,9 +19,44 @@ body {
   font-family: var(--font-sans);
   background: var(--bg);
   color: var(--text);
-  line-height: 1.5;
+  line-height: var(--lh-normal);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Заголовки — на шкалу --fs-*. До этого h1–h6 держали браузерные em-размеры
+   (2em…0.67em от 16px), то есть шли мимо типографической шкалы: h1 давал
+   32px — ступени с таким кеглем в шкале нет вовсе, h6 — 10.7px, мельче
+   --fs-xs. Соответствие взято из самих определений токенов в variables.css
+   («--fs-lg — заголовки H4», «--fs-xl — H3», «--fs-2xl — H2», «--fs-3xl —
+   H1 страниц»); --fs-4xl остаётся hero-ступенью и назначается классом
+   (.hub-title), а не тегом.
+   Вес не задаём: браузерный bold сохранён, брендовые темы перекрывают его
+   сами (themes/*.css). Компонентные заголовки (.card-title, .modal-title,
+   .spec-section__title) имеют класс и по специфичности бьют эти правила. */
+h1 { font-size: var(--fs-3xl); }
+h2 { font-size: var(--fs-2xl); }
+h3 { font-size: var(--fs-xl); }
+h4 { font-size: var(--fs-lg); }
+h5 { font-size: var(--fs-md); }
+h6 { font-size: var(--fs-base); }
+
+h1,
+h2,
+h3 {
+  line-height: var(--lh-tight);
+}
+h4,
+h5,
+h6 {
+  line-height: var(--lh-snug);
+}
+
+/* Трекинг зависит от кегля (RULES ui-motion-craft §8): крупный текст
+   ужимается, мелкий остаётся нейтральным */
+h1,
+h2 {
+  letter-spacing: var(--tracking-tight);
 }
 
 img,
@@ -68,7 +105,7 @@ ol {
 
 /* Focus states (AutoTrassir) */
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: var(--border-w-strong) solid var(--accent);
   outline-offset: 2px;
 }
 
@@ -76,7 +113,8 @@ ol {
   outline: none;
 }
 
-/* Scrollbar (AutoTrassir dark theme) */
+/* Scrollbar (AutoTrassir dark theme).
+   8px — размер системного контрола, а не ступень дизайн-шкалы (§5.3) */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -88,7 +126,7 @@ ol {
 
 ::-webkit-scrollbar-thumb {
   background: var(--muted);
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
 }
 
 ::-webkit-scrollbar-thumb:hover {

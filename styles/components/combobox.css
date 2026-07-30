@@ -6,6 +6,11 @@
    - dropdown с shadow + 1px border
    - tags = chip с accent-soft
    - все цвета через токены, dark внутри
+
+   Нейминг состояний: только is-* (§2.2). Дореформенные двойники .open,
+   .selected/.combobox-option-selected и .highlighted удалены вместе с
+   последними потребителями в main.js и разметке витрины — раскрытие это
+   .is-open, выбор .is-selected, клавиатурная подсветка .is-highlighted.
    ========================================================================== */
 
 .combobox {
@@ -39,7 +44,6 @@
 
 .combobox-trigger:focus,
 .combobox-trigger:focus-visible,
-.combobox.open .combobox-trigger,
 .combobox.is-open .combobox-trigger {
   border-color: var(--color-accent);
   box-shadow: var(--shadow-focus);
@@ -74,7 +78,6 @@
   transition: transform var(--duration-dropdown) var(--ease-in-out);
 }
 .combobox-arrow svg { width: 16px; height: 16px; }
-.combobox.open .combobox-arrow,
 .combobox.is-open .combobox-arrow { transform: rotate(180deg); }
 
 .combobox-clear {
@@ -92,11 +95,11 @@
   cursor: pointer;
   flex-shrink: 0;
   opacity: 0;
-  transition: opacity var(--t-fast) var(--ease),
-              background var(--t-fast) var(--ease);
+  transition: opacity var(--duration-press) var(--ease-out),
+              background var(--duration-press) var(--ease-out);
 }
 .combobox-trigger:hover .combobox-clear,
-.combobox.has-value .combobox-clear { opacity: 1; }
+.combobox.is-filled .combobox-clear { opacity: 1; }
 
 .combobox-clear:hover {
   background: var(--color-surface-active);
@@ -135,7 +138,6 @@
   overflow: hidden;
 }
 
-.combobox.open .combobox-dropdown,
 .combobox.is-open .combobox-dropdown {
   opacity: 1;
   visibility: visible;
@@ -213,7 +215,7 @@
 }
 
 .combobox-option:hover,
-.combobox-option.highlighted {
+.combobox-option.is-highlighted {
   background: var(--color-surface-elevated-hover);
   color: var(--color-text);
 }
@@ -230,14 +232,12 @@
   box-shadow: var(--shadow-focus);
 }
 
-.combobox-option.selected,
 .combobox-option.is-selected {
   background: var(--color-accent-soft);
   color: var(--color-accent);
   font-weight: var(--fw-medium);
 }
 
-.combobox-option.selected .combobox-option-check,
 .combobox-option.is-selected .combobox-option-check { opacity: 1; }
 
 .combobox-option-content {
@@ -272,7 +272,6 @@
   flex-shrink: 0;
 }
 .combobox-option-icon svg { width: 100%; height: 100%; }
-.combobox-option.selected .combobox-option-icon,
 .combobox-option.is-selected .combobox-option-icon { color: var(--color-accent); }
 
 .combobox-option-check {
@@ -328,8 +327,8 @@
   opacity: 0.7;
   cursor: pointer;
   flex-shrink: 0;
-  transition: opacity var(--t-fast) var(--ease),
-              background var(--t-fast) var(--ease);
+  transition: opacity var(--duration-press) var(--ease-out),
+              background var(--duration-press) var(--ease-out);
 }
 .combobox-tag-remove:hover {
   opacity: 1;
@@ -364,17 +363,15 @@
   border: var(--border-w-strong) solid var(--color-border-strong);
   border-radius: var(--radius-xs);
   flex-shrink: 0;
-  transition: border-color var(--t-fast) var(--ease),
-              background var(--t-fast) var(--ease);
+  transition: border-color var(--duration-press) var(--ease-out),
+              background var(--duration-press) var(--ease-out);
 }
 
-.combobox-option.selected .combobox-option-checkbox,
 .combobox-option.is-selected .combobox-option-checkbox {
   background: var(--color-accent);
   border-color: var(--color-accent);
 }
 
-.combobox-option.selected .combobox-option-checkbox::after,
 .combobox-option.is-selected .combobox-option-checkbox::after {
   content: "";
   width: 10px;
@@ -410,14 +407,14 @@
   background: transparent;
   cursor: pointer;
   border-radius: var(--radius-sm);
-  transition: background var(--t-fast) var(--ease);
+  transition: background var(--duration-press) var(--ease-out);
 }
 .combobox-group-toggle:hover { background: var(--color-surface-hover); }
 
 .combobox-group-toggle-icon {
   width: 12px;
   height: 12px;
-  transition: transform var(--t-fast) var(--ease);
+  transition: transform var(--duration-press) var(--ease-out);
 }
 .combobox-group.collapsed .combobox-group-toggle-icon { transform: rotate(-90deg); }
 .combobox-group.collapsed .combobox-group-options { display: none; }
@@ -496,7 +493,6 @@
 }
 
 .combobox.error .combobox-trigger:focus,
-.combobox.error.open .combobox-trigger,
 .combobox.error.is-open .combobox-trigger {
   /* Прозрачный контур рядом с box-shadow-кольцом: в forced-colors тень
      вырезается, а контур система перекрашивает в Highlight */
@@ -543,7 +539,7 @@
   color: var(--color-accent);
   font-size: var(--fs-sm);
   cursor: pointer;
-  transition: background var(--t-fast) var(--ease);
+  transition: background var(--duration-press) var(--ease-out);
 }
 .combobox-create:hover { background: var(--color-accent-soft); }
 
@@ -572,7 +568,7 @@
   background: transparent;
   color: var(--color-accent);
   cursor: pointer;
-  transition: background var(--t-fast) var(--ease);
+  transition: background var(--duration-press) var(--ease-out);
 }
 .combobox-footer-btn:hover { background: var(--color-accent-soft); }
 .combobox-footer-btn:focus-visible {
@@ -584,9 +580,9 @@
 /* ==================== Mobile ==================== */
 @media (max-width: 767px) {
   .combobox-trigger {
-    min-height: 44px;
+    min-height: var(--touch-target-min);
     padding: var(--space-3) var(--space-3);
-    font-size: 16px; /* iOS no-zoom */
+    font-size: var(--fs-lg); /* 16px — iOS не зумит поле от этой ступени */
   }
   .combobox-dropdown {
     position: fixed;
@@ -605,7 +601,6 @@
                 visibility var(--duration-modal-exit) var(--ease-drawer),
                 transform var(--duration-modal-exit) var(--ease-drawer);
   }
-  .combobox.open .combobox-dropdown,
   .combobox.is-open .combobox-dropdown {
     transform: translateY(0);
     transition-duration: var(--duration-modal);
@@ -623,7 +618,7 @@
     padding: var(--space-3) var(--space-4);
     min-height: 48px;
   }
-  .combobox-search-input { font-size: 16px; }
+  .combobox-search-input { font-size: var(--fs-lg); }
 }
 
 /* ==================== Reduced motion ==================== */

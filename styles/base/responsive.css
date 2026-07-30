@@ -5,6 +5,16 @@
    1. Breakpoint CSS Variables
    ============================================= */
 
+/* Шкала брейкпоинтов — ДЕКЛАРАЦИЯ, а не рабочие переменные, и это её
+   единственная законная роль: var() внутри @media спецификацией не
+   поддерживается, поэтому в медиазапросах значения стоят числом
+   (479/767/768/1023/1024/1279/1280 — соседний min-width минус 1px).
+   Токены оставлены сознательно: на них ссылается белый список литералов
+   (§5.4 css-architecture-craft) как на первоисточник — удалить их значит
+   сделать правило «изобретать значения вне этой шкалы нельзя» ссылкой в
+   пустоту, а шкалу — устной договорённостью. Потребителей через var() у
+   них нет и не будет; в отчёте о токенах-сиротах они проходят как
+   документация, а не как дефект. */
 :root {
   --breakpoint-xs: 320px;
   --breakpoint-sm: 480px;
@@ -25,17 +35,23 @@
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 16px;
-  padding-right: 16px;
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
 }
 
 .container-fluid {
   width: 100%;
-  padding-left: 16px;
-  padding-right: 16px;
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
 }
 
-/* Container max-widths at breakpoints */
+/* Container max-widths at breakpoints.
+   Ступени ширины выведены из шкалы брейкпоинтов: breakpoint − 2 поля
+   (480−32, 768−48, 1024−64, 1280−80, 1536−96). Токенами не выражены —
+   единственный существующий токен ширины --max-content-w (1280px) описывает
+   другую величину (потолок контентной колонки, не ступень контейнера).
+   Ступени --container-* заведены не будут без решения по составу шкалы —
+   строка в pipeline/backlog.md. */
 @media (min-width: 480px) {
   .container {
     max-width: 448px;
@@ -45,13 +61,13 @@
 @media (min-width: 768px) {
   .container {
     max-width: 720px;
-    padding-left: 24px;
-    padding-right: 24px;
+    padding-left: var(--space-6);
+    padding-right: var(--space-6);
   }
 
   .container-fluid {
-    padding-left: 24px;
-    padding-right: 24px;
+    padding-left: var(--space-6);
+    padding-right: var(--space-6);
   }
 }
 
@@ -64,13 +80,13 @@
 @media (min-width: 1280px) {
   .container {
     max-width: 1200px;
-    padding-left: 32px;
-    padding-right: 32px;
+    padding-left: var(--space-8);
+    padding-right: var(--space-8);
   }
 
   .container-fluid {
-    padding-left: 32px;
-    padding-right: 32px;
+    padding-left: var(--space-8);
+    padding-right: var(--space-8);
   }
 }
 
@@ -291,96 +307,96 @@
    5. Spacing Responsive Utilities
    ============================================= */
 
-/* Gap utilities */
+/* Gap utilities — шкала --space-* (была продублирована числами) */
 .gap-2-mobile {
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .gap-4-mobile {
-  gap: 16px;
+  gap: var(--space-4);
 }
 
 @media (min-width: 768px) {
   .gap-2-mobile {
-    gap: 12px;
+    gap: var(--space-3);
   }
 
   .gap-4-mobile {
-    gap: 20px;
+    gap: var(--space-5);
   }
 
   .gap-4-tablet {
-    gap: 16px;
+    gap: var(--space-4);
   }
 
   .gap-6-tablet {
-    gap: 24px;
+    gap: var(--space-6);
   }
 }
 
 @media (min-width: 1024px) {
   .gap-6-desktop {
-    gap: 24px;
+    gap: var(--space-6);
   }
 
   .gap-8-desktop {
-    gap: 32px;
+    gap: var(--space-8);
   }
 }
 
 /* Padding utilities */
 .p-2-mobile {
-  padding: 8px;
+  padding: var(--space-2);
 }
 
 .p-4-mobile {
-  padding: 16px;
+  padding: var(--space-4);
 }
 
 @media (min-width: 768px) {
   .p-2-mobile {
-    padding: 12px;
+    padding: var(--space-3);
   }
 
   .p-4-mobile {
-    padding: 20px;
+    padding: var(--space-5);
   }
 
   .p-4-tablet {
-    padding: 16px;
+    padding: var(--space-4);
   }
 
   .p-6-tablet {
-    padding: 24px;
+    padding: var(--space-6);
   }
 }
 
 @media (min-width: 1024px) {
   .p-6-desktop {
-    padding: 24px;
+    padding: var(--space-6);
   }
 
   .p-8-desktop {
-    padding: 32px;
+    padding: var(--space-8);
   }
 }
 
 /* Margin utilities */
 .m-2-mobile {
-  margin: 8px;
+  margin: var(--space-2);
 }
 
 .m-4-mobile {
-  margin: 16px;
+  margin: var(--space-4);
 }
 
 @media (min-width: 768px) {
   .m-2-mobile {
-    margin: 12px;
+    margin: var(--space-3);
   }
 
   .m-4-mobile {
-    margin: 20px;
+    margin: var(--space-5);
   }
 }
 
@@ -574,32 +590,32 @@ h6.fluid, .h6-fluid {
    ============================================= */
 
 .stack-mobile > * + * {
-  margin-top: 12px;
+  margin-top: var(--space-3);
 }
 
 @media (min-width: 768px) {
   .stack-mobile > * + * {
-    margin-top: 16px;
+    margin-top: var(--space-4);
   }
 }
 
 .stack-sm-mobile > * + * {
-  margin-top: 8px;
+  margin-top: var(--space-2);
 }
 
 @media (min-width: 768px) {
   .stack-sm-mobile > * + * {
-    margin-top: 12px;
+    margin-top: var(--space-3);
   }
 }
 
 .stack-lg-mobile > * + * {
-  margin-top: 16px;
+  margin-top: var(--space-4);
 }
 
 @media (min-width: 768px) {
   .stack-lg-mobile > * + * {
-    margin-top: 24px;
+    margin-top: var(--space-6);
   }
 }
 
@@ -695,6 +711,7 @@ h6.fluid, .h6-fluid {
   scrollbar-width: thin;
 }
 
+/* 6px — размер системного контрола (§5.3), не ступень шкалы */
 .scroll-x::-webkit-scrollbar {
   height: 6px;
 }
@@ -705,7 +722,7 @@ h6.fluid, .h6-fluid {
 
 .scroll-x::-webkit-scrollbar-thumb {
   background: var(--border);
-  border-radius: 3px;
+  border-radius: var(--radius-xs);
 }
 
 /* Hide scrollbar on mobile */
@@ -735,55 +752,17 @@ h6.fluid, .h6-fluid {
 }
 
 /* =============================================
-   15. Bottom Sheet Base
-   ============================================= */
-
-.bottom-sheet {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: var(--panel);
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
-  transform: translateY(100%);
-  transition: transform var(--transition-slow);
-  z-index: 1000;
-  max-height: 90vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.bottom-sheet.open {
-  transform: translateY(0);
-}
-
-.bottom-sheet-handle {
-  width: 36px;
-  height: 4px;
-  background: var(--border);
-  border-radius: 2px;
-  margin: 12px auto;
-  flex-shrink: 0;
-}
-
-.bottom-sheet-content {
-  flex: 1;
-  overflow-y: auto;
-  padding: 0 16px 16px;
-  padding-bottom: calc(16px + env(safe-area-inset-bottom));
-}
-
-/* Dark theme */
-.dark .bottom-sheet {
-  background: var(--dark-panel);
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
-}
-
-.dark .bottom-sheet-handle {
-  background: var(--dark-border);
-}
+   15. Bottom Sheet Base — удалён
+   =============================================
+   Здесь лежала ещё одна реализация нижнего листа (.bottom-sheet,
+   -handle, -content и её тёмная тема). Вхождений в разметке, main.js и
+   e2e — ноль (grep по *.html/*.js/*.css); нижний лист в библиотеке один —
+   вариант .drawer--sheet с полоской-захватом .drawer__grabber
+   (components/drawer.css). Заодно ушли: z-index 1000 мимо шкалы --z-*,
+   размеры 36/4/2/12/16px мимо --space-*, тень литералом, «выключатель»
+   transition: none в prefers-reduced-motion (запрещён RULES ui-motion §6)
+   и обращения к несуществующим токенам --dark-panel / --dark-border —
+   они не объявлены нигде, то есть тёмная тема листа не работала вовсе. */
 
 /* =============================================
    16. Overlay Utilities
@@ -799,11 +778,16 @@ h6.fluid, .h6-fluid {
     position: fixed;
     inset: 0;
     background: var(--color-overlay);
+    /* 4px — лёгкое размытие подложки; токен --blur-glass (12px) описывает
+       другой материал (frosted-панель шапки) и здесь не подходит */
     backdrop-filter: blur(4px);
-    z-index: 999;
+    z-index: var(--z-drawer);
     opacity: 0;
     visibility: hidden;
-    transition: opacity var(--transition), visibility var(--transition);
+    /* PURPOSE: preventing a jarring change — подложка проявляется, а не
+       возникает. Легаси-пара --transition заменена на motion-токены */
+    transition: opacity var(--duration-dropdown) var(--ease-out),
+                visibility var(--duration-dropdown) var(--ease-out);
   }
 
   .overlay-mobile.active {
@@ -812,21 +796,23 @@ h6.fluid, .h6-fluid {
   }
 }
 
-.dark .overlay-mobile {
-  background: rgba(0, 0, 0, 0.7);
-}
+/* Отдельного тёмного правила подложке не нужно: --color-overlay сам
+   становится плотнее в тёмной теме (rgba(0,0,0,0.60), а при
+   prefers-reduced-transparency — 0.72). Прежний литерал rgba(0,0,0,0.7)
+   игнорировал оба этих решения. */
 
 /* =============================================
    17. Reduced Motion Support
    ============================================= */
 
 @media (prefers-reduced-motion: reduce) {
-  .bottom-sheet {
-    transition: none;
-  }
-
+  /* «Мягче, но не ноль» (RULES ui-motion §6): подложка продолжает
+     проявляться кроссфейдом — он объясняет, что за ней контент заблокирован.
+     Прежний transition: none был выключателем и снимал эту подсказку.
+     Длительность общего смягчения задаёт base/motion.css */
   .overlay-mobile {
-    transition: none;
+    transition: opacity var(--duration-exit) var(--ease-out),
+                visibility var(--duration-exit) var(--ease-out);
   }
 
   .scroll-snap-x {
@@ -850,9 +836,5 @@ h6.fluid, .h6-fluid {
   .container {
     max-width: 100%;
     padding: 0;
-  }
-
-  .bottom-sheet {
-    display: none !important;
   }
 }

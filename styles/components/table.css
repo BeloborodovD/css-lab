@@ -61,7 +61,7 @@
 
 /* Hover */
 .table--hover tbody tr {
-  transition: background var(--t-fast) var(--ease);
+  transition: background var(--duration-press) var(--ease-out);
 }
 .table--hover tbody tr:hover {
   background: var(--color-surface-hover);
@@ -131,11 +131,9 @@
   border-right: none;
 }
 
-/* Highlighted row */
-.table tbody tr.is-highlighted {
-  background: var(--color-warning-soft);
-  font-weight: var(--fw-medium);
-}
+/* Подсветки строки здесь нет: состояние .is-highlighted не ставил ни один
+   скрипт и не встречалось в разметке (§2.3.1 — состояние без сеттера).
+   Выделенная строка в библиотеке одна — .is-selected ниже. */
 
 /* Selected row */
 .table tbody tr.is-selected {
@@ -203,7 +201,7 @@
   width: 16px;
   pointer-events: none;
   opacity: 0;
-  transition: opacity var(--t-fast) var(--ease);
+  transition: opacity var(--duration-press) var(--ease-out);
   z-index: var(--z-raised);
 }
 .table-responsive::before {

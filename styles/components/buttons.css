@@ -22,10 +22,10 @@
   cursor: pointer;
   white-space: nowrap;
   user-select: none;
-  transition: color var(--t-fast) var(--ease),
-              background-color var(--t-fast) var(--ease),
-              border-color var(--t-fast) var(--ease),
-              box-shadow var(--t-fast) var(--ease);
+  transition: color var(--duration-press) var(--ease-out),
+              background-color var(--duration-press) var(--ease-out),
+              border-color var(--duration-press) var(--ease-out),
+              box-shadow var(--duration-press) var(--ease-out);
 }
 
 .btn:hover {
@@ -218,13 +218,23 @@
   border-right: none;
 }
 
-/* ====================== Loading ====================== */
-.btn-loading {
+/* ====================== Loading ======================
+   Состояние ставит JS, поэтому имя каноническое — .is-loading (§2.4).
+   Прежнее .btn-loading удалено; страницы pages/login.html и pages/form.html
+   уже ставили именно .is-loading и своего правила в библиотеке не имели.
+   Встроенный индикатор рисуется только у кнопки БЕЗ собственного .spinner
+   в разметке: иначе на входе было бы два индикатора, а подпись «Входим…»
+   гасилась бы color: transparent.
+   Цвета кольца на заливке — унаследованное исключение §5.6 (индикатор поверх
+   произвольного акцента, пара к .spinner-white). */
+.btn.is-loading {
   position: relative;
-  color: transparent !important;
   pointer-events: none;
 }
-.btn-loading::before {
+.btn.is-loading:not(:has(.spinner)) {
+  color: transparent !important;
+}
+.btn.is-loading:not(:has(.spinner))::before {
   content: '';
   position: absolute;
   top: 50%;
@@ -232,13 +242,13 @@
   width: 16px;
   height: 16px;
   margin: -8px 0 0 -8px;
-  border: 2px solid var(--color-border);
+  border: var(--border-w-strong) solid var(--color-border);
   border-top-color: var(--color-accent);
   border-radius: var(--radius-full);
   animation: btn-spin 0.7s linear infinite;
 }
-.btn-primary.btn-loading::before,
-.btn-danger.btn-loading::before {
+.btn-primary.is-loading:not(:has(.spinner))::before,
+.btn-danger.is-loading:not(:has(.spinner))::before {
   border-color: rgba(255, 255, 255, 0.3);
   border-top-color: #fff;
 }
@@ -250,13 +260,16 @@
 .btn-block-mobile { display: inline-flex; }
 
 @media (max-width: 767px) {
+  /* Крупная тач-цель — токен --touch-target-min (44px, base/responsive.css).
+     Мелкая и крупная кнопки берут квадраты иконочной шкалы: 36px
+     (--icon-size) и 48px (--icon-size-lg) — те же величины, что были числом */
   .btn {
-    min-height: 44px;
-    min-width: 44px;
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
   }
-  .btn-sm   { min-height: 36px; padding: var(--space-2) var(--space-3); }
-  .btn-lg   { min-height: 48px; padding: var(--space-3) var(--space-6); }
-  .btn-icon { width: 44px; height: 44px; }
+  .btn-sm   { min-height: var(--icon-size);    padding: var(--space-2) var(--space-3); }
+  .btn-lg   { min-height: var(--icon-size-lg); padding: var(--space-3) var(--space-6); }
+  .btn-icon { width: var(--touch-target-min); height: var(--touch-target-min); }
 
   .btn-block-mobile {
     display: flex;

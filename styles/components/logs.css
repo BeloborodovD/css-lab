@@ -58,7 +58,7 @@
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
   border-bottom: var(--border-w) solid var(--color-border-subtle);
-  transition: background var(--t-fast) var(--ease);
+  transition: background var(--duration-press) var(--ease-out);
 }
 
 .log-entry:hover {
@@ -72,7 +72,7 @@
   border: none;
   color: var(--color-text-muted);
   cursor: pointer;
-  transition: color var(--t-fast) var(--ease);
+  transition: color var(--duration-press) var(--ease-out);
 }
 
 .log-entry-toggle:hover { color: var(--color-text); }
@@ -166,8 +166,8 @@
   font-size: var(--fs-sm);
   font-family: inherit;
   cursor: pointer;
-  transition: border-color var(--t-fast) var(--ease),
-              box-shadow var(--t-fast) var(--ease);
+  transition: border-color var(--duration-press) var(--ease-out),
+              box-shadow var(--duration-press) var(--ease-out);
 }
 
 .log-controls-select:focus {
@@ -194,8 +194,8 @@
   font-size: var(--fs-sm);
   font-family: inherit;
   cursor: pointer;
-  transition: background var(--t-fast) var(--ease),
-              color var(--t-fast) var(--ease);
+  transition: background var(--duration-press) var(--ease-out),
+              color var(--duration-press) var(--ease-out);
 }
 
 .view-mode-btn:hover { color: var(--color-text); }
@@ -220,7 +220,7 @@
   font-weight: var(--fw-medium);
   font-family: inherit;
   cursor: pointer;
-  transition: background var(--t-fast) var(--ease);
+  transition: background var(--duration-press) var(--ease-out);
 }
 
 .log-refresh-btn:hover { background: var(--color-accent-hover); }

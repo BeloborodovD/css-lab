@@ -32,10 +32,50 @@ _meta:
       и e2e-локаторами, поэтому 30.07 сведены только `.tag` → `.chip`.
       `.filter-pill` остаётся отдельным компонентом осознанно (пара
       «поле: значение», всегда удаляемая) — это записано в его паспорте.
-- [ ] Миграция combobox на нейминг `is-*` (сейчас двойные алиасы `.open`/`.is-open`).
 - [ ] Тёмная тема для страниц `print-forms.html` и `ral-colors.html`.
-- [ ] Заголовкам h1–h6 не назначена токен-шкала `--fs-*` — размеры браузерные
-      (2em…0.67em), в паспортах и типографике это видно как пробел.
+- [ ] Базовый кегль текста не привязан к шкале: `body` в `base/reset.css`
+      наследует браузерные 16px, тогда как `--fs-base` = 14px. Абзацы без
+      класса живут мимо шкалы; правка ломающая (поедут все страницы) —
+      нужно решение по составу шкалы, а не точечная замена.
+- [ ] Ступени ширины `.container` (448/720/960/1200/1440) записаны числами:
+      токенов ширины контейнера нет, а единственный существующий
+      `--max-content-w` (1280px) описывает другую величину. Либо шкала
+      `--container-*`, либо явная запись в белый список литералов §5.
+- [ ] Fluid-типографика в `base/responsive.css` (`.text-fluid-*`, `h1.fluid`
+      и соседи) задаёт кегль литералами внутри `clamp()` — параллельная шкала
+      в rem рядом со шкалой `--fs-*` в px.
+- [ ] `base/animations.css` заводит собственные словари движения
+      (`--duration-instant…-slowest`, `--ease-standard/-decelerate/-accelerate/
+      -bounce/-spring/-smooth`). С именами `motion.css` они не пересекаются,
+      поэтому бандл не ломают, но это второй словарь кривых и длительностей
+      в репозитории — при разборе легаси-зверинца решать вместе с файлом.
+- [ ] В шкале `--space-*` нет ступени 2px, и она нужна в двух ролях:
+      `padding: 2px var(--space-2)` у `kbd` (`themes/dark.css`) и
+      `outline-offset: 2px` у фокус-кольца (`base/reset.css`,
+      `themes/dark.css`, компоненты). Либо ступень `--space-0-5`, либо
+      отдельный токен отступа контура — решать вместе с владельцем шкалы.
+- [ ] Легаси-длительности без потребителей: `--transition-fast`,
+      `--transition-slow`, `--t-slower` (последний потребитель
+      `--transition-slow` ушёл вместе с `.bottom-sheet`). Вычищаются вместе
+      со всем легаси-мостом `--t-*`/`--transition*`, не поодиночке.
+- [ ] Подставить заведённый `--footer-h` (48px) вместо чисел, подобранных под
+      высоту фиксированного подвала: `components/app-layout.css` —
+      `.app-layout { padding-bottom: var(--space-16) }` и
+      `.width-control { bottom: var(--space-20) }`; проверить заодно нижнюю
+      кромку панелей в `components/sidebar.css`. Файлы вне зоны правки
+      волны «база и темы».
+- [ ] `.overlay-mobile` (`base/responsive.css`) — ещё одна подложка рядом с
+      `.sidebar-overlay`, `.drawer__overlay` и `layout.css .overlay`;
+      состояние легаси-формы `.active`. Вхождений в разметке нет.
+- [ ] Классы в разметке витрины без реализации в CSS: `.palette-group-title`,
+      `.brand-card__title` (`components.html`). После перевода заголовков на
+      шкалу они получают кегль от тега — проверить, тот ли это вид.
+- [ ] Свод `.claude/skills/css-architecture-craft/RULES.md` разошёлся с кодом
+      после разбора сирот: §1.1 перечисляет удалённый `--max-prose-w`, §1.4 —
+      удалённые `--t-instant`/`--max-prose-w` и уже неверный `--icon-size-lg`
+      (у него появился потребитель); не упомянуты `--fw-light` и `--footer-h`,
+      а `--dark-*` — новое семейство примитивов тёмной палитры. Актуализация
+      свода — работа владельца скилла, не слоя стилей.
 
 ### Найдено при написании паспортов и скилла (2026-07-30)
 
@@ -54,21 +94,20 @@ _meta:
       Либо общий обработчик чипов-опций, либо явная пометка в паспорте.
 - [ ] `#open-command-palette` на витрине без обработчика — кнопка вызова
       палитры ничего не открывает.
-- [ ] `breadcrumbs.css` на легаси-токенах движения (`--t-fast`, `--ease`);
-      модификатор `.breadcrumbs-slash` повторяет поведение по умолчанию.
+- [ ] Модификатор `.breadcrumbs-slash` повторяет поведение по умолчанию.
+- [ ] Демо `file-upload` не реагирует на перетаскивание: обработчиков
+      dragenter/dragover/drop нет ни в `main.js`, ни на витрине, поэтому
+      состояние `[data-drag-over="true"]` вживую не воспроизвести.
+- [ ] `.notification-badge.is-open` — состояние без сеттера: панель уведомлений
+      на витрине показана статично инлайновым `style`, обработчика открытия
+      нет. Либо демо с триггером и сеттером, либо явная пометка в паспорте.
 
 #### Дубликаты (кандидаты на консолидацию)
 
-- [ ] Остатки пульса вне компонента `skeleton` (коллизия имён устранена —
-      `@keyframes skeleton-pulse` в бандле остался один, но однотипных
-      анимаций всё ещё несколько): `@keyframes pulse` в `base/utilities.css`;
-      `skeleton-pulse-dark` вместе с `.dark .skeleton` в `themes/dark.css`
-      (там же литерал `1.4s` и `--ease-in-out` на бесконечном индикаторе —
-      нужен `linear` и `--duration-pulse`); `search-result-card-pulse 1.4s
-      var(--ease-in-out)` в `search-result-card.css`; плюс
-      `.skeleton-*`/`.skeleton-card`/`.skeleton-shimmer` в
-      `base/animations.css`, который витрина подключает после `core.css` и
-      который бьёт компонент.
+- [ ] Свой `@keyframes` пульса у `search-result-card` остался
+      (`search-result-card-pulse`) — тайминг и кривая уже общие
+      (`--duration-pulse`, `linear`), но само имя дублирует
+      `skeleton-pulse`. Сводить — вместе с ревизией заглушек.
 - [ ] Нижний лист, переизобретённый вне компонента `drawer`:
       `notification-panel` и `picklist__panel--sheet`. Первый — чужая зона,
       второй — панель самого пиклиста (нет оверлея и ловушки фокуса, шторкой
@@ -81,70 +120,223 @@ _meta:
       `components/app-layout.css` (фиксированный подвал каркаса, вместе с
       `.footer-left/-center/-right/-nav/-version/-status`). Разводить роли или
       сводить — отдельной работой.
-- [ ] `layout.css .overlay` — третья подложка библиотеки рядом с
-      `.sidebar-overlay` и `.drawer__overlay`; вхождений в разметке ноль.
 - [ ] `components/app-layout.css` объявляет глобальные токены на `:root`
       (`--sidebar-width`, `--sidebar-w-left/-right`) — компонент не должен
       заводить глобальные имена (§1.2). Место им в `base/variables.css`.
 - [ ] Нижняя кромка панелей и каркаса привязана к высоте фиксированного подвала
       числом (`--space-16` подобран под факт) — нужен токен `--footer-h` рядом
       с `--header-h`.
-- [ ] Потолок ручного ресайза панели живёт в двух местах: `max-width: 50vw`
-      в CSS и `maxWidth = 500` в `main.js`.
-- [ ] `spinner.css .spinner-white` и мобильные литералы `40px` в `layout.css`
-      (`.header .btn-icon`) — остались вне шкалы токенов.
+- [ ] `spinner.css .spinner-white` и мобильные литералы `40px`/`36px` в
+      `layout.css` (`.header .btn-icon`) — остались вне шкалы токенов.
 - [ ] `app-layout.css` держит правило `.site-footer .footer-status-dot` —
       после переезда точки состояния на общий `.badge-dot` оно мёртвое.
       Файл был вне зоны правки, удалить отдельно.
-- [ ] Классы в разметке без реализации в CSS: `.badge-subtle`
-      (`index.html`, `pages/catalog.html`), `.notification-wrapper`
-      (был на витрине, разметка переведена на `.notification-badge`).
-- [ ] `.dark .badge` перекрашивает текст в акцентный у всех бейджей, включая
-      семантические: на красной или зелёной заливке это не цвет текста
-      «на акценте». Нужен разбор по вариантам.
-- [ ] `alerts.css` на легаси-токенах движения (`--t`, `--t-slow`, `--ease`) —
-      в общий список файлов-должников он не попал.
-- [ ] `tooltip.css`: размер стрелки задан литералами (5px база, 4px `sm`,
-      6px `lg`) — белым списком литералов §5 это не покрыто, нужен либо токен,
-      либо запись в исключения.
-- [ ] `tag-cloud.css` использует брейкпоинт `max-width: 640px` — значения нет
-      в шкале `--breakpoint-*` (479/767/1023/1279).
-- [ ] `.chip-remove` — цель 18px при требовании SC 2.5.8 ≥24px
-      (у `.filter-pill__remove` и `.alert-close` уже 24px).
 
 #### Долги закона (см. скилл css-architecture-craft)
 
-- [ ] Состояния без JS-сеттера: `.picklist__panel--top` (комментарий обещает JS),
-      `table.css .is-highlighted`.
-- [ ] Легаси-нейминг состояний: `.open`/`.is-open` дублями, `.chip-active`,
-      `.dropdown-item.active`, `.toast-enter/-exit`,
-      `.file-dropzone.drag-over`, `.btn-loading` — привести к `is-*`.
-      Отдельно: `.sidebar-nav-link.active` и `.sidebar-tag.active` остались
-      легаси-формой (JS витрины ставит `active`), классы-фолбэки
-      `.app-content.sidebar-left-open/-right-open/-both-open` и
-      `.search-bar.sidebar-none-open/-one-open/-both-open` — тоже состояния
-      без префикса.
-- [ ] Токены-сироты: `--t-instant`, `--z-base`, `--lh-loose`, `--space-24`,
-      `--icon-size-lg`, `--max-prose-w`, шкала `--breakpoint-*`.
-- [ ] Цветовые литералы вне белого списка: `chip`, `progress`, `steps`,
-      `swatch-picker`, `autotrassir`, `buttons`.
-- [ ] Кегль литералом (14 вхождений) и отступы мимо шкалы `--space-*` (~11).
-- [ ] `buttons.css` задаёт тач-цели числом (44/48/36px) при существующем
-      `--touch-target-min`.
-- [ ] Легаси-токены движения `--t`, `--t-fast`, `--ease` вместо
-      `--duration-*`/`--ease-out`: `footer`, `logs`, `pagination`,
-      `notification-badge`, `progress`, `search-result-card`, `layout`
-      (остался только в `.overlay`), `buttons`, `file-upload`, `tag-cloud`,
-      частично `modal`; сверх прежнего списка — `search`, `steps`, `table`,
-      `stats` (в группе Б они не правились: попутные улучшения запрещены).
-- [ ] `spinner.css .spinner-pulse` анимируется из `scale(0)` — прямой запрет
-      ui-motion-craft §3; бесконечные индикаторы используют `--ease-in-out`
-      там, где нужен `linear`.
-- [ ] `variables.css` держит полную копию блока `.dark` в
-      `@media (prefers-color-scheme: dark)` — правится в двух местах, кандидат
-      на рефактор.
+- [ ] Легаси-токены движения `--t*`/`--ease` остались в шести компонентах,
+      не входивших в зону слоя Б: `avatar`, `cards`, `command-palette`,
+      `date-picker`, `empty-state`, `tabs`. Плюс база: `--transition*`
+      в `base/utilities.css` и `base/responsive.css`.
+- [ ] Легаси-нейминг состояний за пределами разобранного списка:
+      `.dropdown.open` и `.popover.open` (`dropdown.css`),
+      `.date-picker.open` + `.selected/.today/.other-month/.range-*/.in-range`
+      (`date-picker.css`), `.search-input.has-value`, `.search-dropdown.open`,
+      `.search-dropdown-item.highlighted` (`search.css`),
+      `.view-mode-btn.active` (`logs.css`), `.step.completed/.active/.pending`
+      (`steps.css`), `.tab.active` / `.tab-panel.active` (`tabs.css`),
+      `.table-responsive.scroll-left/-right` (`table.css`),
+      `.combobox.has-value` в паспорте `search`. Все ставит JS.
+- [ ] Витринный переключатель размещения панели (`initPanelPlacementSwitch`
+      в `main.js`) навешивает `picklist__panel--sheet` и
+      `swatch-picker__panel--sheet` через `classList` — то есть JS трогает
+      `--`-модификатор (§2.3.2). Состояние `is-flipped` из этой связки уже
+      выведено; для листа нужен другой механизм демо (например, атрибут).
+- [ ] `base/animations.css` держит собственный `.btn-loading`/`.btn-loading.loading`
+      — после переименования состояния кнопки в `.is-loading` правило осталось
+      без потребителей. Файл — легаси-зверинец витрины, чужая зона.
+- [ ] Цветовые литералы вне белого списка, не входившие в зону слоя Б:
+      `toggle.css` (`rgba(255,255,255,0.7)`, `#fff` у подписей тумблера),
+      `table.css` (тени прокрутки `rgba(16,24,40,0.06)` и `rgba(0,0,0,0.4)`,
+      печатный блок `#333`/`#000`/`#f5f5f5` — печатный оформить как «бумажную
+      палитру» §5.8 либо через токены).
+- [ ] `buttons.css` в белом списке §5.6 записан как унаследованное исключение
+      (`rgba(255,255,255,0.3)` + `#fff` у кольца индикатора на заливке) —
+      в строке долгов он числился ошибочно. Либо оставить исключение, либо
+      завести пару токенов «индикатор на произвольной заливке» для него,
+      `spinner-white` и превью `file-upload` разом.
+- [ ] Отступы мимо шкалы, оставшиеся вне зоны: `inputs.css` (`40px` — это
+      `--space-10`, `20px` — `--space-5`, `44px` — `--touch-target-min`,
+      плюс внешкальные `6px`/`10px`/`14px`/`18px`), `tabs.css` (`14px`).
+      Повсеместный `2px` (≈25 вхождений) отдельной строкой уже записан выше —
+      ступени 2px в шкале нет.
+- [ ] Брейкпоинты вне шкалы `--breakpoint-*`: `layout.css` (`max-width: 374px`),
+      `app-layout.css` (`min-width: 769px` вместо 768), `nav.css`
+      (`max-width: 768px` — пересекается с `min-width: 768px`).
+- [ ] `empty-state.css`: бесконечная `empty-state-float 3s var(--ease-in-out)`.
+      Это не индикатор загрузки, а декоративное покачивание, поэтому под
+      правило «constant motion → linear» формально не попадает — нужен
+      вердикт: либо признать колебанием и оставить, либо снять как декор.
+- [ ] `progress.css`: `.progress-bar` анимирует `width`, а
+      `.progress-indeterminate-dual` — `left`/`width` в keyframes. Это
+      layout-свойства (RULES §5), нужен перевод на `transform: scaleX()`
+      с пересчётом раскладки полосы.
+- [ ] `notification-badge.css` объявляет `--notification-panel-width` и
+      `--notification-item-padding` на `:root` — компонент не имеет права
+      заводить глобальные имена (§1.2), как и `app-layout.css` выше.
 
 ## Сделано
+
+### Долги закона, слой Б — компоненты (2026-07-30)
+
+- [x] Цветовые литералы погашены токенами. `chip`: `#fff` у залитых
+      семантических чипов → `--color-text-on-accent`, подложка крестика →
+      `--color-accent-soft-hover` (и `--color-on-accent-strong` на залитом
+      чипе), из-за чего отдельное dark-правило крестика стало не нужно и
+      удалено. `progress`: блик и полоски → `--color-on-accent-strong` /
+      `--color-on-accent-soft`, подпись на полосе → `--color-text-on-accent`
+      с тенью `--color-on-accent-dim`. `steps`: `#fff` у шага-ошибки →
+      `--color-text-on-accent`. `swatch-picker`: галочка выбора → пара
+      неинвертируемых `--color-scrim-light` / `--color-on-scrim` (подложка —
+      произвольный цвет RAL, темы у неё нет). `autotrassir`: затемнение под
+      подписью кадра → `--color-overlay`. В `logs.css` цветовых литералов не
+      оказалось вовсе — строка беклога была неточной; `buttons.css` покрыт
+      унаследованным исключением §5.6 (см. открытую строку выше).
+- [x] Кегли и отступы переведены на шкалы: `file-upload` (24/18/32/18/14px →
+      `--fs-3xl/-xl/-4xl/-xl/-base`; 32px точной ступени не имеет, взята
+      ближайшая `--fs-4xl` 30px), `combobox` (16px «iOS no-zoom» → `--fs-lg`,
+      обе точки), `progress` (10px → ближайшая ступень `--fs-xs` 12px),
+      `notification-badge` (`14px` → `--space-3` как ближайшая ступень,
+      `20px` → `--space-5`, `24px` → `--space-6`).
+- [x] Тач-цели на токенах: `buttons.css` (44 → `--touch-target-min`,
+      36 → `--icon-size`, 48 → `--icon-size-lg`), `footer.css` и
+      `notification-badge.css` (44 → `--touch-target-min`), `combobox.css`
+      (44 → `--touch-target-min`). Крестик чипа `.chip-remove` вырос с 18px
+      до 24px — требование SC 2.5.8, как у `.picklist__chip-remove`,
+      `.filter-pill__remove` и `.alert-close`.
+- [x] Легаси-токены движения `--t*`/`--ease` заменены на `--duration-*` и
+      `--ease-out` в: `alerts`, `autotrassir`, `breadcrumbs`, `buttons`,
+      `chip`, `combobox`, `file-upload`, `footer`, `layout`, `logs`, `modal`,
+      `notification-badge`, `pagination`, `progress`, `search`,
+      `search-result-card`, `stats`, `steps`, `table`, `tag-cloud`.
+      Соответствие: `--t-fast` (0.12s) → `--duration-press` (160ms),
+      `--t` (0.18s) → `--duration-dropdown` (200ms), `--t-slow` (0.28s) →
+      `--duration-modal` (300ms); `--t-slower` (0.4s) в `autotrassir`
+      выходил за бюджет UI-анимации и сведён к `--duration-modal`.
+- [x] `spinner.css .spinner-pulse` больше не появляется из нулевого масштаба
+      (прямой запрет ui-motion-craft §3): цикл идёт от 0.95 наружу к 1.6.
+      Бесконечные индикаторы переведены с `--ease-in-out` на `linear`:
+      `spinner-smooth`, `spinner-dots-bounce`, `spinner-bars-stretch`,
+      `spinner-pulse`, `progress-shimmer`, `progress-indeterminate` (+ пара
+      dual), `file-progress-indeterminate`, `search-result-card-pulse`,
+      `card-shimmer`.
+- [x] Состояния приведены к `is-*` в обе стороны (CSS + `main.js` + разметка
+      витрины + страницы + e2e-локаторы): `.btn-loading` → `.btn.is-loading`
+      (с оговоркой `:not(:has(.spinner))`, чтобы не спорить со своим
+      индикатором страниц входа и формы), `.chip-active` →
+      `.chip-clickable.is-active` (у прежнего имени не было ни одного правила
+      в CSS — теперь состояние показывается), `.dropdown-item.active` →
+      `.is-active`, `.toast-enter/-exit` → `.toast.is-entering/.is-exiting`,
+      `.notification-badge.open` → `.is-open`, `.sidebar-nav-link.active` и
+      `.sidebar-tag.active` → `.is-active`,
+      `.app-content`/`.width-control`/`.search-bar` — `is-sidebar-*-open`.
+- [x] Комбобокс мигрирован целиком: двойники `.open`, `.selected`/
+      `.combobox-option-selected`, `.highlighted`/`.combobox-option-highlighted`
+      удалены, остались `.is-open`, `.is-selected`, `.is-highlighted`;
+      `.has-value` → `.is-filled`. Двойник `.nav-menu.open` тоже снят.
+      Двойных алиасов в библиотеке не осталось.
+- [x] `.picklist__panel--top` и `.swatch-picker__panel--top` переименованы в
+      состояние `.is-flipped` (§2.3.2: класс, который трогает `classList`,
+      не может начинаться с `--`; §2.6 свода описывал ровно этот случай).
+      Сеттер уже был — витринный переключатель размещения; `data-panel-variant`
+      и e2e переведены. На узком экране лист сильнее: добавлена пара правил
+      `--sheet.is-flipped`, чтобы размещение не раздваивалось.
+- [x] `table.css .is-highlighted` удалено: ни сеттера, ни вхождений в разметке,
+      а выделенная строка в библиотеке уже есть (`.is-selected`).
+- [x] `layout.css .overlay` удалена вместе с состоянием `.active` — третья
+      подложка библиотеки без единого вхождения в разметке; остаются
+      `.sidebar-overlay` и `.drawer__overlay`.
+- [x] Потолок ручного ресайза панели сведён к одному источнику: границы
+      объявлены в `.sidebar--resizable` (CSS), `main.js` читает их через
+      `getComputedStyle` на каждый жест. Прежние `minWidth = 220` /
+      `maxWidth = 500` из скрипта убраны — потолок 500px расходился с `50vw`.
+- [x] `tooltip.css`: размер стрелки вынесен в локальное свойство блока
+      `--tooltip-arrow` (тот же приём слоя 4, что и `--tooltip-bg/-fg`);
+      варианты `sm`/`lg` переопределяют только его.
+- [x] Брейкпоинты `max-width: 640px` в `search-result-card.css` и
+      `tag-cloud.css` приведены к шкале — `767px` (соседний `min-width: 768`
+      минус 1px, §5.4).
+- [x] `.badge-subtle` реализован (акцентный tint вместо заливки): класс был в
+      разметке `index.html` и `pages/catalog.html` без правила в библиотеке.
+      `.notification-wrapper` в разметке уже не встречается — строка закрыта
+      без правки.
+- [x] `.dark .badge` разведён по вариантам: базовое правило осталось за
+      акцентным бейджем, семантические (`success/warning/error/info`) в тёмной
+      теме красятся near-black `--color-bg` — на светлой семантической заливке
+      индиго-950 читался как чужой оттенок.
+- [x] `.file-dropzone.drag-over` удалён: носитель состояния —
+      `[data-drag-over="true"]`, а класс-двойник никем не ставился (§2.3.3).
+- [x] Попутно вскрылось и закрыто: `.dark .chip` (0,2,0, объявлено позже)
+      перебивало `.chip-selected` (0,1,0) и возвращало выбранному чипу
+      accent-soft вместе с тёмной подписью — заливка повторена в dark-правиле
+      выбора. Обнаружено при оживлении `.chip-clickable.is-active`.
+- [x] Реестр паспортов `docs/components.yaml` синхронизирован с новыми именами
+      состояний, модификаторов и списками токенов у всех затронутых записей.
+
+### Долги закона, слой А — база и темы (2026-07-30)
+
+- [x] Токены-сироты разобраны поимённо. Удалены: `--t-instant` (нулевая
+      ступень легаси-набора `--t-*` — «мгновенно» это отсутствие перехода,
+      а не длительность) и `--max-prose-w` (мера строки 72ch без единого
+      потребителя; ту же роль локально играет `.page-shell__sub`).
+      Оставлены с записанным обоснованием прямо у объявления: `--space-24`
+      и `--lh-loose` (крайние ступени шкал — дыра в шкале хуже неиспользуемой
+      ступени, 96px к тому же есть в карте `naming-lint.py`), `--z-base`
+      (нулевая ступень шкалы слоёв). `--icon-size-lg` сиротой быть перестал
+      сам — его читает `.width-control` в `app-layout.css`. Шкала
+      `--breakpoint-*` признана декларацией и оставлена: на неё как на
+      первоисточник ссылается белый список литералов §5.4, а `var()` в
+      медиазапросах не работает по спецификации — удаление превратило бы
+      правило «значения только из этой шкалы» в устную договорённость.
+- [x] Заголовкам h1–h6 назначена шкала `--fs-*` (`base/reset.css`):
+      24/20/18/16/15/14px по соответствию, записанному в самих комментариях
+      токенов, плюс интерлиньяж (`--lh-tight` у h1–h3, `--lh-snug` у h4–h6) и
+      ужатый трекинг у h1–h2. Вес оставлен браузерным — его задают брендовые
+      темы. Компонентные заголовки не поехали: у всех есть класс с
+      собственным кеглем, класс сильнее тега (проверено грепом по
+      `styles/components/**`, `styles/pages/**` и разметке).
+- [x] Тёмная тема сведена к одному источнику значений: блок
+      `[BLOCK:dark-palette-source]` в `variables.css` объявляет палитру
+      примитивами `--dark-*`, а `.dark, [data-theme="dark"]` и зеркало
+      `@media (prefers-color-scheme: dark)` только присваивают их
+      семантическим именам. Производные (`--shadow-focus*`, легаси
+      `--bg/--panel/--accent*`) остались в блоке `.dark` — носитель класса
+      может быть ниже `:root`; из медиа-зеркала они убраны намеренно: там
+      носитель тот же `:root`, и `var()` уже читает тёмные значения.
+      Механика бренда (`[BLOCK:brand-scope-derived]`, коммит 9a1712f) не
+      затронута.
+- [x] Скелетон-зверинец вычищен из базы и тем: из `base/animations.css`
+      удалены `.skeleton-wave/-shimmer/-text/-avatar/-card` и кадры
+      `skeleton-wave`/`skeleton-shimmer-wave` (файл подключается витриной
+      после `core.css` и бил компонент), из `base/utilities.css` — кадры
+      `pulse`/`spin` вместе с `.animate-pulse`/`.animate-spin`, из
+      `themes/dark.css` — `@keyframes skeleton-pulse-dark` и анимация на
+      `.dark .skeleton` (в теме остался только цвет заглушки). Канон —
+      `components/skeleton.css`: `skeleton-pulse`, `--duration-pulse`,
+      `linear`.
+- [x] Литералы в базе и темах погашены: отступы и зазоры адаптивных утилит,
+      контейнера и стеков — на `--space-*`; кегли утилит `.text-*` — на
+      `--fs-*`; веса — на `--fw-*`; `z-index` — на `--z-*`; интерлиньяж
+      `body`, скругления полос прокрутки, толщина границ — на токены;
+      легаси-пара `--transition` у мобильной подложки — на
+      `--duration-dropdown`/`--ease-out`. Оставлены с записанным
+      обоснованием: 16px корня rem, размеры системных полос прокрутки
+      (6/8/10px), ширины `.container`, `white`/`black` в печатном сбросе.
+- [x] Заведена ступень `--fw-light` (300): тема VEZA задавала вес основного
+      текста числом мимо шкалы.
+- [x] Заведён `--footer-h` (48px) рядом с `--header-h` — высота фиксированного
+      подвала каркаса. Потребители подставляются отдельной строкой беклога:
+      сами компоненты в эту волну не правились.
 
 ### Производные токены в скоупе бренда (2026-07-30)
 

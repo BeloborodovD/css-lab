@@ -57,10 +57,11 @@
   margin-right: var(--sidebar-w-right);
 }
 
-/* Fallback классы (для браузеров без :has()) */
-.app-content.sidebar-left-open  { margin-left: var(--sidebar-w-left); }
-.app-content.sidebar-right-open { margin-right: var(--sidebar-w-right); }
-.app-content.sidebar-both-open {
+/* Fallback классы (для браузеров без :has()) — состояние ставит JS,
+   поэтому имена канонические, с префиксом is- (§2.2) */
+.app-content.is-sidebar-left-open  { margin-left: var(--sidebar-w-left); }
+.app-content.is-sidebar-right-open { margin-right: var(--sidebar-w-right); }
+.app-content.is-sidebar-both-open {
   margin-left: var(--sidebar-w-left);
   margin-right: var(--sidebar-w-right);
 }
@@ -197,7 +198,7 @@ body:has(> .app-layout > .sidebar--right.is-open) .width-control {
   right: calc(var(--sidebar-width) + var(--space-5));
 }
 
-.width-control.sidebar-right-open {
+.width-control.is-sidebar-right-open {
   right: calc(var(--sidebar-width) + var(--space-5));
 }
 
@@ -253,9 +254,9 @@ body.width-full .app-content > .container {
   .app-layout:has(> .sidebar--left.is-open) > .app-content,
   .app-layout:has(> .sidebar--right.is-open) > .app-content,
   .app-layout:has(> .sidebar--left.is-open):has(> .sidebar--right.is-open) > .app-content,
-  .app-content.sidebar-left-open,
-  .app-content.sidebar-right-open,
-  .app-content.sidebar-both-open {
+  .app-content.is-sidebar-left-open,
+  .app-content.is-sidebar-right-open,
+  .app-content.is-sidebar-both-open {
     margin-left: 0 !important;
     margin-right: 0 !important;
   }
@@ -269,7 +270,7 @@ body.width-full .app-content > .container {
 
   .app-layout:has(> .sidebar--right.is-open) ~ .width-control,
   body:has(> .app-layout > .sidebar--right.is-open) .width-control,
-  .width-control.sidebar-right-open {
+  .width-control.is-sidebar-right-open {
     right: var(--space-4);
   }
 }

@@ -157,11 +157,14 @@
 .toast.error .toast-progress   { background: var(--color-error); }
 
 /* ==================== Animations ==================== */
-/* PURPOSE: spatial consistency — тост входит и выходит через один и тот же край;
+/* Состояния входа и ухода ставит JS, поэтому имена канонические —
+   .is-entering / .is-exiting (прежние .toast-enter / .toast-exit читались
+   как модификаторы разметки, хотя жили секунды).
+   PURPOSE: spatial consistency — тост входит и выходит через один и тот же край;
    выход быстрее входа (240 против 300): система отвечает быстро.
    Выход тоже на кривой out — «вялая» кривая на выходе всегда дефект (RULES §1) */
-.toast-enter { animation: toast-slide-in-right var(--duration-modal) var(--ease-out) forwards; }
-.toast-exit  { animation: toast-slide-out-right var(--duration-modal-exit) var(--ease-out) forwards; }
+.toast.is-entering { animation: toast-slide-in-right var(--duration-modal) var(--ease-out) forwards; }
+.toast.is-exiting  { animation: toast-slide-out-right var(--duration-modal-exit) var(--ease-out) forwards; }
 
 @keyframes toast-slide-in-right {
   from { opacity: 0; transform: translateX(100%); }
@@ -173,13 +176,13 @@
   to   { opacity: 0; transform: translateX(100%); }
 }
 
-.toast-container.top-left .toast-enter,
-.toast-container.bottom-left .toast-enter {
+.toast-container.top-left .toast.is-entering,
+.toast-container.bottom-left .toast.is-entering {
   animation: toast-slide-in-left var(--duration-modal) var(--ease-out) forwards;
 }
 
-.toast-container.top-left .toast-exit,
-.toast-container.bottom-left .toast-exit {
+.toast-container.top-left .toast.is-exiting,
+.toast-container.bottom-left .toast.is-exiting {
   animation: toast-slide-out-left var(--duration-modal-exit) var(--ease-out) forwards;
 }
 
@@ -193,13 +196,13 @@
   to   { opacity: 0; transform: translateX(-100%); }
 }
 
-.toast-container.top-center .toast-enter,
-.toast-container.bottom-center .toast-enter {
+.toast-container.top-center .toast.is-entering,
+.toast-container.bottom-center .toast.is-entering {
   animation: toast-fade-in var(--duration-modal) var(--ease-out) forwards;
 }
 
-.toast-container.top-center .toast-exit,
-.toast-container.bottom-center .toast-exit {
+.toast-container.top-center .toast.is-exiting,
+.toast-container.bottom-center .toast.is-exiting {
   animation: toast-fade-out var(--duration-modal-exit) var(--ease-out) forwards;
 }
 
@@ -234,10 +237,10 @@
 /* Мягче, но не «в ноль»: слайд заменён коротким fade. Выход раньше ошибочно
    использовал keyframe появления — тост «проявлялся» вместо исчезновения */
 @media (prefers-reduced-motion: reduce) {
-  .toast-enter {
+  .toast.is-entering {
     animation: toast-fade-in var(--duration-dropdown) var(--ease-out) forwards;
   }
-  .toast-exit {
+  .toast.is-exiting {
     animation: toast-fade-out var(--duration-exit) var(--ease-out) forwards;
   }
   .toast-progress { animation: none; }

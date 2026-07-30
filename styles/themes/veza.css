@@ -74,7 +74,7 @@
    остаются 400, иначе на 13-14px light нечитаем */
 [data-brand="veza"] p,
 [data-brand="veza"] .font-body-light {
-  font-weight: 300;
+  font-weight: var(--fw-light);
 }
 /* </BLOCK:theme.veza.headings> */
 

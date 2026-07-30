@@ -277,6 +277,9 @@
   --space-12:   48px;
   --space-16:   64px;
   --space-20:   80px;
+  /* Верхняя ступень шкалы. Потребителей в библиотеке пока нет, но дыра в
+     шкале хуже неиспользованной ступени: на 96px её ищет и naming-lint.py
+     (карта px → имя токена), и разметка страниц-потребителей */
   --space-24:   96px;
 
   /* ======================================================================
@@ -302,8 +305,15 @@
   --lh-snug:    1.4;
   --lh-normal:  1.5;
   --lh-relaxed: 1.65;
+  /* Крайняя ступень интерлиньяжа: длинный текст на узкой мере. Потребителя
+     в библиотеке нет — ступень сохранена намеренно, шкала из 5 значений
+     полная, обрывать её на relaxed значит заставить потребителя писать 1.8 числом */
   --lh-loose:   1.8;
 
+  /* Ступень light (300) заведена под брендбук VEZA: основной текст — Roboto
+     Light. Без неё тема писала вес числом мимо шкалы. Мелкие UI-надписи
+     (13-14px) на light не переводятся — нечитаемо, см. themes/veza.css */
+  --fw-light:   300;
   --fw-regular: 400;
   --fw-medium:  500;
   --fw-semi:    600;
@@ -316,8 +326,9 @@
   /* ======================================================================
      TRANSITIONS — длительности-легаси. Кривые НЕ объявляются здесь:
      единственный источник кривых — base/motion.css (ui-motion-craft).
-     --ease оставлен как легаси-алиас для старых компонентов. */
-  --t-instant:  0;
+     --ease оставлен как легаси-алиас для старых компонентов.
+     Ступень --t-instant (0) удалена: потребителей не было, а «мгновенно»
+     в motion-контракте не длительность, а отсутствие перехода. */
   --t-fast:     0.12s;
   --t:          0.18s;
   --t-slow:     0.28s;
@@ -326,7 +337,11 @@
   --ease:           var(--ease-out);   /* легаси-алиас → кривая motion.css */
 
   /* ======================================================================
-     Z-INDEX SCALE — диапазоны, не точные значения, чтобы можно было вставлять */
+     Z-INDEX SCALE — диапазоны, не точные значения, чтобы можно было вставлять.
+     --z-base (0) — нулевая ступень шкалы: имя для «слоя страницы», от которого
+     отсчитываются остальные. Потребителя нет и, скорее всего, не будет —
+     элемент в базовом слое z-index не объявляет вовсе; ступень оставлена,
+     чтобы шкала читалась целиком и 0 не писался числом */
   --z-base:        0;
   --z-raised:      10;
   --z-sticky:      100;
@@ -339,6 +354,12 @@
   /* ======================================================================
      LAYOUT */
   --header-h:       64px;
+  /* Высота фиксированного подвала каркаса (.site-footer в app-layout.css):
+     padding 12+12 + строка --fs-sm + кромка ≈ 45px, округлено вверх до
+     ступени шкалы. Заведён, чтобы нижняя кромка панелей и каркаса
+     перестала подбираться числом (--space-16 подобран «по факту»).
+     Потребители подставляются отдельной задачей — см. pipeline/backlog.md */
+  --footer-h:       48px;
   --sidebar-w:      280px;
   --sidebar-w-sm:   220px;
   --drawer-w:       420px;
@@ -347,7 +368,9 @@
      --drawer-w, — тултип не должен читаться как панель. */
   --tooltip-max-w:  360px;
   --max-content-w:  1280px;
-  --max-prose-w:    72ch;
+  /* --max-prose-w (72ch) удалён: ни одного потребителя. Меру строки задают
+     сами блоки текста (layout/page-shell.css .page-shell__sub). Понадобится
+     общая — заводится заново по §1.3 скилла css-architecture-craft */
   --icon-size:      36px;
   --icon-size-sm:   24px;
   --icon-size-lg:   48px;
@@ -382,100 +405,117 @@
      - Accent muted: #60a5fa (blue-400) вместо #2563eb. На тёмном bg яркий
        blue-600 теряет читаемость (3.8:1), blue-400 даёт 7.4:1 AAA.
      - Тени почти не работают — используем border более явные.
+
+   УСТРОЙСТВО (было: две полные копии значений — блок .dark и его зеркало
+   в @media (prefers-color-scheme: dark); правка одного цвета требовала двух
+   правок, расхождение проявлялось только при системной тёмной теме):
+     1. [BLOCK:dark-palette-source] — единственный источник ЗНАЧЕНИЙ, набор
+        примитивов --dark-*. Объявлен на :root, поэтому виден обоим скоупам.
+     2. .dark, [data-theme="dark"] — ручное переключение: присваивает
+        семантические имена из источника.
+     3. @media (prefers-color-scheme: dark) — системное предпочтение:
+        те же присваивания на :root.
+   Правка цвета — одна, в источнике. Новый тёмный токен — строка в источнике
+   плюс присваивание в оба скоупа (имена по-прежнему перечисляются дважды:
+   в CSS нет способа применить один набор объявлений в двух селекторах).
    ========================================================================== */
 
-.dark,
-[data-theme="dark"] {
+/* [BLOCK:dark-palette-source]
+   Примитивы тёмной палитры. Компоненты и темы их НЕ читают: --dark-* не
+   семантический слой, а сырьё для присваиваний ниже (§1.2 css-architecture-craft).
+   Контрасты посчитаны на --dark-color-bg (#18181b). */
+:root {
   /* Luxury warm-black neutral base (zinc-900 шкала, НЕ синеватый).
      Постепенное warming surface-уровней — глаз отдыхает, ощущается дороже */
-  --color-bg:               #18181b;  /* zinc-900 — neutral warm-black */
-  --color-surface:          #1c1c1f;  /* +1 уровень — карточки */
-  --color-surface-hover:    #222225;
-  --color-surface-active:   #28282b;
-  --color-surface-sunken:   #0d0d0e;  /* ниже bg — inputs, code */
+  --dark-color-bg:               #18181b;  /* zinc-900 — neutral warm-black */
+  --dark-color-surface:          #1c1c1f;  /* +1 уровень — карточки */
+  --dark-color-surface-hover:    #222225;
+  --dark-color-surface-active:   #28282b;
+  --dark-color-surface-sunken:   #0d0d0e;  /* ниже bg — inputs, code */
 
   /* Elevation ladder: bg #18181b → surface #1c1c1f → elevated #222226 →
      overlay #27272c. Монотонный подъём светлоты (Material overlays 5/8/12%).
      Контрасты текста проверены: muted #a1a1aa на elevated 6.2:1, на overlay 5.8:1 */
-  --color-surface-elevated:       #222226;  /* dropdown, popover, toast, listbox */
-  --color-surface-overlay:        #27272c;  /* modal, drawer, command-palette */
-  --color-surface-elevated-hover: #2c2c31;  /* hover пунктов на elevated/overlay */
+  --dark-color-surface-elevated:       #222226;  /* dropdown, popover, toast, listbox */
+  --dark-color-surface-overlay:        #27272c;  /* modal, drawer, command-palette */
+  --dark-color-surface-elevated-hover: #2c2c31;  /* hover пунктов на elevated/overlay */
 
   /* Borders в dark играют роль теней. Тёплые zinc-оттенки */
-  --color-border:           #2a2a2e;
-  --color-border-strong:    #3f3f46;  /* zinc-700 */
-  --color-border-subtle:    #222225;
+  --dark-color-border:           #2a2a2e;
+  --dark-color-border-strong:    #3f3f46;  /* zinc-700 */
+  --dark-color-border-subtle:    #222225;
 
   /* Text. Off-white premium-style на zinc-900 (#18181b):
      #f4f4f5 = 16.1:1 (AAA) — off-white, без halation на OLED
      #d4d4d8 = 12.0:1 (AAA) — zinc-300
      #a1a1aa = 6.9:1  (AA+) — zinc-400
      #71717a = 3.9:1  (large/decorative only) — zinc-500 */
-  --color-text:             #f4f4f5;  /* zinc-100 — off-white primary */
-  --color-text-secondary:   #d4d4d8;  /* zinc-300 — body */
-  --color-text-muted:       #a1a1aa;  /* zinc-400 — AAA 7:1 */
-  --color-text-disabled:    #71717a;  /* zinc-500 */
-  --color-text-on-accent:   #ffffff;
+  --dark-color-text:             #f4f4f5;  /* zinc-100 — off-white primary */
+  --dark-color-text-secondary:   #d4d4d8;  /* zinc-300 — body */
+  --dark-color-text-muted:       #a1a1aa;  /* zinc-400 — AAA 7:1 */
+  --dark-color-text-disabled:    #71717a;  /* zinc-500 */
+  --dark-color-text-on-accent:   #ffffff;
 
   /* Accent — Indigo-400 для dark (на 1 шаг светлее light=indigo-800).
      #818cf8 на bg=#18181b: 7.2:1 — AAA. Не vivid, благородный. */
-  --color-accent:           #818cf8;  /* indigo-400 */
-  --color-accent-hover:     #a5b4fc;  /* indigo-300 */
-  --color-accent-active:    #6366f1;  /* indigo-500 */
-  --color-accent-soft:      rgba(129, 140, 248, 0.10);
-  --color-accent-soft-hover: rgba(129, 140, 248, 0.16);
-  --color-accent-text:      #1e1b4b;  /* indigo-950 — dark text на light accent */
-  --color-accent-border:    rgba(129, 140, 248, 0.35);
+  --dark-color-accent:           #818cf8;  /* indigo-400 */
+  --dark-color-accent-hover:     #a5b4fc;  /* indigo-300 */
+  --dark-color-accent-active:    #6366f1;  /* indigo-500 */
+  --dark-color-accent-soft:      rgba(129, 140, 248, 0.10);
+  --dark-color-accent-soft-hover: rgba(129, 140, 248, 0.16);
+  --dark-color-accent-text:      #1e1b4b;  /* indigo-950 — dark text на light accent */
+  --dark-color-accent-border:    rgba(129, 140, 248, 0.35);
 
   /* Semantic — desaturated, единый OKLCH-ramp: L 0.73–0.78, C 0.09–0.115.
      Success/error выровнены с warning/info, неон green-400/red-400 ушёл */
-  --color-success:          #6fc98d;  /* ~oklch(0.76 0.10 150) — 8.8:1 на bg */
-  --color-success-hover:    #91d6a9;
-  --color-success-soft:     rgba(111, 201, 141, 0.10);
-  --color-success-text:     #bbf7d0;
+  --dark-color-success:          #6fc98d;  /* ~oklch(0.76 0.10 150) — 8.8:1 на bg */
+  --dark-color-success-hover:    #91d6a9;
+  --dark-color-success-soft:     rgba(111, 201, 141, 0.10);
+  --dark-color-success-text:     #bbf7d0;
 
-  --color-warning:          #d4a373;  /* warm desaturated amber, не fbbf24 (vivid) */
-  --color-warning-hover:    #e9c598;
-  --color-warning-soft:     rgba(212, 163, 115, 0.10);
-  --color-warning-text:     #fde68a;
+  --dark-color-warning:          #d4a373;  /* warm desaturated amber, не fbbf24 (vivid) */
+  --dark-color-warning-hover:    #e9c598;
+  --dark-color-warning-soft:     rgba(212, 163, 115, 0.10);
+  --dark-color-warning-text:     #fde68a;
 
-  --color-error:            #ee8b84;  /* ~oklch(0.73 0.11 25) — 7.3:1 на bg */
-  --color-error-hover:      #f4a9a3;
-  --color-error-soft:       rgba(238, 139, 132, 0.10);
-  --color-error-text:       #fecaca;
+  --dark-color-error:            #ee8b84;  /* ~oklch(0.73 0.11 25) — 7.3:1 на bg */
+  --dark-color-error-hover:      #f4a9a3;
+  --dark-color-error-soft:       rgba(238, 139, 132, 0.10);
+  --dark-color-error-soft-hover: rgba(238, 139, 132, 0.16);
+  --dark-color-error-text:       #fecaca;
 
   /* Info — тот же hue что accent (indigo), на 1 шаг светлее */
-  --color-info:             #a5b4fc;  /* indigo-300 */
-  --color-info-hover:       #c7d2fe;
-  --color-info-soft:        rgba(165, 180, 252, 0.10);
-  --color-info-text:        #c7d2fe;
+  --dark-color-info:             #a5b4fc;  /* indigo-300 */
+  --dark-color-info-hover:       #c7d2fe;
+  --dark-color-info-soft:        rgba(165, 180, 252, 0.10);
+  --dark-color-info-text:        #c7d2fe;
 
   /* Source colors — Подход 1: монохромная zinc-шкала.
      Те же оттенки нейтральной шкалы (zinc-300/400/500), различие через value */
-  --color-source-wiki:        #a1a1aa;  /* zinc-400 — средний */
-  --color-source-wiki-soft:   rgba(161, 161, 170, 0.10);
-  --color-source-wiki-text:   #d4d4d8;  /* zinc-300 — на wiki-soft */
+  --dark-color-source-wiki:        #a1a1aa;  /* zinc-400 — средний */
+  --dark-color-source-wiki-soft:   rgba(161, 161, 170, 0.10);
+  --dark-color-source-wiki-text:   #d4d4d8;  /* zinc-300 — на wiki-soft */
 
-  --color-source-forum:       #71717a;  /* zinc-500 — самый тёмный из трёх (dim) */
-  --color-source-forum-soft:  rgba(113, 113, 122, 0.10);
-  --color-source-forum-text:  #a1a1aa;  /* zinc-400 */
+  --dark-color-source-forum:       #71717a;  /* zinc-500 — самый тёмный из трёх (dim) */
+  --dark-color-source-forum-soft:  rgba(113, 113, 122, 0.10);
+  --dark-color-source-forum-text:  #a1a1aa;  /* zinc-400 */
 
-  --color-source-catalog:     #d4d4d8;  /* zinc-300 — самый светлый */
-  --color-source-catalog-soft: rgba(212, 212, 216, 0.08);
-  --color-source-catalog-text: #e4e4e7; /* zinc-200 */
+  --dark-color-source-catalog:      #d4d4d8;  /* zinc-300 — самый светлый */
+  --dark-color-source-catalog-soft: rgba(212, 212, 216, 0.08);
+  --dark-color-source-catalog-text: #e4e4e7; /* zinc-200 */
 
   /* Highlight в dark — тёмный warm amber tint, НЕ яркий pastel */
-  --color-highlight:          #3f3a26;  /* dark warm amber background */
-  --color-highlight-strong:   #57502f;  /* активная цитата */
-  --color-highlight-text:     #fde68a;  /* amber-200 — читаемый текст */
+  --dark-color-highlight:          #3f3a26;  /* dark warm amber background */
+  --dark-color-highlight-strong:   #57502f;  /* активная цитата */
+  --dark-color-highlight-text:     #fde68a;  /* amber-200 — читаемый текст */
 
   /* Confidence — подогнаны под новые semantic */
-  --color-confidence-high:        #6fc98d;
-  --color-confidence-high-soft:   rgba(111, 201, 141, 0.10);
-  --color-confidence-medium:      #d4a373;
-  --color-confidence-medium-soft: rgba(212, 163, 115, 0.10);
-  --color-confidence-low:         #71717a;  /* zinc-500 */
-  --color-confidence-low-soft:    rgba(113, 113, 122, 0.10);
+  --dark-color-confidence-high:        #6fc98d;
+  --dark-color-confidence-high-soft:   rgba(111, 201, 141, 0.10);
+  --dark-color-confidence-medium:      #d4a373;
+  --dark-color-confidence-medium-soft: rgba(212, 163, 115, 0.10);
+  --dark-color-confidence-low:         #71717a;  /* zinc-500 */
+  --dark-color-confidence-low-soft:    rgba(113, 113, 122, 0.10);
 
   /* Brand colors — на dark подсветлены до читаемого варианта.
      Оригинальные #2E8A3C и #136b5c слишком тёмные на dark-bg #18181b
@@ -483,67 +523,189 @@
      RAL/Pantone эталоны остаются для печати — light-варианты в брендбуке. */
 
   /* VEZA dark — подсветлённый green (hue 130° бренда, не tailwind-минт) */
-  --brand-veza:                       #5fc16f;  /* AAA 7.9:1 на dark, hue сохранён */
-  --brand-veza-soft:                  rgba(95, 193, 111, 0.15);
-  --brand-veza-text:                  #18181b;  /* near-black на светлом green */
-  --brand-veza-secondary:             #a1a1aa;  /* zinc-400 — подсветлённый neutral grey */
-  --brand-veza-secondary-soft:        rgba(161, 161, 170, 0.15);
-  --brand-veza-secondary-text:        #18181b;
+  --dark-brand-veza:                       #5fc16f;  /* AAA 7.9:1 на dark, hue сохранён */
+  --dark-brand-veza-soft:                  rgba(95, 193, 111, 0.15);
+  --dark-brand-veza-text:                  #18181b;  /* near-black на светлом green */
+  --dark-brand-veza-secondary:             #a1a1aa;  /* zinc-400 — подсветлённый neutral grey */
+  --dark-brand-veza-secondary-soft:        rgba(161, 161, 170, 0.15);
+  --dark-brand-veza-secondary-text:        #18181b;
 
   /* Уралэлектро dark — графит RAL 5008 подсветлён до AA (hue 196° сохранён) */
-  --brand-uralelectro:                #8fa6ae;  /* светлый графит — 6.9:1 на dark */
-  --brand-uralelectro-soft:           rgba(143, 166, 174, 0.15);
-  --brand-uralelectro-text:           #10181b;  /* near-black на светлом графите */
-  --brand-uralelectro-dark:           #7a939c;  /* на dark играет роль hover/active */
-  --brand-uralelectro-dark-soft:      rgba(122, 147, 156, 0.15);
-  --brand-uralelectro-light:          #a9bcc3;  /* ещё светлее — для secondary/tints */
-  --brand-uralelectro-light-soft:     rgba(169, 188, 195, 0.18);
+  --dark-brand-uralelectro:                #8fa6ae;  /* светлый графит — 6.9:1 на dark */
+  --dark-brand-uralelectro-soft:           rgba(143, 166, 174, 0.15);
+  --dark-brand-uralelectro-text:           #10181b;  /* near-black на светлом графите */
+  --dark-brand-uralelectro-dark:           #7a939c;  /* на dark играет роль hover/active */
+  --dark-brand-uralelectro-dark-soft:      rgba(122, 147, 156, 0.15);
+  --dark-brand-uralelectro-light:          #a9bcc3;  /* ещё светлее — для secondary/tints */
+  --dark-brand-uralelectro-light-soft:     rgba(169, 188, 195, 0.18);
 
   /* HEMAH dark — тил подсветлён до AA, голубой CTA остаётся */
-  --brand-hemah:                      #6fb3c7;  /* светлый тил — 6.5:1 на dark */
-  --brand-hemah-soft:                 rgba(111, 179, 199, 0.15);
-  --brand-hemah-text:                 #0d2229;  /* near-black на светлом тиле */
-  --brand-hemah-dark:                 #4d97ad;
-  --brand-hemah-dark-soft:            rgba(77, 151, 173, 0.15);
-  --brand-hemah-highlight:            #2fc6f6;
-  --brand-hemah-highlight-soft:       rgba(47, 198, 246, 0.18);
-  --brand-hemah-highlight-text:       #0d2229;
+  --dark-brand-hemah:                      #6fb3c7;  /* светлый тил — 6.5:1 на dark */
+  --dark-brand-hemah-soft:                 rgba(111, 179, 199, 0.15);
+  --dark-brand-hemah-text:                 #0d2229;  /* near-black на светлом тиле */
+  --dark-brand-hemah-dark:                 #4d97ad;
+  --dark-brand-hemah-dark-soft:            rgba(77, 151, 173, 0.15);
+  --dark-brand-hemah-highlight:            #2fc6f6;
+  --dark-brand-hemah-highlight-soft:       rgba(47, 198, 246, 0.18);
+  --dark-brand-hemah-highlight-text:       #0d2229;
 
   /* Shadows — в dark тень тонет, поэтому первый слой — полупрозрачное светлое
      кольцо 1px (RULES.md §8: ring, не сплошной border), оно очерчивает
      elevated-поверхность; семантическую границу несёт border-strong */
-  --shadow-xs:    0 1px 2px rgba(0, 0, 0, 0.30);
-  --shadow-sm:    0 1px 2px rgba(0, 0, 0, 0.30),
-                  0 1px 3px rgba(0, 0, 0, 0.40);
-  --shadow:       0 0 0 1px rgba(255, 255, 255, 0.06),
-                  0 4px 8px -2px rgba(0, 0, 0, 0.40),
-                  0 2px 4px -1px rgba(0, 0, 0, 0.30);
-  --shadow-lg:    0 0 0 1px rgba(255, 255, 255, 0.07),
-                  0 12px 24px -6px rgba(0, 0, 0, 0.50),
-                  0 4px 8px -2px rgba(0, 0, 0, 0.30);
-  --shadow-xl:    0 0 0 1px rgba(255, 255, 255, 0.08),
-                  0 24px 48px -12px rgba(0, 0, 0, 0.60),
-                  0 8px 16px -4px rgba(0, 0, 0, 0.40);
-  --shadow-focus: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-accent);
-  --shadow-focus-error: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-error);
+  --dark-shadow-xs:    0 1px 2px rgba(0, 0, 0, 0.30);
+  --dark-shadow-sm:    0 1px 2px rgba(0, 0, 0, 0.30),
+                       0 1px 3px rgba(0, 0, 0, 0.40);
+  --dark-shadow:       0 0 0 1px rgba(255, 255, 255, 0.06),
+                       0 4px 8px -2px rgba(0, 0, 0, 0.40),
+                       0 2px 4px -1px rgba(0, 0, 0, 0.30);
+  --dark-shadow-lg:    0 0 0 1px rgba(255, 255, 255, 0.07),
+                       0 12px 24px -6px rgba(0, 0, 0, 0.50),
+                       0 4px 8px -2px rgba(0, 0, 0, 0.30);
+  --dark-shadow-xl:    0 0 0 1px rgba(255, 255, 255, 0.08),
+                       0 24px 48px -12px rgba(0, 0, 0, 0.60),
+                       0 8px 16px -4px rgba(0, 0, 0, 0.40);
 
   /* Оверлеи в dark: подложка глубже, on-accent слои инвертированы
      (акцент в dark светлый → слои на нём тёмные) */
-  --color-overlay:            rgba(0, 0, 0, 0.60);
-  --color-on-accent-soft:     rgba(24, 24, 27, 0.14);
-  --color-on-accent-strong:   rgba(24, 24, 27, 0.26);
-  --color-on-accent-border:   rgba(24, 24, 27, 0.30);
-  --color-on-accent-dim:      rgba(255, 255, 255, 0.30);
-  --color-swatch-inset:       rgba(255, 255, 255, 0.14);
-  --color-error-soft-hover:   rgba(238, 139, 132, 0.16);
+  --dark-color-overlay:            rgba(0, 0, 0, 0.60);
+  --dark-color-on-accent-soft:     rgba(24, 24, 27, 0.14);
+  --dark-color-on-accent-strong:   rgba(24, 24, 27, 0.26);
+  --dark-color-on-accent-border:   rgba(24, 24, 27, 0.30);
+  --dark-color-on-accent-dim:      rgba(255, 255, 255, 0.30);
+  --dark-color-swatch-inset:       rgba(255, 255, 255, 0.14);
 
   /* Glass/veil в dark — тёмное стекло (никогда светлое translucent на тёмном) */
-  --surface-glass:            rgba(24, 24, 27, 0.72);
-  --surface-glass-border:     rgba(255, 255, 255, 0.08);
-  --surface-veil:             rgba(24, 24, 27, 0.70);
+  --dark-surface-glass:            rgba(24, 24, 27, 0.72);
+  --dark-surface-glass-border:     rgba(255, 255, 255, 0.08);
+  --dark-surface-veil:             rgba(24, 24, 27, 0.70);
 
   /* Приглушение фото/видео в dark — по умолчанию, opt-out через .img-keep */
-  --media-dim:                brightness(0.9);
+  --dark-media-dim:                brightness(0.9);
+}
+/* </BLOCK:dark-palette-source> */
+
+/* Ручное переключение темы: класс .dark (или data-theme) на html либо body.
+   Производные (--shadow-focus*, легаси --bg/--accent*) пересобираются здесь
+   обязательно: носитель класса может быть НИЖЕ :root, а var() разрешается
+   на элементе объявления — см. [BLOCK:brand-scope-derived] в конце файла. */
+.dark,
+[data-theme="dark"] {
+  --color-bg:               var(--dark-color-bg);
+  --color-surface:          var(--dark-color-surface);
+  --color-surface-hover:    var(--dark-color-surface-hover);
+  --color-surface-active:   var(--dark-color-surface-active);
+  --color-surface-sunken:   var(--dark-color-surface-sunken);
+
+  --color-surface-elevated:       var(--dark-color-surface-elevated);
+  --color-surface-overlay:        var(--dark-color-surface-overlay);
+  --color-surface-elevated-hover: var(--dark-color-surface-elevated-hover);
+
+  --color-border:           var(--dark-color-border);
+  --color-border-strong:    var(--dark-color-border-strong);
+  --color-border-subtle:    var(--dark-color-border-subtle);
+
+  --color-text:             var(--dark-color-text);
+  --color-text-secondary:   var(--dark-color-text-secondary);
+  --color-text-muted:       var(--dark-color-text-muted);
+  --color-text-disabled:    var(--dark-color-text-disabled);
+  --color-text-on-accent:   var(--dark-color-text-on-accent);
+
+  --color-accent:            var(--dark-color-accent);
+  --color-accent-hover:      var(--dark-color-accent-hover);
+  --color-accent-active:     var(--dark-color-accent-active);
+  --color-accent-soft:       var(--dark-color-accent-soft);
+  --color-accent-soft-hover: var(--dark-color-accent-soft-hover);
+  --color-accent-text:       var(--dark-color-accent-text);
+  --color-accent-border:     var(--dark-color-accent-border);
+
+  --color-success:          var(--dark-color-success);
+  --color-success-hover:    var(--dark-color-success-hover);
+  --color-success-soft:     var(--dark-color-success-soft);
+  --color-success-text:     var(--dark-color-success-text);
+
+  --color-warning:          var(--dark-color-warning);
+  --color-warning-hover:    var(--dark-color-warning-hover);
+  --color-warning-soft:     var(--dark-color-warning-soft);
+  --color-warning-text:     var(--dark-color-warning-text);
+
+  --color-error:            var(--dark-color-error);
+  --color-error-hover:      var(--dark-color-error-hover);
+  --color-error-soft:       var(--dark-color-error-soft);
+  --color-error-soft-hover: var(--dark-color-error-soft-hover);
+  --color-error-text:       var(--dark-color-error-text);
+
+  --color-info:             var(--dark-color-info);
+  --color-info-hover:       var(--dark-color-info-hover);
+  --color-info-soft:        var(--dark-color-info-soft);
+  --color-info-text:        var(--dark-color-info-text);
+
+  --color-source-wiki:        var(--dark-color-source-wiki);
+  --color-source-wiki-soft:   var(--dark-color-source-wiki-soft);
+  --color-source-wiki-text:   var(--dark-color-source-wiki-text);
+
+  --color-source-forum:       var(--dark-color-source-forum);
+  --color-source-forum-soft:  var(--dark-color-source-forum-soft);
+  --color-source-forum-text:  var(--dark-color-source-forum-text);
+
+  --color-source-catalog:      var(--dark-color-source-catalog);
+  --color-source-catalog-soft: var(--dark-color-source-catalog-soft);
+  --color-source-catalog-text: var(--dark-color-source-catalog-text);
+
+  --color-highlight:          var(--dark-color-highlight);
+  --color-highlight-strong:   var(--dark-color-highlight-strong);
+  --color-highlight-text:     var(--dark-color-highlight-text);
+
+  --color-confidence-high:        var(--dark-color-confidence-high);
+  --color-confidence-high-soft:   var(--dark-color-confidence-high-soft);
+  --color-confidence-medium:      var(--dark-color-confidence-medium);
+  --color-confidence-medium-soft: var(--dark-color-confidence-medium-soft);
+  --color-confidence-low:         var(--dark-color-confidence-low);
+  --color-confidence-low-soft:    var(--dark-color-confidence-low-soft);
+
+  --brand-veza:                       var(--dark-brand-veza);
+  --brand-veza-soft:                  var(--dark-brand-veza-soft);
+  --brand-veza-text:                  var(--dark-brand-veza-text);
+  --brand-veza-secondary:             var(--dark-brand-veza-secondary);
+  --brand-veza-secondary-soft:        var(--dark-brand-veza-secondary-soft);
+  --brand-veza-secondary-text:        var(--dark-brand-veza-secondary-text);
+
+  --brand-uralelectro:                var(--dark-brand-uralelectro);
+  --brand-uralelectro-soft:           var(--dark-brand-uralelectro-soft);
+  --brand-uralelectro-text:           var(--dark-brand-uralelectro-text);
+  --brand-uralelectro-dark:           var(--dark-brand-uralelectro-dark);
+  --brand-uralelectro-dark-soft:      var(--dark-brand-uralelectro-dark-soft);
+  --brand-uralelectro-light:          var(--dark-brand-uralelectro-light);
+  --brand-uralelectro-light-soft:     var(--dark-brand-uralelectro-light-soft);
+
+  --brand-hemah:                      var(--dark-brand-hemah);
+  --brand-hemah-soft:                 var(--dark-brand-hemah-soft);
+  --brand-hemah-text:                 var(--dark-brand-hemah-text);
+  --brand-hemah-dark:                 var(--dark-brand-hemah-dark);
+  --brand-hemah-dark-soft:            var(--dark-brand-hemah-dark-soft);
+  --brand-hemah-highlight:            var(--dark-brand-hemah-highlight);
+  --brand-hemah-highlight-soft:       var(--dark-brand-hemah-highlight-soft);
+  --brand-hemah-highlight-text:       var(--dark-brand-hemah-highlight-text);
+
+  --shadow-xs:    var(--dark-shadow-xs);
+  --shadow-sm:    var(--dark-shadow-sm);
+  --shadow:       var(--dark-shadow);
+  --shadow-lg:    var(--dark-shadow-lg);
+  --shadow-xl:    var(--dark-shadow-xl);
+  --shadow-focus: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-accent);
+  --shadow-focus-error: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-error);
+
+  --color-overlay:            var(--dark-color-overlay);
+  --color-on-accent-soft:     var(--dark-color-on-accent-soft);
+  --color-on-accent-strong:   var(--dark-color-on-accent-strong);
+  --color-on-accent-border:   var(--dark-color-on-accent-border);
+  --color-on-accent-dim:      var(--dark-color-on-accent-dim);
+  --color-swatch-inset:       var(--dark-color-swatch-inset);
+
+  --surface-glass:            var(--dark-surface-glass);
+  --surface-glass-border:     var(--dark-surface-glass-border);
+  --surface-veil:             var(--dark-surface-veil);
+
+  --media-dim:                var(--dark-media-dim);
 
   /* Legacy mapping для dark */
   --bg:           var(--color-bg);
@@ -564,152 +726,126 @@
 @media (prefers-color-scheme: dark) {
   :root:not(.light):not([data-theme="light"]) {
     color-scheme: dark;
-    /* ПОЛНОЕ зеркало .dark-блока выше. Частичное зеркало оставляло при
-       OS-dark светлые semantic/shadow/overlay/brand токены
-       (error #b91c1c на #18181b = 1.9:1 — fail). Правишь .dark — правь и здесь */
-    --color-bg:               #18181b;
-    --color-surface:          #1c1c1f;
-    --color-surface-hover:    #222225;
-    --color-surface-active:   #28282b;
-    --color-surface-sunken:   #0d0d0e;
+    /* Те же присваивания, что в .dark: значения берутся из общего источника
+       [BLOCK:dark-palette-source], поэтому разъехаться им негде.
+       Производных (--shadow-focus*, легаси --bg/--panel/--accent*) здесь
+       НЕТ намеренно: носитель — тот же :root, что и в светлом блоке, а
+       var() внутри них разрешается по итоговому значению на элементе, то
+       есть уже по тёмным токенам. Дублировать их — значит вернуть вторую
+       копию, ради устранения которой блок и переписан. */
+    --color-bg:               var(--dark-color-bg);
+    --color-surface:          var(--dark-color-surface);
+    --color-surface-hover:    var(--dark-color-surface-hover);
+    --color-surface-active:   var(--dark-color-surface-active);
+    --color-surface-sunken:   var(--dark-color-surface-sunken);
 
-    /* Elevation ladder */
-    --color-surface-elevated:       #222226;
-    --color-surface-overlay:        #27272c;
-    --color-surface-elevated-hover: #2c2c31;
+    --color-surface-elevated:       var(--dark-color-surface-elevated);
+    --color-surface-overlay:        var(--dark-color-surface-overlay);
+    --color-surface-elevated-hover: var(--dark-color-surface-elevated-hover);
 
-    --color-border:           #2a2a2e;
-    --color-border-strong:    #3f3f46;
-    --color-border-subtle:    #222225;
+    --color-border:           var(--dark-color-border);
+    --color-border-strong:    var(--dark-color-border-strong);
+    --color-border-subtle:    var(--dark-color-border-subtle);
 
-    --color-text:             #f4f4f5;
-    --color-text-secondary:   #d4d4d8;
-    --color-text-muted:       #a1a1aa;
-    --color-text-disabled:    #71717a;
-    --color-text-on-accent:   #ffffff;
+    --color-text:             var(--dark-color-text);
+    --color-text-secondary:   var(--dark-color-text-secondary);
+    --color-text-muted:       var(--dark-color-text-muted);
+    --color-text-disabled:    var(--dark-color-text-disabled);
+    --color-text-on-accent:   var(--dark-color-text-on-accent);
 
-    /* Accent */
-    --color-accent:           #818cf8;
-    --color-accent-hover:     #a5b4fc;
-    --color-accent-active:    #6366f1;
-    --color-accent-soft:      rgba(129, 140, 248, 0.10);
-    --color-accent-soft-hover: rgba(129, 140, 248, 0.16);
-    --color-accent-text:      #1e1b4b;
-    --color-accent-border:    rgba(129, 140, 248, 0.35);
+    --color-accent:            var(--dark-color-accent);
+    --color-accent-hover:      var(--dark-color-accent-hover);
+    --color-accent-active:     var(--dark-color-accent-active);
+    --color-accent-soft:       var(--dark-color-accent-soft);
+    --color-accent-soft-hover: var(--dark-color-accent-soft-hover);
+    --color-accent-text:       var(--dark-color-accent-text);
+    --color-accent-border:     var(--dark-color-accent-border);
 
-    /* Semantic */
-    --color-success:          #6fc98d;
-    --color-success-hover:    #91d6a9;
-    --color-success-soft:     rgba(111, 201, 141, 0.10);
-    --color-success-text:     #bbf7d0;
+    --color-success:          var(--dark-color-success);
+    --color-success-hover:    var(--dark-color-success-hover);
+    --color-success-soft:     var(--dark-color-success-soft);
+    --color-success-text:     var(--dark-color-success-text);
 
-    --color-warning:          #d4a373;
-    --color-warning-hover:    #e9c598;
-    --color-warning-soft:     rgba(212, 163, 115, 0.10);
-    --color-warning-text:     #fde68a;
+    --color-warning:          var(--dark-color-warning);
+    --color-warning-hover:    var(--dark-color-warning-hover);
+    --color-warning-soft:     var(--dark-color-warning-soft);
+    --color-warning-text:     var(--dark-color-warning-text);
 
-    --color-error:            #ee8b84;
-    --color-error-hover:      #f4a9a3;
-    --color-error-soft:       rgba(238, 139, 132, 0.10);
-    --color-error-text:       #fecaca;
+    --color-error:            var(--dark-color-error);
+    --color-error-hover:      var(--dark-color-error-hover);
+    --color-error-soft:       var(--dark-color-error-soft);
+    --color-error-soft-hover: var(--dark-color-error-soft-hover);
+    --color-error-text:       var(--dark-color-error-text);
 
-    --color-info:             #a5b4fc;
-    --color-info-hover:       #c7d2fe;
-    --color-info-soft:        rgba(165, 180, 252, 0.10);
-    --color-info-text:        #c7d2fe;
+    --color-info:             var(--dark-color-info);
+    --color-info-hover:       var(--dark-color-info-hover);
+    --color-info-soft:        var(--dark-color-info-soft);
+    --color-info-text:        var(--dark-color-info-text);
 
-    /* Source colors */
-    --color-source-wiki:        #a1a1aa;
-    --color-source-wiki-soft:   rgba(161, 161, 170, 0.10);
-    --color-source-wiki-text:   #d4d4d8;
+    --color-source-wiki:        var(--dark-color-source-wiki);
+    --color-source-wiki-soft:   var(--dark-color-source-wiki-soft);
+    --color-source-wiki-text:   var(--dark-color-source-wiki-text);
 
-    --color-source-forum:       #71717a;
-    --color-source-forum-soft:  rgba(113, 113, 122, 0.10);
-    --color-source-forum-text:  #a1a1aa;
+    --color-source-forum:       var(--dark-color-source-forum);
+    --color-source-forum-soft:  var(--dark-color-source-forum-soft);
+    --color-source-forum-text:  var(--dark-color-source-forum-text);
 
-    --color-source-catalog:     #d4d4d8;
-    --color-source-catalog-soft: rgba(212, 212, 216, 0.08);
-    --color-source-catalog-text: #e4e4e7;
+    --color-source-catalog:      var(--dark-color-source-catalog);
+    --color-source-catalog-soft: var(--dark-color-source-catalog-soft);
+    --color-source-catalog-text: var(--dark-color-source-catalog-text);
 
-    /* Highlight */
-    --color-highlight:        #3f3a26;
-    --color-highlight-strong: #57502f;
-    --color-highlight-text:   #fde68a;
+    --color-highlight:          var(--dark-color-highlight);
+    --color-highlight-strong:   var(--dark-color-highlight-strong);
+    --color-highlight-text:     var(--dark-color-highlight-text);
 
-    /* Confidence */
-    --color-confidence-high:        #6fc98d;
-    --color-confidence-high-soft:   rgba(111, 201, 141, 0.10);
-    --color-confidence-medium:      #d4a373;
-    --color-confidence-medium-soft: rgba(212, 163, 115, 0.10);
-    --color-confidence-low:         #71717a;
-    --color-confidence-low-soft:    rgba(113, 113, 122, 0.10);
+    --color-confidence-high:        var(--dark-color-confidence-high);
+    --color-confidence-high-soft:   var(--dark-color-confidence-high-soft);
+    --color-confidence-medium:      var(--dark-color-confidence-medium);
+    --color-confidence-medium-soft: var(--dark-color-confidence-medium-soft);
+    --color-confidence-low:         var(--dark-color-confidence-low);
+    --color-confidence-low-soft:    var(--dark-color-confidence-low-soft);
 
-    /* Brand colors — dark-варианты */
-    --brand-veza:                       #5fc16f;
-    --brand-veza-soft:                  rgba(95, 193, 111, 0.15);
-    --brand-veza-text:                  #18181b;
-    --brand-veza-secondary:             #a1a1aa;
-    --brand-veza-secondary-soft:        rgba(161, 161, 170, 0.15);
-    --brand-veza-secondary-text:        #18181b;
+    --brand-veza:                       var(--dark-brand-veza);
+    --brand-veza-soft:                  var(--dark-brand-veza-soft);
+    --brand-veza-text:                  var(--dark-brand-veza-text);
+    --brand-veza-secondary:             var(--dark-brand-veza-secondary);
+    --brand-veza-secondary-soft:        var(--dark-brand-veza-secondary-soft);
+    --brand-veza-secondary-text:        var(--dark-brand-veza-secondary-text);
 
-    --brand-uralelectro:                #8fa6ae;
-    --brand-uralelectro-soft:           rgba(143, 166, 174, 0.15);
-    --brand-uralelectro-text:           #10181b;
-    --brand-uralelectro-dark:           #7a939c;
-    --brand-uralelectro-dark-soft:      rgba(122, 147, 156, 0.15);
-    --brand-uralelectro-light:          #a9bcc3;
-    --brand-uralelectro-light-soft:     rgba(169, 188, 195, 0.18);
+    --brand-uralelectro:                var(--dark-brand-uralelectro);
+    --brand-uralelectro-soft:           var(--dark-brand-uralelectro-soft);
+    --brand-uralelectro-text:           var(--dark-brand-uralelectro-text);
+    --brand-uralelectro-dark:           var(--dark-brand-uralelectro-dark);
+    --brand-uralelectro-dark-soft:      var(--dark-brand-uralelectro-dark-soft);
+    --brand-uralelectro-light:          var(--dark-brand-uralelectro-light);
+    --brand-uralelectro-light-soft:     var(--dark-brand-uralelectro-light-soft);
 
-    --brand-hemah:                      #6fb3c7;
-    --brand-hemah-soft:                 rgba(111, 179, 199, 0.15);
-    --brand-hemah-text:                 #0d2229;
-    --brand-hemah-dark:                 #4d97ad;
-    --brand-hemah-dark-soft:            rgba(77, 151, 173, 0.15);
-    --brand-hemah-highlight:            #2fc6f6;
-    --brand-hemah-highlight-soft:       rgba(47, 198, 246, 0.18);
-    --brand-hemah-highlight-text:       #0d2229;
+    --brand-hemah:                      var(--dark-brand-hemah);
+    --brand-hemah-soft:                 var(--dark-brand-hemah-soft);
+    --brand-hemah-text:                 var(--dark-brand-hemah-text);
+    --brand-hemah-dark:                 var(--dark-brand-hemah-dark);
+    --brand-hemah-dark-soft:            var(--dark-brand-hemah-dark-soft);
+    --brand-hemah-highlight:            var(--dark-brand-hemah-highlight);
+    --brand-hemah-highlight-soft:       var(--dark-brand-hemah-highlight-soft);
+    --brand-hemah-highlight-text:       var(--dark-brand-hemah-highlight-text);
 
-    /* Shadows — светлое кольцо 1px + глубокие тени (как в .dark) */
-    --shadow-xs:    0 1px 2px rgba(0, 0, 0, 0.30);
-    --shadow-sm:    0 1px 2px rgba(0, 0, 0, 0.30),
-                    0 1px 3px rgba(0, 0, 0, 0.40);
-    --shadow:       0 0 0 1px rgba(255, 255, 255, 0.06),
-                    0 4px 8px -2px rgba(0, 0, 0, 0.40),
-                    0 2px 4px -1px rgba(0, 0, 0, 0.30);
-    --shadow-lg:    0 0 0 1px rgba(255, 255, 255, 0.07),
-                    0 12px 24px -6px rgba(0, 0, 0, 0.50),
-                    0 4px 8px -2px rgba(0, 0, 0, 0.30);
-    --shadow-xl:    0 0 0 1px rgba(255, 255, 255, 0.08),
-                    0 24px 48px -12px rgba(0, 0, 0, 0.60),
-                    0 8px 16px -4px rgba(0, 0, 0, 0.40);
-    --shadow-focus: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-accent);
-    --shadow-focus-error: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-error);
+    --shadow-xs:    var(--dark-shadow-xs);
+    --shadow-sm:    var(--dark-shadow-sm);
+    --shadow:       var(--dark-shadow);
+    --shadow-lg:    var(--dark-shadow-lg);
+    --shadow-xl:    var(--dark-shadow-xl);
 
-    /* Оверлеи и on-accent слои */
-    --color-overlay:            rgba(0, 0, 0, 0.60);
-    --color-on-accent-soft:     rgba(24, 24, 27, 0.14);
-    --color-on-accent-strong:   rgba(24, 24, 27, 0.26);
-    --color-on-accent-border:   rgba(24, 24, 27, 0.30);
-    --color-on-accent-dim:      rgba(255, 255, 255, 0.30);
-    --color-swatch-inset:       rgba(255, 255, 255, 0.14);
-    --color-error-soft-hover:   rgba(238, 139, 132, 0.16);
+    --color-overlay:            var(--dark-color-overlay);
+    --color-on-accent-soft:     var(--dark-color-on-accent-soft);
+    --color-on-accent-strong:   var(--dark-color-on-accent-strong);
+    --color-on-accent-border:   var(--dark-color-on-accent-border);
+    --color-on-accent-dim:      var(--dark-color-on-accent-dim);
+    --color-swatch-inset:       var(--dark-color-swatch-inset);
 
-    /* Glass / veil / media dimming */
-    --surface-glass:            rgba(24, 24, 27, 0.72);
-    --surface-glass-border:     rgba(255, 255, 255, 0.08);
-    --surface-veil:             rgba(24, 24, 27, 0.70);
-    --media-dim:                brightness(0.9);
-
-    /* Legacy mapping */
-    --bg:           var(--color-bg);
-    --panel:        var(--color-surface);
-    --text:         var(--color-text);
-    --muted:        var(--color-text-muted);
-    --border:       var(--color-border);
-    --card-border:  var(--color-border);
-    --accent:       var(--color-accent);
-    --accent-700:   var(--color-accent-hover);
-    --accent-100:   var(--color-accent-soft);
+    --surface-glass:            var(--dark-surface-glass);
+    --surface-glass-border:     var(--dark-surface-glass-border);
+    --surface-veil:             var(--dark-surface-veil);
+    --media-dim:                var(--dark-media-dim);
   }
 }
 

@@ -14,14 +14,14 @@ document.querySelectorAll('.chip-remove').forEach(btn => {
   });
 });
 
-// Clickable chips (filter toggle)
+// Clickable chips (filter toggle). Состояние — .is-active (chip.css):
+// прежнее .chip-active не имело в библиотеке ни одного правила
 document.querySelectorAll('.chip-clickable').forEach(chip => {
   chip.addEventListener('click', (e) => {
     const parent = e.target.parentElement;
-    // Toggle active state
-    if (!e.target.classList.contains('chip-active')) {
-      parent.querySelectorAll('.chip-clickable').forEach(c => c.classList.remove('chip-active'));
-      e.target.classList.add('chip-active');
+    if (!e.target.classList.contains('is-active')) {
+      parent.querySelectorAll('.chip-clickable').forEach(c => c.classList.remove('is-active'));
+      e.target.classList.add('is-active');
     }
   });
 });
@@ -37,9 +37,19 @@ function initSidebarResize() {
     if (!handle) return;
 
     const isLeft = sidebar.classList.contains('sidebar--left');
-    // Нижняя граница совпадает с --sidebar-w-sm (min-width в CSS)
-    const minWidth = 220;
-    const maxWidth = 500;
+    // Границы ресайза объявлены в CSS (.sidebar--resizable: min-width
+    // --sidebar-w-sm, max-width 50vw) и читаются оттуда. Держать в JS вторую
+    // копию потолка нельзя: числа расходятся (было 50vw в CSS против 500 здесь).
+    // Значения снимаются на каждый жест — 50vw зависит от ширины окна.
+    const limits = () => {
+      const cs = getComputedStyle(sidebar);
+      const min = parseFloat(cs.minWidth);
+      const max = parseFloat(cs.maxWidth);
+      return {
+        min: Number.isFinite(min) ? min : 220,
+        max: Number.isFinite(max) ? max : window.innerWidth / 2
+      };
+    };
 
     let isResizing = false;
     let startX = 0;
@@ -71,7 +81,8 @@ function initSidebarResize() {
       }
 
       // Apply constraints
-      newWidth = Math.max(minWidth, Math.min(maxWidth, newWidth));
+      const { min, max } = limits();
+      newWidth = Math.max(min, Math.min(max, newWidth));
       sidebar.style.width = newWidth + 'px';
       // Отступ центра следует за шириной панели (пер-сторонняя переменная)
       document.documentElement.style.setProperty(
@@ -96,7 +107,8 @@ function initSidebarResize() {
     const savedWidth = localStorage.getItem(`sidebar-width-${sidebarId}`);
     if (savedWidth) {
       const width = parseInt(savedWidth);
-      if (width >= minWidth && width <= maxWidth) {
+      const { min, max } = limits();
+      if (width >= min && width <= max) {
         sidebar.style.width = savedWidth;
         // Восстановленная ширина тоже двигает отступ центра
         document.documentElement.style.setProperty(
@@ -128,16 +140,16 @@ const demoToast = (function initDemoToast() {
   }
   // Уход тоста: exit-анимация + страховочный remove (reduced-motion)
   function dismissToast(toast) {
-    if (!toast.isConnected || toast.classList.contains('toast-exit')) return;
-    toast.classList.remove('toast-enter');
-    toast.classList.add('toast-exit');
+    if (!toast.isConnected || toast.classList.contains('is-exiting')) return;
+    toast.classList.remove('is-entering');
+    toast.classList.add('is-exiting');
     toast.addEventListener('animationend', () => toast.remove(), { once: true });
     setTimeout(() => toast.remove(), 400);
   }
   return function demoToast(message, title) {
     const box = ensureContainer();
     const toast = document.createElement('div');
-    toast.className = 'toast toast-compact toast-enter';
+    toast.className = 'toast toast-compact is-entering';
     toast.setAttribute('role', 'status');
     const content = document.createElement('div');
     content.className = 'toast-content';
@@ -247,7 +259,7 @@ const demoToast = (function initDemoToast() {
 
 // ===== Nav =====
 // Бургер навигационной полосы: раскрывает .nav-menu на узком экране.
-// Переходное именование: ставим и легаси .open, и канон .is-open (RULES §2.4).
+// Состояние в единственном написании — .is-open (RULES §2.4).
 (function initNav() {
   document.querySelectorAll('.nav .nav-toggle').forEach(toggle => {
     const menu = document.getElementById(toggle.getAttribute('aria-controls') || '');
@@ -256,7 +268,6 @@ const demoToast = (function initDemoToast() {
     toggle.addEventListener('click', () => {
       const open = !menu.classList.contains('is-open');
       menu.classList.toggle('is-open', open);
-      menu.classList.toggle('open', open);
       toggle.setAttribute('aria-expanded', String(open));
     });
   });
@@ -900,7 +911,7 @@ function isPanelSwitchFor(target, pickerRoot) {
     const placeholder = valueEl && /^Выберите/.test(valueEl.textContent.trim())
       ? valueEl.textContent.trim() : 'Выберите…';
 
-    const isOpen = () => box.classList.contains('is-open') || box.classList.contains('open');
+    const isOpen = () => box.classList.contains('is-open');
     const visibleOptions = () =>
       [...box.querySelectorAll('.combobox-option')].filter(o => o.style.display !== 'none');
 
@@ -912,27 +923,27 @@ function isPanelSwitchFor(target, pickerRoot) {
       return clone.textContent.trim();
     }
 
-    // Подсветка: семантический класс по спеке + .highlighted для стилей CSS
+    // Подсветка клавиатурной навигации — одно каноническое имя .is-highlighted
+    // (прежние двойники .combobox-option-highlighted + .highlighted сняты)
     function clearHighlight() {
-      box.querySelectorAll('.combobox-option-highlighted').forEach(o =>
-        o.classList.remove('combobox-option-highlighted', 'highlighted'));
+      box.querySelectorAll('.combobox-option.is-highlighted').forEach(o =>
+        o.classList.remove('is-highlighted'));
     }
     function highlight(opt) {
       clearHighlight();
       if (!opt) return;
-      opt.classList.add('combobox-option-highlighted', 'highlighted');
+      opt.classList.add('is-highlighted');
       opt.scrollIntoView({ block: 'nearest' });
     }
     function moveHighlight(step) {
       const opts = visibleOptions();
       if (!opts.length) return;
-      const cur = opts.findIndex(o => o.classList.contains('combobox-option-highlighted'));
+      const cur = opts.findIndex(o => o.classList.contains('is-highlighted'));
       highlight(opts[(cur + step + opts.length) % opts.length]);
     }
 
     function setOpen(open) {
       if (open === isOpen()) return;
-      box.classList.toggle('open', open);
       box.classList.toggle('is-open', open);
       trigger.setAttribute('aria-expanded', String(open));
       if (open) {
@@ -952,9 +963,7 @@ function isPanelSwitchFor(target, pickerRoot) {
     }
 
     function markSelected(opt, on) {
-      // Оба варианта класса: combobox-option-selected (разметка) + selected (CSS)
-      opt.classList.toggle('combobox-option-selected', on);
-      opt.classList.toggle('selected', on);
+      opt.classList.toggle('is-selected', on);
     }
 
     // Мультивыбор: тег с кнопкой удаления, вставляется перед счётчиком «+N»
@@ -981,8 +990,7 @@ function isPanelSwitchFor(target, pickerRoot) {
       const label = optionLabel(opt);
       if (multi) {
         // Тоггл выбора; дропдаун остаётся открытым — выбирают несколько подряд
-        const on = !(opt.classList.contains('combobox-option-selected')
-          || opt.classList.contains('selected'));
+        const on = !opt.classList.contains('is-selected');
         markSelected(opt, on);
         if (on) addTag(label); else removeTag(label);
         return;
@@ -993,7 +1001,7 @@ function isPanelSwitchFor(target, pickerRoot) {
         valueEl.textContent = label;
         valueEl.classList.remove('combobox-placeholder');
       }
-      box.classList.add('has-value');
+      box.classList.add('is-filled');
       setOpen(false);
       trigger.focus?.();
     }
@@ -1035,7 +1043,7 @@ function isPanelSwitchFor(target, pickerRoot) {
         valueEl.textContent = placeholder;
         valueEl.classList.add('combobox-placeholder');
       }
-      box.classList.remove('has-value');
+      box.classList.remove('is-filled');
     });
 
     // Удаление тегов мультивыбора (включая изначальные из разметки)
@@ -1058,7 +1066,7 @@ function isPanelSwitchFor(target, pickerRoot) {
         if (!isOpen()) setOpen(true);
         moveHighlight(e.key === 'ArrowDown' ? 1 : -1);
       } else if (e.key === 'Enter' && isOpen()) {
-        const hi = box.querySelector('.combobox-option-highlighted');
+        const hi = box.querySelector('.combobox-option.is-highlighted');
         if (hi) {
           e.preventDefault(); // иначе кнопка-триггер своим кликом закроет дропдаун
           select(hi);
@@ -1486,10 +1494,11 @@ function isPanelSwitchFor(target, pickerRoot) {
 })();
 
 // ===== Panel Placement Switch =====
-// Витринный переключатель размещения панели пикера: в бою классы --top/--sheet
-// ставит JS, замерив свободное место до кромки вьюпорта, поэтому иначе эти
-// состояния на витрине не воспроизвести. Группа кнопок несёт полное имя класса
-// в data-panel-variant, пустое значение = размещение по умолчанию (вниз).
+// Витринный переключатель размещения панели пикера: в бою состояние
+// .is-flipped (открытие вверх) и вариант --sheet (мобильный лист) выбираются
+// по замеру свободного места, поэтому иначе их на витрине не воспроизвести.
+// Группа кнопок несёт полное имя класса в data-panel-variant, пустое
+// значение = размещение по умолчанию (вниз).
 (function initPanelPlacementSwitch() {
   document.querySelectorAll('[data-panel-switch]').forEach(group => {
     const panel = document.getElementById(group.dataset.panelSwitch);

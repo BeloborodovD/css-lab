@@ -91,7 +91,9 @@
   box-shadow: var(--shadow-focus);
 }
 
-.dropdown-item.active {
+/* Текущий пункт меню — состояние, а не вариант: его назначает приложение
+   по текущему разделу, поэтому имя каноническое (§2.2) */
+.dropdown-item.is-active {
   background: var(--color-accent-soft);
   color: var(--color-accent);
   font-weight: var(--fw-medium);
@@ -104,7 +106,7 @@
   color: var(--color-text-muted);
 }
 
-.dropdown-item.active svg {
+.dropdown-item.is-active svg {
   color: var(--color-accent);
 }
 

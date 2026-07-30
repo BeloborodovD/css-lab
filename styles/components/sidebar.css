@@ -150,7 +150,7 @@
   box-shadow: var(--shadow-focus);
 }
 
-.sidebar-nav-link.active {
+.sidebar-nav-link.is-active {
   background: var(--color-accent-soft);
   color: var(--color-accent);
   font-weight: var(--fw-medium);
@@ -278,7 +278,7 @@
   }
 }
 
-.sidebar-tag.active {
+.sidebar-tag.is-active {
   background: var(--color-accent-soft);
   color: var(--color-accent);
   font-weight: var(--fw-medium);
@@ -361,7 +361,9 @@
 
 /* ==================== Ручка ресайза (только мышь) ==================== */
 /* Границы ручного ресайза: нижняя — узкая раскладка панели (--sidebar-w-sm),
-   верхняя — половина экрана. Жёсткий потолок в пикселях держит JS-обработчик. */
+   верхняя — половина экрана. Единственный источник обеих величин — эти два
+   объявления: обработчик в main.js читает их через getComputedStyle, своих
+   чисел больше не держит (раньше в JS стоял независимый потолок 500px). */
 .sidebar--resizable {
   min-width: var(--sidebar-w-sm);
   max-width: 50vw;

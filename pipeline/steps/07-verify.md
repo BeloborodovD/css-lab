@@ -39,3 +39,14 @@ css-lab fallback — глобальный `loop-evaluator` из `~/.claude/agent
 При PASS оркестратор в ту же сессию: коммит целевого проекта → push во все его
 ремоуты → сборка/деплой по регламенту целевого проекта → smoke на проде
 (браузерный UA). Обновить `<target>/.claude/context.md` и артефакты redesign/.
+
+Если в прогоне менялась библиотека (шаг 03), витрину нужно выкатить отдельно —
+**автодеплоя нет**: HR клонирован с ветки `main` GitLab, поэтому пуша в
+`feature/*` недостаточно.
+
+```bash
+cd /d/_claude_project/css-lab && git -c credential.helper= push gitlab feature/lightweight-redesign:main
+ssh ServerHr "cd ~/docker/css-lab && git pull && docker compose -f docker-compose.hr.yml up -d --build"
+```
+
+Проверять прод только браузерным User-Agent — ModSecurity режет UA curl'а.

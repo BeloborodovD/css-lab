@@ -1,0 +1,108 @@
+/* [BLOCK:component.form-error-summary]
+ * Сводка ошибок валидации длинной формы: список невалидных полей ссылками
+ * с якорями, сгруппированный по разделам. Замена блокирующего alert() —
+ * пользователь видит все ошибки сразу и переходит к полю одним нажатием.
+ * Порт потребности опросного листа R&D Уралэлектро (validate()).
+ * Модуль: css-lab/components. Зависимости: base/variables.css,
+ * base/motion.css, components/alerts.css (контейнер — .alert.alert-error).
+ *
+ * Композиция, а НЕ самостоятельная плашка:
+ *   <div class="alert alert-error form-error-summary" role="alert" tabindex="-1">
+ * Фон, рамка, радиус и цвет текста приходят из .alert-error (alerts.css:45-52),
+ * заголовок — .alert-title, иконка — .alert-icon. Здесь объявляются ТОЛЬКО
+ * новые элементы: __list / __item / __link / __section.
+ */
+
+/* Пока ошибок нет вовсе, сводка выключена атрибутом hidden и не занимает
+   места в потоке (иначе над формой висела бы пустая полоса). Показ:
+   снять hidden → следующим кадром повесить .is-visible — тогда переход
+   отработает. Между показами скрытие идёт через visibility + opacity:
+   элемент остаётся носителем role="alert" и целью программного фокуса. */
+.form-error-summary[hidden] { display: none; }
+
+.form-error-summary {
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(4px);
+  /* PURPOSE: preventing a jarring change — сводка не подпрыгивает в поток
+     рывком. Частота показа rare (после нажатия «отправить») — гейт RULES §0
+     пройден. Базовое состояние = выход: он быстрее входа */
+  transition:
+    opacity var(--duration-exit) var(--ease-out),
+    transform var(--duration-exit) var(--ease-out),
+    visibility 0s linear var(--duration-exit);
+}
+.form-error-summary.is-visible {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity var(--duration-dropdown) var(--ease-out),
+    transform var(--duration-dropdown) var(--ease-out),
+    visibility 0s;
+}
+
+/* Список ошибок. Маркер вешается ПОШТУЧНО на __item, а не на список целиком:
+   заголовок раздела (__section) — тоже <li> и получал бы буллит.
+   reset.css снимает list-style у ul, поэтому возвращаем его точечно */
+.form-error-summary__list {
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--fs-sm);
+}
+.form-error-summary__item {
+  margin: 0 0 var(--space-1) var(--space-4);
+  list-style: disc outside;
+}
+.form-error-summary__item:last-child { margin-bottom: 0; }
+
+/* Ссылка-якорь к невалидному полю: подчёркнута — цвет не единственный
+   носитель (SC 1.4.1), цель по вертикали не мельче строки */
+.form-error-summary__link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: color var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .form-error-summary__link:hover { color: var(--color-error); }
+}
+.form-error-summary__link:focus-visible {
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--shadow-focus-error);
+}
+
+/* Группировка по разделам формы («Раздел 4 — 2 ошибки»);
+   работает в паре с .form-section--invalid и бейджем секции */
+.form-error-summary__section {
+  margin-top: var(--space-3);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semi);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: inherit;
+}
+.form-error-summary__section:first-of-type { margin-top: var(--space-2); }
+/* Первая ошибка раздела прижимается к его заголовку */
+.form-error-summary__section + .form-error-summary__item { margin-top: var(--space-1); }
+
+/* Стартовое состояние перехода из display: none. Атрибут hidden снимается и
+   класс вешается в одном кадре (main.js), поэтому без @starting-style браузеру
+   не от чего анимировать — сводка возникала бы рывком */
+@starting-style {
+  .form-error-summary.is-visible {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+/* Уменьшенное движение: мягче, но не ноль — сдвиг убран, проявление осталось */
+@media (prefers-reduced-motion: reduce) {
+  .form-error-summary,
+  .form-error-summary.is-visible { transform: none; }
+}
+/* </BLOCK:component.form-error-summary> */

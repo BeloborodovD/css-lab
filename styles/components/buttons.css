@@ -110,8 +110,75 @@
   border-color: var(--color-error-hover);
 }
 .btn-danger:focus-visible {
+  /* Та же пара, что у .btn:focus-visible: box-shadow система вырезает
+     в forced-colors, прозрачный outline она перекрашивает в Highlight */
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   box-shadow: var(--shadow-focus-error);
   border-color: var(--color-error);
+}
+
+/* Secondary — нейтральная заливка «второго плана»: заметнее ghost, тише
+   primary. Класс использовался разметкой (шапка сайта, drawer, picklist)
+   ещё до объявления — восемь мёртвых мест на трёх страницах */
+.btn-secondary {
+  background: var(--color-surface-sunken);
+  border-color: var(--color-border);
+  color: var(--color-text-secondary);
+}
+.btn-secondary:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-strong);
+  color: var(--color-text);
+}
+.btn-secondary:active {
+  background: var(--color-surface-active);
+}
+
+/* На акцентной заливке (брендовая полоса шапки).
+   Фокус-кольцо строится от цвета ТЕКСТА полосы, а не от --color-accent:
+   на собственном фоне акцентное кольцо сливается (прецедент quiz.css:109) */
+.btn-on-accent {
+  background: var(--color-on-accent-soft);
+  border-color: var(--color-on-accent-border);
+  color: var(--color-text-on-accent);
+}
+.btn-on-accent:hover {
+  background: var(--color-on-accent-strong);
+  border-color: var(--color-on-accent-border);
+  color: var(--color-text-on-accent);
+}
+.btn-on-accent:active {
+  background: var(--color-on-accent-strong);
+}
+.btn-on-accent:focus-visible {
+  outline: var(--border-w-strong) solid var(--color-text-on-accent);
+  outline-offset: 2px;
+  box-shadow: none;
+  border-color: var(--color-text-on-accent);
+}
+/* Главное действие на заливке — инверсия: поверхность на акценте */
+.btn-on-accent.btn-primary {
+  background: var(--color-surface);
+  border-color: var(--color-surface);
+  color: var(--color-accent);
+}
+.btn-on-accent.btn-primary:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-surface-hover);
+  color: var(--color-accent);
+}
+/* Деструктив на заливке остаётся деструктивом: без этой пары он сливался
+   бы с соседними полупрозрачными кнопками — ровно претензия аудита
+   («Очистить» неотличима от «PDF») */
+.btn-on-accent.btn-danger {
+  background: var(--color-error);
+  border-color: var(--color-error);
+  color: var(--color-text-on-accent);
+}
+.btn-on-accent.btn-danger:hover {
+  background: var(--color-error-hover);
+  border-color: var(--color-error-hover);
 }
 
 /* Icon */
@@ -250,6 +317,45 @@
   background: var(--color-accent-active);
   border-color: var(--color-accent-active);
 }
+.dark .btn-secondary,
+[data-theme="dark"] .btn-secondary {
+  background: var(--color-surface-sunken);
+  border-color: var(--color-border);
+  color: var(--color-text-secondary);
+}
+.dark .btn-secondary:hover,
+[data-theme="dark"] .btn-secondary:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-strong);
+  color: var(--color-text);
+}
+/* on-accent слои в dark инвертированы темой (--color-on-accent-*),
+   поэтому вариант повторяется дословно — перебить .dark .btn */
+.dark .btn-on-accent,
+[data-theme="dark"] .btn-on-accent {
+  background: var(--color-on-accent-soft);
+  border-color: var(--color-on-accent-border);
+  color: var(--color-text-on-accent);
+}
+.dark .btn-on-accent:hover,
+[data-theme="dark"] .btn-on-accent:hover {
+  background: var(--color-on-accent-strong);
+  border-color: var(--color-on-accent-border);
+  color: var(--color-text-on-accent);
+}
+.dark .btn-on-accent.btn-primary,
+[data-theme="dark"] .btn-on-accent.btn-primary {
+  background: var(--color-surface);
+  border-color: var(--color-surface);
+  color: var(--color-accent);
+}
+.dark .btn-on-accent.btn-danger,
+[data-theme="dark"] .btn-on-accent.btn-danger {
+  background: var(--color-error);
+  border-color: var(--color-error);
+  color: var(--color-bg);  /* near-black на светлом error-red: 7.3:1 */
+}
+
 .dark .btn-danger,
 [data-theme="dark"] .btn-danger {
   background: var(--color-error);

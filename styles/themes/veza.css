@@ -40,6 +40,11 @@
   /* Плашка под белый логотип: всегда насыщенный бренд, не инвертируется */
   --brand-plate-bg:          #2e8a3c;
 
+  /* Бумага (.print-sheet) не инвертируется в dark, поэтому акцент и логотип
+     листа берутся отсюда: тот же AA-акцент 5.0:1 на белом и цветной логотип */
+  --color-accent-paper:      #2a7f37;
+  --brand-logo-paper:        url("/assets/logos/veza.svg");
+
   /* Типографика бренда: Roboto, fallback Arial (по брендбуку) */
   --font-sans:    "Roboto", Arial, -apple-system, "Segoe UI", "Helvetica Neue", sans-serif;
   --font-display: "Roboto", Arial, -apple-system, "Segoe UI", "Helvetica Neue", sans-serif;

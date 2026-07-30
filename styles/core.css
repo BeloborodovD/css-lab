@@ -72,6 +72,9 @@
 @import './components/swatch-picker.css';
 @import './components/quiz.css';
 @import './components/form-section.css';
+/* form-error-summary — композиция на .alert.alert-error: импортируется ПОСЛЕ
+   alerts.css и form-section.css, чтобы его элементы били общие правила плашки */
+@import './components/form-error-summary.css';
 @import './components/row-card.css';
 @import './components/save-status.css';
 @import './components/rte.css';

@@ -24,24 +24,16 @@ body { background: var(--color-surface-sunken); }
   font-size: var(--fs-sm);
 }
 .pf-toolbar__actions { display: flex; gap: var(--space-2); flex-wrap: wrap; }
-/* Экранная «бумага»: белый лист с тенью, при печати — чистый A4.
-   Механизм донора motor-datasheet: лист держит геометрию A4, подвал
-   («Лист N из M») прижат к нижней кромке листа. Адаптация: flex-колонка
-   + margin-top:auto у подвала вместо absolute-подвала донора — подвал
-   остаётся в потоке и при переполнении уходит ПОСЛЕ контента,
-   не наезжая на него на промежуточных страницах. */
-.pf-sheet {
-  display: flex;
-  flex-direction: column;
-  width: 210mm;            /* физическая ширина листа A4 */
-  max-width: 100%;
-  min-height: 297mm;       /* физическая высота листа A4 — подвал у нижней кромки даже при коротком контенте */
-  margin: 0 auto var(--space-6);
-  background: #ffffff;
-  box-shadow: var(--shadow);
-  border-radius: var(--radius-xs);
-  padding: 16mm 14mm;
-}
+/* Экранная «бумага» — компонент layout/print-sheet.css: листы страницы несут
+   class="print-sheet pf-sheet". Геометрия A4 (210×297mm, поля 16/14mm, тень,
+   радиус) и палитра бумаги [CONFIG:paper-palette] живут ТОЛЬКО там — здесь их
+   дубля больше нет. Раньше .pf-sheet повторял геометрию байт-в-байт и при этом
+   хардкодил background:#ffffff без палитры: в тёмной теме ОС лист оставался
+   белым, а текст наследовал тёмные токены (заголовок #f4f4f5 на #ffffff —
+   1,10:1, колонтитул — 2,56:1). Второй компонент с той же геометрией и был
+   причиной расхождения, поэтому лист теперь один.
+   .pf-sheet остался постраничным адаптером: композиция .spec-sheet внутри
+   листа и печатная min-height, привязанная к @page ЭТОЙ страницы. */
 .pf-sheet .spec-sheet {
   border: none;
   box-shadow: none;
@@ -54,37 +46,25 @@ body { background: var(--color-surface-sunken); }
 }
 /* Подвал листа — к нижней кромке (пустое место уходит НАД подвалом) */
 .pf-sheet .spec-sheet__footer { margin-top: auto; }
-/* Колонтитулы страницы при печати (как в опросном листе R&D) */
+/* Печатная страница: ТОЛЬКО size и margin. Колонтитулы через margin-boxes
+   (@bottom-left / @bottom-right + counter(page)) — Paged Media, который
+   Chrome и Firefox не реализуют: правило молча отбрасывалось и лист уходил
+   в печать без подписи и номера. Подпись и номер листа теперь несёт разметка —
+   .print-sheet__running-foot / .spec-sheet__footer (layout/print-sheet.css). */
 @page {
   size: A4 portrait;
   margin: 12mm 14mm 14mm 16mm;
-  @bottom-left {
-    content: "CSS Lab · печатные формы";
-    font-size: 7pt;
-    color: #555555;
-  }
-  @bottom-right {
-    content: counter(page) " / " counter(pages);
-    font-size: 7pt;
-    color: #555555;
-  }
 }
 @media print {
   body { background: #fff; }
   .pf-toolbar { display: none; }
   .pf-page { max-width: none; padding: 0; }
-  .pf-sheet {
-    box-shadow: none;
-    border-radius: 0;
-    padding: 0;
-    margin: 0;
-    width: auto;         /* горизонтальные поля задаёт @page */
-    /* Высота печатного листа = 297mm минус вертикальные поля @page
-       (12mm сверху + 14mm снизу); min-height, а не height: при переполнении
-       лист растёт на следующую страницу, подвал остаётся после контента */
-    min-height: 271mm;
-    break-after: page;
-  }
-  .pf-sheet:last-child { break-after: auto; }
+  /* Сброс экранной подачи листа (тень, радиус, поля, ширина, break-after)
+     и его :last-child — в @media print компонента layout/print-sheet.css.
+     Постранично остаётся только высота: 297mm минус вертикальные поля
+     @page ЭТОЙ страницы (12mm сверху + 14mm снизу). min-height, а не
+     height: при переполнении лист растёт на следующую страницу, подвал
+     остаётся после контента. */
+  .pf-sheet { min-height: 271mm; }
 }
 /* </BLOCK:page.print-forms> */

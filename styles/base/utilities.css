@@ -18,30 +18,38 @@
 .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
 .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
 .grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
-.gap-1 { gap: 4px; }
-.gap-2 { gap: 8px; }
-.gap-3 { gap: 12px; }
-.gap-4 { gap: 16px; }
-.gap-6 { gap: 24px; }
+.gap-1 { gap: var(--space-1); }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-4 { gap: var(--space-4); }
+.gap-6 { gap: var(--space-6); }
 
-/* Spacing */
-.m-0 { margin: 0; }
-.m-1 { margin: 4px; }
-.m-2 { margin: 8px; }
-.m-4 { margin: 16px; }
-.mt-2 { margin-top: 8px; }
-.mt-4 { margin-top: 16px; }
-.mb-2 { margin-bottom: 8px; }
-.mb-4 { margin-bottom: 16px; }
+/* Spacing — шкала --space-*, без литералов. Ступени 1/3/6 добавлены:
+   именно ими разметка расставляет поля (12px = --space-3), и без них
+   в HTML заводились инлайновые style="margin-top:12px" */
+.m-0 { margin: var(--space-0); }
+.m-1 { margin: var(--space-1); }
+.m-2 { margin: var(--space-2); }
+.m-4 { margin: var(--space-4); }
+.mt-1 { margin-top: var(--space-1); }
+.mt-2 { margin-top: var(--space-2); }
+.mt-3 { margin-top: var(--space-3); }
+.mt-4 { margin-top: var(--space-4); }
+.mt-6 { margin-top: var(--space-6); }
+.mb-1 { margin-bottom: var(--space-1); }
+.mb-2 { margin-bottom: var(--space-2); }
+.mb-3 { margin-bottom: var(--space-3); }
+.mb-4 { margin-bottom: var(--space-4); }
+.mb-6 { margin-bottom: var(--space-6); }
 .ml-auto { margin-left: auto; }
 .mr-auto { margin-right: auto; }
 .mx-auto { margin-left: auto; margin-right: auto; }
 
-.p-0 { padding: 0; }
-.p-1 { padding: 4px; }
-.p-2 { padding: 8px; }
-.p-4 { padding: 16px; }
-.p-6 { padding: 24px; }
+.p-0 { padding: var(--space-0); }
+.p-1 { padding: var(--space-1); }
+.p-2 { padding: var(--space-2); }
+.p-4 { padding: var(--space-4); }
+.p-6 { padding: var(--space-6); }
 
 /* Text */
 .text-center { text-align: center; }
@@ -91,10 +99,10 @@
 .rounded { border-radius: var(--radius); }
 .rounded-sm { border-radius: var(--radius-sm); }
 .rounded-lg { border-radius: var(--radius-lg); }
-.rounded-full { border-radius: 9999px; }
-.border { border: 1px solid var(--border); }
-.border-t { border-top: 1px solid var(--border); }
-.border-b { border-bottom: 1px solid var(--border); }
+.rounded-full { border-radius: var(--radius-full); }
+.border { border: var(--border-w) solid var(--border); }
+.border-t { border-top: var(--border-w) solid var(--border); }
+.border-b { border-bottom: var(--border-w) solid var(--border); }
 
 /* Effects */
 .shadow { box-shadow: var(--shadow); }
@@ -156,11 +164,11 @@
 
   /* Smaller gaps on mobile */
   .gap-4 {
-    gap: 12px;
+    gap: var(--space-3);
   }
 
   .gap-6 {
-    gap: 16px;
+    gap: var(--space-4);
   }
 
   /* Stack flex items on mobile */

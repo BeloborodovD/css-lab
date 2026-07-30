@@ -18,12 +18,24 @@
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
 }
+/* Секция с ошибками валидации: засечка слева меняет цвет — вместе с бейджем
+   в легенде это два независимых носителя (цвет не единственный, SC 1.4.1) */
+.form-section--invalid { border-left-color: var(--color-error); }
+
 .form-section__legend {
   padding: 0 var(--space-2);
   font-size: var(--fs-md);
   font-weight: var(--fw-semi);
   letter-spacing: var(--tracking-tight);
   color: var(--color-accent);
+}
+/* Ряд легенды: заголовок + бейдж счётчика ошибок (.badge.badge-error).
+   Без него бейдж некуда повесить, кроме инлайновой вёрстки */
+.form-section__legend-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
 }
 .form-section__hint {
   margin: var(--space-px) 0 var(--space-3);
@@ -110,7 +122,86 @@
   color: var(--color-accent-text);
 }
 
+/* ===== Текст ошибки поля =============================================== */
+/* Без него ошибка передаётся только цветом рамки — SC 1.4.1 не закрыть.
+   Связывается с контролом через aria-describedby; маркер «!» дублирует цвет.
+   Появляется без анимации: сообщение приходит по blur каждого поля длинной
+   формы (частота «десятки раз», гейт RULES.md §0), а салиентный вход по
+   отправке отыгрывает один раз .form-error-summary — двух движений на одно
+   событие валидации быть не должно. */
+.form-field__error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-1);
+  font-size: var(--fs-xs);
+  line-height: var(--lh-snug);
+  color: var(--color-error);
+}
+.form-field__error::before {
+  content: "!";
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-4);
+  height: var(--space-4);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-on-accent);
+  background: var(--color-error);
+  border-radius: var(--radius-full);
+}
+
+/* ===== Счётчик символов =============================================== */
+/* Для textarea и для .rte-area: длина ограничена — пользователь должен
+   видеть остаток. Моноширинные цифры, иначе счётчик дёргает вёрстку.
+   Движения и перехода цвета здесь нет и не будет: счётчик пересчитывается
+   на каждый символ — это высшая частота по гейту RULES.md §0. Пороги
+   переключают цвет мгновенно, догоняющее затухание на 90% лимита читалось бы
+   как задержка ввода. */
+.form-field__counter {
+  align-self: flex-end;
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+}
+.form-field__counter.is-near-limit { color: var(--color-warning); }
+.form-field__counter.is-over-limit {
+  color: var(--color-error);
+  font-weight: var(--fw-semi);
+}
+
+/* ===== Прогрессивное раскрытие ======================================== */
+/* Компонентные display перебивают атрибут hidden — из-за этого страницы
+   заводили собственные костыли (.fp-step[hidden]). Правило живёт в самом
+   компоненте, чтобы зависимые поля скрывались разметкой, без JS-классов */
+.form-field[hidden],
+.form-group[hidden] { display: none; }
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+/* Зависимая группа: визуально привязана к управляющему полю засечкой слева.
+   PURPOSE: state indication — появление проявлением, без анимации высоты
+   (layout-свойство, RULES.md §5) */
+.form-group--dependent {
+  padding-left: var(--space-3);
+  border-left: var(--border-w-strong) solid var(--color-border);
+  transition: opacity var(--duration-dropdown) var(--ease-out);
+}
+.form-group--dependent.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* ===== Адаптив ========================================================== */
+/* Промежуточная ступень: на планшете три колонки по ~300px были той же
+   теснотой, что в прототипе, — сначала 3→2 и только потом 2→1 */
+@media (max-width: 980px) {
+  .form-grid--three { grid-template-columns: repeat(2, 1fr); }
+}
 @media (max-width: 720px) {
   .form-grid,
   .form-grid--three { grid-template-columns: 1fr; }

@@ -41,6 +41,17 @@
   cursor: not-allowed;
 }
 
+/* Только для чтения ≠ выключено: поле заполняет система или другая роль,
+   но текст обязан читаться с обычным контрастом (не --color-text-disabled) */
+.input[readonly],
+.textarea[readonly] {
+  background: var(--color-surface-sunken);
+  border-color: var(--color-border-subtle);
+  color: var(--color-text);
+  cursor: default;
+}
+.input[readonly]:hover:not(:focus) { border-color: var(--color-border-subtle); }
+
 /* ====================== Sizes ====================== */
 .input-sm {
   padding: var(--space-1) var(--space-2);
@@ -66,6 +77,52 @@
   display: inline-flex;
   color: var(--color-text-muted);
   pointer-events: none;
+}
+
+/* Хвостовой аддон: единица или валюта ВНУТРИ поля («₽», «кВт», «%»).
+   Ведущая иконка не нужна — паддинг слева возвращается к обычному */
+.input-group--suffix .input {
+  padding-left: var(--space-3);
+  padding-right: var(--space-10);
+}
+.input-affix {
+  position: absolute;
+  right: var(--space-3);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Числовое поле: моноширинные цифры (колонки значений не пляшут) и снятый
+   нативный спиннер там, где шаг вверх-вниз бессмыслен (цена, мощность) */
+.input--numeric {
+  font-variant-numeric: tabular-nums;
+}
+.input--numeric::-webkit-outer-spin-button,
+.input--numeric::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
+.input--numeric[type="number"] { appearance: textfield; }
+
+/* ===== Парный контрол диапазона «от — до» =============================
+   Компонентная версия .fp-range из styles/pages/form.css: два поля, общая
+   метка на группе, общее кольцо при :focus-within — связь «от/до» перестаёт
+   держаться только на тексте метки */
+.input-range {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0;
+  border: none;
+  min-width: 0;
+}
+.input-range .input { flex: 1; min-width: 0; }
+.input-range__dash {
+  flex: none;
+  color: var(--color-text-muted);
+  user-select: none;
 }
 
 /* ====================== Search bar ====================== */
@@ -169,11 +226,44 @@
   border-color: var(--color-error);
 }
 .input-error:focus {
+  /* Прозрачный контур обязателен и у error-варианта: в forced-colors
+     box-shadow вырезается и кольцо ошибки исчезло бы целиком */
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   border-color: var(--color-error);
   box-shadow: var(--shadow-focus-error);
 }
 .input-success {
   border-color: var(--color-success);
+}
+
+/* Нативная валидация. Именно :user-invalid, а не :invalid: последний красит
+   поле красным ещё до первого ввода (ровно дефект прототипа на date/email).
+   [aria-invalid="true"] — тот же вид для полей, валидируемых скриптом */
+.input:user-invalid,
+.select:user-invalid,
+.textarea:user-invalid,
+.input[aria-invalid="true"],
+.select[aria-invalid="true"],
+.textarea[aria-invalid="true"] {
+  border-color: var(--color-error);
+}
+.input:user-invalid:focus,
+.select:user-invalid:focus,
+.textarea:user-invalid:focus,
+.input[aria-invalid="true"]:focus,
+.select[aria-invalid="true"]:focus,
+.textarea[aria-invalid="true"]:focus {
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
+  border-color: var(--color-error);
+  box-shadow: var(--shadow-focus-error);
+}
+/* Пока поле в работе — нейтральное состояние: подсветка приходит после blur,
+   а не на каждом промежуточном символе */
+.input:focus:user-invalid:placeholder-shown {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-focus);
 }
 
 /* ====================== Floating label ====================== */
@@ -206,13 +296,24 @@
 }
 
 /* ====================== Animations ====================== */
+/* PURPOSE: feedback — отказ ввода («так нельзя») там, где поле остаётся на
+   месте и красной рамки мало. Длительность 300 мс = потолок UI-движения
+   (RULES.md §2), взята из токенов; литеральных 0.4s здесь быть не может.
+   Единственный keyframes-случай в файле: тряска не обратима и не
+   перезапускается пачкой — прерываемость (§4) для неё не требование. */
 .input-shake {
-  animation: input-shake 0.4s var(--ease);
+  animation: input-shake calc(2 * var(--duration-tooltip)) var(--ease-out);
 }
 @keyframes input-shake {
   0%, 100% { transform: translateX(0); }
   10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
   20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+/* Уменьшенное движение: тряска — чистое перемещение и снимается целиком.
+   Носитель информации остаётся прежним — красная рамка :user-invalid и
+   текст .form-field__error (RULES.md §6: движение не единственный носитель) */
+@media (prefers-reduced-motion: reduce) {
+  .input-shake { animation: none; }
 }
 
 /* ====================== Responsive ====================== */
@@ -320,4 +421,38 @@
 [data-theme="dark"] .input:focus,
 [data-theme="dark"] .select:focus {
   border-color: var(--color-accent);
+}
+/* Невалидное и readonly-состояние обязаны пережить .dark .input/:focus —
+   у тех правил специфичность выше, и без повтора рамка ошибки терялась */
+.dark .input[readonly],
+.dark .textarea[readonly],
+[data-theme="dark"] .input[readonly],
+[data-theme="dark"] .textarea[readonly] {
+  border-color: var(--color-border-subtle);
+  color: var(--color-text);
+}
+.dark .input-error,
+.dark .input:user-invalid,
+.dark .input[aria-invalid="true"],
+.dark .select[aria-invalid="true"],
+.dark .textarea[aria-invalid="true"],
+[data-theme="dark"] .input-error,
+[data-theme="dark"] .input:user-invalid,
+[data-theme="dark"] .input[aria-invalid="true"],
+[data-theme="dark"] .select[aria-invalid="true"],
+[data-theme="dark"] .textarea[aria-invalid="true"] {
+  border-color: var(--color-error);
+}
+.dark .input-error:focus,
+.dark .input:user-invalid:focus,
+.dark .input[aria-invalid="true"]:focus,
+.dark .select[aria-invalid="true"]:focus,
+.dark .textarea[aria-invalid="true"]:focus,
+[data-theme="dark"] .input-error:focus,
+[data-theme="dark"] .input:user-invalid:focus,
+[data-theme="dark"] .input[aria-invalid="true"]:focus,
+[data-theme="dark"] .select[aria-invalid="true"]:focus,
+[data-theme="dark"] .textarea[aria-invalid="true"]:focus {
+  border-color: var(--color-error);
+  box-shadow: var(--shadow-focus-error);
 }

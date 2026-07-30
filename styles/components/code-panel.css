@@ -30,6 +30,91 @@
   color: var(--color-text-muted);
 }
 
+/* Размещение: единственный живой результат формы обязан оставаться на экране.
+   --sticky — липнет под шапкой; --aside — боковая колонка. Обе высоты
+   ограничены и прокручиваются самостоятельно */
+.code-panel--sticky {
+  position: sticky;
+  top: calc(var(--header-h) + var(--space-4));
+  max-height: calc(100vh - var(--header-h) - var(--space-8));
+  overflow: auto;
+}
+.code-panel--aside {
+  position: sticky;
+  top: calc(var(--header-h) + var(--space-4));
+  max-height: calc(100vh - var(--header-h) - var(--space-8));
+  overflow: auto;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--fs-sm);
+}
+@media (max-width: 767px) {
+  /* На мобильном липкая панель съедала бы половину экрана */
+  .code-panel--sticky,
+  .code-panel--aside {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+/* Строка кода + кнопка копирования. Акцентную заливку берёт на себя ряд,
+   поэтому кнопка оказывается НА акценте и её цвет строится от
+   --color-accent-text (на светлой подложке панели он был бы невидим) */
+.code-panel__string-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-accent-text);
+  background: var(--color-accent);
+  border-radius: var(--radius-sm);
+}
+.code-panel__string-row .code-panel__string {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 0;
+  padding: 0;
+  background: none;
+  border-radius: 0;
+}
+/* Кнопка на акцентной подложке: цвет от текста строки, кольцо фокуса тоже —
+   акцентное кольцо на акцентном фоне не видно */
+.code-panel__copy {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--fs-sm);
+  color: var(--color-accent-text);
+  background: var(--color-on-accent-soft);
+  border: var(--border-w) solid var(--color-on-accent-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  /* PURPOSE: feedback — отклик на наведение и подтверждение копирования.
+     Свойства перечислены поимённо (RULES.md §5): background-color меняет
+     hover, border-color — состояние .is-copied; без него рамка подтверждения
+     щёлкала бы мимо заливки. Движения нет: копирование часто идёт с
+     клавиатуры (Ctrl+C рядом), кнопка отвечает только цветом */
+  transition:
+    background-color var(--duration-press) var(--ease-out),
+    border-color var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .code-panel__copy:hover { background: var(--color-on-accent-strong); }
+}
+.code-panel__copy:focus-visible {
+  outline: var(--border-w-strong) solid var(--color-accent-text);
+  outline-offset: 2px;
+}
+/* Подтверждение копирования: класс снимает JS. Текст меняет разметка —
+   цвет фона не единственный носитель */
+.code-panel__copy.is-copied {
+  background: var(--color-on-accent-strong);
+  border-color: var(--color-accent-text);
+}
+
 /* Итоговая код-строка */
 .code-panel__string {
   margin-bottom: var(--space-3);
@@ -86,5 +171,63 @@
 .code-panel__empty {
   font-size: var(--fs-sm);
   color: var(--color-text-muted);
+}
+
+/* ===== Печать ========================================================== */
+/* Акцентная заливка на печати даёт сплошную краску, поэтому прототип чинил
+   код-строку инлайн-стилем. Печатный слой снимает заливку и градиент,
+   палитра принудительно светлая (приём spec-sheet.css:212-261) */
+@media print {
+  .code-panel {
+    --color-text:           #18181b;
+    --color-text-muted:     #52525b;
+    --color-border:         #d6d3d1;
+    --color-border-subtle:  #e7e5e4;
+    --color-accent:         #18181b;
+    --color-surface:        #ffffff;
+    background: none;
+    border: 0.4pt solid var(--color-border);
+    border-left: 1pt solid var(--color-accent);
+    break-inside: avoid;
+    padding: 2mm 3mm;
+    print-color-adjust: exact;
+  }
+  .code-panel--sticky,
+  .code-panel--aside {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+  .code-panel__title { font-size: 10.5pt; color: var(--color-accent); }
+  .code-panel__hint,
+  .code-panel__count { font-size: 7.5pt; color: var(--color-text-muted); }
+  /* Код-строка: рамка и светлый фон вместо заливки акцентом */
+  .code-panel__string {
+    font-size: 9pt;
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 0.4pt solid var(--color-border);
+  }
+  .code-panel__string-row {
+    color: var(--color-text);
+    background: none;
+    border: 0.4pt solid var(--color-border);
+    padding: 1mm 2mm;
+  }
+  .code-panel__copy { display: none; }
+  .code-panel__table { font-size: 8pt; }
+  .code-panel__table td { border-bottom: 0.4pt solid var(--color-border-subtle); }
+  .code-panel__table tr { break-inside: avoid; }
+  /* Предупреждение в ч/б: рамка и значок «!», а не только красный цвет */
+  .code-panel__warn {
+    font-size: 8.5pt;
+    color: var(--color-text);
+    background: none;
+    border: 0.8pt solid var(--color-text);
+  }
+  .code-panel__warn::before {
+    content: "! ";
+    font-weight: var(--fw-bold);
+  }
 }
 /* </BLOCK:component.code-panel> */

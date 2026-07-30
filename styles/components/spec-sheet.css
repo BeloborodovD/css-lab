@@ -91,6 +91,14 @@
   color: var(--color-text);
   text-align: right;
 }
+/* Незаполненное значение: «не требуется» обязано отличаться от «забыли».
+   Курсив + приглушённый цвет + прочерк в разметке — три носителя, не один */
+.spec-row__value--empty,
+.spec-sheet__empty {
+  font-weight: var(--fw-regular);
+  font-style: italic;
+  color: var(--color-text-muted);
+}
 .spec-row--full {
   grid-column: 1 / -1;
   flex-direction: column;
@@ -249,6 +257,14 @@
     padding: 1.1mm 2mm;
   }
   .spec-table th { font-size: 8pt; }
+  /* Шапка длинной таблицы (рабочие точки) повторяется на каждой странице,
+     строки не режутся пополам. Собственное правило, а не заимствование из
+     table.css: печатный лист — зона ответственности spec-sheet, компонент
+     обязан быть самодостаточным при вендоринге */
+  .spec-table thead { display: table-header-group; }
+  .spec-table tr { break-inside: avoid; }
+  .spec-row__value--empty,
+  .spec-sheet__empty { font-size: 8.5pt; color: var(--color-text-muted); }
   .spec-section { break-inside: avoid; margin-bottom: 4mm; }
   .param-card { break-inside: avoid; }
   .spec-sheet__footer {

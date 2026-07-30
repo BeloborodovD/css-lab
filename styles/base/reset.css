@@ -44,6 +44,23 @@ a {
   text-decoration: none;
 }
 
+/* Инлайн-код. Базы в светлой теме не было вовсе, при этом themes/dark.css
+   переопределяет `.dark code` — тёмная тема правила несуществующее правило.
+   .code-inline — тот же вид для <span>, когда семантика <code> не подходит */
+code,
+.code-inline {
+  padding: var(--space-px) var(--space-1);
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  background: var(--color-surface-sunken);
+  border-radius: var(--radius-xs);
+}
+pre code {
+  padding: 0;
+  background: none;
+  border-radius: 0;
+}
+
 ul,
 ol {
   list-style: none;

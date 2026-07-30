@@ -498,6 +498,10 @@
 .combobox.error .combobox-trigger:focus,
 .combobox.error.open .combobox-trigger,
 .combobox.error.is-open .combobox-trigger {
+  /* Прозрачный контур рядом с box-shadow-кольцом: в forced-colors тень
+     вырезается, а контур система перекрашивает в Highlight */
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   box-shadow: var(--shadow-focus-error);
 }
 

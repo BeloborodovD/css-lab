@@ -47,11 +47,16 @@
 }
 
 /* Кнопка-раскрыватель: единственная клавиатурная точка входа контрола,
-   не вложена в другой интерактив. Цель ≥24px (SC 2.5.8) */
+   не вложена в другой интерактив. Цель ≥24px (SC 2.5.8).
+   inset-block: 0 + margin-block: auto центрируют её по вертикали: при 2-4
+   рядах чипов (взрывозащита, 34 типоразмера) фиксированный top отрывал
+   кнопку к верхней кромке — дефект прототипа, унаследованный портом.
+   Колонку под кнопку резервирует padding-right контрола (--space-8). */
 .picklist__toggle {
   position: absolute;
   right: var(--space-1);
-  top: var(--space-2);
+  inset-block: 0;
+  margin-block: auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -114,7 +119,9 @@
   top: calc(100% + var(--space-1));
   left: 0;
   right: 0;
-  max-height: 250px;
+  /* Высота от свободного места вьюпорта, а не константа 250px: на коротком
+     экране панель перекрывала половину страницы и не знала о её границах */
+  max-height: 50vh;
   overflow: auto;
   padding: var(--space-1);
   background: var(--color-surface);
@@ -168,6 +175,9 @@
 .picklist__option {
   display: flex;
   align-items: center;
+  /* Перенос нужен двухстрочной опции: .picklist__option-desc — сиблинг
+     метки и уходит на вторую строку через flex-basis: 100% */
+  flex-wrap: wrap;
   gap: var(--space-2);
   padding: var(--space-2);
   font-size: var(--fs-sm);
@@ -179,13 +189,109 @@
 @media (hover: hover) and (pointer: fine) {
   .picklist__option:hover { background: var(--color-accent-soft); }
 }
+/* Клавиатурный проход по чекбоксам: строка подсвечивается так же, как под
+   курсором, — иначе с клавиатуры не видно, где находишься.
+   PURPOSE: state indication. Переход снят намеренно: перебор опций стрелками —
+   действие высокой частоты и инициировано клавиатурой, подсветка обязана
+   стоять там же, где каретка, без догоняющего затухания (RULES.md §0) */
+.picklist__option:focus-within {
+  background: var(--color-accent-soft);
+  transition: none;
+}
 /* PURPOSE: feedback — пункт-label отзывается на нажатие (глобальный press
    ловит только button/[role=button]) */
 .picklist__option:active { background: var(--color-accent-soft-hover); }
 .picklist__option input[type="checkbox"] {
-  width: auto;
+  /* Размер как у .checkbox (inputs.css), а не браузерные ~13px: цель нажатия
+     на сенсорном экране увеличивается ниже, в блоке адаптива */
+  width: 18px;
+  height: 18px;
+  flex: none;
   margin: 0;
   accent-color: var(--color-accent);
+}
+
+/* ===== Группы опций ===================================================== */
+/* Списки на 27-34 позиции (напряжения, монтажные исполнения) без группировки
+   нечитаемы; заголовок группы липнет к верху панели при прокрутке */
+.picklist__group + .picklist__group { margin-top: var(--space-2); }
+.picklist__group-label {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-raised);
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+}
+.picklist__group.is-filtered { display: none; }
+
+/* ===== Двухстрочная опция: код + расшифровка ============================ */
+/* В чип уходит код, в списке видно и код, и расшифровку (IC/IP/Ex,
+   «PTC (ГОСТ 27888)», «N — нормальный») */
+.picklist__option-label {
+  font-size: var(--fs-sm);
+  color: var(--color-text);
+}
+/* Расшифровка уходит на вторую строку и выравнивается под кодом:
+   отступ = ширина чекбокса + gap строки */
+.picklist__option-desc {
+  flex-basis: 100%;
+  padding-left: calc(18px + var(--space-2));
+  font-size: var(--fs-xs);
+  line-height: var(--lh-snug);
+  color: var(--color-text-muted);
+  white-space: normal;
+}
+/* Вариант с обёрткой (код и расшифровка внутри одного контейнера) */
+.picklist__option-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-px);
+  min-width: 0;
+}
+.picklist__option-body .picklist__option-desc {
+  flex-basis: auto;
+  padding-left: 0;
+}
+
+/* ===== Многоколоночная панель =========================================== */
+/* Для полей во всю ширину сетки: 34 значения в один столбец — прокрутка ради
+   прокрутки. Колонка не уже 200px, иначе коды переносятся */
+.picklist__panel--columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-px) var(--space-2);
+  align-content: start;
+}
+.picklist__panel--columns .picklist__search,
+.picklist__panel--columns .picklist__group-label,
+.picklist__panel--columns .picklist__no-match,
+.picklist__panel--columns .picklist__actions,
+.picklist__panel--columns .picklist__other { grid-column: 1 / -1; }
+
+/* ===== Массовые действия ================================================ */
+/* «Выбрать все / снять все» + счётчик выбранного: типовой ряд высот оси
+   набирался восемью кликами */
+.picklist__actions {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1);
+  margin-top: var(--space-1);
+  border-top: var(--border-w) solid var(--color-border);
+  background: var(--color-surface);
+}
+.picklist__actions-count {
+  margin-left: auto;
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
 }
 
 /* Вариант панели с чипами-опциями вместо чекбоксов */
@@ -207,10 +313,64 @@
   font-size: var(--fs-sm);
 }
 
-/* Reduced motion: без сдвига/масштаба */
+/* ===== Столкновение с краем вьюпорта ==================================== */
+/* Открытие вверх (класс ставит JS, замерив свободное место) — аналог
+   .combobox-dropdown-top. Панель по-прежнему растёт от контрола */
+.picklist__panel--top {
+  top: auto;
+  bottom: calc(100% + var(--space-1));
+  transform-origin: var(--transform-origin, bottom center);
+}
+
+/* Мобильный вариант — лист снизу: панель на пол-экрана поверх контента
+   заменяется предсказуемым bottom-sheet. Вход и выход одной кромкой,
+   смещение процентное (RULES.md §3) */
+@media (max-width: 479px) {
+  .picklist__panel--sheet {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: var(--z-drawer);
+    max-height: 70vh;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    transform: translateY(100%);
+    /* Лист принадлежит нижней кромке экрана, а не контролу: origin у той же
+       кромки, из-за которой он выезжает и за которую уходит */
+    transform-origin: bottom center;
+    /* PURPOSE: spatial consistency — на мобильном панель ведёт себя как
+       шторка, а не как поповер: кривая --ease-drawer и тайминги шторки
+       (300 вход / 240 выход), прецедент combobox.css. Базовое состояние =
+       выход, он быстрее входа */
+    transition:
+      opacity var(--duration-modal-exit) var(--ease-drawer),
+      transform var(--duration-modal-exit) var(--ease-drawer),
+      visibility 0s linear var(--duration-modal-exit);
+  }
+  .picklist.is-open .picklist__panel--sheet {
+    transform: translateY(0);
+    transition:
+      opacity var(--duration-modal) var(--ease-drawer),
+      transform var(--duration-modal) var(--ease-drawer),
+      visibility 0s;
+  }
+}
+
+/* Сенсорный экран: цель чекбокса опции — как у .checkbox в inputs.css */
+@media (max-width: 767px) {
+  .picklist__option input[type="checkbox"] {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+/* Reduced motion: мягче, но не ноль — движение (масштаб панели, выезд листа)
+   снимается, кроссфейд открытия остаётся: он и есть носитель смены состояния.
+   Вариант --sheet перечислен явно, чтобы правило не зависело от порядка
+   блоков в файле (у него та же специфичность, что у базовой панели) */
 @media (prefers-reduced-motion: reduce) {
-  .picklist__panel { transform: none; }
-  .picklist.is-open .picklist__panel { transform: none; }
+  .picklist__panel,
+  .picklist__panel--sheet,
+  .picklist.is-open .picklist__panel,
+  .picklist.is-open .picklist__panel--sheet { transform: none; }
   .picklist__caret { transition: none; }
 }
 /* </BLOCK:component.picklist> */

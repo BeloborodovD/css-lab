@@ -18,15 +18,110 @@
   max-width: 100%;
   min-height: 297mm;       /* физическая высота листа A4 — экранное превью держит пропорции */
   margin: 0 auto var(--space-6);
-  background: #ffffff;
   box-shadow: var(--shadow);
   border-radius: var(--radius-xs);
   padding: 16mm 14mm;
+
+  /* [CONFIG:paper-palette]
+   * Принудительно светлая палитра — БЕЗУСЛОВНО, а не только в @media print:
+   * лист это бумага, и на экране он белый в обеих темах по определению.
+   * Без этого блока белый лист тащил тёмные токены темы: заголовок #f4f4f5
+   * на #ffffff давал 1,07:1, колонтитул #a1a1aa — 2,56:1, то есть в dark
+   * содержимое листа пропадало. Идиома та же, что в spec-sheet.css и
+   * code-panel.css: токены переопределяются на самом блоке и наследуются
+   * всем содержимым листа. Значения взяты из светлой палитры variables.css,
+   * собственных оттенков блок не вводит. Единственное намеренное отличие —
+   * --color-bg: #ffffff вместо #fafaf9 светлой темы: у листа фон бумаги
+   * белый (то же значение, что --color-surface здесь и в светлой теме).
+   * Для содержимого листа разница нейтральна — единственный потребитель
+   * --color-bg, .param-card (spec-sheet.css), внутри .print-sheet не стоит. */
+  --color-text:           #18181b;
+  --color-text-secondary: #27272a;
+  --color-text-muted:     #52525b;
+  --color-border:         #e7e5e4;
+  --color-border-strong:  #d6d3d1;
+  --color-border-subtle:  #f5f5f4;
+  --color-surface:        #ffffff;
+  --color-surface-sunken: #f5f5f4;
+  --color-bg:             #ffffff;
+  --color-highlight:      #eef2ff;
+  /* Акцент отдельно: в dark он намеренно подсвечен под тёмный фон
+     (#5fc16f у VEZA — 7,9:1 на #18181b, но 2,25:1 на бумаге), а плоская
+     замена на чернила убила бы фирменный цвет и в светлой теме.
+     --color-accent-paper живёт только в светлых блоках variables/тем и в
+     dark не инвертируется (приём --brand-plate-bg), поэтому лист получает
+     выверенный по AA светлый акцент бренда в обеих темах. Без var(…, …)
+     с самоссылкой: `--color-accent: var(--color-accent-paper, var(--color-accent))`
+     — это цикл, он делает переменную invalid at computed-value time. */
+  --color-accent: var(--color-accent-paper);
+  background: var(--color-surface);
+  /* Белая бумага обязана печататься белой и из dark-темы */
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+  /* </CONFIG:paper-palette> */
+}
+
+/* Логотип на бумаге — цветной в обеих темах: в dark --brand-logo
+   переключается на белый mono-вариант (themes/*.css), а он на белом листе
+   не виден. --brand-logo-paper задан только в светлом блоке темы.
+   :not(.brand-mark--mono) — явный опт-ин на белый логотип уважаем.
+   Приглушение .dark .brand-mark снимается в themes/dark.css. */
+.print-sheet .brand-mark:not(.brand-mark--mono) {
+  background-image: var(--brand-logo-paper, var(--brand-logo));
+}
+
+/* [CONFIG:print-visibility]
+ * Контракт видимости экран/печать. Механизм печатной формы держится на паре:
+ * экранное представление прячется, печатное — показывается.
+ *   .no-print / .screen-only — видно на экране, не печатается (синонимы);
+ *   .print-only              — скрыто на экране, печатается.
+ * Скрытие через display: элементы полностью выключаются из обоих потоков.
+ */
+.print-only { display: none; }
+/* </CONFIG:print-visibility> */
+
+/* Колонтитул разметкой. CSS-нумерация страниц через @page margin-boxes
+   (@bottom-left / counter(page)) Paged-Media-only: Chrome и Firefox молча её
+   игнорируют, документ уходит в печать без подписи и номера. Поэтому
+   колонтитул живёт в разметке листа, а @page страницы оставляет себе только
+   size и margin. Сквозная нумерация «Лист N из M» средствами CSS в браузере
+   недостижима — номер проставляет генератор документа. */
+.print-sheet__running-head,
+.print-sheet__running-foot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+.print-sheet__running-head {
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-4);
+  border-bottom: var(--border-w) solid var(--color-border);
+}
+/* Подвал прижимается к нижней кромке листа (лист — flex-колонка) */
+.print-sheet__running-foot {
+  margin-top: auto;
+  padding-top: var(--space-2);
+  border-top: var(--border-w) solid var(--color-border);
 }
 
 @media print {
   body { background: #fff; }
+  .print-only { display: revert; }
+  .screen-only { display: none !important; }
+  .print-sheet__running-head,
+  .print-sheet__running-foot {
+    /* Светлую палитру колонтитул получает от самого листа (см. paper-palette
+       в базовом правиле), здесь остаётся только печатный кегль */
+    font-size: 7pt;
+  }
   .print-sheet {
+    /* Экранная граница #e7e5e4 на бумаге почти не отпечатывается — на печати
+       линии листа уходят на ступень темнее (значение прежнего print-блока
+       колонтитула и spec-sheet.css) */
+    --color-border: #d6d3d1;
     box-shadow: none;
     border-radius: 0;
     padding: 0;

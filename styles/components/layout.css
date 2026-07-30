@@ -12,7 +12,11 @@
   position: sticky;
   top: 0;
   z-index: var(--z-sticky);
-  height: var(--header-h);
+  /* min-height, а не height: жёсткая высота при overflow: visible не режет
+     контент, а выпускает его за пределы полосы (заголовок наезжал на текст
+     сверху, подзаголовок — на кнопки снизу). Пока содержимое умещается,
+     рендер идентичен прежнему */
+  min-height: var(--header-h);
   display: flex;
   align-items: center;
   gap: var(--space-3);
@@ -88,6 +92,158 @@ body:not(:has(.app-sidebar.left.open)):not(:has(.app-sidebar.right.open)) .searc
 .logo-accent {
   color: var(--color-accent);
 }
+
+/* [BLOCK:component.header-accent]
+ * Брендовая полоса приложения: акцентная заливка, заголовок с подзаголовком,
+ * слот логотипа, сгруппированные действия и уплотнение при скролле.
+ * Обобщает шапку теста (components/quiz.css) — доменный .quiz-header
+ * остаётся её потребителем, дублировать пару title/sub в нём не нужно.
+ * Движения нет: полоса постоянно на экране (RULES.md §0), sticky без перехода.
+ */
+/* Селектор .header.header--accent (не одиночный класс) там, где правило
+   обязано пережить медиазапросы базовой .header ниже по файлу: у них та же
+   специфичность, но они идут позже и перебивали бы вариант. */
+.header--accent {
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+  border-bottom: none;
+}
+.header.header--accent {
+  /* Полоса растёт под содержимое, а не выпускает его наружу */
+  height: auto;
+  min-height: var(--header-h);
+  /* Переносится целиком: на узком экране группа действий уходит на свою
+     строку, а не за правую кромку */
+  flex-wrap: wrap;
+  align-items: center;
+  padding-block: var(--space-2);
+  row-gap: var(--space-2);
+}
+/* Текстовая часть ужимается (min-width: 0 отменяет min-content-пол flex),
+   действия не ужимаются, но переносятся */
+.header--accent .header-left {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+/* Страховка на случай, если текстовая пара обёрнута контейнером без класса:
+   flex-элемент по умолчанию не ужимается ниже min-content и растягивает полосу */
+.header--accent .header-left > * { min-width: 0; }
+.header--accent .header-right {
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  row-gap: var(--space-2);
+  min-width: 0;
+}
+
+/* Обёртка пары «заголовок + подзаголовок»: логотип остаётся слева в строку,
+   текст — колонкой. Без min-width: 0 длинный заголовок задаёт полосе
+   min-content-ширину и вся раскладка течёт вправо */
+.header__titles {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-px);
+  min-width: 0;
+}
+
+/* Заголовок полосы. Дисплейный шрифт бренда (Wadik у Уралэлектро) приходит
+   темой через --font-display; трекинг ужат — кегль крупный (RULES.md §8).
+   overflow-wrap: anywhere — длинный номер заявки рвётся, а не растягивает
+   полосу по горизонтали */
+.header__title {
+  margin: 0;
+  min-width: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-semi);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-tight);
+  color: inherit;
+  overflow-wrap: anywhere;
+}
+/* Подзаголовок БЕЗ opacity: полупрозрачный текст на акценте проваливал AA
+   (урок quiz.css:31-35 — переносится в обобщённый блок как есть) */
+.header__sub {
+  margin: 0;
+  min-width: 0;
+  font-size: var(--fs-xs);
+  line-height: var(--lh-snug);
+  color: inherit;
+  overflow-wrap: anywhere;
+}
+
+/* Слот бренд-марки. На акцентной заливке — белый (mono) вариант логотипа
+   независимо от того, проставлен ли в разметке .brand-mark--mono */
+.header__logo {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+}
+.header--accent .header__logo.brand-mark,
+.header--accent .header__logo .brand-mark {
+  background-image: var(--brand-logo-mono);
+}
+
+/* Группа действий: разделитель разводит «экспорт / импорт / деструктив».
+   Группа переносится внутри себя — шесть кнопок на 480px иначе уезжают */
+.header__group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.header__group + .header__group {
+  margin-left: var(--space-2);
+  padding-left: var(--space-3);
+  border-left: var(--border-w) solid var(--color-border);
+}
+.header--accent .header__group + .header__group {
+  border-left-color: var(--color-on-accent-border);
+}
+
+/* Уплотнение при скролле (класс вешает JS). Перехода нет намеренно, по двум
+   причинам сразу: высота и кегль — layout-свойства (RULES.md §5), а сам
+   триггер — прокрутка, то есть действие максимальной частоты, которое по
+   гейту RULES.md §0 не анимируется вовсе. Мгновенное переключение к тому же
+   тривиально прерываемо: класс можно снимать и вешать хоть каждый кадр.
+   На стороне JS порог обязан иметь гистерезис (например, ставить после 24px
+   и снимать до 8px) — иначе класс задребезжит на границе. */
+.header.header--condensed {
+  height: auto;
+  min-height: 0;
+  padding-block: var(--space-1);
+}
+.header--condensed .header__sub { display: none; }
+.header--condensed .header__title { font-size: var(--fs-lg); }
+
+@media print {
+  /* Полоса теряет заливку и становится шапкой бланка: цветной логотип,
+     правило-разделитель брендом, действия не печатаются.
+     Палитра принудительно светлая — активная dark-тема не должна утащить
+     тёмные токены в лист (тот же приём, что в spec-sheet.css) */
+  .header,
+  .header--accent {
+    --color-text:   #18181b;
+    --color-border: #d6d3d1;
+    position: static;
+    height: auto;
+    min-height: 0;
+    padding: 0 0 var(--space-2);
+    background: none;
+    color: var(--color-text);
+    border-bottom: var(--border-w-strong) solid var(--color-accent);
+    box-shadow: none;
+  }
+  .header--accent .header__logo.brand-mark,
+  .header--accent .header__logo .brand-mark {
+    background-image: var(--brand-logo);
+  }
+  .header-right,
+  .header .search-bar { display: none; }
+}
+/* </BLOCK:component.header-accent> */
 
 /* ==================== Sidebar ==================== */
 .sidebar {
@@ -196,12 +352,24 @@ body:not(:has(.app-sidebar.left.open)):not(:has(.app-sidebar.right.open)) .searc
   .header {
     padding: 0 var(--space-3);
     gap: var(--space-2);
-    height: 56px;
+    min-height: 56px;
     justify-content: space-between;
   }
 
   .header-left,
   .header-right { gap: var(--space-2); flex-shrink: 0; }
+
+  /* Акцентная полоса на мобильном: вертикальные поля возвращаются (шорткат
+     padding выше их обнулил), обе группы занимают строку целиком и
+     разрешают ужиматься — иначе шесть кнопок уходят за кромку */
+  .header.header--accent { padding: var(--space-2) var(--space-3); }
+  .header--accent .header-left,
+  .header--accent .header-right {
+    flex: 1 1 100%;
+    min-width: 0;
+    flex-shrink: 1;
+  }
+  .header--accent .header-right { justify-content: flex-start; }
 
   .logo { font-size: var(--fs-md); }
   .search-bar { display: none; }
@@ -230,8 +398,9 @@ body:not(:has(.app-sidebar.left.open)):not(:has(.app-sidebar.right.open)) .searc
 @media (max-width: 374px) {
   .header {
     padding: 0 var(--space-2);
-    height: 52px;
+    min-height: 52px;
   }
+  .header.header--accent { padding: var(--space-2); }
   .logo { font-size: var(--fs-base); }
   .header .btn-icon { width: 36px; height: 36px; }
   .main { padding: var(--space-2); }

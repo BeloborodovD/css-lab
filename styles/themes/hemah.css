@@ -40,6 +40,11 @@
   /* Плашка под белый логотип: всегда фирменный тил */
   --brand-plate-bg:          #367589;
 
+  /* Бумага (.print-sheet) не инвертируется в dark, поэтому акцент и логотип
+     листа берутся отсюда: тот же AA-акцент на белом и цветной логотип */
+  --color-accent-paper:      #2d6274;
+  --brand-logo-paper:        url("/assets/logos/hemah.svg");
+
   /* Типографика бренда */
   --font-sans:    "Open Sans", -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-display: "Manrope", "Open Sans", -apple-system, "Segoe UI", sans-serif;
@@ -75,7 +80,7 @@
 .dark [data-brand="hemah"],
 [data-brand="hemah"] .dark,
 [data-brand="hemah"][data-theme="dark"] {
-  --color-accent:            #6fb3c7;  /* светлый тил — 6.5:1 на #18181b */
+  --color-accent:            #6fb3c7;  /* светлый тил — 7.55:1 на #18181b */
   --color-accent-hover:      #94c8d7;
   --color-accent-active:     #4d97ad;
   --color-accent-soft:       rgba(111, 179, 199, 0.12);

@@ -11,6 +11,44 @@
 .page-shell--narrow { max-width: 720px; }
 .page-shell--wide { max-width: none; padding-left: var(--space-6); padding-right: var(--space-6); }
 
+/* Ссылка «к содержимому» (SC 2.4.1). НЕ .sr-only: та остаётся скрытой всегда,
+   а skip-link обязан появиться при фокусе. До фокуса убран за верхнюю кромку
+   окна — движение по transform, чтобы не дёргать layout страницы */
+.skip-link {
+  position: fixed;
+  top: 0;
+  left: var(--space-4);
+  z-index: var(--z-sticky);
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--color-accent);
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  /* PURPOSE: preventing a jarring change — ссылка выезжает в поток, а не
+     возникает поверх контента рывком. Частота rare (первый Tab) */
+  transform: translateY(-100%);
+  transition: transform var(--duration-dropdown) var(--ease-out);
+}
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--shadow-focus);
+}
+/* Уменьшенное движение: мягче, а не «выключено» — выезд заменяется
+   проявлением. transform остаётся механикой укрытия (сбросить его в none
+   значило бы показать ссылку всегда), из перехода он убран: ссылка
+   оказывается на месте сразу и проступает по opacity (RULES.md §6) */
+@media (prefers-reduced-motion: reduce) {
+  .skip-link {
+    opacity: 0;
+    transition: opacity var(--duration-dropdown) var(--ease-out);
+  }
+  .skip-link:focus-visible { opacity: 1; }
+}
+
 .page-shell__title { margin: 0 0 var(--space-1); }
 .page-shell__sub {
   margin: 0 0 var(--space-5);

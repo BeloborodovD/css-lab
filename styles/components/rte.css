@@ -61,8 +61,15 @@
   border-color: var(--color-accent);
   box-shadow: var(--shadow-focus);
 }
+/* Плейсхолдер. Основной хук — атрибут data-empty (ставит JS на input):
+   селектор :empty ложно-отрицателен, как только в contenteditable остаётся
+   пустой <br> после Enter+Backspace — плейсхолдер пропадал навсегда.
+   :empty оставлен фолбэком на случай, когда JS ещё не отработал. */
+.rte-area[data-empty="true"]::before,
 .rte-area:empty::before {
   content: attr(data-placeholder);
   color: var(--color-text-disabled);
 }
+/* Явное «не пусто» перебивает фолбэк :empty */
+.rte-area[data-empty="false"]::before { content: none; }
 /* </BLOCK:component.rte> */

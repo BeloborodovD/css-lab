@@ -218,10 +218,11 @@
 [data-tooltip].tooltip-primary.tooltip-left::after   { border-top-color: transparent; border-left-color: var(--color-accent); }
 [data-tooltip].tooltip-primary.tooltip-right::after  { border-top-color: transparent; border-right-color: var(--color-accent); }
 
-/* Multiline */
+/* Multiline. Ширина — токен --tooltip-max-w, зажатый вьюпортом: на узком
+   экране подсказка не должна упираться в кромки (запас — по --space-8) */
 [data-tooltip].tooltip-multiline::before {
   white-space: normal;
-  max-width: 250px;
+  max-width: min(var(--tooltip-max-w), calc(100vw - var(--space-8)));
   text-align: center;
   line-height: var(--lh-snug);
 }
@@ -387,6 +388,17 @@ button[data-tooltip],
   }
 }
 .tooltip-interactive { pointer-events: auto; }
+
+/* Многострочный JS-тултип: инженерные подсказки (ряды мощностей, расшифровки
+   IC/IP/IE) приходят готовыми строками с переводами строк. Базовый
+   .tooltip-popup жёстко nowrap — без сброса white-space ограничение ширины
+   не сработало бы вовсе, подсказка растянулась бы в одну строку на экран */
+.tooltip-popup.tooltip-multiline {
+  white-space: pre-line;
+  max-width: min(var(--tooltip-max-w), calc(100vw - var(--space-8)));
+  text-align: left;
+  line-height: var(--lh-normal);
+}
 
 /* Origin у края, обращённого к триггеру (класс позиции = сторона стрелки) */
 .tooltip-popup.tooltip-top    { transform-origin: 50% 100%; }

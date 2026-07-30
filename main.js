@@ -175,7 +175,9 @@ const demoToast = (function initDemoToast() {
     '.filter-pills, .chips, #demo-log-view-toggle, .form-rows__add, .row-card__remove, ' +
     '.chip-remove, .modal, .dropdown, .tree-item, .toast, #theme-toggle, #width-control, ' +
     '#burger-menu, #info-toggle, .sidebar-close, .tab, .toggle, [data-datepicker], ' +
-    '#demo-drawer-open, .quiz-header__nav, .combobox';
+    '#demo-drawer-open, .quiz-header__nav, .combobox, .code-panel__string-row, ' +
+    '.form-error-summary, [data-error-summary], [data-panel-switch], ' +
+    '.table--form, .swatch-picker__actions, .picklist__actions';
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('button');
     if (!btn || btn.closest(SKIP)) return;
@@ -379,6 +381,19 @@ const demoToast = (function initDemoToast() {
   });
 })();
 
+// ===== Panel Placement Switch: helper =====
+// Витринные чипы «Вниз/Вверх/Шторка» лежат в разметке рядом с пикером, а не
+// внутри него. Для обработчиков «клик снаружи» это ложное срабатывание: клик
+// по чипу закрыл бы панель, размещение которой чип и переключает.
+// Проверяем адресно — управляет ли группа панелью именно этого пикера,
+// чужой переключатель по-прежнему закрывает панель как обычный клик снаружи.
+function isPanelSwitchFor(target, pickerRoot) {
+  const group = target.closest?.('[data-panel-switch]');
+  if (!group) return false;
+  const panel = document.getElementById(group.dataset.panelSwitch);
+  return !!panel && pickerRoot.contains(panel);
+}
+
 // ===== Picklist =====
 // Открытие панели, синхронизация чипов с чекбоксами, поиск-фильтр опций
 (function initPicklist() {
@@ -401,6 +416,10 @@ const demoToast = (function initDemoToast() {
       setOpen(!picklist.classList.contains('is-open'));
     });
     document.addEventListener('click', (e) => {
+      // Витринный переключатель размещения лежит вне пикера, но управляет именно
+      // его панелью — такой клик не считаем «кликом снаружи». Гасить всплытие
+      // на самом чипе нельзя: на document висят и другие потребители клика
+      if (isPanelSwitchFor(e.target, picklist)) return;
       if (picklist.classList.contains('is-open') && !picklist.contains(e.target)) setOpen(false);
     });
     document.addEventListener('keydown', (e) => {
@@ -412,7 +431,10 @@ const demoToast = (function initDemoToast() {
     function selectedItems() {
       const boxes = [...panel.querySelectorAll('.picklist__option input:checked')]
         .map(input => ({
-          label: input.closest('.picklist__option').textContent.trim(),
+          // У двухстрочной опции в чип уходит только код (__option-label),
+          // расшифровка (__option-desc) остаётся в списке
+          label: (input.closest('.picklist__option').querySelector('.picklist__option-label')
+            || input.closest('.picklist__option')).textContent.trim(),
           clear() {
             input.checked = false;
             input.dispatchEvent(new Event('change', { bubbles: true }));
@@ -459,6 +481,30 @@ const demoToast = (function initDemoToast() {
     });
     // Начальные чипы из разметки заменяем на синхронизированные
     syncChips();
+
+    // Массовые действия: типовой ряд высот оси набирался восемью кликами
+    const countEl = panel.querySelector('[data-picklist-count]');
+    const optionInputs = () => [...panel.querySelectorAll('.picklist__option input[type="checkbox"]')];
+
+    function syncCount() {
+      if (!countEl) return;
+      const all = optionInputs();
+      countEl.textContent = 'Выбрано ' + all.filter(i => i.checked).length + ' из ' + all.length;
+    }
+    function setAll(checked) {
+      optionInputs().forEach(input => { input.checked = checked; });
+      syncChips();
+      syncCount();
+    }
+
+    panel.querySelectorAll('[data-picklist-select-all]').forEach(btn => {
+      btn.addEventListener('click', () => setAll(true));
+    });
+    panel.querySelectorAll('[data-picklist-clear-all]').forEach(btn => {
+      btn.addEventListener('click', () => setAll(false));
+    });
+    optionInputs().forEach(input => input.addEventListener('change', syncCount));
+    syncCount();
 
     // Поиск-фильтр по опциям
     const search = panel.querySelector('[data-picklist-search]');
@@ -535,6 +581,12 @@ const demoToast = (function initDemoToast() {
       });
     }
 
+    // Статические образцы разметки берут цвет из data-swatch-hex: в витрине
+    // нет инлайновых стилей, значение приходит данными
+    grid.querySelectorAll('.swatch[data-swatch-hex]').forEach(swatch => {
+      swatch.style.background = swatch.dataset.swatchHex;
+    });
+
     // Дропдаун: открытие по клику на контрол/кнопку, закрытие вне и Escape
     function setOpen(open) {
       picker.classList.toggle('is-open', open);
@@ -545,10 +597,53 @@ const demoToast = (function initDemoToast() {
       setOpen(!picker.classList.contains('is-open'));
     });
     document.addEventListener('click', (e) => {
+      // См. picklist: клик по чипу переключателя размещения этой же панели —
+      // не «клик снаружи»; точечная оговорка вместо stopPropagation на чипе
+      if (isPanelSwitchFor(e.target, picker)) return;
       if (picker.classList.contains('is-open') && !picker.contains(e.target)) setOpen(false);
     });
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && picker.classList.contains('is-open')) setOpen(false);
+    });
+
+    const placeholder = control.querySelector('.swatch-picker__placeholder');
+    const selectedRow = picker.querySelector('[data-swatch-selected-row]');
+    const countEl = picker.querySelector('[data-swatch-count]');
+
+    // Строка выбранного внутри панели: увидеть выбор, не закрывая палитру
+    function syncSelectedRow() {
+      const selected = [...grid.querySelectorAll('.swatch.is-selected')];
+      if (countEl) {
+        countEl.textContent = selected.length ? 'Выбрано ' + selected.length : 'Ничего не выбрано';
+      }
+      if (!selectedRow) return;
+      selectedRow.textContent = '';
+      if (!selected.length) {
+        selectedRow.append('Ничего не выбрано');
+        return;
+      }
+      selected.forEach(swatch => {
+        const code = swatch.querySelector('.swatch__code')?.textContent || '';
+        const chip = document.createElement('span');
+        chip.className = 'swatch-picker__chip';
+        const dot = document.createElement('i');
+        dot.className = 'swatch-picker__chip-color';
+        dot.style.background = swatch.style.background;
+        chip.append(dot, ' RAL ' + code);
+        selectedRow.appendChild(chip);
+      });
+    }
+
+    // Массовое действие палитры: снять весь выбор
+    picker.querySelectorAll('[data-swatch-clear-all]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        grid.querySelectorAll('.swatch.is-selected').forEach(swatch => {
+          swatch.classList.remove('is-selected');
+          swatch.setAttribute('aria-pressed', 'false');
+        });
+        syncChips();
+      });
     });
 
     // Чипы выбранных цветов перерисовываются из .is-selected образцов
@@ -574,6 +669,9 @@ const demoToast = (function initDemoToast() {
         chip.append(dot, ' RAL ' + code + ' ', btn);
         control.appendChild(chip);
       });
+      // Плейсхолдер живёт только в пустом контроле
+      if (placeholder) placeholder.hidden = !!control.querySelector('.swatch-picker__chip');
+      syncSelectedRow();
     }
 
     grid.querySelectorAll('.swatch').forEach(swatch => {
@@ -585,19 +683,31 @@ const demoToast = (function initDemoToast() {
     });
     syncChips();
 
-    // Поиск по коду и названию образца
+    // Поиск по коду и названию образца. Фильтрация — классом .is-filtered
+    // (не inline style.display): состояние остаётся в CSS и читается тестами
     const search = picker.querySelector('.swatch-picker__search');
+    const noMatch = picker.querySelector('.swatch-picker__no-match');
+    const resultCount = picker.querySelector('.swatch-picker__result-count');
     if (search) {
       search.addEventListener('input', () => {
         const q = search.value.trim().toLowerCase();
-        grid.querySelectorAll('.swatch').forEach(swatch => {
+        const swatches = grid.querySelectorAll('.swatch');
+        let visible = 0;
+        swatches.forEach(swatch => {
           const hay = swatch.dataset.search ||
             (swatch.querySelector('.swatch__code')?.textContent || '').toLowerCase();
-          swatch.style.display = !q || hay.includes(q) ? '' : 'none';
+          const match = !q || hay.includes(q);
+          swatch.classList.toggle('is-filtered', !match);
+          if (match) visible++;
         });
+        // Заголовки семейств осмысленны только в полном списке
         grid.querySelectorAll('.swatch-picker__family').forEach(f => {
-          f.style.display = q ? 'none' : '';
+          f.classList.toggle('is-filtered', !!q);
         });
+        if (noMatch) noMatch.hidden = visible > 0;
+        if (resultCount) {
+          resultCount.textContent = q ? 'Найдено ' + visible + ' из ' + swatches.length : '';
+        }
       });
       // Клик в поле поиска не закрывает панель
       search.addEventListener('click', (e) => e.stopPropagation());
@@ -1223,5 +1333,208 @@ const demoToast = (function initDemoToast() {
   });
   clearBtn?.addEventListener('click', () => {
     bar.querySelectorAll('.filter-pill').forEach(pill => pill.remove());
+  });
+})();
+
+// ===== Form Error Summary =====
+// Сводка ошибок вместо alert(): показ по попытке отправки (фокус уходит на
+// контейнер с role=alert), ссылка сводки ведёт к своему полю и ставит на него
+// фокус. Появление и уход рисует CSS по классу .is-visible — JS только состояние.
+(function initFormErrorSummary() {
+  function fieldOf(link) {
+    const href = link.getAttribute('href') || '';
+    return href.startsWith('#') ? document.getElementById(href.slice(1)) : null;
+  }
+
+  document.querySelectorAll('.form-error-summary').forEach(summary => {
+    summary.addEventListener('click', (e) => {
+      const link = e.target.closest('.form-error-summary__link');
+      if (!link) return;
+      const field = fieldOf(link);
+      if (!field) return;
+      e.preventDefault();
+      // scrollIntoView мгновенный при reduced-motion (ME-06)
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      field.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' });
+      field.focus({ preventScroll: true });
+    });
+  });
+
+  document.querySelectorAll('[data-error-summary]').forEach(btn => {
+    const summary = document.getElementById(btn.dataset.errorSummary);
+    if (!summary) return;
+    btn.addEventListener('click', () => {
+      summary.hidden = false;
+      summary.classList.add('is-visible');
+      // Перечисленные в сводке поля помечаются невалидными — рамка и текст
+      // ошибки перестают быть единственным носителем (SC 1.4.1 / 3.3.1)
+      summary.querySelectorAll('.form-error-summary__link').forEach(link => {
+        fieldOf(link)?.setAttribute('aria-invalid', 'true');
+      });
+      summary.focus();
+    });
+  });
+})();
+
+// ===== Char Counter =====
+// Счётчик символов под textarea/rte-area: [data-counter] указывает на id
+// элемента-счётчика; пороги 90% и лимит переключают состояния
+(function initCharCounter() {
+  document.querySelectorAll('[data-counter]').forEach(field => {
+    const out = document.getElementById(field.dataset.counter);
+    if (!out) return;
+    const max = Number(field.getAttribute('maxlength')) || 0;
+
+    function render() {
+      const len = (field.value ?? field.textContent ?? '').length;
+      out.textContent = max ? len + ' / ' + max : String(len);
+      out.classList.toggle('is-near-limit', max > 0 && len >= max * 0.9 && len < max);
+      out.classList.toggle('is-over-limit', max > 0 && len >= max);
+    }
+
+    field.addEventListener('input', render);
+    render();
+  });
+})();
+
+// ===== Copy Button =====
+// Копирование содержимого элемента ([data-copy-for] → id источника).
+// Подтверждение — класс .is-copied на ~1,2 с; буфер может быть недоступен
+// (небезопасный контекст, отказ в разрешении) — состояние всё равно показываем
+(function initCopyButtons() {
+  document.querySelectorAll('[data-copy-for]').forEach(btn => {
+    const source = document.getElementById(btn.dataset.copyFor);
+    if (!source) return;
+    const idleLabel = btn.textContent.trim();
+    let timer = null;
+
+    btn.addEventListener('click', () => {
+      const text = source.textContent.trim();
+      Promise.resolve(navigator.clipboard?.writeText(text)).catch(() => {});
+      btn.classList.add('is-copied');
+      btn.textContent = 'Скопировано';
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        btn.classList.remove('is-copied');
+        btn.textContent = idleLabel;
+      }, 1200);
+    });
+  });
+})();
+
+// ===== Multiline Tooltip Popup =====
+// JS-позиционируемый тултип для многострочных инженерных расшифровок
+// ([data-tip-multiline]). Текст дублирован в .sr-only + aria-describedby,
+// поэтому сам попап скрыт от AT. Анимация входа — целиком в tooltip.css.
+(function initMultilineTips() {
+  const GAP = 8; // зазор между триггером и попапом, px
+
+  document.querySelectorAll('[data-tip-multiline]').forEach(trigger => {
+    let tip = null;
+
+    function hide() {
+      tip?.remove();
+      tip = null;
+    }
+
+    function show() {
+      if (tip) return;
+      tip = document.createElement('div');
+      // tooltip-bottom = попап под триггером, origin у верхней кромки
+      tip.className = 'tooltip-popup tooltip-multiline tooltip-bottom';
+      tip.setAttribute('aria-hidden', 'true');
+      tip.textContent = trigger.dataset.tipMultiline;
+      document.body.appendChild(tip);
+      const rect = trigger.getBoundingClientRect();
+      tip.style.left = (window.scrollX + rect.left) + 'px';
+      tip.style.top = (window.scrollY + rect.bottom + GAP) + 'px';
+    }
+
+    trigger.addEventListener('mouseenter', show);
+    trigger.addEventListener('mouseleave', hide);
+    trigger.addEventListener('focus', show);
+    trigger.addEventListener('blur', hide);
+    trigger.addEventListener('keydown', (e) => { if (e.key === 'Escape') hide(); });
+  });
+})();
+
+// ===== Panel Placement Switch =====
+// Витринный переключатель размещения панели пикера: в бою классы --top/--sheet
+// ставит JS, замерив свободное место до кромки вьюпорта, поэтому иначе эти
+// состояния на витрине не воспроизвести. Группа кнопок несёт полное имя класса
+// в data-panel-variant, пустое значение = размещение по умолчанию (вниз).
+(function initPanelPlacementSwitch() {
+  document.querySelectorAll('[data-panel-switch]').forEach(group => {
+    const panel = document.getElementById(group.dataset.panelSwitch);
+    if (!panel) return;
+    const buttons = [...group.querySelectorAll('[data-panel-variant]')];
+    const picker = panel.closest('.picklist, .swatch-picker');
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Всплытие НЕ гасим: на document висят и другие потребители клика
+        // (комбобокс, меню, календарь) — они должны закрыться по клику по чипу.
+        // Оговорку «это не клик снаружи» делают сами пикеры (isPanelSwitchFor)
+        buttons.forEach(other => {
+          if (other.dataset.panelVariant) panel.classList.remove(other.dataset.panelVariant);
+          const active = other === btn;
+          other.classList.toggle('is-active', active);
+          other.setAttribute('aria-pressed', String(active));
+        });
+        if (btn.dataset.panelVariant) panel.classList.add(btn.dataset.panelVariant);
+        // Панель показываем сразу — иначе выбранное размещение не увидеть
+        picker?.classList.add('is-open');
+        picker?.querySelector('.picklist__toggle, .swatch-picker__toggle')
+          ?.setAttribute('aria-expanded', 'true');
+      });
+    });
+  });
+})();
+
+// ===== Dependent Field Group =====
+// Прогрессивное раскрытие: управляющее поле показывает зависимую группу.
+// hidden снимается до проявления, is-hidden держит opacity — высота не
+// анимируется (layout-свойство), уход ждёт конца перехода
+(function initDependentGroups() {
+  document.querySelectorAll('[data-dependent-target]').forEach(control => {
+    const group = document.getElementById(control.dataset.dependentTarget);
+    if (!group) return;
+    const values = (control.dataset.dependentValues || '').split(',').map(v => v.trim());
+    let hideTimer = null;
+
+    function apply() {
+      const show = values.includes(control.value);
+      clearTimeout(hideTimer);
+      if (show) {
+        group.hidden = false;
+        // Кадр на применение display перед снятием is-hidden — иначе перехода нет
+        requestAnimationFrame(() => group.classList.remove('is-hidden'));
+      } else {
+        group.classList.add('is-hidden');
+        hideTimer = setTimeout(() => { group.hidden = true; }, 200);
+      }
+    }
+
+    control.addEventListener('change', apply);
+    apply();
+  });
+})();
+
+// ===== Editable Table Rows =====
+// Удаление строки редактируемой таблицы + перенумерация первой колонки
+(function initTableFormRows() {
+  document.querySelectorAll('table.table--form').forEach(table => {
+    function renumber() {
+      table.querySelectorAll('tbody tr').forEach((row, i) => {
+        const cell = row.querySelector('td');
+        if (cell) cell.textContent = String(i + 1);
+      });
+    }
+    table.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-table-row-remove]');
+      if (!btn) return;
+      btn.closest('tr')?.remove();
+      renumber();
+    });
   });
 })();

@@ -199,8 +199,13 @@ body.dark,
   filter: brightness(0.92);
 }
 
-/* Внутри фирменной плашки логотип — эталон цвета, не приглушаем */
-.dark .brand-plate .brand-mark {
+/* Внутри фирменной плашки логотип — эталон цвета, не приглушаем.
+   Печатный лист — тот же случай: бумага светлая в любой теме, на ней стоит
+   цветной логотип (--brand-logo-paper, layout/print-sheet.css), приглушать
+   его незачем. Селектор длиннее .dark .brand-mark — правило выше по каскаду
+   не перебьёт его порядком импорта */
+.dark .brand-plate .brand-mark,
+.dark .print-sheet .brand-mark {
   filter: none;
 }
 

@@ -22,6 +22,9 @@
   justify-content: space-between;
   gap: var(--space-2);
 }
+/* Пара «заголовок + подзаголовок» обобщена в components/layout.css
+   (.header__title / .header__sub). Здесь она остаётся доменным
+   потребителем: шапка теста держит заголовок на ступень мельче общего. */
 .quiz-header__title {
   margin: 0;
   font-size: var(--fs-lg);
@@ -29,10 +32,13 @@
   line-height: var(--lh-tight);
 }
 .quiz-header__sub {
-  margin-top: 2px;
+  margin-top: var(--space-px);
   font-size: var(--fs-xs);
   /* без opacity — полупрозрачный текст на акценте проваливал AA */
 }
+/* Разметка теста может перейти на обобщённые имена без потери кегля */
+.quiz-header .header__title { font-size: var(--fs-lg); }
+.quiz-header .header__sub { margin-top: var(--space-px); }
 .quiz-header__timer {
   flex-shrink: 0;
   padding: var(--space-1) var(--space-3);

@@ -49,6 +49,10 @@
   </style>
 </head>
 <body>
+  <!-- [BLOCK:skip-link] -->
+  <!-- Первый таб-стоп документа: съезжает в поток по фокусу (SC 2.4.1) -->
+  <a class="skip-link" id="page-skip-link" href="#main-content">Перейти к содержимому</a>
+  <!-- </BLOCK:skip-link> -->
   <!-- Версия дизайн-системы переехала в футер (бейдж возле © CSS Lab) -->
   <!-- Header -->
   <header class="header">
@@ -214,6 +218,12 @@
           <li class="sidebar-nav-item"><a href="#form-section" class="sidebar-nav-link">Form Section</a></li>
           <li class="sidebar-nav-item"><a href="#spec-sheet" class="sidebar-nav-link">Spec Sheet · Print</a></li>
           <li class="sidebar-nav-item"><a href="#code-panel" class="sidebar-nav-link">Code Panel</a></li>
+          <li class="sidebar-nav-item"><a href="#app-bar" class="sidebar-nav-link">App Bar · Accent</a></li>
+          <li class="sidebar-nav-item"><a href="#input-states" class="sidebar-nav-link">Input States</a></li>
+          <li class="sidebar-nav-item"><a href="#form-error-summary" class="sidebar-nav-link">Form Error Summary</a></li>
+          <li class="sidebar-nav-item"><a href="#table-form" class="sidebar-nav-link">Editable Table</a></li>
+          <li class="sidebar-nav-item"><a href="#print-sheet" class="sidebar-nav-link">Print Sheet · A4</a></li>
+          <li class="sidebar-nav-item"><a href="#skip-link" class="sidebar-nav-link">Skip Link · Print</a></li>
           <li class="sidebar-nav-item"><a href="/print-forms.html" class="sidebar-nav-link">📄 Печатные формы</a></li>
           <li class="sidebar-nav-item"><a href="/ral-colors.html" class="sidebar-nav-link">🎨 Цвета RAL</a></li>
         </ul>
@@ -221,7 +231,8 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="app-content">
+    <!-- tabindex=-1: цель skip-link принимает фокус программно, но не в Tab-порядке -->
+    <main class="app-content" id="main-content" tabindex="-1">
       <div class="container">
         <h1 class="mb-4">CSS Lab - Библиотека стилей</h1>
         <p class="text-muted mb-4">Собрано из проектов: mdm_terms, autoTrassir</p>
@@ -613,6 +624,20 @@
               <p style="margin: 0;">Заголовки — Manrope; текст — Open Sans.</p>
             </div>
           </div>
+
+          <!-- Инлайн-код: <code> и .code-inline для случаев, где семантика тега не подходит -->
+          <div class="card mb-4">
+            <div class="card-header"><h3 class="card-title">Инлайн-код</h3></div>
+            <div class="card-body">
+              <p id="demo-code-inline-text">
+                Обозначение режима работы записывается как <code>S3 40%</code>, монтажное
+                исполнение — как <code>IM1081</code>. Когда это не код, а значение из
+                каталога, семантика <code>&lt;code&gt;</code> не подходит: артикул
+                <span class="code-inline" id="demo-code-inline">АДМ132S4У3-IE2</span> —
+                просто моноширинная строка в тексте.
+              </p>
+            </div>
+          </div>
         </section>
         <!-- </BLOCK:section-typography> -->
 
@@ -624,7 +649,10 @@
         <button class="btn btn-primary">Primary</button>
         <button class="btn btn-outline">Outline</button>
         <button class="btn btn-ghost">Ghost</button>
+        <button class="btn btn-secondary" id="demo-btn-secondary">Secondary</button>
+        <button class="btn btn-danger">Danger</button>
       </div>
+      <p class="text-muted mb-2">Вариант на акцентной заливке (<code>.btn-on-accent</code>) — в секции <a href="#app-bar">App Bar</a>.</p>
       <div class="flex gap-2 flex-wrap mb-2">
         <button class="btn btn-sm">Small</button>
         <button class="btn">Normal</button>
@@ -1929,6 +1957,30 @@
           </div>
         </div>
       </div>
+
+      <!-- Многострочный JS-тултип: инженерные расшифровки в несколько строк -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">Многострочный (JS-позиционируемый)</h3>
+        </div>
+        <div class="card-body">
+          <p class="text-muted mb-2">
+            <code>.tooltip-popup.tooltip-multiline</code> — для расшифровок кодов IC/IP/IE
+            и рядов мощностей: текст переносится и держит ширину, а не растягивается в строку.
+            Наведите курсор или дайте фокус кнопке.
+          </p>
+          <div class="flex gap-4 flex-wrap">
+            <button type="button" class="btn btn-sm" id="demo-tip-multiline"
+              data-tip-multiline="Ряд мощностей АДМ 132:&#10;• 5,5 кВт — 2 полюса, 2900 об/мин&#10;• 7,5 кВт — 4 полюса, 1455 об/мин&#10;• 5,5 кВт — 6 полюсов, 960 об/мин&#10;Значения по ГОСТ Р 51689 при 380 В / 50 Гц."
+              aria-describedby="demo-tip-multiline-text">Ряд мощностей 132-го габарита</button>
+            <span class="sr-only" id="demo-tip-multiline-text">Ряд мощностей АДМ 132: 5,5 кВт при 2 полюсах, 7,5 кВт при 4 полюсах, 5,5 кВт при 6 полюсах. Значения по ГОСТ Р 51689 при 380 В и 50 Гц.</span>
+            <button type="button" class="btn btn-sm"
+              data-tip-multiline="IC 411 — способ охлаждения:&#10;первая цифра — цепь охлаждения,&#10;вторая — хладагент,&#10;третья — способ его перемещения.&#10;411 = обдув собственным вентилятором."
+              aria-describedby="demo-tip-ic-text">Расшифровка IC 411</button>
+            <span class="sr-only" id="demo-tip-ic-text">IC 411 — способ охлаждения: первая цифра обозначает цепь охлаждения, вторая — хладагент, третья — способ его перемещения. 411 означает обдув собственным вентилятором.</span>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Avatar Section -->
@@ -3162,6 +3214,203 @@
           </div>
         </div>
       </div>
+
+      <!-- Группировка опций и двухстрочная опция «код + расшифровка» -->
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Группы и расшифровки опций</h3></div>
+        <div class="card-body">
+          <div class="form-field">
+            <label class="form-field__label" id="demo-picklist-groups-label">Напряжение питания</label>
+            <div class="picklist" id="demo-picklist-groups">
+              <div class="picklist__control">
+                <button type="button" class="picklist__toggle" aria-expanded="false" aria-controls="demo-picklist-groups-panel" aria-labelledby="demo-picklist-groups-label">
+                  <svg class="picklist__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+              </div>
+              <div class="picklist__panel" id="demo-picklist-groups-panel">
+                <div class="picklist__search">
+                  <input type="search" class="input" placeholder="Поиск по списку…" aria-label="Фильтр напряжений" data-picklist-search>
+                </div>
+                <div class="picklist__group" role="group" aria-labelledby="demo-picklist-group-single">
+                  <div class="picklist__group-label" id="demo-picklist-group-single">Одиночное напряжение</div>
+                  <label class="picklist__option">
+                    <input type="checkbox" checked>
+                    <span class="picklist__option-label">380 В</span>
+                    <span class="picklist__option-desc">Сеть 50 Гц, обмотка в треугольник</span>
+                  </label>
+                  <label class="picklist__option">
+                    <input type="checkbox">
+                    <span class="picklist__option-label">660 В</span>
+                    <span class="picklist__option-desc">Сеть 50 Гц, обмотка в звезду</span>
+                  </label>
+                  <label class="picklist__option">
+                    <input type="checkbox">
+                    <span class="picklist__option-label">1140 В</span>
+                    <span class="picklist__option-desc">Рудничное исполнение, только по согласованию</span>
+                  </label>
+                </div>
+                <div class="picklist__group" role="group" aria-labelledby="demo-picklist-group-dual">
+                  <div class="picklist__group-label" id="demo-picklist-group-dual">Двойное напряжение</div>
+                  <label class="picklist__option">
+                    <input type="checkbox">
+                    <span class="picklist__option-label">220/380 В</span>
+                    <span class="picklist__option-desc">Δ/Y, пуск переключением обмоток</span>
+                  </label>
+                  <label class="picklist__option">
+                    <input type="checkbox">
+                    <span class="picklist__option-label">380/660 В</span>
+                    <span class="picklist__option-desc">Δ/Y, стандарт для приводов от ПЧ</span>
+                  </label>
+                </div>
+                <div class="picklist__group" role="group" aria-labelledby="demo-picklist-group-import">
+                  <div class="picklist__group-label" id="demo-picklist-group-import">Экспортное исполнение</div>
+                  <label class="picklist__option">
+                    <input type="checkbox">
+                    <span class="picklist__option-label">400 В / 50 Гц</span>
+                    <span class="picklist__option-desc">IEC 60034-1, допуск ±10 %</span>
+                  </label>
+                  <label class="picklist__option">
+                    <input type="checkbox">
+                    <span class="picklist__option-label">460 В / 60 Гц</span>
+                    <span class="picklist__option-desc">NEMA MG 1, обороты выше на 20 %</span>
+                  </label>
+                </div>
+                <div class="picklist__no-match" hidden>Ничего не найдено</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Многоколоночная панель + массовые действия: 34 типоразмера -->
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Многоколоночная панель и массовые действия</h3></div>
+        <div class="card-body">
+          <p class="text-muted mb-2">
+            Поле во всю ширину сетки: <code>.picklist__panel--columns</code> раскладывает
+            список в несколько колонок вместо прокрутки 34 значений в узком столбце.
+            Строка <code>.picklist__actions</code> липнет к низу панели: «выбрать все»,
+            «снять все» и счётчик выбранного.
+          </p>
+          <div class="form-field form-field--full">
+            <label class="form-field__label" id="demo-picklist-columns-label">Типоразмеры (высота оси, мм)</label>
+            <div class="picklist" id="demo-picklist-columns">
+              <div class="picklist__control">
+                <button type="button" class="picklist__toggle" aria-expanded="false" aria-controls="demo-picklist-columns-panel" aria-labelledby="demo-picklist-columns-label">
+                  <svg class="picklist__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+              </div>
+              <div class="picklist__panel picklist__panel--columns" id="demo-picklist-columns-panel">
+                <div class="picklist__search">
+                  <input type="search" class="input" placeholder="Поиск по списку…" aria-label="Фильтр типоразмеров" data-picklist-search>
+                </div>
+                <label class="picklist__option"><input type="checkbox" checked><span class="picklist__option-label">56</span></label>
+                <label class="picklist__option"><input type="checkbox"><span class="picklist__option-label">63</span></label>
+                <label class="picklist__option"><input type="checkbox"><span class="picklist__option-label">71</span></label>
+                <label class="picklist__option"><input type="checkbox"><span class="picklist__option-label">80</span></label>
+                <label class="picklist__option"><input type="checkbox"><span class="picklist__option-label">90S</span></label>
+                <label class="picklist__option"><input type="checkbox"><span class="picklist__option-label">90L</span></label>
+                <label class="picklist__option"><input type="checkbox"><span class="picklist__option-label">100S</span></label>
+                <label class="picklist__option"><input type="checkbox"><span class="picklist__option-label">100L</span></label>
+                <label class="picklist__option"><input type="checkbox"><span class="picklist__option-label">112M</span></label>
+                <label class="picklist__option"><input type="checkbox" checked><span class="picklist__option-label">132S</span></label>
+                <label class="picklist__option"><input type="checkbox"><span class="picklist__option-label">132M</span></label>
+                <label class="picklist__option"><input type="checkbox"><span class="picklist__option-label">160S</span></label>
+                <label class="picklist__option"><input type="checkbox"><span class="picklist__option-label">160M</span></label>
+                <label class="picklist__option"><input type="checkbox"><span class="picklist__option-label">160L</span></label>
+                <label class="picklist__option"><input type="checkbox"><span class="picklist__option-label">180S</span></label>
+                <label class="picklist__option"><input type="checkbox"><span class="picklist__option-label">180M</span></label>
+                <label class="picklist__option"><input type="checkbox"><span class="picklist__option-label">200M</span></label>
+                <label class="picklist__option"><input type="checkbox"><span class="picklist__option-label">200L</span></label>
+                <label class="picklist__option"><input type="checkbox"><span class="picklist__option-label">225M</span></label>
+                <label class="picklist__option"><input type="checkbox"><span class="picklist__option-label">250M</span></label>
+                <label class="picklist__option"><input type="checkbox"><span class="picklist__option-label">280S</span></label>
+                <label class="picklist__option"><input type="checkbox"><span class="picklist__option-label">280M</span></label>
+                <label class="picklist__option"><input type="checkbox"><span class="picklist__option-label">315S</span></label>
+                <label class="picklist__option"><input type="checkbox"><span class="picklist__option-label">315M</span></label>
+                <div class="picklist__no-match" hidden>Ничего не найдено</div>
+                <div class="picklist__actions">
+                  <button type="button" class="btn btn-ghost btn-sm" data-picklist-select-all>Выбрать все</button>
+                  <button type="button" class="btn btn-ghost btn-sm" data-picklist-clear-all>Снять все</button>
+                  <span class="picklist__actions-count" role="status" aria-live="polite" data-picklist-count>Выбрано 2 из 24</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Обёртка опции + размещение панели у края вьюпорта -->
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Размещение панели: вниз, вверх, лист снизу</h3></div>
+        <div class="card-body">
+          <p class="text-muted mb-2">
+            Панель у нижней кромки экрана открывается вверх (<code>--top</code>), на узком
+            экране — листом снизу (<code>--sheet</code>, до 479px). Классы ставит JS,
+            замерив свободное место; здесь их переключает панель управления демо.
+            Опция собрана обёрткой <code>.picklist__option-body</code>: код и расшифровка
+            в одном контейнере, а не сиблингами.
+          </p>
+          <div class="grid-cols-2-sm gap-4 items-start">
+            <!-- Переключатель стоит соседней колонкой, а не над пикером: панель
+                 растёт от контрола вверх на свою высоту и накрыла бы чипы,
+                 то есть демо ломалось бы ровно в том состоянии, что показывает -->
+            <div class="form-field">
+              <span class="form-field__label" id="demo-picklist-place-switch">Размещение панели</span>
+              <div class="chips" role="group" aria-labelledby="demo-picklist-place-switch"
+                data-panel-switch="demo-picklist-place-panel">
+                <button type="button" class="chip chip-choice is-active" data-panel-variant="" aria-pressed="true">Вниз (авто)</button>
+                <button type="button" class="chip chip-choice" data-panel-variant="picklist__panel--top" aria-pressed="false">Вверх</button>
+                <button type="button" class="chip chip-choice" data-panel-variant="picklist__panel--sheet" aria-pressed="false">Лист снизу</button>
+              </div>
+              <p class="text-muted text-sm m-0">
+                Класс встаёт сразу по нажатию. «Лист снизу» меняет вид на экране
+                до 479px — сузьте окно, панель ляжет на нижнюю кромку.
+              </p>
+            </div>
+            <div class="form-field">
+              <label class="form-field__label" id="demo-picklist-place-label">Тепловая защита</label>
+              <div class="picklist" id="demo-picklist-place">
+                <div class="picklist__control">
+                  <button type="button" class="picklist__toggle" aria-expanded="false" aria-controls="demo-picklist-place-panel" aria-labelledby="demo-picklist-place-label">
+                    <svg class="picklist__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                  </button>
+                </div>
+                <div class="picklist__panel" id="demo-picklist-place-panel">
+                  <label class="picklist__option">
+                    <input type="checkbox" checked>
+                    <span class="picklist__option-body">
+                      <span class="picklist__option-label">PTC</span>
+                      <span class="picklist__option-desc">Позисторы в обмотке, ГОСТ 27888 — отключение по порогу</span>
+                    </span>
+                  </label>
+                  <label class="picklist__option">
+                    <input type="checkbox">
+                    <span class="picklist__option-body">
+                      <span class="picklist__option-label">PT100</span>
+                      <span class="picklist__option-desc">Платиновые датчики, непрерывный контроль температуры</span>
+                    </span>
+                  </label>
+                  <label class="picklist__option">
+                    <input type="checkbox">
+                    <span class="picklist__option-body">
+                      <span class="picklist__option-label">KTY84</span>
+                      <span class="picklist__option-desc">Кремниевый датчик, штатный вход большинства ПЧ</span>
+                    </span>
+                  </label>
+                  <label class="picklist__option">
+                    <input type="checkbox">
+                    <span class="picklist__option-body">
+                      <span class="picklist__option-label">Термоконтакт</span>
+                      <span class="picklist__option-desc">Биметаллический размыкающий, без внешнего реле</span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- ===== Swatch Picker Section ===== -->
@@ -3174,14 +3423,107 @@
             <label class="form-field__label" id="demo-swatch-label">Цвет покрытия RAL (можно несколько)</label>
             <div class="swatch-picker" id="demo-swatch-picker" data-swatch-fill data-swatch-selected="5008">
               <div class="swatch-picker__control">
+                <!-- Плейсхолдер пустого контрола: прячется, как только появился чип -->
+                <span class="swatch-picker__placeholder">— выбрать цвета —</span>
                 <button type="button" class="swatch-picker__toggle" aria-expanded="false" aria-controls="demo-swatch-panel" aria-labelledby="demo-swatch-label">
                   <svg class="swatch-picker__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
               </div>
               <div class="swatch-picker__panel" id="demo-swatch-panel">
                 <input type="search" class="input swatch-picker__search" placeholder="Поиск: номер или название…" aria-label="Поиск цвета RAL">
+                <div class="swatch-picker__result-count" role="status" aria-live="polite"></div>
                 <div class="swatch-picker__grid"></div>
+                <div class="swatch-picker__no-match" hidden>Ничего не найдено — уточните номер или название цвета</div>
                 <div class="swatch-picker__hint">Клик — выбрать/снять. Можно несколько цветов. Полный справочник — <a href="/ral-colors.html">страница RAL</a>.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Частые цвета бренда, строка выбранного и массовые действия -->
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Частые цвета, строка выбранного и массовые действия</h3></div>
+        <div class="card-body">
+          <p class="text-muted mb-2">
+            Секция <code>.swatch-picker__section</code> поднимает наверх ходовые цвета
+            Уралэлектро, <code>.swatch-picker__selected</code> показывает выбор, не закрывая
+            панель, <code>.swatch-picker__actions</code> даёт «очистить всё» и счётчик.
+            Панель показана инлайн-вариантом — она всегда развёрнута.
+          </p>
+          <div class="form-field">
+            <label class="form-field__label" id="demo-swatch-fav-label">Цвет покрытия — частые</label>
+            <div class="swatch-picker" id="demo-swatch-favorites">
+              <div class="swatch-picker__control">
+                <span class="swatch-picker__placeholder">— выбрать цвета —</span>
+                <button type="button" class="swatch-picker__toggle" aria-expanded="true" aria-controls="demo-swatch-fav-panel" aria-labelledby="demo-swatch-fav-label">
+                  <svg class="swatch-picker__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+              </div>
+              <div class="swatch-picker__panel swatch-picker__panel--inline" id="demo-swatch-fav-panel">
+                <div class="swatch-picker__selected" data-swatch-selected-row role="status" aria-live="polite"></div>
+                <div class="swatch-picker__section">
+                  <div class="swatch-picker__section-title" id="demo-swatch-fav-title">Частые цвета Уралэлектро</div>
+                  <div class="swatch-picker__grid" role="group" aria-labelledby="demo-swatch-fav-title">
+                    <button type="button" class="swatch is-selected" data-swatch-hex="#1F3855" data-search="5008 серо-синий" aria-pressed="true" aria-label="RAL 5008, серо-синий"><span class="swatch__code">5008</span></button>
+                    <button type="button" class="swatch" data-swatch-hex="#293133" data-search="7016 антрацитово-серый" aria-pressed="false" aria-label="RAL 7016, антрацитово-серый"><span class="swatch__code">7016</span></button>
+                    <button type="button" class="swatch" data-swatch-hex="#0A0A0A" data-search="9005 чёрный янтарный" aria-pressed="false" aria-label="RAL 9005, чёрный янтарный"><span class="swatch__code">9005</span></button>
+                    <button type="button" class="swatch" data-swatch-hex="#F7F9EF" data-search="9010 белый" aria-pressed="false" aria-label="RAL 9010, белый"><span class="swatch__code">9010</span></button>
+                    <button type="button" class="swatch" data-swatch-hex="#37A72E" data-search="6018 жёлто-зелёный" aria-pressed="false" aria-label="RAL 6018, жёлто-зелёный"><span class="swatch__code">6018</span></button>
+                    <button type="button" class="swatch" data-swatch-hex="#C1121C" data-search="3020 транспортный красный" aria-pressed="false" aria-label="RAL 3020, транспортный красный"><span class="swatch__code">3020</span></button>
+                  </div>
+                </div>
+                <div class="swatch-picker__actions">
+                  <button type="button" class="btn btn-ghost btn-sm" data-swatch-clear-all>Очистить всё</button>
+                  <span class="swatch-picker__actions-count" role="status" aria-live="polite" data-swatch-count>Выбрано 1</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Размещение панели палитры -->
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Размещение панели: вниз, вверх, лист снизу</h3></div>
+        <div class="card-body">
+          <p class="text-muted mb-2">
+            Те же варианты, что у пиклиста: <code>--top</code> у нижней кромки вьюпорта,
+            <code>--sheet</code> на экране до 479px.
+          </p>
+          <div class="grid-cols-2-sm gap-4 items-start">
+            <!-- Раскладка как у пиклиста: переключатель соседней колонкой, иначе
+                 панель, открытая вверх, накрывает собственные органы управления -->
+            <div class="form-field">
+              <span class="form-field__label" id="demo-swatch-place-switch">Размещение панели</span>
+              <div class="chips" role="group" aria-labelledby="demo-swatch-place-switch"
+                data-panel-switch="demo-swatch-place-panel">
+                <button type="button" class="chip chip-choice is-active" data-panel-variant="" aria-pressed="true">Вниз (авто)</button>
+                <button type="button" class="chip chip-choice" data-panel-variant="swatch-picker__panel--top" aria-pressed="false">Вверх</button>
+                <button type="button" class="chip chip-choice" data-panel-variant="swatch-picker__panel--sheet" aria-pressed="false">Лист снизу</button>
+              </div>
+              <p class="text-muted text-sm m-0">
+                Класс встаёт сразу по нажатию. «Лист снизу» меняет вид на экране
+                до 479px — сузьте окно, палитра ляжет на нижнюю кромку.
+              </p>
+            </div>
+            <div class="form-field">
+              <label class="form-field__label" id="demo-swatch-place-label">Цвет покрытия</label>
+              <div class="swatch-picker" id="demo-swatch-place">
+                <div class="swatch-picker__control">
+                  <span class="swatch-picker__placeholder">— выбрать цвета —</span>
+                  <button type="button" class="swatch-picker__toggle" aria-expanded="false" aria-controls="demo-swatch-place-panel" aria-labelledby="demo-swatch-place-label">
+                    <svg class="swatch-picker__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                  </button>
+                </div>
+                <div class="swatch-picker__panel" id="demo-swatch-place-panel">
+                  <div class="swatch-picker__grid">
+                    <button type="button" class="swatch" data-swatch-hex="#1F3855" data-search="5008 серо-синий" aria-pressed="false" aria-label="RAL 5008, серо-синий"><span class="swatch__code">5008</span></button>
+                    <button type="button" class="swatch" data-swatch-hex="#293133" data-search="7016 антрацитово-серый" aria-pressed="false" aria-label="RAL 7016, антрацитово-серый"><span class="swatch__code">7016</span></button>
+                    <button type="button" class="swatch" data-swatch-hex="#9C9C9C" data-search="7040 серое окно" aria-pressed="false" aria-label="RAL 7040, серое окно"><span class="swatch__code">7040</span></button>
+                    <button type="button" class="swatch" data-swatch-hex="#F7F9EF" data-search="9010 белый" aria-pressed="false" aria-label="RAL 9010, белый"><span class="swatch__code">9010</span></button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -3399,7 +3741,14 @@
                 <div class="spec-row"><span class="spec-row__label">Степень защиты</span><span class="spec-row__value">IP55</span></div>
                 <div class="spec-row"><span class="spec-row__label">Климат</span><span class="spec-row__value">У2</span></div>
                 <div class="spec-row spec-row--full"><span class="spec-row__label">Особые требования</span><span class="spec-row__value">Антиконденсатный подогрев 220 В, изолированный подшипник NDE для работы от ПЧ.</span></div>
+                <!-- Незаполненное значение: «не требуется» обязано отличаться от «забыли» -->
+                <div class="spec-row"><span class="spec-row__label">Взрывозащита</span><span class="spec-row__value spec-row__value--empty" id="demo-spec-empty">— не требуется</span></div>
+                <div class="spec-row"><span class="spec-row__label">Тормоз</span><span class="spec-row__value spec-row__value--empty">— не требуется</span></div>
               </div>
+            </div>
+            <div class="spec-section">
+              <h4 class="spec-section__title">Опросный лист заказчика</h4>
+              <p class="spec-sheet__empty" id="demo-spec-sheet-empty">Раздел не заполнен — заявка ушла в работу по типовому исполнению.</p>
             </div>
             <div class="spec-section" style="margin-bottom: 0;">
               <h4 class="spec-section__title">Рабочие точки</h4>
@@ -3427,7 +3776,12 @@
           <div class="code-panel" style="max-width: 640px;">
             <h4 class="code-panel__title">Коды маркировки (спецификация v9.2)</h4>
             <p class="code-panel__hint">Автоматически из выбранных параметров ТЗ по PRISM-каталогу. Значения без кода помечаются как нестандартные.</p>
-            <div class="code-panel__string">М812+С702+С412+С601+Н602+М501</div>
+            <!-- Строка кода + копирование: главный артефакт панели не выделяют мышью -->
+            <div class="code-panel__string-row">
+              <div class="code-panel__string" id="demo-mark-string">М812+С702+С412+С601+Н602+М501</div>
+              <button type="button" class="btn btn-ghost btn-sm code-panel__copy" id="demo-mark-copy"
+                data-copy-for="demo-mark-string" aria-label="Копировать код маркировки">Копировать</button>
+            </div>
             <table class="code-panel__table">
               <thead class="sr-only">
                 <tr><th scope="col">Код</th><th scope="col">Параметр</th><th scope="col">Расшифровка</th></tr>
@@ -3446,7 +3800,540 @@
           </div>
         </div>
       </div>
+
+      <!-- Размещение панели: боковая колонка и липкая панель -->
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Размещение: боковая колонка и липкая панель</h3></div>
+        <div class="card-body">
+          <p class="text-muted mb-2">
+            Единственный живой результат формы обязан оставаться на экране:
+            <code>.code-panel--aside</code> — боковая колонка рядом с полями,
+            <code>.code-panel--sticky</code> — панель, липнущая под шапкой при прокрутке
+            длинной формы. Обе ограничены по высоте и прокручиваются сами.
+            На экране до 767px обе становятся обычным блоком в потоке.
+          </p>
+          <div class="grid grid-cols-2 gap-4">
+            <fieldset class="form-section">
+              <legend class="form-section__legend">8. Исполнение и маркировка</legend>
+              <div class="form-field">
+                <label class="form-field__label" for="demo-aside-ip">Степень защиты</label>
+                <select id="demo-aside-ip" class="select">
+                  <option>IP54</option>
+                  <option selected>IP55</option>
+                  <option>IP65</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label class="form-field__label" for="demo-aside-climate">Климатическое исполнение</label>
+                <select id="demo-aside-climate" class="select">
+                  <option selected>У2</option>
+                  <option>УХЛ4</option>
+                  <option>Т2</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label class="form-field__label" for="demo-aside-voltage">Напряжение питания</label>
+                <select id="demo-aside-voltage" class="select">
+                  <option selected>380/660 В</option>
+                  <option>220/380 В</option>
+                  <option>400 В / 50 Гц</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label class="form-field__label" for="demo-aside-eff">Класс энергоэффективности</label>
+                <select id="demo-aside-eff" class="select">
+                  <option>IE1</option>
+                  <option selected>IE2</option>
+                  <option>IE3</option>
+                </select>
+              </div>
+            </fieldset>
+            <aside class="code-panel code-panel--aside" id="demo-code-panel-aside" aria-label="Коды маркировки">
+              <h4 class="code-panel__title">Коды маркировки</h4>
+              <div class="code-panel__string-row">
+                <div class="code-panel__string" id="demo-aside-string">М812+С702+С412+Н602</div>
+                <button type="button" class="btn btn-ghost btn-sm code-panel__copy"
+                  data-copy-for="demo-aside-string" aria-label="Копировать код маркировки">Копировать</button>
+              </div>
+              <div class="code-panel__count">4 кода из 4 параметров</div>
+            </aside>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 mt-4">
+            <div class="code-panel code-panel--sticky" id="demo-code-panel-sticky">
+              <h4 class="code-panel__title">Липкая панель</h4>
+              <div class="code-panel__string">М812+С702+С412+Н602</div>
+              <p class="code-panel__hint">Липнет под шапкой, пока прокручивается длинная форма.</p>
+            </div>
+            <div>
+              <p class="text-muted">
+                Соседняя колонка длиннее панели — при прокрутке страницы панель слева
+                остаётся на месте, а этот текст уезжает вверх. Так живой результат
+                генерации кодов виден одновременно с полями, которые его меняют:
+                исходный прототип вклинивал панель между разделами 8 и 9, и она
+                терялась из виду на первом же экране прокрутки.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
+
+    <!-- ===== App Bar Section ===== -->
+    <!-- [BLOCK:section-app-bar] -->
+    <section id="app-bar" class="mb-4">
+      <h2 class="mb-2">App Bar — акцентная шапка приложения</h2>
+      <p class="text-muted mb-2">
+        Вариант <code>.header--accent</code>: полоса заливается акцентом бренда, заголовок с
+        подзаголовком живут в самой полосе, действия сгруппированы разделителями.
+        Обобщён из шапки теста (<code>.quiz-header</code>) и рассчитан на длинные формы —
+        опросный лист R&amp;D, конфигуратор, мастер заявки. Переключите бренд в шапке сайта:
+        заливка и логотип идут от темы, компонент о брендах не знает.
+      </p>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <header class="header header--accent" id="demo-app-bar">
+            <div class="header-left">
+              <span class="brand-mark brand-mark--mono header__logo" role="img" aria-label="Логотип бренда"></span>
+              <div class="header__titles">
+                <h3 class="header__title">Опросный лист R&amp;D · заявка RND-2026-014</h3>
+                <p class="header__sub">АО «МЭЗ «Уралэлектро» · черновик сохранён 12:04</p>
+              </div>
+            </div>
+            <div class="header-right" role="toolbar" aria-label="Действия с заявкой">
+              <span class="header__group">
+                <button type="button" class="btn btn-on-accent btn-sm">Скачать JSON</button>
+                <button type="button" class="btn btn-on-accent btn-sm">Загрузить</button>
+              </span>
+              <span class="header__group">
+                <button type="button" class="btn btn-on-accent btn-primary btn-sm" id="demo-app-bar-submit">Сформировать пакет</button>
+                <button type="button" class="btn btn-on-accent btn-sm">На почту</button>
+                <button type="button" class="btn btn-on-accent btn-sm">Печать</button>
+              </span>
+              <span class="header__group">
+                <button type="button" class="btn btn-on-accent btn-danger btn-sm">Очистить</button>
+              </span>
+            </div>
+          </header>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Уплотнённый вариант (<code>--condensed</code>)</h3></div>
+        <div class="card-body">
+          <p class="text-muted mb-2">
+            Состояние при прокрутке длинной формы: полоса сжимается, подзаголовок уходит,
+            остаются заголовок и действия. Движения у полосы нет — она постоянно на экране.
+          </p>
+          <header class="header header--accent header--condensed" id="demo-app-bar-condensed">
+            <div class="header-left">
+              <span class="brand-mark brand-mark--mono brand-mark--sm header__logo" role="img" aria-label="Логотип бренда"></span>
+              <div class="header__titles">
+                <h3 class="header__title">Заявка RND-2026-014</h3>
+                <p class="header__sub">АО «МЭЗ «Уралэлектро» · черновик сохранён 12:04</p>
+              </div>
+            </div>
+            <div class="header-right">
+              <span class="header__group">
+                <button type="button" class="btn btn-on-accent btn-primary btn-sm">Сформировать пакет</button>
+              </span>
+            </div>
+          </header>
+        </div>
+      </div>
+    </section>
+    <!-- </BLOCK:section-app-bar> -->
+
+    <!-- ===== Input States Section ===== -->
+    <!-- [BLOCK:section-input-states] -->
+    <section id="input-states" class="mb-4">
+      <h2 class="mb-2">Input States — валидация, аффиксы, диапазон</h2>
+      <p class="text-muted mb-2">
+        Состояния полей длинной инженерной формы: нативная валидация после ввода,
+        текст ошибки под контролом, счётчик символов, единицы внутри поля,
+        поле «только для чтения» и парный контрол диапазона.
+      </p>
+
+      <!-- Нативная валидация: подсветка только после ввода (:user-invalid), не с загрузки -->
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Валидация и текст ошибки</h3></div>
+        <div class="card-body">
+          <p class="text-muted mb-2">
+            <code>:user-invalid</code> красит поле только после того, как пользователь его тронул —
+            в отличие от <code>:invalid</code>, который подсвечивает пустое обязательное поле
+            сразу при загрузке. Ошибка дублируется текстом: цвет не может быть единственным
+            носителем (SC 1.4.1).
+          </p>
+          <div class="form-grid">
+            <div class="form-field">
+              <label class="form-field__label" for="demo-uv-mail">Рабочий e-mail <span class="form-field__req" aria-hidden="true">*</span></label>
+              <input id="demo-uv-mail" class="input" type="email" required
+                placeholder="name@uralelectro.ru" autocomplete="email">
+              <span class="form-field__unit">Введите заведомо неверный адрес и уведите фокус</span>
+            </div>
+            <div class="form-field">
+              <label class="form-field__label" for="demo-aria-power">Мощность, кВт <span class="form-field__req" aria-hidden="true">*</span></label>
+              <input id="demo-aria-power" class="input input--numeric" type="text" inputmode="decimal"
+                value="0" aria-invalid="true" aria-describedby="demo-aria-power-err">
+              <span class="form-field__error" id="demo-aria-power-err">
+                Мощность должна быть больше нуля — ряд серии АДМ начинается с 0,12 кВт
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Секция с ошибками: бейдж в легенде + красная засечка -->
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Секция с ошибками</h3></div>
+        <div class="card-body">
+          <fieldset class="form-section form-section--invalid" id="demo-invalid-section">
+            <legend class="form-section__legend">
+              <span class="form-section__legend-row">
+                4. Режим работы и нагрузка
+                <span class="badge badge-error">2 ошибки</span>
+              </span>
+            </legend>
+            <div class="form-section__hint">Раздел помечается, пока в нём остаются незаполненные обязательные поля.</div>
+            <div class="form-grid">
+              <div class="form-field">
+                <label class="form-field__label" for="demo-inv-duty">Режим работы по ГОСТ IEC 60034-1</label>
+                <select id="demo-inv-duty" class="select" aria-invalid="true" aria-describedby="demo-inv-duty-err">
+                  <option value="">— выбрать —</option>
+                  <option>S1 — продолжительный</option>
+                  <option>S3 — повторно-кратковременный</option>
+                  <option>S6 — продолжительный с периодической нагрузкой</option>
+                </select>
+                <span class="form-field__error" id="demo-inv-duty-err">Выберите режим: от него зависит расчёт нагрева</span>
+              </div>
+              <div class="form-field">
+                <label class="form-field__label" for="demo-inv-starts">Включений в час</label>
+                <input id="demo-inv-starts" class="input input--numeric" type="text" inputmode="numeric"
+                  aria-invalid="true" aria-describedby="demo-inv-starts-err" value="900">
+                <span class="form-field__error" id="demo-inv-starts-err">Больше 600 включений в час — нужен отдельный расчёт с ОГК</span>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+
+      <!-- Единицы внутри поля, моноширинные цифры, поле только для чтения -->
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Единицы в поле, числа и «только для чтения»</h3></div>
+        <div class="card-body">
+          <div class="form-grid form-grid--three">
+            <div class="form-field">
+              <label class="form-field__label" for="demo-affix-price">Целевая цена, ₽ за штуку</label>
+              <div class="input-group input-group--suffix">
+                <input id="demo-affix-price" class="input input--numeric" type="text" inputmode="decimal" value="184 500">
+                <span class="input-affix" aria-hidden="true">₽</span>
+              </div>
+            </div>
+            <div class="form-field">
+              <label class="form-field__label" for="demo-affix-speed">Номинальные обороты</label>
+              <div class="input-group input-group--suffix">
+                <input id="demo-affix-speed" class="input input--numeric" type="text" inputmode="numeric" value="1455">
+                <span class="input-affix" aria-hidden="true">об/мин</span>
+              </div>
+            </div>
+            <div class="form-field">
+              <label class="form-field__label" for="demo-readonly-no">Номер заявки</label>
+              <input id="demo-readonly-no" class="input" type="text" value="RND-2026-014" readonly
+                aria-describedby="demo-readonly-no-hint">
+              <span class="form-field__unit" id="demo-readonly-no-hint">Присваивает отдел R&amp;D — поле недоступно для правки, но читается и копируется</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Парный контрол диапазона -->
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Диапазон значений</h3></div>
+        <div class="card-body">
+          <fieldset class="form-field form-field--full">
+            <legend class="form-field__label">Диапазон мощности, кВт</legend>
+            <div class="input-range" id="demo-input-range">
+              <input class="input input--numeric" id="demo-range-min" type="text" inputmode="decimal"
+                value="5,5" aria-label="Мощность от, кВт">
+              <span class="input-range__dash" aria-hidden="true">—</span>
+              <input class="input input--numeric" id="demo-range-max" type="text" inputmode="decimal"
+                value="22" aria-label="Мощность до, кВт">
+            </div>
+            <span class="form-field__unit">Общее кольцо фокуса: два поля читаются как один контрол</span>
+          </fieldset>
+        </div>
+      </div>
+
+      <!-- Счётчик символов -->
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Счётчик символов</h3></div>
+        <div class="card-body">
+          <div class="form-field form-field--full">
+            <label class="form-field__label" for="demo-counter-area">Бизнес-обоснование</label>
+            <textarea id="demo-counter-area" class="textarea" maxlength="400"
+              data-counter="demo-counter" aria-describedby="demo-counter"
+              placeholder="Замещение импортного двигателя Siemens 1LE1 на линии гранулирования…"></textarea>
+            <span class="form-field__counter" id="demo-counter" aria-live="polite">0 / 400</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Прогрессивное раскрытие: зависимая группа полей -->
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Прогрессивное раскрытие</h3></div>
+        <div class="card-body">
+          <p class="text-muted mb-2">
+            Зависимые поля не занимают место, пока не нужны: <code>.form-group--dependent</code>
+            привязана засечкой к управляющему полю и появляется проявлением, без анимации
+            высоты. Выберите повторно-кратковременный режим S3 — появится группа ПВ%.
+          </p>
+          <div class="form-grid">
+            <div class="form-field">
+              <label class="form-field__label" for="demo-dep-duty">Режим работы</label>
+              <select id="demo-dep-duty" class="select"
+                data-dependent-target="demo-dependent-group" data-dependent-values="S3,S4,S5">
+                <option value="S1" selected>S1 — продолжительный</option>
+                <option value="S3">S3 — повторно-кратковременный</option>
+                <option value="S4">S4 — с частыми пусками</option>
+                <option value="S5">S5 — с электрическим торможением</option>
+              </select>
+            </div>
+            <div class="form-group form-group--dependent is-hidden" id="demo-dependent-group" hidden>
+              <div class="form-field">
+                <label class="form-field__label" for="demo-dep-pv">ПВ, %</label>
+                <div class="input-group input-group--suffix">
+                  <input id="demo-dep-pv" class="input input--numeric" type="text" inputmode="numeric" value="40">
+                  <span class="input-affix" aria-hidden="true">%</span>
+                </div>
+                <span class="form-field__unit">Стандартный ряд: 15, 25, 40, 60 %</span>
+              </div>
+              <div class="form-field">
+                <label class="form-field__label" for="demo-dep-cycle">Длительность цикла, мин</label>
+                <input id="demo-dep-cycle" class="input input--numeric" type="text" inputmode="numeric" value="10">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- </BLOCK:section-input-states> -->
+
+    <!-- ===== Form Error Summary Section ===== -->
+    <!-- [BLOCK:section-form-error-summary] -->
+    <section id="form-error-summary" class="mb-4">
+      <h2 class="mb-2">Form Error Summary — сводка ошибок формы</h2>
+      <p class="text-muted mb-2">
+        Замена <code>alert()</code> перед отправкой: контейнер собран из <code>.alert.alert-error</code>,
+        новое — только список с якорями. Ошибки сгруппированы по разделам, каждая ссылка ведёт
+        к своему полю и ставит на него фокус. Контейнер получает <code>role="alert"</code> и фокус
+        при показе — на 12 разделах искать невалидное поле вручную невозможно.
+      </p>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="alert alert-error form-error-summary" id="demo-error-summary" role="alert" tabindex="-1" hidden>
+            <strong class="alert-title">Пакет не сформирован: 3 ошибки в двух разделах</strong>
+            <ul class="form-error-summary__list">
+              <li class="form-error-summary__section">Раздел 1. Инициатор и контактное лицо — 2 ошибки</li>
+              <li class="form-error-summary__item">
+                <a class="form-error-summary__link" href="#demo-es-mail">Укажите рабочий e-mail — на него уйдёт сформированный пакет</a>
+              </li>
+              <li class="form-error-summary__item">
+                <a class="form-error-summary__link" href="#demo-es-date">Укажите дату заявки</a>
+              </li>
+              <li class="form-error-summary__section">Раздел 4. Мощность и обороты — 1 ошибка</li>
+              <li class="form-error-summary__item">
+                <a class="form-error-summary__link" href="#demo-es-power">Мощность «от» больше мощности «до»</a>
+              </li>
+            </ul>
+          </div>
+
+          <fieldset class="form-section">
+            <legend class="form-section__legend">1. Инициатор и контактное лицо</legend>
+            <div class="form-grid">
+              <div class="form-field">
+                <label class="form-field__label" for="demo-es-mail">Рабочий e-mail <span class="form-field__req" aria-hidden="true">*</span></label>
+                <input id="demo-es-mail" class="input" type="email" required placeholder="name@uralelectro.ru" autocomplete="email">
+              </div>
+              <div class="form-field">
+                <label class="form-field__label" for="demo-es-date">Дата заявки <span class="form-field__req" aria-hidden="true">*</span></label>
+                <input id="demo-es-date" class="input" type="date" required>
+              </div>
+              <div class="form-field">
+                <label class="form-field__label" for="demo-es-power">Мощность «от», кВт</label>
+                <input id="demo-es-power" class="input input--numeric" type="text" inputmode="decimal" value="45">
+              </div>
+              <div class="form-field">
+                <label class="form-field__label" for="demo-es-power-max">Мощность «до», кВт</label>
+                <input id="demo-es-power-max" class="input input--numeric" type="text" inputmode="decimal" value="22">
+              </div>
+            </div>
+          </fieldset>
+
+          <button type="button" class="btn btn-primary" id="demo-error-summary-submit"
+            data-error-summary="demo-error-summary">Сформировать пакет (YAML)</button>
+        </div>
+      </div>
+    </section>
+    <!-- </BLOCK:section-form-error-summary> -->
+
+    <!-- ===== Editable Table Section ===== -->
+    <!-- [BLOCK:section-table-form] -->
+    <section id="table-form" class="mb-4">
+      <h2 class="mb-2">Editable Table — редактируемая таблица</h2>
+      <p class="text-muted mb-2">
+        Альтернатива <code>row-card</code> там, где строка — это 5–7 однотипных числовых
+        параметров: одна шапка на весь массив вместо повторяющихся меток у каждого поля
+        (при 5 строках это 35 меток против семи заголовков колонок). Ячейка сама себе
+        рамка: у поля внутри границы нет, кольцо фокуса рисуется на ячейке.
+        На экране до 767px строка разворачивается в карточку.
+      </p>
+      <div class="card mb-4">
+        <div class="card-body">
+          <table class="table table--form table-card-mobile" id="demo-table-form">
+            <thead>
+              <tr>
+                <th scope="col">№</th>
+                <th scope="col">P, кВт</th>
+                <th scope="col">n, об/мин</th>
+                <th scope="col">M, Н·м</th>
+                <th scope="col">Режим</th>
+                <th scope="col"><span class="sr-only">Действия</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="№">1</td>
+                <td data-label="P, кВт"><input class="input input--numeric" type="text" inputmode="decimal" value="7,5" aria-label="Мощность рабочей точки 1, кВт"></td>
+                <td data-label="n, об/мин"><input class="input input--numeric" type="text" inputmode="numeric" value="1455" aria-label="Обороты рабочей точки 1, об/мин"></td>
+                <td data-label="M, Н·м"><input class="input input--numeric" type="text" inputmode="decimal" value="49,2" aria-label="Момент рабочей точки 1, Н·м"></td>
+                <td data-label="Режим">
+                  <select class="select" aria-label="Режим рабочей точки 1">
+                    <option selected>S1</option>
+                    <option>S3 40%</option>
+                    <option>S6 60%</option>
+                  </select>
+                </td>
+                <td class="table__actions">
+                  <button type="button" class="btn btn-ghost btn-sm" data-table-row-remove aria-label="Удалить рабочую точку 1">Удалить</button>
+                </td>
+              </tr>
+              <tr>
+                <td data-label="№">2</td>
+                <td data-label="P, кВт"><input class="input input--numeric" type="text" inputmode="decimal" value="5,5" aria-label="Мощность рабочей точки 2, кВт"></td>
+                <td data-label="n, об/мин"><input class="input input--numeric" type="text" inputmode="numeric" value="960" aria-label="Обороты рабочей точки 2, об/мин"></td>
+                <td data-label="M, Н·м"><input class="input input--numeric" type="text" inputmode="decimal" value="54,7" aria-label="Момент рабочей точки 2, Н·м"></td>
+                <td data-label="Режим">
+                  <select class="select" aria-label="Режим рабочей точки 2">
+                    <option>S1</option>
+                    <option selected>S3 40%</option>
+                    <option>S6 60%</option>
+                  </select>
+                </td>
+                <td class="table__actions">
+                  <button type="button" class="btn btn-ghost btn-sm" data-table-row-remove aria-label="Удалить рабочую точку 2">Удалить</button>
+                </td>
+              </tr>
+              <tr>
+                <td data-label="№">3</td>
+                <td data-label="P, кВт"><input class="input input--numeric" type="text" inputmode="decimal" value="3,0" aria-label="Мощность рабочей точки 3, кВт"></td>
+                <td data-label="n, об/мин"><input class="input input--numeric" type="text" inputmode="numeric" value="720" aria-label="Обороты рабочей точки 3, об/мин"></td>
+                <td data-label="M, Н·м"><input class="input input--numeric" type="text" inputmode="decimal" value="39,8" aria-label="Момент рабочей точки 3, Н·м"></td>
+                <td data-label="Режим">
+                  <select class="select" aria-label="Режим рабочей точки 3">
+                    <option>S1</option>
+                    <option>S3 40%</option>
+                    <option selected>S6 60%</option>
+                  </select>
+                </td>
+                <td class="table__actions">
+                  <button type="button" class="btn btn-ghost btn-sm" data-table-row-remove aria-label="Удалить рабочую точку 3">Удалить</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    <!-- </BLOCK:section-table-form> -->
+
+    <!-- ===== Print Sheet Section ===== -->
+    <!-- [BLOCK:section-print-sheet] -->
+    <section id="print-sheet" class="mb-4">
+      <h2 class="mb-2">Print Sheet — лист A4 с колонтитулами</h2>
+      <p class="text-muted mb-2">
+        Лист держит физическую геометрию A4 (210×297 мм). Колонтитул живёт
+        <strong>разметкой</strong>, а не <code>@page</code> margin-boxes:
+        <code>@bottom-left</code> и <code>counter(page)</code> — Paged-Media-only,
+        Chrome и Firefox их молча игнорируют, и документ уходит в печать без подписи
+        и номера. Поэтому <code>.print-sheet__running-head</code> и
+        <code>.print-sheet__running-foot</code> — обычные элементы листа; подвал
+        прижат к нижней кромке листа, а не контента.
+      </p>
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="print-sheet" id="demo-print-sheet">
+            <div class="print-sheet__running-head" id="demo-running-head">
+              <span>АО «МЭЗ «Уралэлектро» · опросный лист R&amp;D</span>
+              <span>Заявка RND-2026-014 · 29.07.2026</span>
+            </div>
+            <div class="spec-sheet__header">
+              <div class="flex gap-4 items-center">
+                <span class="brand-mark" role="img" aria-label="Логотип бренда"></span>
+                <h3 class="spec-sheet__title">Техническое задание на разработку</h3>
+              </div>
+            </div>
+            <div class="spec-section">
+              <h4 class="spec-section__title">Основные параметры</h4>
+              <div class="spec-grid">
+                <div class="spec-row"><span class="spec-row__label">Серия</span><span class="spec-row__value">АДМ</span></div>
+                <div class="spec-row"><span class="spec-row__label">Габарит</span><span class="spec-row__value">132S</span></div>
+                <div class="spec-row"><span class="spec-row__label">Мощность</span><span class="spec-row__value">7,5 кВт</span></div>
+                <div class="spec-row"><span class="spec-row__label">Число полюсов</span><span class="spec-row__value">4</span></div>
+                <div class="spec-row"><span class="spec-row__label">Взрывозащита</span><span class="spec-row__value spec-row__value--empty">— не требуется</span></div>
+                <div class="spec-row"><span class="spec-row__label">Тормоз</span><span class="spec-row__value spec-row__value--empty">— не требуется</span></div>
+              </div>
+            </div>
+            <div class="print-sheet__running-foot" id="demo-running-foot">
+              <span>Подпись инициатора ____________ / дата ____________</span>
+              <span>Лист 1 из 1</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- </BLOCK:section-print-sheet> -->
+
+    <!-- ===== Skip Link / Print Utilities Section ===== -->
+    <!-- [BLOCK:section-skip-link] -->
+    <section id="skip-link" class="mb-4">
+      <h2 class="mb-2">Skip Link · утилиты печати</h2>
+      <p class="text-muted mb-2">
+        <code>.skip-link</code> — первый таб-стоп документа: до фокуса убран с экрана,
+        по фокусу съезжает в поток и ведёт на <code>&lt;main&gt;</code> (SC 2.4.1).
+        Живой экземпляр стоит в самом верху этой страницы: поставьте курсор в адресную строку
+        и нажмите Tab — ссылка появится в левом верхнем углу.
+      </p>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Экран и печать</h3></div>
+        <div class="card-body">
+          <p class="text-muted mb-2">
+            <code>.screen-only</code> и <code>.print-only</code> — парные утилиты:
+            экранная форма прячется при печати, печатный бланк показывается только там.
+            Проверяется предпросмотром печати браузера.
+          </p>
+          <p class="screen-only" id="demo-screen-only">
+            Виден на экране: подсказки, кнопки, панель автосохранения. При печати этот блок исчезает.
+          </p>
+          <p class="print-only" id="demo-print-only">
+            Появляется только на бумаге: «Заявка RND-2026-014. Подпись инициатора ____________ / дата ____________».
+          </p>
+        </div>
+      </div>
+    </section>
+    <!-- </BLOCK:section-skip-link> -->
 
       </div><!-- /.container -->
     </main><!-- /.app-content -->

@@ -74,6 +74,53 @@
   font-size: var(--fs-sm);
 }
 
+/* Form — редактируемая таблица: массив однотипных строк с полями ввода
+   в ячейках и ОДНОЙ шапкой на весь массив. Альтернатива row-card там, где
+   строка — это 5-7 числовых параметров: карточка повторяет метку у каждого
+   поля (при 5 строках — 35 меток вместо семи заголовков колонок).
+   Ячейка сама себе рамка: у поля внутри границы нет, кольцо фокуса рисуется
+   на ячейке — иначе двойная рамка «ячейка + input» */
+.table--form th,
+.table--form td {
+  padding: var(--space-1) var(--space-2);
+  vertical-align: middle;
+}
+.table--form td { padding: 0; }
+.table--form td .input,
+.table--form td .select {
+  width: 100%;
+  padding: var(--space-2);
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}
+.table--form td:focus-within {
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: calc(-1 * var(--border-w-strong));
+  box-shadow: inset 0 0 0 var(--border-w-strong) var(--color-accent);
+}
+.table--form td .input:focus,
+.table--form td .select:focus {
+  outline: none;
+  box-shadow: none;
+}
+/* Колонка действий строки (удалить) прижата к правому краю */
+.table--form td.table__actions {
+  width: 1%;
+  padding: 0 var(--space-2);
+  white-space: nowrap;
+}
+/* На мобильном строка разворачивается в карточку: заголовок колонки
+   подставляется из data-label (общий механизм .table-card-mobile) */
+@media (max-width: 767px) {
+  .table--form td { padding: var(--space-1) var(--space-2); }
+  .table--form td .input,
+  .table--form td .select {
+    border: var(--border-w) solid var(--color-border);
+    border-radius: var(--radius-sm);
+  }
+}
+
 /* Bordered — внутренние divider'ы между колонками */
 .table--bordered th,
 .table--bordered td {

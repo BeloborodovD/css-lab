@@ -39,6 +39,13 @@
   box-shadow: var(--shadow-focus);
 }
 
+/* Плейсхолдер пустого контрола — как у picklist: без него поле схлопывается
+   в пустую полосу без подписи */
+.swatch-picker__placeholder {
+  color: var(--color-text-disabled);
+  font-size: var(--fs-base);
+}
+
 /* Чип выбранного цвета: образец + код + удаление */
 .swatch-picker__chip {
   display: inline-flex;
@@ -76,11 +83,14 @@
   .swatch-picker__chip-remove:hover { color: var(--color-error); }
 }
 
-/* Кнопка-раскрыватель (как в picklist): клавиатурная точка входа, ≥24px */
+/* Кнопка-раскрыватель (как в picklist): клавиатурная точка входа, ≥24px.
+   Центрирование по вертикали через inset-block + margin-block: при 2-4 рядах
+   чипов (5+ цветов RAL) фиксированный top отрывал кнопку к верхней кромке */
 .swatch-picker__toggle {
   position: absolute;
   right: var(--space-1);
-  top: var(--space-2);
+  inset-block: 0;
+  margin-block: auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -145,6 +155,26 @@
   width: 100%;
   margin-bottom: var(--space-2);
 }
+/* Очистка поиска — БЕЗ собственного элемента: поле оборачивается в
+   .search-input и получает библиотечную .search-clear (components/search.css),
+   она уже спозиционирована от своей обёртки и показывается по
+   :not(:placeholder-shown). Непригоден здесь только .input-clear
+   (inputs.css:87 — right: 60px под кнопку search-bar). */
+
+/* Счётчик результатов фильтрации — носитель для aria-live */
+.swatch-picker__result-count {
+  margin-bottom: var(--space-1);
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+}
+/* Пустой результат поиска — по образцу .picklist__no-match */
+.swatch-picker__no-match {
+  padding: var(--space-2);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+  text-align: center;
+}
 
 .swatch-picker__grid {
   display: grid;
@@ -153,6 +183,65 @@
   max-height: 320px;
   overflow: auto;
   padding: var(--space-px);
+  /* Затухание у нижней кромки скролла: при обрезанном списке видно, что он
+     продолжается (прецедент .table-responsive::before/::after).
+     Гасится только низ — верх занимает sticky-заголовок семейства, его
+     приглушать нельзя. В маске значима только альфа, поэтому цвет берётся
+     currentColor: ни одного литерала */
+  mask-image: linear-gradient(
+    to bottom,
+    currentColor calc(100% - var(--space-4)),
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    currentColor calc(100% - var(--space-4)),
+    transparent 100%
+  );
+}
+
+/* Фильтр поиска переключается КЛАССОМ, а не инлайновым style.display:
+   иначе состояние не восстановить и заголовки семейств гаснут навсегда */
+.swatch.is-filtered,
+.swatch-picker__family.is-filtered { display: none; }
+
+/* Секция избранного («частые цвета» бренда) над общей палитрой */
+.swatch-picker__section { margin-bottom: var(--space-3); }
+.swatch-picker__section-title {
+  margin-bottom: var(--space-1);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-muted);
+}
+
+/* Строка выбранного внутри панели — чтобы увидеть выбор, панель больше
+   не нужно закрывать */
+.swatch-picker__selected {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  margin-bottom: var(--space-2);
+  padding-bottom: var(--space-2);
+  border-bottom: var(--border-w) solid var(--color-border);
+}
+
+/* Массовые действия палитры: очистить всё + счётчик выбранного */
+.swatch-picker__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: var(--border-w) solid var(--color-border);
+}
+.swatch-picker__actions-count {
+  margin-left: auto;
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
 }
 
 /* Заголовок семейства цветов — sticky внутри скролла */
@@ -243,10 +332,55 @@
   margin-top: var(--space-2);
 }
 
-/* Reduced motion: без масштаба на hover и сдвига панели */
+/* ===== Столкновение с краем вьюпорта ==================================== */
+/* Открытие вверх (класс ставит JS, замерив свободное место) */
+.swatch-picker__panel--top {
+  top: auto;
+  bottom: calc(100% + var(--space-1));
+  transform-origin: var(--transform-origin, bottom center);
+}
+
+/* Мобильный лист снизу вместо панели поверх половины экрана.
+   Вход и выход одной кромкой, смещение процентное (RULES.md §3) */
+@media (max-width: 479px) {
+  .swatch-picker__panel--sheet {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: var(--z-drawer);
+    max-height: 70vh;
+    overflow: auto;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    transform: translateY(100%);
+    /* Лист принадлежит нижней кромке экрана, а не контролу: origin у той же
+       кромки, из-за которой он выезжает и за которую уходит */
+    transform-origin: bottom center;
+    /* PURPOSE: spatial consistency — палитра на мобильном ведёт себя как
+       шторка: кривая --ease-drawer и тайминги шторки (300 вход / 240 выход),
+       одинаково с picklist и combobox. Базовое состояние = выход */
+    transition:
+      opacity var(--duration-modal-exit) var(--ease-drawer),
+      transform var(--duration-modal-exit) var(--ease-drawer),
+      visibility 0s linear var(--duration-modal-exit);
+  }
+  .swatch-picker.is-open .swatch-picker__panel--sheet {
+    transform: translateY(0);
+    transition:
+      opacity var(--duration-modal) var(--ease-drawer),
+      transform var(--duration-modal) var(--ease-drawer),
+      visibility 0s;
+  }
+  .swatch-picker__grid { max-height: 50vh; }
+}
+
+/* Reduced motion: мягче, но не ноль — снимается движение (подъём образца,
+   масштаб панели, выезд листа), кроссфейд открытия остаётся носителем
+   смены состояния. Вариант --sheet перечислен явно, чтобы правило не
+   зависело от порядка блоков в файле */
 @media (prefers-reduced-motion: reduce) {
-  .swatch-picker__panel { transform: none; }
-  .swatch-picker.is-open .swatch-picker__panel { transform: none; }
+  .swatch-picker__panel,
+  .swatch-picker__panel--sheet,
+  .swatch-picker.is-open .swatch-picker__panel,
+  .swatch-picker.is-open .swatch-picker__panel--sheet { transform: none; }
   .swatch:hover { transform: none; }
 }
 /* </BLOCK:component.swatch-picker> */

@@ -16,7 +16,8 @@
 
 /* [BLOCK:theme.uralelectro.light] */
 [data-brand="uralelectro"] {
-  /* Accent → графитово-синий RAL 5008. На #fafaf9: 8.7:1 — AAA */
+  /* Accent → графитово-синий RAL 5008. На #fafaf9: 8.89:1 — AAA
+     (на белой поверхности #ffffff — 9.29:1) */
   --color-accent:            #374a51;
   --color-accent-hover:      #2d3d43;
   --color-accent-active:     #28363b;
@@ -39,6 +40,11 @@
 
   /* Плашка под белый логотип: всегда насыщенный бренд, не инвертируется */
   --brand-plate-bg:          #374a51;
+
+  /* Бумага (.print-sheet) не инвертируется в dark, поэтому акцент и логотип
+     листа берутся отсюда: тот же AAA-акцент 9.29:1 на белом и цветной логотип */
+  --color-accent-paper:      #374a51;
+  --brand-logo-paper:        url("/assets/logos/uralelectro.svg");
 
   /* Типографика бренда */
   --font-sans:    "NT Somic", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -86,7 +92,7 @@
 .dark [data-brand="uralelectro"],
 [data-brand="uralelectro"] .dark,
 [data-brand="uralelectro"][data-theme="dark"] {
-  --color-accent:            #8fa6ae;  /* светлый графит — 6.4:1 на #18181b */
+  --color-accent:            #8fa6ae;  /* светлый графит — 6.95:1 на #18181b */
   --color-accent-hover:      #a9bcc3;
   --color-accent-active:     #7a939c;
   --color-accent-soft:       rgba(143, 166, 174, 0.12);

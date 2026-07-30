@@ -82,4 +82,39 @@
   .btn-row-del:hover { background: var(--color-error-soft-hover); }
 }
 /* .btn-row-add / .btn-row-del — deprecated-алиасы, мигрировать на BEM-имена */
+
+/* ===== Пара к редактируемой таблице (.table--form, components/table.css) ==
+   Разграничение: массив из 5-7 числовых параметров подаётся таблицей с одной
+   шапкой (.table--form), а не карточками — иначе метка каждого поля
+   повторяется в каждой строке. На мобильном таблица всё равно разворачивается
+   строкой-карточкой; структуру этого режима даёт .table-card-mobile
+   (table.css:322-356), здесь ей выдаётся ОБЛИК .row-card, чтобы в одной форме
+   не сосуществовали два разных языка «строки массива».
+   Кнопки строки — те же .form-rows__add / .row-card__remove. */
+@media (max-width: 767px) {
+  .table--form.table-card-mobile tbody {
+    gap: var(--space-3);
+  }
+  .table--form.table-card-mobile tbody tr {
+    padding: var(--space-3);
+    background: var(--color-surface-sunken);
+    border: var(--border-w) solid var(--color-border);
+    border-radius: var(--radius-sm);
+  }
+  /* Ячейка-карточка: метка слева (data-label), поле справа — как в row-card */
+  .table--form.table-card-mobile td {
+    gap: var(--space-2);
+    padding: var(--space-1) 0;
+  }
+  .table--form.table-card-mobile td .input,
+  .table--form.table-card-mobile td .select {
+    flex: 1;
+    min-width: 0;
+  }
+  .table--form.table-card-mobile td.table__actions {
+    justify-content: flex-end;
+    padding-top: var(--space-2);
+  }
+  .table--form.table-card-mobile td.table__actions::before { content: none; }
+}
 /* </BLOCK:component.row-card> */

@@ -54,6 +54,12 @@
      с самоссылкой: `--color-accent: var(--color-accent-paper, var(--color-accent))`
      — это цикл, он делает переменную invalid at computed-value time. */
   --color-accent: var(--color-accent-paper);
+  /* Фокус-кольцо пересобирается здесь же: собранное уровнем выше, оно
+     несёт accent и surface СТРАНИЦЫ — в тёмной теме это подсвеченный
+     акцент и тёмный разрыв на белой бумаге. Тот же дефект уровня
+     объявления, что лечит [BLOCK:brand-scope-derived] в variables.css */
+  --shadow-focus: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-accent);
+  --shadow-focus-error: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-error);
   background: var(--color-surface);
   /* Белая бумага обязана печататься белой и из dark-темы */
   print-color-adjust: exact;

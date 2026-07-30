@@ -1,8 +1,15 @@
 /* ==========================================================================
    alerts.css — info/success/warning/error баннер с soft-bg + accent border-left
    --------------------------------------------------------------------------
+   Единственная плашка сообщения в библиотеке: сюда сведена и вторая
+   реализация, жившая в logs.css под именем .alert-box.
    Soft фон вместо ярких цветных пастелей; border-radius полный (не только
    справа); без агрессивного pulse/attention-glow.
+
+   Две раскладки одного блока:
+     - текстовая (по умолчанию) — заголовок и текст в потоке;
+     - строчная — включается сама, когда внутри есть иконка .alert-icon
+       или блок закрываемый (.alert-dismissible).
    ========================================================================== */
 
 /* ====================== Base ====================== */
@@ -43,8 +50,7 @@
 }
 
 .alert-error,
-.alert-danger,
-.alert.warning {
+.alert-danger {
   background: var(--color-error-soft);
   border-color: var(--color-error-soft);
   border-left-color: var(--color-error);
@@ -52,14 +58,36 @@
 }
 
 /* ====================== Anatomy ====================== */
-.alert-icon {
+/* Строчная раскладка: иконка слева, текст растягивается, кнопка закрытия
+   прижата к правому краю. Включается наличием иконки или крестика —
+   отдельного модификатора раскладки в разметке держать не нужно. */
+.alert-dismissible,
+.alert:has(> .alert-icon) {
   display: flex;
   align-items: flex-start;
   gap: var(--space-3);
 }
-.alert-icon .icon {
+
+.alert-dismissible {
+  transition: opacity var(--t) var(--ease),
+              transform var(--t) var(--ease);
+}
+
+/* Иконка типа сообщения. Смысл ею не передаётся — только подкрепляется:
+   тип обязан быть назван текстом (.alert-title или сам текст). */
+.alert-icon {
   flex-shrink: 0;
-  font-size: var(--fs-lg);
+  width: 20px;
+  height: 20px;
+  color: inherit;
+}
+.alert-icon svg { width: 100%; height: 100%; }
+
+.alert-content {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
 }
 
 .alert-title {
@@ -68,28 +96,26 @@
   color: inherit;
 }
 
-/* Dismissible */
-.alert-dismissible {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  transition: opacity var(--t) var(--ease),
-              transform var(--t) var(--ease);
-}
-
 .alert-close {
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;   /* цель касания ≥24px (SC 2.5.8) */
+  height: 24px;
+  padding: 0;
+  margin-left: auto;
   background: transparent;
   border: none;
+  border-radius: var(--radius-xs);
   font-size: var(--fs-lg);
   line-height: 1;
   color: inherit;
   opacity: 0.6;
-  padding: 0;
-  margin-left: var(--space-2);
   cursor: pointer;
   transition: opacity var(--t-fast) var(--ease);
 }
+.alert-close svg { width: 16px; height: 16px; }
 .alert-close:hover { opacity: 1; }
 .alert-close:focus-visible {
   outline: var(--border-w-strong) solid transparent;
@@ -129,7 +155,10 @@
     opacity: 1;
     transform: none;
   }
-  .alert-dismissible { transition: opacity 0.01ms; }
+  /* Мягче, но не «выключено»: движение убрано, растворение остаётся */
+  .alert-dismissible {
+    transition: opacity var(--duration-dropdown) var(--ease-out);
+  }
 }
 
 /* ====================== Dark theme ======================

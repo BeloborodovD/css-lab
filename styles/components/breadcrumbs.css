@@ -51,11 +51,16 @@ a.breadcrumb-item:focus-visible {
   pointer-events: none;
 }
 
-/* ====================== Separator ====================== */
-.breadcrumb-separator {
+/* ====================== Separator ======================
+   Глиф разделителя — единственный источник, и он здесь: разметка ставит пустой
+   .breadcrumb-separator, символ приходит из ::before. Если писать глиф ещё и
+   текстом, получается двойной разделитель. Селекторы ограничены блоком
+   .breadcrumbs, чтобы правило не доставало чужие .breadcrumb-item. */
+.breadcrumbs .breadcrumb-separator {
   color: var(--color-text-disabled);
   user-select: none;
 }
+.breadcrumbs .breadcrumb-separator::before { content: '/'; }
 
 /* ====================== Icons ====================== */
 .breadcrumb-item svg,
@@ -74,10 +79,10 @@ a.breadcrumb-item:focus-visible {
 }
 
 /* ====================== Separator styles ====================== */
-.breadcrumbs-slash    .breadcrumb-separator::before { content: '/'; }
-.breadcrumbs-arrow    .breadcrumb-separator::before { content: '›'; }
-.breadcrumbs-chevron  .breadcrumb-separator::before { content: '>'; }
-.breadcrumbs-dot      .breadcrumb-separator::before { content: '•'; }
+.breadcrumbs.breadcrumbs-slash    .breadcrumb-separator::before { content: '/'; }
+.breadcrumbs.breadcrumbs-arrow    .breadcrumb-separator::before { content: '›'; }
+.breadcrumbs.breadcrumbs-chevron  .breadcrumb-separator::before { content: '>'; }
+.breadcrumbs.breadcrumbs-dot      .breadcrumb-separator::before { content: '•'; }
 
 /* ====================== Variants ====================== */
 .breadcrumbs-boxed {

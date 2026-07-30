@@ -1,8 +1,20 @@
-/* ==========================================================================
-   badge.css — компактный бейдж + tag (удаляемый)
-   ========================================================================== */
+/* [BLOCK:component.badge]
+ * Бейдж — неинтерактивный носитель статуса или счётчика: пилюля с числом
+ * (в том числе накладываемая на иконку) и точка-индикатор без подписи.
+ * Модуль: css-lab/components. Зависимости: base/variables.css, base/motion.css.
+ *
+ * Граница с соседями:
+ *   badge — СТАТУС или СЧЁТЧИК, автор разметки его не выбирает и не снимает;
+ *   chip  — ОБЪЕКТ, который выбирают, переключают или удаляют (chip.css).
+ * Поэтому удаляемая метка живёт в chip.css (.chip-removable), а не здесь.
+ *
+ * .badge-dot — единственный примитив точки состояния в библиотеке: им
+ * пользуются подвал (.footer), галерея событий (autotrassir), индикатор
+ * уведомлений (notification-badge) и точка присутствия аватара
+ * (.avatar-status добавляет к нему только позицию у кромки круга).
+ */
 
-/* ====================== Badge ====================== */
+/* ====================== Бейдж-пилюля ====================== */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -16,13 +28,6 @@
   color: var(--color-text-on-accent);
   background: var(--color-accent);
   border-radius: var(--radius-full);
-}
-
-/* Float — поверх иконок (cart, bell) */
-.badge-float {
-  position: absolute;
-  top: -6px;
-  right: -6px;
 }
 
 /* Outline */
@@ -44,51 +49,41 @@
 .badge-error   { background: var(--color-error); }
 .badge-info    { background: var(--color-info); }
 
-/* ====================== Tag ====================== */
-.tag {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  padding: var(--space-1) var(--space-3);
-  font-size: var(--fs-xs);
-  font-weight: var(--fw-medium);
-  color: var(--color-accent);
-  background: var(--color-accent-soft);
-  border-radius: var(--radius-xs);
-}
-
-.tag-removable {
-  padding-right: var(--space-2);
-}
-
-.tag-remove {
-  width: 16px;
-  height: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background: transparent;
-  color: inherit;
-  opacity: 0.6;
-  cursor: pointer;
+/* ====================== Точка состояния ======================
+   Точка без подписи: смысл обязан дублироваться текстом рядом либо
+   aria-label — цвет носителем информации быть не может. */
+.badge-dot {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
   border-radius: var(--radius-full);
-  transition: opacity var(--t-fast) var(--ease),
-              background-color var(--t-fast) var(--ease);
-}
-.tag-remove:hover {
-  opacity: 1;
-  background: var(--color-accent);
-  color: var(--color-text-on-accent);
+  background: var(--color-text-muted);
 }
 
-.tag-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-1);
+.badge-dot-sm { width: 6px;  height: 6px; }
+.badge-dot-lg { width: 12px; height: 12px; }
+
+.badge-dot-accent  { background: var(--color-accent); }
+.badge-dot-success { background: var(--color-success); }
+.badge-dot-warning { background: var(--color-warning); }
+.badge-dot-error   { background: var(--color-error); }
+.badge-dot-info    { background: var(--color-info); }
+.badge-dot-muted   { background: var(--color-text-muted); }
+
+/* ====================== Накладка на иконку ======================
+   Счётчик или точка поверх кнопки-иконки (колокольчик, корзина).
+   Родитель обязан быть position: relative — эту роль берёт на себя
+   .notification-badge, но подойдёт любой позиционированный контейнер.
+   Кольцо в цвет поверхности отделяет бейдж от того, что под ним. */
+.badge-float {
+  position: absolute;
+  top: calc(-1 * var(--space-1));
+  right: calc(-1 * var(--space-1));
+  border: var(--border-w-strong) solid var(--color-surface);
 }
 
-/* ====================== Dark theme ====================== */
+/* ====================== Тёмная тема ====================== */
 .dark .badge,
 [data-theme="dark"] .badge {
   color: var(--color-accent-text);
@@ -103,8 +98,4 @@
   background: transparent;
   color: var(--color-accent);
 }
-.dark .tag,
-[data-theme="dark"] .tag {
-  background: var(--color-accent-soft);
-  color: var(--color-accent);
-}
+/* </BLOCK:component.badge> */

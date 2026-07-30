@@ -623,7 +623,7 @@ test('витрина: .code-inline выглядит как инлайн-код',
 test('витрина: пункты сайдбара ведут на реально существующие секции', async ({ page }) => {
   await page.goto('/components.html');
   const missing = await page.evaluate(() => {
-    const links = [...document.querySelectorAll('.app-sidebar.left .sidebar-nav-link')];
+    const links = [...document.querySelectorAll('#left-sidebar .sidebar-nav-link')];
     return links
       .map((link) => link.getAttribute('href') || '')
       .filter((href) => href.startsWith('#'))
@@ -838,4 +838,152 @@ test.describe('печатные формы под тёмной темой ОС',
   });
 });
 // </TEST:e2e.print-forms-dark>
+
+// [TEST:e2e.focus-ring-brand]
+// Кольцо фокуса — производный токен: --shadow-focus собран из var(--color-accent).
+// var() разрешается на элементе объявления, а бренд живёт на body, поэтому
+// объявленное в :root кольцо оставалось indigo на всех брендовых страницах,
+// пока шапка и H1 были брендовыми. Глазами это видно, тестами не мерилось —
+// отсюда и тест: снимаем РЕАЛЬНЫЙ box-shadow сфокусированного .input.
+const DEFAULT_ACCENT_RGB = 'rgb(55, 48, 163)';  // indigo :root — маркер «бренд не доехал»
+
+// Эталонные акценты брендов (variables/темы). Проверяем и совпадение с живым
+// токеном, и попадание в эталон: иначе тест пройдёт на паре сломанных значений
+const BRAND_ACCENT_RGB: Record<string, { light: string; dark: string }> = {
+  veza:        { light: 'rgb(42, 127, 55)',  dark: 'rgb(95, 193, 111)' },
+  uralelectro: { light: 'rgb(55, 74, 81)',   dark: 'rgb(143, 166, 174)' },
+  hemah:       { light: 'rgb(45, 98, 116)',  dark: 'rgb(111, 179, 199)' },
+};
+
+// Замер кольца: слои computed box-shadow идут в порядке объявления —
+// первый (2px) — разрыв цветом поверхности, последний (4px) — само кольцо.
+// Токены снимаем зондом-соседом поля, а не с :root: сравнение с тем, что
+// реально досталось элементу в его ветке каскада
+const FOCUS_RING_INPUT = '#inputs input.input';
+
+async function measureFocusRing(page: Page) {
+  const field = page.locator(FOCUS_RING_INPUT).first();
+  await field.focus();
+  await expect(field).toBeFocused();
+  // Кольцо проявляется переходом box-shadow (--duration-press), и смена
+  // темы/бренда запускает его заново. Читать значение сразу нельзя — попадаешь
+  // в промежуточный кадр (4px вместо 5px, альфа 0.99): три прогона давали три
+  // разных сообщения об одной и той же гонке. Ждать по таймеру наугад тоже
+  // нельзя. Порядок: дать переходу стартовать (кадр), дождаться завершения всех
+  // запущенных на поле переходов (getAnimations().finished — уже не пустой), и
+  // только потом убедиться, что значение осело — несколько одинаковых кадров
+  // подряд. Потолок в кадрах — страховка от зависания, не подмена ожидания.
+  await page.evaluate(
+    (selector) =>
+      new Promise<void>((resolve) => {
+        const el = document.querySelector(selector);
+        if (!el) {
+          resolve();
+          return;
+        }
+        const STABLE_FRAMES = 3;
+        const MAX_FRAMES = 240;
+        let last: string | null = null;
+        let stable = 0;
+        let frames = 0;
+
+        const settle = () => {
+          const now = getComputedStyle(el).boxShadow;
+          stable = now === last ? stable + 1 : 0;
+          last = now;
+          frames += 1;
+          if (stable >= STABLE_FRAMES || frames >= MAX_FRAMES) {
+            resolve();
+            return;
+          }
+          requestAnimationFrame(settle);
+        };
+
+        // Переход создаётся на ближайшем пересчёте стилей — сначала кадр,
+        // потом ожидание его завершения, потом проверка на оседание
+        requestAnimationFrame(() => {
+          const running = el
+            .getAnimations()
+            .map((animation) => animation.finished.catch(() => undefined));
+          Promise.all(running).then(() => requestAnimationFrame(settle));
+        });
+      }),
+    FOCUS_RING_INPUT,
+  );
+
+  return page.evaluate((selector) => {
+    const input = document.querySelector(selector) as HTMLInputElement | null;
+    if (!input) return null;
+
+    const shadow = getComputedStyle(input).boxShadow;
+    const layers = shadow.match(/rgba?\([^)]+\)/g) || [];
+
+    const probe = document.createElement('span');
+    probe.style.color = 'var(--color-accent)';
+    input.parentElement!.appendChild(probe);
+    const accent = getComputedStyle(probe).color;
+    probe.style.color = 'var(--color-surface)';
+    const surface = getComputedStyle(probe).color;
+    probe.remove();
+
+    return { shadow, gap: layers[0], ring: layers[layers.length - 1], accent, surface };
+  }, FOCUS_RING_INPUT);
+}
+
+test('витрина: кольцо фокуса — акцент бренда во всех брендах и обеих темах', async ({ page }) => {
+  await page.goto('/components.html');
+
+  for (const brand of BRANDS) {
+    await page.click(`.js-brand-switcher [data-brand-value="${brand}"]`);
+    await expect(page.locator('body')).toHaveAttribute('data-brand', brand);
+
+    for (const theme of ['light', 'dark'] as const) {
+      await page.evaluate((t) => document.body.classList.toggle('dark', t === 'dark'), theme);
+
+      const ring = await measureFocusRing(page);
+      const where = `бренд ${brand}, тема ${theme}`;
+      expect(ring, `#inputs input.input найден — ${where}`).not.toBeNull();
+
+      // Кольцо — два слоя: разрыв поверхностью и сам ринг
+      expect(ring!.gap, `внутренний разрыв кольца — поверхность темы, ${where}: ${ring!.shadow}`)
+        .toBe(ring!.surface);
+      expect(ring!.ring, `кольцо совпадает с живым --color-accent, ${where}: ${ring!.shadow}`)
+        .toBe(ring!.accent);
+      expect(ring!.ring, `кольцо равно эталону бренда, ${where}`)
+        .toBe(BRAND_ACCENT_RGB[brand][theme]);
+      expect(ring!.ring, `кольцо не осталось дефолтным indigo, ${where}`)
+        .not.toBe(DEFAULT_ACCENT_RGB);
+    }
+  }
+});
+
+test.describe('усиленный контраст', () => {
+  // prefers-contrast: more утолщает кольцо до 5px (contrast-preferences.css,
+  // импорт последним). Бренд-скоуп обязан отдать усиленное кольцо, а не
+  // перебить его своими 4px — предпочтение пользователя бьёт тему.
+  // NB: test.use({ contrast: 'more' }) здесь не срабатывает — до страницы
+  // предпочтение не доезжает (проверено: matchMedia отдаёт false), поэтому
+  // эмуляция ставится явно на странице
+  test('витрина: при prefers-contrast кольцо остаётся брендовым и утолщённым', async ({ page }) => {
+    await page.emulateMedia({ contrast: 'more' });
+    await page.goto('/components.html');
+    expect(await page.evaluate(() => matchMedia('(prefers-contrast: more)').matches),
+      'предпочтение усиленного контраста применено').toBe(true);
+
+    for (const brand of BRANDS) {
+      await page.click(`.js-brand-switcher [data-brand-value="${brand}"]`);
+      await expect(page.locator('body')).toHaveAttribute('data-brand', brand);
+
+      for (const theme of ['light', 'dark'] as const) {
+        await page.evaluate((t) => document.body.classList.toggle('dark', t === 'dark'), theme);
+
+        const ring = await measureFocusRing(page);
+        const where = `бренд ${brand}, тема ${theme}, prefers-contrast: more`;
+        expect(ring!.ring, `кольцо брендовое — ${where}`).toBe(BRAND_ACCENT_RGB[brand][theme]);
+        expect(ring!.shadow, `кольцо утолщено до 5px — ${where}: ${ring!.shadow}`).toContain('5px');
+      }
+    }
+  });
+});
+// </TEST:e2e.focus-ring-brand>
 // </TEST:e2e.smoke>

@@ -18,12 +18,14 @@
   color: var(--color-accent);
   font-weight: var(--fw-semi);
   font-size: var(--fs-base);
-  overflow: hidden;
+  /* Обрезка по кругу живёт на самой картинке, а не на блоке: overflow:hidden
+     на .avatar срезал бы точку статуса, которая по анатомии выступает за круг */
   transition: box-shadow var(--t-fast) var(--ease),
               border-color var(--t-fast) var(--ease);
 }
 
-.avatar-image {
+.avatar-image,
+.avatar > img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -64,23 +66,28 @@
   box-shadow: var(--shadow-focus);
 }
 
-/* ====================== Status indicator ====================== */
+/* ====================== Status indicator ======================
+   Точка присутствия — общий примитив .badge-dot (badge.css); разметка несёт
+   оба класса: <span class="badge-dot avatar-status avatar-status-online">.
+   Аватар добавляет к примитиву только своё: место у кромки круга, размерную
+   шкалу под размер аватара и кольцо в цвет поверхности (точка выступает за
+   круг, поэтому обрезка живёт на .avatar-image, а не на блоке). */
 .avatar-status {
   position: absolute;
   bottom: 0;
   right: 0;
   width: 10px;
   height: 10px;
-  border-radius: var(--radius-full);
-  border: 2px solid var(--color-surface);
-  background: var(--color-text-muted);
+  border: var(--border-w-strong) solid var(--color-surface);
 }
 
-.avatar-xs .avatar-status { width: 6px;  height: 6px;  border-width: 1px; }
+.avatar-xs .avatar-status { width: 6px;  height: 6px;  border-width: var(--border-w); }
 .avatar-sm .avatar-status { width: 8px;  height: 8px; }
 .avatar-lg .avatar-status { width: 12px; height: 12px; }
-.avatar-xl .avatar-status { width: 14px; height: 14px; border-width: 3px; }
+.avatar-xl .avatar-status { width: 14px; height: 14px; border-width: var(--border-w-thick); }
 
+/* Присутствие названо ролью человека, а не тяжестью события: точка одна
+   и та же, различается только цветом из семантической шкалы. */
 .avatar-status-online  { background: var(--color-success); }
 .avatar-status-offline { background: var(--color-text-muted); }
 .avatar-status-busy    { background: var(--color-error); }

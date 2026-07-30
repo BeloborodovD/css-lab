@@ -92,7 +92,9 @@
 }
 .login-submit.is-loading { pointer-events: none; opacity: 0.85; }
 
-.login-card .alert-box { margin-bottom: 0; }
+/* Плашка ошибки входа стоит вплотную к форме: вертикальные поля .alert
+   в узкой карточке лишние (ранее правило целилось в .alert-box из logs.css) */
+.login-card .alert { margin: 0 0 var(--space-4); }
 .login-footnote {
   margin-top: var(--space-5);
   text-align: center;

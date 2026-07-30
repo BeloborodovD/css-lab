@@ -37,8 +37,13 @@
   gap: var(--space-2);
 }
 
-/* Search bar — центрированный, ширина 90% доступного пространства */
-.search-bar {
+/* Поле поиска в шапке — композиция, а не второй компонент: сам блок
+   .search-bar (поле + кнопка) описан в components/inputs.css и остаётся его
+   единственной реализацией. Здесь только поведение внутри полосы: центровка и
+   ширина, которая ужимается под открытые боковые панели. Селекторы
+   квалифицированы .header, поэтому не спорят с базовым блоком по порядку
+   импортов. Вычитаемые 200px — место под левую и правую группы шапки. */
+.header .search-bar {
   flex: 1;
   display: flex;
   justify-content: center;
@@ -46,38 +51,40 @@
   gap: var(--space-2);
   max-width: calc((100% - var(--sidebar-width, 280px) * 2 - 200px) * 0.9);
   margin: 0 auto;
-  transition: max-width var(--t-slow) var(--ease);
+  transition: max-width var(--duration-modal) var(--ease-drawer);
 }
 
-.search-bar .input {
+.header .search-bar .input {
   flex: 1;
   min-width: 200px;
 }
 
-/* Search-bar fallback классы для ширины (browser без :has()) */
-.search-bar.sidebar-both-open {
+/* Fallback классы ширины (браузеры без :has()) — ставит JS витрины */
+.header .search-bar.sidebar-both-open {
   max-width: calc((100% - var(--sidebar-width, 280px) * 2 - 200px) * 0.9);
 }
 
-.search-bar.sidebar-one-open {
+.header .search-bar.sidebar-one-open {
   max-width: calc((100% - var(--sidebar-width, 280px) - 200px) * 0.9);
 }
 
-.search-bar.sidebar-none-open {
+.header .search-bar.sidebar-none-open {
   max-width: calc((100% - 200px) * 0.9);
 }
 
-/* :has() поддержка */
-body:has(.app-sidebar.left.open):has(.app-sidebar.right.open) .search-bar {
+/* :has() поддержка. Путь до панели задан явно (body > .app-layout > .sidebar):
+   иначе полоса реагировала бы на любой вложенный каркас — например на
+   подмакетник с демонстрацией панели внутри страницы */
+body:has(> .app-layout > .sidebar--left.is-open):has(> .app-layout > .sidebar--right.is-open) .header .search-bar {
   max-width: calc((100% - var(--sidebar-width, 280px) * 2 - 200px) * 0.9);
 }
 
-body:has(.app-sidebar.left.open):not(:has(.app-sidebar.right.open)) .search-bar,
-body:has(.app-sidebar.right.open):not(:has(.app-sidebar.left.open)) .search-bar {
+body:has(> .app-layout > .sidebar--left.is-open):not(:has(> .app-layout > .sidebar--right.is-open)) .header .search-bar,
+body:has(> .app-layout > .sidebar--right.is-open):not(:has(> .app-layout > .sidebar--left.is-open)) .header .search-bar {
   max-width: calc((100% - var(--sidebar-width, 280px) - 200px) * 0.9);
 }
 
-body:not(:has(.app-sidebar.left.open)):not(:has(.app-sidebar.right.open)) .search-bar {
+body:not(:has(> .app-layout > .sidebar--left.is-open)):not(:has(> .app-layout > .sidebar--right.is-open)) .header .search-bar {
   max-width: calc((100% - 200px) * 0.9);
 }
 
@@ -245,67 +252,16 @@ body:not(:has(.app-sidebar.left.open)):not(:has(.app-sidebar.right.open)) .searc
 }
 /* </BLOCK:component.header-accent> */
 
-/* ==================== Sidebar ==================== */
-.sidebar {
-  position: fixed;
-  top: var(--header-h);
-  bottom: 0;
-  width: var(--sidebar-w);
-  background: var(--color-surface);
-  padding: var(--space-4);
-  overflow-y: auto;
-  overflow-x: hidden;
-  display: flex;
-  flex-direction: column;
-  transition: transform var(--t-slow) var(--ease);
-  z-index: var(--z-drawer);
-}
-
-.sidebar-left {
-  left: 0;
-  border-right: var(--border-w) solid var(--color-border);
-}
-
-.sidebar-right {
-  right: 0;
-  border-left: var(--border-w) solid var(--color-border);
-}
-
-.sidebar-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: var(--space-3);
-}
-
-.sidebar-title {
-  margin: 0;
-  font-size: var(--fs-md);
-  font-weight: var(--fw-semi);
-}
-
-.sidebar-body {
-  flex: 1;
-  overflow-y: auto;
-  min-height: 0;
-}
-
-.sidebar-left.collapsed  { transform: translateX(-100%); }
-.sidebar-right.collapsed { transform: translateX(100%); }
+/* Боковая панель этому файлу не принадлежит: единственная реализация —
+   components/sidebar.css (.sidebar, .sidebar--left/--right), раскладка вокруг
+   неё — components/app-layout.css. Прежний дубль каркаса и его модификаторы
+   .sidebar-left/.sidebar-right/.collapsed вместе с парой
+   .main.with-sidebar-left/-right отсюда удалены. */
 
 /* ==================== Main ==================== */
 .main {
   min-height: calc(100vh - var(--header-h));
   padding: var(--space-6);
-  transition: padding var(--t) var(--ease);
-}
-
-.main.with-sidebar-left {
-  padding-left: calc(var(--sidebar-w) + var(--space-6));
-}
-
-.main.with-sidebar-right {
-  padding-right: calc(var(--sidebar-w) + var(--space-6));
 }
 
 /* ==================== Overlay ==================== */
@@ -338,16 +294,6 @@ body:not(:has(.app-sidebar.left.open)):not(:has(.app-sidebar.right.open)) .searc
 .container-lg { max-width: 1400px; }
 
 /* ==================== Responsive ==================== */
-@media (max-width: 1024px) {
-  .sidebar-right {
-    width: min(90vw, 360px);
-    transform: translateX(100%);
-    box-shadow: var(--shadow-lg);
-  }
-  .sidebar-right.open { transform: translateX(0); }
-  .main.with-sidebar-right { padding-right: var(--space-4); }
-}
-
 @media (max-width: 767px) {
   .header {
     padding: 0 var(--space-3);
@@ -372,7 +318,7 @@ body:not(:has(.app-sidebar.left.open)):not(:has(.app-sidebar.right.open)) .searc
   .header--accent .header-right { justify-content: flex-start; }
 
   .logo { font-size: var(--fs-md); }
-  .search-bar { display: none; }
+  .header .search-bar { display: none; }
 
   .header .btn-icon {
     width: 40px;
@@ -381,15 +327,6 @@ body:not(:has(.app-sidebar.left.open)):not(:has(.app-sidebar.right.open)) .searc
   }
 
   .header .dropdown { display: none; }
-
-  .sidebar-left {
-    width: min(85vw, 300px);
-    transform: translateX(-100%);
-    box-shadow: var(--shadow-lg);
-  }
-
-  .sidebar-left.open { transform: translateX(0); }
-  .main.with-sidebar-left { padding-left: var(--space-4); }
 
   .main { padding: var(--space-3); }
   .container { padding: 0 var(--space-3); }

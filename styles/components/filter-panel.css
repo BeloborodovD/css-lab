@@ -5,7 +5,10 @@
  * кнопка «Сбросить все».
  * Модуль: css-lab/components. Зависимости: base/variables.css,
  * base/motion.css, components/chip.css (.chips/.chip-choice),
- * components/inputs.css (select/input).
+ * components/inputs.css (select/input, диапазон .input-range).
+ *
+ * Панель встроена в поток страницы. Всплывающая панель фильтров от триггера —
+ * это .popover (components/dropdown.css), меню действий — .dropdown-menu там же.
  */
 
 .filter-panel {
@@ -150,14 +153,9 @@
   background: var(--color-surface);
 }
 
-/* Диапазон «от — до» */
-.filter-range {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-.filter-range .input { flex: 1; min-width: 0; }
-.filter-range__dash { color: var(--color-text-muted); }
+/* Диапазон «от — до» собственной реализации не имеет: в группе фильтров
+   используется парный контрол .input-range из components/inputs.css
+   (прежний дубль .filter-range удалён). */
 
 /* ===== Подвал: сброс всех ============================================== */
 .filter-panel__footer {

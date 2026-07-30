@@ -189,40 +189,10 @@
 .modal-slide-up .modal,
 .modal.modal-slide-up   { animation: modal-slide-up   var(--duration-modal) var(--ease-out) forwards; }
 
-/* ==================== Drawer ==================== */
-.modal-drawer {
-  max-width: var(--drawer-w);
-  height: 100vh;
-  max-height: 100vh;
-  border-radius: 0;
-  margin: 0;
-  box-shadow: var(--shadow-lg);
-}
-
-.modal-overlay.modal-drawer-right { justify-content: flex-end; }
-.modal-overlay.modal-drawer-left  { justify-content: flex-start; }
-
-/* PURPOSE: spatial consistency — шторка входит из-за края экрана по кривой шторки */
-.modal-drawer-right .modal-drawer { animation: modal-slide-left  var(--duration-modal) var(--ease-drawer) forwards; }
-.modal-drawer-left  .modal-drawer { animation: modal-slide-right var(--duration-modal) var(--ease-drawer) forwards; }
-
-@keyframes modal-slide-left  { from { transform: translateX(100%); }  to { transform: translateX(0); } }
-@keyframes modal-slide-right { from { transform: translateX(-100%); } to { transform: translateX(0); } }
-
-/* ==================== Bottom-sheet ==================== */
-.modal-bottom-sheet .modal {
-  max-height: 85vh;
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-}
-
-.modal-bottom-sheet-handle {
-  width: 36px;
-  height: 4px;
-  background: var(--color-border);
-  border-radius: var(--radius-full);
-  margin: var(--space-2) auto var(--space-1);
-  flex-shrink: 0;
-}
+/* Шторок здесь нет. Боковая панель поверх контента и нижний лист — это один
+   компонент components/drawer.css (.drawer, .drawer--left, .drawer--sheet);
+   прежние .modal-drawer / .modal-bottom-sheet были второй реализацией того же
+   и удалены. Модалка остаётся центрированным окном. */
 
 /* ==================== Mobile ==================== */
 @media (max-width: 767px) {
@@ -266,7 +236,6 @@
   }
   .modal-footer .btn { width: 100%; justify-content: center; }
 
-  .modal-drawer { width: 85%; max-width: 320px; }
   .modal-close { width: 40px; height: 40px; }
 
   .modal-icon { width: 48px; height: 48px; margin-bottom: var(--space-3); }

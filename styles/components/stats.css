@@ -209,23 +209,43 @@
   margin-top: var(--space-3);
 }
 
-/* ==================== Progress stat ==================== */
+/* ==================== Плитка метрики ====================
+   Компактная центрированная метрика для узкой колонки (боковая панель,
+   виджет). Заменяет прежний собственный набор .sidebar-stat* из sidebar.css:
+   метрика в библиотеке одна и живёт здесь. */
+.stat-card-tile {
+  align-items: center;
+  text-align: center;
+  padding: var(--space-3) var(--space-2);
+  background: var(--color-surface-sunken);
+  border-color: transparent;
+}
+
+.stat-card-tile .stat-value {
+  font-size: var(--fs-xl);
+  color: var(--color-accent);
+}
+
+.stat-card-tile .stat-label {
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+
+/* Плитка не интерактивна — отклика на наведение у неё быть не должно */
+@media (hover: hover) and (pointer: fine) {
+  .stat-card-tile:hover {
+    border-color: transparent;
+    box-shadow: none;
+  }
+}
+
+/* ==================== Progress stat ====================
+   Собственной полосы у карточки нет: внутрь .stat-progress кладётся
+   компонент progress (.progress.progress-xs > .progress-bar) —
+   дубль .stat-progress-bar/-fill удалён. */
 .stat-progress {
   margin-top: var(--space-3);
-}
-
-.stat-progress-bar {
-  height: 4px;
-  background: var(--color-border-subtle);
-  border-radius: var(--radius-full);
-  overflow: hidden;
-}
-
-.stat-progress-fill {
-  height: 100%;
-  background: var(--color-accent);
-  border-radius: var(--radius-full);
-  transition: width var(--t-slow) var(--ease);
 }
 
 .stat-progress-label {

@@ -14,8 +14,8 @@
     /* Шапка липнет ПОД баннером, а не под самым верхом */
     .header { top: var(--banner-h); }
     /* Боковые панели и оверлей начинаются ниже баннера + шапки */
-    .app-sidebar.left,
-    .app-sidebar.right {
+    .sidebar--left,
+    .sidebar--right {
       top: calc(var(--header-h) + var(--banner-h));
       height: calc(100vh - var(--header-h) - var(--banner-h));
     }
@@ -163,7 +163,7 @@
   <!-- App Layout Wrapper -->
   <div class="app-layout">
     <!-- Left Sidebar - Navigation -->
-    <aside class="app-sidebar left resizable" id="left-sidebar">
+    <aside class="sidebar sidebar--left sidebar--resizable" id="left-sidebar">
       <div class="sidebar-resize-handle"></div>
       <div class="sidebar-header">
         <h4 class="sidebar-title">Компоненты</h4>
@@ -180,9 +180,11 @@
           <li class="sidebar-nav-item"><a href="#badges" class="sidebar-nav-link">Badges</a></li>
           <li class="sidebar-nav-item"><a href="#tree" class="sidebar-nav-link">Tree View</a></li>
           <li class="sidebar-nav-item"><a href="#pagination" class="sidebar-nav-link">Pagination</a></li>
+          <li class="sidebar-nav-item"><a href="#dropdown" class="sidebar-nav-link">Dropdown</a></li>
           <li class="sidebar-nav-item"><a href="#alerts" class="sidebar-nav-link">Alerts</a></li>
           <li class="sidebar-nav-item"><a href="#table" class="sidebar-nav-link">Table</a></li>
           <li class="sidebar-nav-item"><a href="#logs" class="sidebar-nav-link">Log Viewer</a></li>
+          <li class="sidebar-nav-item"><a href="#autotrassir" class="sidebar-nav-link">Log Viewer · AutoTrassir</a></li>
           <li class="sidebar-nav-item"><a href="#tabs" class="sidebar-nav-link">Tabs</a></li>
           <li class="sidebar-nav-item"><a href="#breadcrumbs" class="sidebar-nav-link">Breadcrumbs</a></li>
           <li class="sidebar-nav-item"><a href="#steps" class="sidebar-nav-link">Steps</a></li>
@@ -216,6 +218,9 @@
           <li class="sidebar-nav-item"><a href="#filter-pills" class="sidebar-nav-link">Filter Pills</a></li>
           <li class="sidebar-nav-item"><a href="#quiz" class="sidebar-nav-link">Quiz</a></li>
           <li class="sidebar-nav-item"><a href="#form-section" class="sidebar-nav-link">Form Section</a></li>
+          <li class="sidebar-nav-item"><a href="#row-card" class="sidebar-nav-link">Row Card</a></li>
+          <li class="sidebar-nav-item"><a href="#rte" class="sidebar-nav-link">RTE</a></li>
+          <li class="sidebar-nav-item"><a href="#save-status" class="sidebar-nav-link">Save Status</a></li>
           <li class="sidebar-nav-item"><a href="#spec-sheet" class="sidebar-nav-link">Spec Sheet · Print</a></li>
           <li class="sidebar-nav-item"><a href="#code-panel" class="sidebar-nav-link">Code Panel</a></li>
           <li class="sidebar-nav-item"><a href="#app-bar" class="sidebar-nav-link">App Bar · Accent</a></li>
@@ -224,6 +229,15 @@
           <li class="sidebar-nav-item"><a href="#table-form" class="sidebar-nav-link">Editable Table</a></li>
           <li class="sidebar-nav-item"><a href="#print-sheet" class="sidebar-nav-link">Print Sheet · A4</a></li>
           <li class="sidebar-nav-item"><a href="#skip-link" class="sidebar-nav-link">Skip Link · Print</a></li>
+          <li class="sidebar-nav-item"><a href="#filter-panel" class="sidebar-nav-link">Filter Panel</a></li>
+          <li class="sidebar-nav-item"><a href="#presence-strip" class="sidebar-nav-link">Presence Strip</a></li>
+          <li class="sidebar-nav-item"><a href="#search-result-card" class="sidebar-nav-link">Search Result Card</a></li>
+          <li class="sidebar-nav-item"><a href="#nav" class="sidebar-nav-link">Nav · Page Nav</a></li>
+          <li class="sidebar-nav-item"><a href="#footer" class="sidebar-nav-link">Footer</a></li>
+          <li class="sidebar-nav-item"><a href="#site-header" class="sidebar-nav-link">Site Header</a></li>
+          <li class="sidebar-nav-item"><a href="#site-footer" class="sidebar-nav-link">Site Footer</a></li>
+          <li class="sidebar-nav-item"><a href="#app-layout" class="sidebar-nav-link">App Layout</a></li>
+          <li class="sidebar-nav-item"><a href="#sidebar" class="sidebar-nav-link">Sidebar</a></li>
           <li class="sidebar-nav-item"><a href="/print-forms.html" class="sidebar-nav-link">📄 Печатные формы</a></li>
           <li class="sidebar-nav-item"><a href="/ral-colors.html" class="sidebar-nav-link">🎨 Цвета RAL</a></li>
         </ul>
@@ -739,7 +753,9 @@
 
     <!-- Badges Section -->
     <section id="badges" class="mb-4">
-      <h2 class="mb-2">Badges & Tags</h2>
+      <h2 class="mb-2">Badges</h2>
+      <p class="text-muted mb-2">Счётчик, метка состояния и точка-индикатор.
+        Удаляемые метки — это чипы (секция Chip): бейдж не снимают и не выбирают.</p>
       <div class="flex gap-2 flex-wrap mb-2">
         <span class="badge">Default</span>
         <span class="badge badge-secondary">Secondary</span>
@@ -748,11 +764,24 @@
         <span class="badge badge-error">Error</span>
         <span class="badge badge-outline">Outline</span>
       </div>
-      <div class="tag-group">
-        <span class="tag">JavaScript</span>
-        <span class="tag">CSS</span>
-        <span class="tag">HTML</span>
-        <span class="tag tag-removable">React <button class="tag-remove">×</button></span>
+      <!-- Точка состояния — общий примитив библиотеки: им же размечены
+           статусы в подвале, в галерее событий и у аватара. -->
+      <div class="flex gap-4 flex-wrap items-center">
+        <span class="flex items-center gap-2">
+          <span class="badge-dot badge-dot-success" aria-hidden="true"></span> Работает
+        </span>
+        <span class="flex items-center gap-2">
+          <span class="badge-dot badge-dot-warning" aria-hidden="true"></span> Плановые работы
+        </span>
+        <span class="flex items-center gap-2">
+          <span class="badge-dot badge-dot-error" aria-hidden="true"></span> Недоступно
+        </span>
+        <span class="flex items-center gap-2">
+          <span class="badge-dot badge-dot-sm badge-dot-muted" aria-hidden="true"></span> Мелкая (sm)
+        </span>
+        <span class="flex items-center gap-2">
+          <span class="badge-dot badge-dot-lg badge-dot-accent" aria-hidden="true"></span> Крупная (lg)
+        </span>
       </div>
     </section>
 
@@ -798,7 +827,7 @@
     </section>
 
     <!-- Dropdown Section -->
-    <section class="mb-4">
+    <section id="dropdown" class="mb-4">
       <h2 class="mb-2">Dropdown</h2>
       <div class="dropdown">
         <button class="btn dropdown-trigger">Open Dropdown ▼</button>
@@ -821,7 +850,7 @@
           <p class="text-muted mb-2">Classic (mdm_terms)</p>
           <div class="card">
             <ul class="tree">
-              <li class="tree-folder open">
+              <li class="tree-folder is-open">
                 <div class="tree-item">
                   <span class="tree-toggle">▶</span>
                   <span class="icon">📁</span>
@@ -861,9 +890,9 @@
           </div>
         </div>
 
-        <!-- Modern Tree (AutoTrassir) -->
+        <!-- Дерево-панель источников: та же реализация, строки-кнопки + счётчики -->
         <div>
-          <p class="text-muted mb-2">Modern (AutoTrassir) — Lucide icons</p>
+          <p class="text-muted mb-2">Панель источников — строки-кнопки, счётчики (<code>.tree-count</code>)</p>
           <div class="card">
             <div class="tree-sidebar-header">
               <div class="tree-sidebar-title">
@@ -879,42 +908,68 @@
                 </button>
               </div>
             </div>
-            <div class="tree-modern">
-              <button class="tree-modern-item expanded">
-                <svg class="tree-modern-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-                <svg class="tree-modern-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 14 1.45-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.55 6a2 2 0 0 1-1.94 1.5H4a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h3.93a2 2 0 0 1 1.66.9l.82 1.2a2 2 0 0 0 1.66.9H18a2 2 0 0 1 2 2v2"/></svg>
-                <span class="tree-modern-label">2024</span>
-                <span class="tree-modern-count">156</span>
-              </button>
-              <div class="tree-modern-nested" style="max-height: 500px;">
-                <button class="tree-modern-item expanded">
-                  <svg class="tree-modern-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-                  <svg class="tree-modern-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 14 1.45-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.55 6a2 2 0 0 1-1.94 1.5H4a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h3.93a2 2 0 0 1 1.66.9l.82 1.2a2 2 0 0 0 1.66.9H18a2 2 0 0 1 2 2v2"/></svg>
-                  <span class="tree-modern-label">Ноябрь</span>
-                  <span class="tree-modern-count">42</span>
+            <ul class="tree">
+              <li class="tree-folder is-open">
+                <button type="button" class="tree-item">
+                  <span class="tree-toggle" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                  </span>
+                  <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 14 1.45-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.55 6a2 2 0 0 1-1.94 1.5H4a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h3.93a2 2 0 0 1 1.66.9l.82 1.2a2 2 0 0 0 1.66.9H18a2 2 0 0 1 2 2v2"/></svg>
+                  <span class="label">2024</span>
+                  <span class="tree-count">156</span>
                 </button>
-                <div class="tree-modern-nested" style="max-height: 500px; padding-left: 24px;">
-                  <button class="tree-modern-item selected">
-                    <span style="width: 16px;"></span>
-                    <svg class="tree-modern-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
-                    <span class="tree-modern-label">23-11-2024</span>
-                    <span class="tree-modern-count">18</span>
-                  </button>
-                  <button class="tree-modern-item">
-                    <span style="width: 16px;"></span>
-                    <svg class="tree-modern-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
-                    <span class="tree-modern-label">22-11-2024</span>
-                    <span class="tree-modern-count">24</span>
-                  </button>
-                </div>
-                <button class="tree-modern-item">
-                  <svg class="tree-modern-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-                  <svg class="tree-modern-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
-                  <span class="tree-modern-label">Октябрь</span>
-                  <span class="tree-modern-count">114</span>
-                </button>
-              </div>
-            </div>
+                <ul>
+                  <li class="tree-folder is-open">
+                    <button type="button" class="tree-item">
+                      <span class="tree-toggle" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                      </span>
+                      <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 14 1.45-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.55 6a2 2 0 0 1-1.94 1.5H4a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h3.93a2 2 0 0 1 1.66.9l.82 1.2a2 2 0 0 0 1.66.9H18a2 2 0 0 1 2 2v2"/></svg>
+                      <span class="label">Ноябрь</span>
+                      <span class="tree-count">42</span>
+                    </button>
+                    <ul>
+                      <li>
+                        <button type="button" class="tree-item selected">
+                          <span class="tree-toggle-spacer" aria-hidden="true"></span>
+                          <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+                          <span class="label">23-11-2024</span>
+                          <span class="tree-count">18</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button type="button" class="tree-item">
+                          <span class="tree-toggle-spacer" aria-hidden="true"></span>
+                          <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+                          <span class="label">22-11-2024</span>
+                          <span class="tree-count">24</span>
+                        </button>
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="tree-folder">
+                    <button type="button" class="tree-item">
+                      <span class="tree-toggle" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                      </span>
+                      <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+                      <span class="label">Октябрь</span>
+                      <span class="tree-count">114</span>
+                    </button>
+                    <ul>
+                      <li>
+                        <button type="button" class="tree-item">
+                          <span class="tree-toggle-spacer" aria-hidden="true"></span>
+                          <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+                          <span class="label">31-10-2024</span>
+                          <span class="tree-count">37</span>
+                        </button>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -934,6 +989,38 @@
       </div>
       <div class="alert alert-error">
         <strong class="alert-title">Error</strong> Произошла ошибка при выполнении операции.
+      </div>
+
+      <!-- Строчная раскладка: иконка + текст + крестик. Раньше это была
+           вторая реализация плашки (.alert-box в logs.css) — сведена сюда. -->
+      <p class="text-muted mb-2">С иконкой и кнопкой закрытия</p>
+      <div class="alert alert-info alert-dismissible">
+        <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+        <span class="alert-content">Информационное сообщение: синхронизация данных запущена.</span>
+        <button class="alert-close" type="button" aria-label="Закрыть сообщение">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <div class="alert alert-warning alert-dismissible">
+        <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+        <span class="alert-content">Предупреждение: нестабильное соединение с сервером.</span>
+        <button class="alert-close" type="button" aria-label="Закрыть сообщение">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <div class="alert alert-error alert-dismissible">
+        <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
+        <span class="alert-content">Ошибка: не удалось подключиться к базе данных.</span>
+        <button class="alert-close" type="button" aria-label="Закрыть сообщение">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <div class="alert alert-success alert-dismissible">
+        <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+        <span class="alert-content">Успешно: все данные сохранены.</span>
+        <button class="alert-close" type="button" aria-label="Закрыть сообщение">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
       </div>
     </section>
 
@@ -999,22 +1086,12 @@
     <!-- VEZA Datasheet Section -->
     <section class="mb-4">
       <h2 class="mb-2">VEZA Datasheet Style</h2>
-      <p class="text-muted mb-2">Стили из datasheet_electric_motor (таблицы характеристик)</p>
-
-      <!-- VEZA Header -->
-      <div class="veza-header">
-        <div class="veza-header-top">
-          <div>
-            <strong style="color: #374a51;">VEZA</strong>
-          </div>
-          <div class="veza-header-title">
-            АИР 132М4 — Электродвигатель асинхронный
-          </div>
-          <div>
-            <span style="color: #374a51;">veza.ru</span>
-          </div>
-        </div>
-      </div>
+      <p class="text-muted mb-2">
+        Таблица характеристик с пунктирными границами. Шапка печатного бланка
+        (логотип, заголовок документа, плашки контактов) — это не часть таблицы:
+        её даёт <a href="#print-sheet">print-sheet</a> и
+        <a href="#spec-sheet">spec-sheet</a>.
+      </p>
 
       <!-- DIP Table (dashed borders) -->
       <table class="table table-dashed">
@@ -1059,21 +1136,6 @@
         </tbody>
       </table>
 
-      <!-- Contact boxes -->
-      <div class="veza-header-contacts mt-2">
-        <div class="veza-header-box">
-          <a href="tel:+74951234567">+7 (495) 123-45-67</a>
-        </div>
-        <div class="veza-header-box">
-          <a href="mailto:info@veza.ru">info@veza.ru</a>
-        </div>
-        <div class="veza-header-box">
-          Москва, ул. Примерная, 1
-        </div>
-        <div class="veza-header-box">
-          <a href="https://veza.ru">veza.ru</a>
-        </div>
-      </div>
     </section>
 
     <!-- Utilities Section -->
@@ -1149,19 +1211,19 @@
       <h3 class="mb-2">Status Indicators</h3>
       <div class="flex gap-4 flex-wrap mb-4">
         <span class="status-indicator">
-          <span class="status-dot success"></span>
+          <span class="badge-dot badge-dot-success" aria-hidden="true"></span>
           <span class="status-text success">Онлайн</span>
         </span>
         <span class="status-indicator">
-          <span class="status-dot warning"></span>
+          <span class="badge-dot badge-dot-warning" aria-hidden="true"></span>
           <span class="status-text warning">Ожидание</span>
         </span>
         <span class="status-indicator">
-          <span class="status-dot error"></span>
+          <span class="badge-dot badge-dot-error" aria-hidden="true"></span>
           <span class="status-text error">Ошибка</span>
         </span>
         <span class="status-indicator">
-          <span class="status-dot info"></span>
+          <span class="badge-dot badge-dot-info" aria-hidden="true"></span>
           <span class="status-text info">Инфо</span>
         </span>
       </div>
@@ -1250,7 +1312,7 @@
     </section>
 
     <!-- Log Viewer Section (AutoTrassir) -->
-    <section class="mb-4">
+    <section id="autotrassir" class="mb-4">
       <h2 class="mb-2">Log Viewer (AutoTrassir)</h2>
       <p class="text-muted mb-2">Компоненты для отображения логов с уровнями info/warning/error</p>
 
@@ -1279,38 +1341,8 @@
         </span>
       </div>
 
-      <!-- Alert Boxes -->
-      <h3 class="mb-2">Alert Boxes</h3>
-      <div class="flex flex-col gap-3 mb-4" style="max-width: 600px;">
-        <div class="alert-box info">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-          <span class="alert-box-content">Информационное сообщение: синхронизация данных запущена.</span>
-          <button class="alert-box-close">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-          </button>
-        </div>
-        <div class="alert-box warning">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
-          <span class="alert-box-content">Предупреждение: нестабильное соединение с сервером.</span>
-          <button class="alert-box-close">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-          </button>
-        </div>
-        <div class="alert-box error">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
-          <span class="alert-box-content">Ошибка: не удалось подключиться к базе данных.</span>
-          <button class="alert-box-close">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-          </button>
-        </div>
-        <div class="alert-box success">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-          <span class="alert-box-content">Успешно: все данные сохранены.</span>
-          <button class="alert-box-close">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-          </button>
-        </div>
-      </div>
+      <!-- Плашки сообщений журнала не имеют собственной реализации:
+           это общий компонент alerts (см. секцию Alerts выше). -->
 
       <!-- Log Controls -->
       <h3 class="mb-2">Log Controls Toolbar</h3>
@@ -1481,19 +1513,19 @@
 
       <div class="breadcrumbs mb-2">
         <a href="#" class="breadcrumb-item">Главная</a>
-        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-separator" aria-hidden="true"></span>
         <a href="#" class="breadcrumb-item">Каталог</a>
-        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-separator" aria-hidden="true"></span>
         <a href="#" class="breadcrumb-item">Оборудование</a>
-        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-separator" aria-hidden="true"></span>
         <span class="breadcrumb-item current">Вентиляторы</span>
       </div>
 
       <div class="breadcrumbs breadcrumbs-chevron mb-4">
         <a href="#" class="breadcrumb-item">Проекты</a>
-        <span class="breadcrumb-separator">›</span>
+        <span class="breadcrumb-separator" aria-hidden="true"></span>
         <a href="#" class="breadcrumb-item">AutoTrassir</a>
-        <span class="breadcrumb-separator">›</span>
+        <span class="breadcrumb-separator" aria-hidden="true"></span>
         <span class="breadcrumb-item current">Настройки</span>
       </div>
     </section>
@@ -1501,32 +1533,36 @@
     <!-- Steps Section -->
     <section id="steps" class="mb-4">
       <h2 class="mb-2">Steps / Wizard</h2>
-      <p class="text-muted mb-2">Пошаговый процесс</p>
+      <p class="text-muted mb-2">
+        Пошаговый процесс. Номер шага — единственный источник: его считает CSS
+        (<code>counter()</code> в <code>.step-number::before</code>), поэтому в разметке
+        кружок пустой. Пройденный шаг подменяет цифру галочкой, ошибочный — восклицательным знаком.
+      </p>
 
       <div class="steps mb-4">
         <div class="step completed">
-          <div class="step-number">✓</div>
+          <div class="step-number"></div>
           <div class="step-content">
             <div class="step-title">Регистрация</div>
           </div>
           <div class="step-connector"></div>
         </div>
         <div class="step active">
-          <div class="step-number">2</div>
+          <div class="step-number"></div>
           <div class="step-content">
             <div class="step-title">Настройка</div>
           </div>
           <div class="step-connector"></div>
         </div>
         <div class="step pending">
-          <div class="step-number">3</div>
+          <div class="step-number"></div>
           <div class="step-content">
             <div class="step-title">Подтверждение</div>
           </div>
           <div class="step-connector"></div>
         </div>
         <div class="step pending">
-          <div class="step-number">4</div>
+          <div class="step-number"></div>
           <div class="step-content">
             <div class="step-title">Готово</div>
           </div>
@@ -1847,25 +1883,25 @@
       <p class="text-muted mb-2">Всплывающие уведомления (статичные примеры)</p>
 
       <div class="flex flex-col gap-3 mb-4" style="max-width: 400px;">
-        <div class="toast toast-info">
+        <div class="toast info">
           <svg class="toast-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
           <div class="toast-content">Информация сохранена</div>
           <button class="toast-close">×</button>
         </div>
 
-        <div class="toast toast-success">
+        <div class="toast success">
           <svg class="toast-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
           <div class="toast-content">Операция выполнена успешно!</div>
           <button class="toast-close">×</button>
         </div>
 
-        <div class="toast toast-warning">
+        <div class="toast warning">
           <svg class="toast-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
           <div class="toast-content">Внимание: нестабильное соединение</div>
           <button class="toast-close">×</button>
         </div>
 
-        <div class="toast toast-error">
+        <div class="toast error">
           <svg class="toast-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
           <div class="toast-content">Ошибка при сохранении данных</div>
           <button class="toast-close">×</button>
@@ -1905,10 +1941,10 @@
         </div>
         <div class="card-body">
           <div class="flex gap-4 flex-wrap">
-            <button class="btn tooltip" data-tooltip="Подсказка сверху" data-tooltip-position="top">Top</button>
-            <button class="btn tooltip" data-tooltip="Подсказка снизу" data-tooltip-position="bottom">Bottom</button>
-            <button class="btn tooltip" data-tooltip="Подсказка слева" data-tooltip-position="left">Left</button>
-            <button class="btn tooltip" data-tooltip="Подсказка справа" data-tooltip-position="right">Right</button>
+            <button class="btn tooltip-top" data-tooltip="Подсказка сверху">Top</button>
+            <button class="btn tooltip-bottom" data-tooltip="Подсказка снизу">Bottom</button>
+            <button class="btn tooltip-left" data-tooltip="Подсказка слева">Left</button>
+            <button class="btn tooltip-right" data-tooltip="Подсказка справа">Right</button>
           </div>
         </div>
       </div>
@@ -1920,9 +1956,9 @@
         </div>
         <div class="card-body">
           <div class="flex gap-4 flex-wrap">
-            <button class="btn tooltip tooltip-sm" data-tooltip="Маленькая">Small</button>
-            <button class="btn tooltip" data-tooltip="Стандартный размер подсказки">Default</button>
-            <button class="btn tooltip tooltip-lg" data-tooltip="Большая подсказка для длинного текста с переносом строк">Large</button>
+            <button class="btn tooltip-sm" data-tooltip="Маленькая">Small</button>
+            <button class="btn" data-tooltip="Стандартный размер подсказки">Default</button>
+            <button class="btn tooltip-lg" data-tooltip="Большая подсказка для длинного текста с переносом строк">Large</button>
           </div>
         </div>
       </div>
@@ -1934,9 +1970,9 @@
         </div>
         <div class="card-body">
           <div class="flex gap-4 flex-wrap">
-            <button class="btn tooltip" data-tooltip="Тёмный фон (по умолчанию)">Dark</button>
-            <button class="btn tooltip tooltip-light" data-tooltip="Светлый фон">Light</button>
-            <button class="btn tooltip tooltip-primary" data-tooltip="Accent цвет">Primary</button>
+            <button class="btn" data-tooltip="Тёмный фон (по умолчанию)">Dark</button>
+            <button class="btn tooltip-light" data-tooltip="Светлый фон">Light</button>
+            <button class="btn tooltip-primary" data-tooltip="Accent цвет">Primary</button>
           </div>
         </div>
       </div>
@@ -1948,12 +1984,12 @@
         </div>
         <div class="card-body">
           <div class="flex gap-4 flex-wrap items-center">
-            <span class="badge badge-primary tooltip" data-tooltip="Подсказка на бейдже">Badge</span>
-            <button class="btn btn-icon tooltip" data-tooltip="Иконка с подсказкой">
+            <span class="badge" data-tooltip="Подсказка на бейдже" tabindex="0">Badge</span>
+            <button class="btn btn-icon" data-tooltip="Иконка с подсказкой" aria-label="Справка">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
             </button>
-            <a href="#" class="tooltip" data-tooltip="Подсказка на ссылке">Ссылка с подсказкой</a>
-            <input type="text" class="input tooltip" data-tooltip="Введите значение" placeholder="Input с подсказкой" style="width: 200px;">
+            <a href="#" data-tooltip="Подсказка на ссылке">Ссылка с подсказкой</a>
+            <input type="text" class="input" data-tooltip="Введите значение" placeholder="Input с подсказкой" style="width: 200px;">
           </div>
         </div>
       </div>
@@ -2020,18 +2056,25 @@
           <h3 class="card-title">Со статусом</h3>
         </div>
         <div class="card-body">
+          <!-- Статус — дочерняя точка: общий примитив .badge-dot плюс
+               .avatar-status (место у кромки круга) и модификатор присутствия;
+               смысл несёт aria-label, цвет — дублирующий носитель -->
           <div class="flex gap-4">
-            <div class="avatar avatar-md avatar-online">
-              <img src="https://i.pravatar.cc/48?img=10" alt="Online">
+            <div class="avatar avatar-md">
+              <img class="avatar-image" src="https://i.pravatar.cc/48?img=10" alt="Анна Ковалёва">
+              <span class="badge-dot avatar-status avatar-status-online" role="img" aria-label="в сети"></span>
             </div>
-            <div class="avatar avatar-md avatar-offline">
-              <img src="https://i.pravatar.cc/48?img=11" alt="Offline">
+            <div class="avatar avatar-md">
+              <img class="avatar-image" src="https://i.pravatar.cc/48?img=11" alt="Игорь Новиков">
+              <span class="badge-dot avatar-status avatar-status-offline" role="img" aria-label="не в сети"></span>
             </div>
-            <div class="avatar avatar-md avatar-busy">
-              <img src="https://i.pravatar.cc/48?img=12" alt="Busy">
+            <div class="avatar avatar-md">
+              <img class="avatar-image" src="https://i.pravatar.cc/48?img=12" alt="Михаил Соколов">
+              <span class="badge-dot avatar-status avatar-status-busy" role="img" aria-label="занят"></span>
             </div>
-            <div class="avatar avatar-md avatar-away">
-              <img src="https://i.pravatar.cc/48?img=13" alt="Away">
+            <div class="avatar avatar-md">
+              <img class="avatar-image" src="https://i.pravatar.cc/48?img=13" alt="Елена Петрова">
+              <span class="badge-dot avatar-status avatar-status-away" role="img" aria-label="отошёл"></span>
             </div>
           </div>
         </div>
@@ -2108,9 +2151,9 @@
         </div>
         <div class="card-body">
           <p>Секция 1</p>
-          <div class="divider divider-text" data-text="ИЛИ"></div>
+          <div class="divider"><span class="divider-text">ИЛИ</span></div>
           <p>Секция 2</p>
-          <div class="divider divider-text" data-text="Продолжение"></div>
+          <div class="divider"><span class="divider-text">Продолжение</span></div>
           <p>Секция 3</p>
         </div>
       </div>
@@ -2373,11 +2416,15 @@
           <h3 class="card-title">Нет данных</h3>
         </div>
         <div class="card-body">
-          <div class="empty-state">
-            <div class="empty-state-icon">📊</div>
+          <div class="empty-state empty-state-no-data">
+            <div class="empty-state-illustration" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/><rect x="13" y="8" width="3" height="10"/></svg>
+            </div>
             <h3 class="empty-state-title">Нет данных для отображения</h3>
             <p class="empty-state-description">Добавьте первую запись, чтобы начать работу</p>
-            <button class="btn btn-primary">Добавить данные</button>
+            <div class="empty-state-action">
+              <button type="button" class="btn btn-primary">Добавить данные</button>
+            </div>
           </div>
         </div>
       </div>
@@ -2388,11 +2435,15 @@
           <h3 class="card-title">Ничего не найдено</h3>
         </div>
         <div class="card-body">
-          <div class="empty-state">
-            <div class="empty-state-icon">🔍</div>
+          <div class="empty-state empty-state-no-results">
+            <div class="empty-state-illustration" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
+            </div>
             <h3 class="empty-state-title">Результаты не найдены</h3>
             <p class="empty-state-description">Попробуйте изменить параметры поиска или сбросить фильтры</p>
-            <button class="btn btn-outline">Сбросить фильтры</button>
+            <div class="empty-state-action">
+              <button type="button" class="btn btn-outline">Сбросить фильтры</button>
+            </div>
           </div>
         </div>
       </div>
@@ -2404,10 +2455,14 @@
         </div>
         <div class="card-body">
           <div class="empty-state empty-state-error">
-            <div class="empty-state-icon">⚠️</div>
+            <div class="empty-state-illustration" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4"/><path d="M12 17h.01"/></svg>
+            </div>
             <h3 class="empty-state-title">Что-то пошло не так</h3>
             <p class="empty-state-description">Произошла ошибка при загрузке данных. Попробуйте обновить страницу.</p>
-            <button class="btn btn-primary">Повторить</button>
+            <div class="empty-state-action">
+              <button type="button" class="btn btn-primary">Повторить</button>
+            </div>
           </div>
         </div>
       </div>
@@ -2415,11 +2470,13 @@
       <!-- Compact -->
       <div class="card mb-4">
         <div class="card-header">
-          <h3 class="card-title">Компактный вариант</h3>
+          <h3 class="card-title">Компактный вариант (<code>.empty-state-sm</code>)</h3>
         </div>
         <div class="card-body">
-          <div class="empty-state empty-state-compact">
-            <div class="empty-state-icon">📁</div>
+          <div class="empty-state empty-state-sm">
+            <div class="empty-state-illustration" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+            </div>
             <p class="empty-state-description">Папка пуста</p>
           </div>
         </div>
@@ -2464,12 +2521,18 @@
               <button class="file-action btn btn-icon btn-sm">×</button>
             </div>
             <div class="file-item file-item-success">
-              <div class="file-icon file-icon-image">IMG</div>
+              <!-- Превью-миниатюра: оверлей с действием раскрывается по наведению -->
+              <div class="file-preview">
+                <img src="https://picsum.photos/80/80?random=7" alt="Превью photo.jpg">
+                <div class="file-preview-overlay">
+                  <button type="button" aria-label="Открыть photo.jpg">⤢</button>
+                </div>
+              </div>
               <div class="file-info">
                 <div class="file-name">photo.jpg</div>
-                <div class="file-meta">1.2 MB • Загружено</div>
+                <div class="file-meta"><span class="file-size">1.2 MB</span><span class="file-type">jpg</span></div>
               </div>
-              <span class="file-status">✓</span>
+              <span class="file-status">✓ Загружено</span>
             </div>
             <div class="file-item file-item-error">
               <div class="file-icon file-icon-doc">DOC</div>
@@ -2510,23 +2573,28 @@
           <h3 class="card-title">Превью изображений</h3>
         </div>
         <div class="card-body">
+          <!-- Карточка сетки раскрывает кнопку удаления по наведению
+               (.file-preview-card-remove), подпись лежит в .file-preview-card-info -->
           <div class="file-preview-grid">
             <div class="file-preview-card">
-              <img src="https://picsum.photos/150/150?random=1" alt="Preview">
-              <div class="file-preview-overlay">
-                <button class="btn btn-sm btn-icon">×</button>
+              <img src="https://picsum.photos/150/150?random=1" alt="Превью fan-01.jpg">
+              <button type="button" class="file-preview-card-remove" aria-label="Убрать fan-01.jpg">×</button>
+              <div class="file-preview-card-info">
+                <div class="file-preview-card-name">fan-01.jpg</div>
               </div>
             </div>
             <div class="file-preview-card">
-              <img src="https://picsum.photos/150/150?random=2" alt="Preview">
-              <div class="file-preview-overlay">
-                <button class="btn btn-sm btn-icon">×</button>
+              <img src="https://picsum.photos/150/150?random=2" alt="Превью fan-02.jpg">
+              <button type="button" class="file-preview-card-remove" aria-label="Убрать fan-02.jpg">×</button>
+              <div class="file-preview-card-info">
+                <div class="file-preview-card-name">fan-02.jpg</div>
               </div>
             </div>
             <div class="file-preview-card">
-              <img src="https://picsum.photos/150/150?random=3" alt="Preview">
-              <div class="file-preview-overlay">
-                <button class="btn btn-sm btn-icon">×</button>
+              <img src="https://picsum.photos/150/150?random=3" alt="Превью fan-03.jpg">
+              <button type="button" class="file-preview-card-remove" aria-label="Убрать fan-03.jpg">×</button>
+              <div class="file-preview-card-info">
+                <div class="file-preview-card-name">fan-03.jpg</div>
               </div>
             </div>
           </div>
@@ -2711,28 +2779,34 @@
         <div class="card-header">
           <h3 class="card-title">Демо (статичный вид)</h3>
         </div>
-        <div class="card-body" style="background: var(--bg-muted); padding: 2rem;">
-          <div class="command-palette-dialog" style="position: relative; transform: none; max-width: 500px; margin: 0 auto;">
-            <div class="command-palette-search">
-              <span class="command-palette-search-icon">🔍</span>
-              <input type="text" class="command-palette-input" placeholder="Введите команду или поиск...">
-              <span class="command-palette-hint">ESC</span>
+        <div class="card-body" style="background: var(--color-surface-sunken); padding: var(--space-8);">
+          <!-- Оверлей .command-palette-overlay в демо не нужен: показан сам диалог -->
+          <div class="command-palette" style="margin: 0 auto;" role="dialog" aria-label="Палитра команд">
+            <div class="command-palette-header">
+              <svg class="command-palette-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
+              <input type="text" class="command-palette-input" placeholder="Введите команду или поиск..." aria-label="Поиск команды">
+              <span class="command-palette-close-hint"><kbd class="kbd">Esc</kbd></span>
             </div>
             <div class="command-palette-body">
               <div class="command-palette-category">Быстрые действия</div>
               <div class="command-palette-item active">
-                <span class="command-palette-item-icon">📄</span>
-                <span class="command-palette-item-title">Новый файл</span>
-                <span class="command-palette-shortcut">
+                <svg class="command-palette-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>
+                <span class="command-palette-item-content">
+                  <span class="command-palette-item-title">Новый файл</span>
+                  <span class="command-palette-item-meta">Создать пустой документ</span>
+                </span>
+                <span class="command-palette-item-shortcut">
                   <kbd class="kbd">Ctrl</kbd>
                   <span class="kbd-plus">+</span>
                   <kbd class="kbd">N</kbd>
                 </span>
               </div>
               <div class="command-palette-item">
-                <span class="command-palette-item-icon">📁</span>
-                <span class="command-palette-item-title">Открыть папку</span>
-                <span class="command-palette-shortcut">
+                <svg class="command-palette-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                <span class="command-palette-item-content">
+                  <span class="command-palette-item-title">Открыть <span class="command-palette-highlight">папку</span></span>
+                </span>
+                <span class="command-palette-item-shortcut">
                   <kbd class="kbd">Ctrl</kbd>
                   <span class="kbd-plus">+</span>
                   <kbd class="kbd">O</kbd>
@@ -2741,18 +2815,26 @@
               <div class="command-palette-separator"></div>
               <div class="command-palette-category">Навигация</div>
               <div class="command-palette-item">
-                <span class="command-palette-item-icon">⚙️</span>
-                <span class="command-palette-item-title">Настройки</span>
-                <span class="command-palette-shortcut">
+                <svg class="command-palette-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6 1.65 1.65 0 0 0 10 3.09V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                <span class="command-palette-item-content">
+                  <span class="command-palette-item-title">Настройки</span>
+                </span>
+                <span class="command-palette-item-shortcut">
                   <kbd class="kbd">Ctrl</kbd>
                   <span class="kbd-plus">+</span>
                   <kbd class="kbd">,</kbd>
                 </span>
               </div>
               <div class="command-palette-item">
-                <span class="command-palette-item-icon">🎨</span>
-                <span class="command-palette-item-title">Сменить тему</span>
+                <svg class="command-palette-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18"/></svg>
+                <span class="command-palette-item-content">
+                  <span class="command-palette-item-title">Сменить тему</span>
+                </span>
               </div>
+            </div>
+            <div class="command-palette-footer">
+              <span class="command-palette-hint"><kbd class="kbd">↑</kbd><kbd class="kbd">↓</kbd> навигация</span>
+              <span class="command-palette-hint"><kbd class="kbd">Enter</kbd> выполнить</span>
             </div>
           </div>
         </div>
@@ -2815,23 +2897,26 @@
           <h3 class="card-title">Точечный индикатор</h3>
         </div>
         <div class="card-body">
+          <!-- Индикатор — это бейдж (badge.css): точка .badge-dot с накладкой
+               .badge-float. Контейнер .notification-badge даёт ей якорь и
+               варианты угла; собственной точки у компонента больше нет. -->
           <div class="flex gap-6">
-            <div class="notification-wrapper">
-              <button class="btn btn-icon">🔔</button>
-              <span class="notification-dot"></span>
-            </div>
-            <div class="notification-wrapper">
-              <button class="btn btn-icon">✉️</button>
-              <span class="notification-dot notification-dot-success"></span>
-            </div>
-            <div class="notification-wrapper">
-              <button class="btn btn-icon">⚙️</button>
-              <span class="notification-dot notification-dot-warning"></span>
-            </div>
-            <div class="notification-wrapper">
-              <button class="btn btn-icon">👤</button>
-              <span class="notification-dot notification-dot-pulse"></span>
-            </div>
+            <span class="notification-badge">
+              <button class="btn btn-icon" aria-label="Уведомления, есть новые">🔔</button>
+              <span class="badge-dot badge-dot-error badge-float" aria-hidden="true"></span>
+            </span>
+            <span class="notification-badge">
+              <button class="btn btn-icon" aria-label="Сообщения, есть новые">✉️</button>
+              <span class="badge-dot badge-dot-success badge-float" aria-hidden="true"></span>
+            </span>
+            <span class="notification-badge">
+              <button class="btn btn-icon" aria-label="Настройки, требуется внимание">⚙️</button>
+              <span class="badge-dot badge-dot-warning badge-float" aria-hidden="true"></span>
+            </span>
+            <span class="notification-badge">
+              <button class="btn btn-icon" aria-label="Профиль, есть новое">👤</button>
+              <span class="badge-dot badge-dot-error badge-float notification-badge-pulse" aria-hidden="true"></span>
+            </span>
           </div>
         </div>
       </div>
@@ -2842,19 +2927,21 @@
           <h3 class="card-title">Счётчик</h3>
         </div>
         <div class="card-body">
+          <!-- Счётчик — тот же бейдж .badge с накладкой .badge-float:
+               отдельной реализации счётчика уведомлений нет. -->
           <div class="flex gap-6">
-            <div class="notification-wrapper">
-              <button class="btn btn-icon">🔔</button>
-              <span class="notification-count">3</span>
-            </div>
-            <div class="notification-wrapper">
-              <button class="btn btn-icon">✉️</button>
-              <span class="notification-count">12</span>
-            </div>
-            <div class="notification-wrapper">
-              <button class="btn btn-icon">💬</button>
-              <span class="notification-count">99+</span>
-            </div>
+            <span class="notification-badge">
+              <button class="btn btn-icon" aria-label="Уведомления: 3 новых">🔔</button>
+              <span class="badge badge-error badge-float" aria-hidden="true">3</span>
+            </span>
+            <span class="notification-badge">
+              <button class="btn btn-icon" aria-label="Сообщения: 12 новых">✉️</button>
+              <span class="badge badge-error badge-float" aria-hidden="true">12</span>
+            </span>
+            <span class="notification-badge">
+              <button class="btn btn-icon" aria-label="Чаты: больше 99 новых">💬</button>
+              <span class="badge badge-error badge-float" aria-hidden="true">99+</span>
+            </span>
           </div>
         </div>
       </div>
@@ -3060,11 +3147,19 @@
 
     <!-- ===== Drawer Section ===== -->
     <section id="drawer" class="mb-4">
-      <h2 class="mb-2">Drawer — выдвижная панель</h2>
-      <p class="text-muted mb-2">Slide-over справа (cert-data / corporate-search): вход и выход по одному пути, кривая --ease-drawer.</p>
+      <h2 class="mb-2">Drawer — выдвижная шторка</h2>
+      <p class="text-muted mb-2">
+        Единственная шторка библиотеки: панель поверх контента с подложкой, фокус-ловушкой и
+        закрытием по Escape. Вход и выход по одному пути, кривая <code>--ease-drawer</code>.
+        Сторона — вариант разметки: справа (по умолчанию), <code>.drawer--left</code>,
+        либо нижний лист <code>.drawer--sheet</code>. Постоянная колонка приложения, которая
+        не перехватывает фокус, — это <a href="#sidebar">sidebar</a>, центрированное окно —
+        <a href="#modal">modal</a>.
+      </p>
       <div class="card mb-4">
-        <div class="card-body">
-          <button type="button" class="btn btn-primary" id="demo-drawer-open">Открыть панель</button>
+        <div class="card-body flex gap-2 flex-wrap">
+          <button type="button" class="btn btn-primary" id="demo-drawer-open" data-drawer-open="demo-drawer" aria-expanded="false" aria-controls="demo-drawer">Боковая панель</button>
+          <button type="button" class="btn btn-secondary" data-drawer-open="demo-drawer-sheet" aria-expanded="false" aria-controls="demo-drawer-sheet">Нижний лист</button>
         </div>
       </div>
       <div class="drawer" id="demo-drawer">
@@ -3087,6 +3182,27 @@
           <div class="drawer__footer">
             <button type="button" class="btn btn-secondary" data-drawer-close>Закрыть</button>
             <button type="button" class="btn btn-primary">Скачать PDF</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Нижний лист — тот же компонент, вариант --sheet -->
+      <div class="drawer drawer--sheet" id="demo-drawer-sheet">
+        <div class="drawer__overlay" data-drawer-close></div>
+        <div class="drawer__panel" role="dialog" aria-modal="true" aria-labelledby="demo-drawer-sheet-title">
+          <div class="drawer__grabber" aria-hidden="true"></div>
+          <div class="drawer__header">
+            <h3 class="drawer__title" id="demo-drawer-sheet-title">Действия над позицией</h3>
+            <button type="button" class="drawer__close" data-drawer-close aria-label="Закрыть лист">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+          </div>
+          <div class="drawer__body">
+            <p class="text-muted">Лист принадлежит нижней кромке экрана: выезжает снизу и уходит туда же.</p>
+          </div>
+          <div class="drawer__footer">
+            <button type="button" class="btn btn-secondary" data-drawer-close>Отмена</button>
+            <button type="button" class="btn btn-primary">Добавить в подбор</button>
           </div>
         </div>
       </div>
@@ -3608,16 +3724,16 @@
     <!-- ===== Form Section ===== -->
     <section id="form-section" class="mb-4">
       <h2 class="mb-2">Form Section — секции сложной формы</h2>
-      <p class="text-muted mb-2">Из опросного листа R&amp;D: fieldset с брендовой засечкой, сетка полей, повторяемые строки, статус автосохранения.</p>
+      <p class="text-muted mb-2">
+        Fieldset с брендовой засечкой, легендой, пояснением и сеткой полей.
+        Соседи по длинной форме показаны отдельно: повторяемые строки — <a href="#row-card">Row Card</a>,
+        текстовый редактор примечаний — <a href="#rte">RTE</a>,
+        статус автосохранения — <a href="#save-status">Save Status</a>.
+      </p>
 
       <div class="card mb-4">
         <div class="card-body">
-          <div class="flex mb-4" style="justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-2);">
-            <span class="save-status save-status--saved">Черновик сохраняется автоматически</span>
-            <span class="save-status__notlive">Данные только в этом браузере</span>
-          </div>
-
-          <fieldset class="form-section">
+          <fieldset class="form-section" style="margin-bottom: 0;">
             <legend class="form-section__legend">1. Инициатор и контактное лицо</legend>
             <div class="form-section__hint">Кто ставит задачу и с кем согласовывать технические вопросы.</div>
             <div class="form-grid">
@@ -3642,6 +3758,28 @@
                 <span class="form-field__unit" id="fs-demo-note-unit">целевая / рыночная</span>
               </div>
             </div>
+          </fieldset>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Row Card Section ===== -->
+    <!-- [BLOCK:section-row-card] -->
+    <section id="row-card" class="mb-4">
+      <h2 class="mb-2">Row Card — повторяемые строки формы</h2>
+      <p class="text-muted mb-2">
+        Массив однотипных записей внутри длинной формы: аналоги, применения, вложения.
+        Строка добавляется кнопкой <code>.form-rows__add</code> и удаляется
+        <code>.row-card__remove</code>; нумерация в <code>.row-card__n</code> пересчитывается из JS.
+        Для массива из 5–7 числовых параметров вместо карточек берётся
+        <a href="#table-form">редактируемая таблица</a> — иначе метка поля повторяется в каждой строке.
+      </p>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <fieldset class="form-section" style="margin-bottom: 0;">
+            <legend class="form-section__legend">3. Аналоги и прототипы</legend>
+            <div class="form-section__hint">С чем сравнивать разрабатываемое изделие.</div>
 
             <h4 class="form-section__subtitle">Аналоги / прототипы</h4>
             <div class="form-rows mb-2" id="demo-form-rows" data-row-label="Аналог">
@@ -3664,7 +3802,24 @@
             </div>
             <button type="button" class="form-rows__add" data-rows-target="demo-form-rows">+ Добавить аналог</button>
           </fieldset>
+        </div>
+      </div>
+    </section>
+    <!-- </BLOCK:section-row-card> -->
 
+    <!-- ===== RTE Section ===== -->
+    <!-- [BLOCK:section-rte] -->
+    <section id="rte" class="mb-4">
+      <h2 class="mb-2">RTE — примечания в свободной форме</h2>
+      <p class="text-muted mb-2">
+        Минимальный текстовый редактор для одного поля длинной формы: начертания, списки,
+        сброс форматирования. Панель <code>.rte-toolbar</code> связана с областью
+        <code>.rte-area</code> через <code>data-rte-for</code>; кнопки держат
+        <code>aria-pressed</code> по состоянию выделения.
+      </p>
+
+      <div class="card mb-4">
+        <div class="card-body">
           <fieldset class="form-section" style="margin-bottom: 0;">
             <legend class="form-section__legend">12. Примечания в свободной форме</legend>
             <div class="rte-toolbar" role="toolbar" aria-label="Форматирование" data-rte-for="demo-rte-area">
@@ -3683,6 +3838,30 @@
         </div>
       </div>
     </section>
+    <!-- </BLOCK:section-rte> -->
+
+    <!-- ===== Save Status Section ===== -->
+    <!-- [BLOCK:section-save-status] -->
+    <section id="save-status" class="mb-4">
+      <h2 class="mb-2">Save Status — статус черновика</h2>
+      <p class="text-muted mb-2">
+        Пилюля состояния автосохранения над длинной формой. Ширина зафиксирована
+        (<code>22ch</code> + табличные цифры), поэтому тикающая отметка времени не дёргает раскладку.
+        Рядом — маркер <code>.save-status__notlive</code>: черновик лежит в браузере, а не на сервере.
+      </p>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Состояния</h3></div>
+        <div class="card-body">
+          <div class="flex flex-wrap gap-4 items-center">
+            <span class="save-status save-status--saved" role="status">Сохранено в 12:04</span>
+            <span class="save-status save-status--dirty" role="status">Есть несохранённое</span>
+            <span class="save-status__notlive">Данные только в этом браузере</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- </BLOCK:section-save-status> -->
 
     <!-- ===== Spec Sheet Section ===== -->
     <section id="spec-sheet" class="mb-4">
@@ -4335,11 +4514,717 @@
     </section>
     <!-- </BLOCK:section-skip-link> -->
 
+    <!-- ===== Filter Panel Section ===== -->
+    <!-- [BLOCK:section-filter-panel] -->
+    <section id="filter-panel" class="mb-4">
+      <h2 class="mb-2">Filter Panel — фасетные фильтры каталога</h2>
+      <p class="text-muted mb-2">
+        Боковая панель отбора: шапка со счётчиком «N из M», быстрые пресеты пунктирными чипами,
+        группы фильтров со сбросом по группе и общий сброс внизу. Кнопка сброса группы показана
+        только у групп с классом <code>.has-active</code>. Демо статичное — фильтрацию,
+        пересчёт счётчиков и пресеты реализует страница; живой пример —
+        <a href="/pages/catalog.html">каталог электродвигателей</a>.
+      </p>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="filter-panel" id="demo-filter-panel" style="max-width: 360px;">
+            <div class="filter-panel__header">
+              <span class="filter-panel__title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                Фильтры
+              </span>
+              <span class="filter-panel__stats" role="status">6 из 12</span>
+            </div>
+
+            <div class="filter-panel__quick">
+              <div class="filter-panel__quick-label">Быстрый подбор</div>
+              <div class="chips">
+                <button type="button" class="filter-preset">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 20h20M4 20V8l6 4V8l6 4V4l4 3v13"/></svg>
+                  Промышленный
+                </button>
+                <button type="button" class="filter-preset">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                  Стандарт
+                </button>
+              </div>
+            </div>
+
+            <div class="filter-panel__body">
+              <div class="filter-group has-active" data-filter="series">
+                <div class="filter-group__head">
+                  <span class="filter-group__label">Серия</span>
+                  <button type="button" class="filter-group__reset" aria-label="Сбросить фильтр по серии">сбросить</button>
+                </div>
+                <div class="chips">
+                  <button type="button" class="chip chip-choice is-active" aria-pressed="true">АДМ <span class="chip-choice__count">6</span></button>
+                  <button type="button" class="chip chip-choice" aria-pressed="false">АДЭМ <span class="chip-choice__count">3</span></button>
+                  <button type="button" class="chip chip-choice" aria-pressed="false">ВАДМ-М <span class="chip-choice__count">2</span></button>
+                </div>
+              </div>
+
+              <div class="filter-group" data-filter="poles">
+                <div class="filter-group__head">
+                  <span class="filter-group__label">Число полюсов</span>
+                  <button type="button" class="filter-group__reset" aria-label="Сбросить фильтр по числу полюсов">сбросить</button>
+                </div>
+                <div class="chips">
+                  <button type="button" class="chip chip-choice" aria-pressed="false">2</button>
+                  <button type="button" class="chip chip-choice" aria-pressed="false">4</button>
+                  <button type="button" class="chip chip-choice" aria-pressed="false">6</button>
+                </div>
+              </div>
+
+              <div class="filter-group" data-filter="power">
+                <div class="filter-group__head">
+                  <span class="filter-group__label">Мощность, кВт</span>
+                  <button type="button" class="filter-group__reset" aria-label="Сбросить фильтр по мощности">сбросить</button>
+                </div>
+                <div class="input-range">
+                  <input type="number" class="input" id="demo-filter-power-min" placeholder="от" min="0" step="0.1" aria-label="Мощность от, кВт">
+                  <span class="input-range__dash" aria-hidden="true">—</span>
+                  <input type="number" class="input" id="demo-filter-power-max" placeholder="до" min="0" step="0.1" aria-label="Мощность до, кВт">
+                </div>
+              </div>
+            </div>
+
+            <div class="filter-panel__footer">
+              <button type="button" class="filter-panel__reset-all">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                Сбросить все фильтры
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- </BLOCK:section-filter-panel> -->
+
+    <!-- ===== Presence Strip Section ===== -->
+    <!-- [BLOCK:section-presence-strip] -->
+    <section id="presence-strip" class="mb-4">
+      <h2 class="mb-2">Presence Strip — кто сейчас на портале</h2>
+      <p class="text-muted mb-2">
+        Стек наложенных аватаров с остатком «+N»; по нажатию раскрывается список
+        «имя · должность · где находится». Состояние раскрытия — <code>.is-open</code>
+        на блоке (ставит <code>main.js</code>), список закрывается по Escape и клику вне.
+        Ниже 1024&nbsp;px полоса скрывается: на узком экране она не несёт задачи —
+        второй живой экземпляр стоит в шапке этой страницы.
+      </p>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="presence-strip" id="demo-presence-strip">
+            <button type="button" class="presence-strip__trigger" aria-expanded="false" aria-label="На портале 4 человека — показать список">
+              <span class="presence-strip__list">
+                <span class="avatar presence-strip__avatar presence-strip__avatar--c1" aria-hidden="true">ДБ</span>
+                <span class="avatar presence-strip__avatar presence-strip__avatar--c2" aria-hidden="true">АК</span>
+                <span class="avatar presence-strip__avatar presence-strip__avatar--c3" aria-hidden="true">МС</span>
+                <span class="avatar presence-strip__avatar presence-strip__avatar--more" aria-hidden="true">+1</span>
+              </span>
+              <span class="presence-strip__label">4 на портале</span>
+            </button>
+            <div class="presence-strip__dropdown">
+              <div class="presence-strip__head">Сейчас на портале — 4</div>
+              <div class="presence-strip__item">
+                <span class="avatar presence-strip__avatar presence-strip__avatar--c1" aria-hidden="true">ДБ</span>
+                <span class="presence-strip__who">
+                  <span class="presence-strip__name">Дмитрий Белобородов</span>
+                  <span class="presence-strip__role">Администратор портала</span>
+                  <span class="presence-strip__where">Админ-панель</span>
+                </span>
+              </div>
+              <div class="presence-strip__item">
+                <span class="avatar presence-strip__avatar presence-strip__avatar--c2" aria-hidden="true">АК</span>
+                <span class="presence-strip__who">
+                  <span class="presence-strip__name">Анна Ковалёва</span>
+                  <span class="presence-strip__role">Инженер-конструктор</span>
+                  <span class="presence-strip__where">Каталог двигателей</span>
+                </span>
+              </div>
+              <div class="presence-strip__item">
+                <span class="avatar presence-strip__avatar presence-strip__avatar--c3" aria-hidden="true">МС</span>
+                <span class="presence-strip__who">
+                  <span class="presence-strip__name">Михаил Соколов</span>
+                  <span class="presence-strip__role">Менеджер по продажам</span>
+                  <span class="presence-strip__where">Поиск</span>
+                </span>
+              </div>
+              <div class="presence-strip__item">
+                <span class="avatar presence-strip__avatar presence-strip__avatar--c4" aria-hidden="true">ЕП</span>
+                <span class="presence-strip__who">
+                  <span class="presence-strip__name">Елена Петрова</span>
+                  <span class="presence-strip__role">Технолог</span>
+                  <span class="presence-strip__where">Опросный лист R&amp;D</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- </BLOCK:section-presence-strip> -->
+
+    <!-- ===== Search Result Card Section ===== -->
+    <!-- [BLOCK:section-search-result-card] -->
+    <section id="search-result-card" class="mb-4">
+      <h2 class="mb-2">Search Result Card — карточка выдачи поиска</h2>
+      <p class="text-muted mb-2">
+        Найденный документ: заголовок-ссылка, оценка релевантности, сниппет с подсветкой
+        совпадений (<code>&lt;mark&gt;</code>), метаданные и действия. Источник несут два носителя —
+        полоса слева (атрибут <code>data-source</code>) и текстовый бейдж, поэтому смысл
+        не держится на одном цвете. Кликается заголовок, а не вся карточка.
+      </p>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Выдача по нескольким источникам</h3></div>
+        <div class="card-body">
+          <div class="flex flex-col gap-3">
+            <article class="search-result-card" data-source="wiki">
+              <div class="search-result-card__header">
+                <h3 class="search-result-card__title"><a href="#search-result-card">Расчёт аэродинамики канального вентилятора</a></h3>
+                <span class="search-result-card__score" title="Оценка релевантности">0,92</span>
+              </div>
+              <div class="search-result-card__snippet">
+                <p>Полное давление <mark>вентилятора</mark> складывается из статического и динамического; при подборе по сети берётся рабочая точка пересечения характеристики <code>p(Q)</code> с кривой сопротивления.</p>
+              </div>
+              <div class="search-result-card__meta">
+                <span class="search-result-card__source-badge search-result-card__source-badge--wiki">Вики</span>
+                <span class="search-result-card__meta-item">обновлено 12.05.2026</span>
+                <span class="search-result-card__meta-item">А. Ковалёва</span>
+              </div>
+              <div class="search-result-card__actions">
+                <button type="button" class="search-result-card__action">Похожие</button>
+                <button type="button" class="search-result-card__action" aria-pressed="false">В избранное</button>
+                <button type="button" class="search-result-card__action">Поделиться</button>
+              </div>
+            </article>
+
+            <article class="search-result-card search-result-card--selected" data-source="catalog">
+              <div class="search-result-card__header">
+                <h3 class="search-result-card__title"><a href="#search-result-card">АДМ 132 S4 — двигатель асинхронный, 7,5 кВт</a></h3>
+                <span class="search-result-card__score" title="Оценка релевантности">0,88</span>
+              </div>
+              <div class="search-result-card__snippet">
+                <p>Класс энергоэффективности IE3, режим S1, степень защиты IP55. Монтажное исполнение IM1081, климатическое — У3.</p>
+              </div>
+              <div class="search-result-card__meta">
+                <span class="search-result-card__source-badge search-result-card__source-badge--catalog">Каталог</span>
+                <span class="search-result-card__meta-item">карточка изделия</span>
+              </div>
+              <div class="search-result-card__actions">
+                <button type="button" class="search-result-card__action" aria-pressed="true">В избранное</button>
+                <button type="button" class="search-result-card__action">Сравнить</button>
+              </div>
+            </article>
+
+            <article class="search-result-card search-result-card--skeleton" aria-hidden="true">
+              <div class="search-result-card__header">
+                <h3 class="search-result-card__title">Загружается следующая карточка выдачи</h3>
+              </div>
+              <div class="search-result-card__snippet">
+                <p>Текст сниппета подгружается вместе с остальной выдачей и заменяет эту заглушку.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Компактный вариант (<code>--compact</code>)</h3></div>
+        <div class="card-body">
+          <p class="text-muted mb-2">Для боковой колонки мастер-детали: сниппет обрезается до двух строк, действия скрыты.</p>
+          <div class="flex flex-col gap-2" style="max-width: 360px;">
+            <article class="search-result-card search-result-card--compact" data-source="forum">
+              <div class="search-result-card__header">
+                <h3 class="search-result-card__title"><a href="#search-result-card">Гудит двигатель на малых оборотах</a></h3>
+              </div>
+              <div class="search-result-card__snippet">
+                <p>Обсуждение: подшипники, дисбаланс крыльчатки и настройка частотного преобразователя — что проверять по порядку и какими приборами.</p>
+              </div>
+              <div class="search-result-card__meta">
+                <span class="search-result-card__source-badge search-result-card__source-badge--forum">Форум</span>
+                <span class="search-result-card__meta-item">14 ответов</span>
+              </div>
+            </article>
+            <article class="search-result-card search-result-card--compact" data-source="wiki">
+              <div class="search-result-card__header">
+                <h3 class="search-result-card__title"><a href="#search-result-card">Классы энергоэффективности IE1–IE4</a></h3>
+              </div>
+              <div class="search-result-card__snippet">
+                <p>Как читать класс на шильдике и чем IE3 отличается от IE4 по потерям, нагреву и цене владения за срок службы.</p>
+              </div>
+              <div class="search-result-card__meta">
+                <span class="search-result-card__source-badge search-result-card__source-badge--wiki">Вики</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- </BLOCK:section-search-result-card> -->
+
+    <style>
+      /* [CONFIG:demo-frame] Подмакетник витрины: transform создаёт containing block,
+         поэтому fixed- и sticky-элементы демо (nav, page-nav, site-header) остаются
+         внутри карточки, а не всплывают поверх страницы. */
+      .demo-frame {
+        position: relative;
+        transform: translate(0);
+        overflow: hidden;
+        min-height: 240px;
+        border: var(--border-w) dashed var(--color-border);
+        border-radius: var(--radius);
+        background: var(--color-bg);
+      }
+      .demo-frame__body {
+        padding: var(--space-5);
+        padding-top: calc(var(--header-h) + var(--space-5));
+        font-size: var(--fs-sm);
+        color: var(--color-text-muted);
+      }
+    </style>
+
+    <!-- ===== Nav Section ===== -->
+    <!-- [BLOCK:section-nav] -->
+    <section id="nav" class="mb-4">
+      <h2 class="mb-2">Nav — навигационная полоса сайта</h2>
+      <p class="text-muted mb-2">
+        Фиксированная верхняя полоса публичной страницы: логотип, разделы, CTA-ссылка
+        (<code>.nav-link-primary</code>) и бургер для узкого экрана. Ниже 768&nbsp;px меню
+        схлопывается и раскрывается кнопкой. Хлебных крошек этот компонент не содержит —
+        путь по уровням даёт <a href="#breadcrumbs">breadcrumbs</a>, а общий хром сайта-витрины —
+        <a href="#site-header">site-header</a>.
+      </p>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Полоса и мобильный бургер</h3></div>
+        <div class="card-body">
+          <div class="demo-frame">
+            <nav class="nav" aria-label="Демо-навигация сайта">
+              <div class="nav-container">
+                <a class="nav-logo" href="#nav">Уралэлектро</a>
+                <div class="nav-menu" id="demo-nav-menu">
+                  <a class="nav-link active" href="#nav" aria-current="page">Каталог</a>
+                  <a class="nav-link" href="#nav">Решения</a>
+                  <a class="nav-link" href="#nav">Поддержка</a>
+                  <a class="nav-link nav-link-primary" href="#nav">Подобрать двигатель</a>
+                </div>
+                <button type="button" class="nav-toggle" aria-controls="demo-nav-menu" aria-expanded="false" aria-label="Меню разделов">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h18"/></svg>
+                </button>
+              </div>
+            </nav>
+            <p class="demo-frame__body">Контент страницы уходит под полосу — она зафиксирована сверху.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Липкое оглавление страницы (<code>.page-nav</code>)</h3></div>
+        <div class="card-body">
+          <p class="text-muted mb-2">
+            Боковой список разделов длинной страницы; текущий раздел помечается
+            <code>.active</code> по позиции прокрутки и <code>aria-current="location"</code>.
+          </p>
+          <div class="demo-frame">
+            <nav class="page-nav" aria-label="Разделы страницы">
+              <a class="page-nav-link active" href="#nav" aria-current="location">Назначение</a>
+              <a class="page-nav-link" href="#nav">Характеристики</a>
+              <a class="page-nav-link" href="#nav">Габариты</a>
+              <a class="page-nav-link" href="#nav">Документация</a>
+            </nav>
+            <p class="demo-frame__body">Оглавление держится у правого края и не уезжает с прокруткой.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- </BLOCK:section-nav> -->
+
+    <!-- ===== Footer Section ===== -->
+    <!-- [BLOCK:section-footer] -->
+    <section id="footer" class="mb-4">
+      <h2 class="mb-2">Footer — контентный подвал</h2>
+      <p class="text-muted mb-2">
+        Развёрнутый подвал страницы: колонки ссылок, копирайт, соцсети, точка состояния
+        и версия сборки. Служебная полоса сайта-витрины — это другой компонент,
+        <a href="#site-footer">site-footer</a>; здесь речь о подвале с содержимым.
+      </p>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Полоса статуса (базовый вид)</h3></div>
+        <div class="card-body">
+          <footer class="footer">
+            <div class="footer-left">
+              <span class="footer-copyright">© 2026 АО «МЭЗ «Уралэлектро»</span>
+              <span class="footer-version">v2.4.0</span>
+            </div>
+            <div class="footer-center">
+              <nav class="footer-nav" aria-label="Подвал">
+                <a href="#footer">Документация</a>
+                <a href="#footer">Поддержка</a>
+                <a href="#footer">Лицензия</a>
+              </nav>
+            </div>
+            <div class="footer-right">
+              <div class="footer-status">
+                <span class="badge-dot badge-dot-success" aria-hidden="true"></span>
+                Система работает
+              </div>
+            </div>
+          </footer>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Колонки ссылок (<code>.footer-multi</code>)</h3></div>
+        <div class="card-body">
+          <footer class="footer footer-multi">
+            <div class="footer-row">
+              <div class="footer-columns">
+                <div>
+                  <div class="footer-column-title">Продукция</div>
+                  <ul class="footer-column-links">
+                    <li><a href="#footer">Электродвигатели</a></li>
+                    <li><a href="#footer">Вентиляторы</a></li>
+                    <li><a href="#footer">Пускатели</a></li>
+                  </ul>
+                </div>
+                <div>
+                  <div class="footer-column-title">Инженеру</div>
+                  <ul class="footer-column-links">
+                    <li><a href="#footer">Подбор по нагрузке</a></li>
+                    <li><a href="#footer">Печатные формы</a></li>
+                    <li><a href="#footer">Опросный лист</a></li>
+                  </ul>
+                </div>
+                <div>
+                  <div class="footer-column-title">Компания</div>
+                  <ul class="footer-column-links">
+                    <li><a href="#footer">О заводе</a></li>
+                    <li><a href="#footer">Контакты</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="footer-row">
+              <span class="footer-copyright">© 2026 АО «МЭЗ «Уралэлектро»</span>
+              <div class="footer-status">
+                <span class="badge-dot badge-dot-warning" aria-hidden="true"></span>
+                Плановые работы до 04:00
+              </div>
+            </div>
+          </footer>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Компактный и по центру</h3></div>
+        <div class="card-body">
+          <footer class="footer footer-compact footer-centered">
+            <nav class="footer-nav" aria-label="Подвал компактный">
+              <a href="#footer">Условия</a>
+              <a href="#footer">Приватность</a>
+              <a href="#footer">Помощь</a>
+            </nav>
+            <span class="footer-copyright">© 2026 CSS Lab</span>
+          </footer>
+        </div>
+      </div>
+    </section>
+    <!-- </BLOCK:section-footer> -->
+
+    <!-- ===== Site Header Section ===== -->
+    <!-- [BLOCK:section-site-header] -->
+    <section id="site-header" class="mb-4">
+      <h2 class="mb-2">Site Header — общая шапка страниц сайта</h2>
+      <p class="text-muted mb-2">
+        Липкая полоса сайта-витрины: словомарка, навигация по страницам и правый блок
+        инструментов с переключателями бренда и темы. Единственный легитимный стеклянный слой
+        уровня страницы — контент скроллится под ней, внутренние элементы не стеклятся.
+        Разметка копируется между страницами по маркерам
+        <code>&lt;!-- [BLOCK:site-header] --&gt;</code>, поведение даёт <code>js/site.js</code>.
+      </p>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="demo-frame">
+            <header class="site-header">
+              <a class="site-header__brand" href="#site-header">
+                <span class="site-header__wordmark">CSS<span>Lab</span></span>
+              </a>
+              <nav class="site-nav" aria-label="Демо-навигация сайта">
+                <a class="site-nav__link" href="#site-header">Хаб</a>
+                <a class="site-nav__link" href="#site-header" aria-current="page">Компоненты</a>
+                <a class="site-nav__link" href="#site-header">Каталог</a>
+                <a class="site-nav__link" href="#site-header">Даташит</a>
+              </nav>
+              <div class="site-header__tools">
+                <button type="button" class="site-header__theme" aria-label="Переключить тему (демо)">
+                  <svg class="icon-light" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v2"/><path d="M12 21v2"/><path d="M1 12h2"/><path d="M21 12h2"/></svg>
+                  <svg class="icon-dark" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                </button>
+              </div>
+            </header>
+            <p class="demo-frame__body">Полоса липкая: при прокрутке страницы она остаётся сверху, а контент уходит под стекло.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- </BLOCK:section-site-header> -->
+
+    <!-- ===== Site Footer Section ===== -->
+    <!-- [BLOCK:section-site-footer] -->
+    <section id="site-footer" class="mb-4">
+      <h2 class="mb-2">Site Footer — общий подвал страниц сайта</h2>
+      <p class="text-muted mb-2">
+        Служебная концовка страницы: ряд ссылок и подпись, отделённые верхней линией,
+        с переносом на узком экране. Развёрнутый подвал с колонками и статусом — это
+        <a href="#footer">footer</a>. Разметка копируется между страницами по маркерам
+        <code>&lt;!-- [BLOCK:site-footer] --&gt;</code>.
+      </p>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <footer class="site-footer" style="margin-top: 0;">
+            <span>CSS Lab — дизайн-система VEZA · Уралэлектро · HEMAH</span>
+            <nav class="site-footer__links" aria-label="Демо-подвал">
+              <a href="#site-footer">Хаб</a>
+              <a href="#site-footer">Компоненты</a>
+              <a href="#site-footer">Печатные формы</a>
+            </nav>
+          </footer>
+        </div>
+      </div>
+    </section>
+    <!-- </BLOCK:section-site-footer> -->
+
+    <style>
+      /* [CONFIG:demo-app-shell] Подмакетник каркаса: тот же приём, что
+         .demo-frame (transform создаёт containing block, поэтому fixed-панели
+         остаются внутри карточки), плюс масштаб под карточку — фиксированная
+         высота вместо 100vh и узкая панель через локальное переопределение
+         --sidebar-width. Стили демонстрационные: компоненты не правятся. */
+      .demo-shell {
+        min-height: 320px;
+        --sidebar-width: 200px;
+        --sidebar-w-left: 200px;
+        --sidebar-w-right: 200px;
+      }
+      .demo-shell .app-layout {
+        margin-top: 0;
+        padding-bottom: 0;
+        min-height: 320px;
+      }
+      .demo-shell .sidebar {
+        top: 0;
+        bottom: 0;
+        height: auto;
+      }
+      .demo-shell .app-content { padding: var(--space-4); }
+      /* Кадр «узкий экран»: центр не раздвигается — панель ложится поверх
+         контента, как это делает раскладка ниже 768px */
+      .demo-shell--over .app-layout:has(> .sidebar--left.is-open) > .app-content {
+        margin-left: 0;
+      }
+      .demo-shell .demo-shell__note {
+        font-size: var(--fs-sm);
+        color: var(--color-text-muted);
+      }
+    </style>
+
+    <!-- ===== App Layout Section ===== -->
+    <!-- [BLOCK:section-app-layout] -->
+    <section id="app-layout" class="mb-4">
+      <h2 class="mb-2">App Layout — каркас приложения</h2>
+      <p class="text-muted mb-2">
+        Раскладка рабочего экрана: центральная колонка между двумя выдвижными панелями,
+        фиксированный подвал и переключатель ширины. Открытая панель на широком экране
+        <em>раздвигает</em> контент (<code>:has()</code> плюс классы-фолбэки), на узком —
+        ложится поверх него. Сама панель — это компонент <a href="#sidebar">sidebar</a>,
+        модальная шторка с оверлеем и ловушкой фокуса — <a href="#drawer">drawer</a>.
+        Витрина собрана на этом же каркасе: панели слева и справа от текста — они и есть.
+      </p>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Панель раздвигает контент</h3></div>
+        <div class="card-body">
+          <div class="demo-frame demo-shell">
+            <div class="app-layout">
+              <aside class="sidebar sidebar--left is-open" aria-label="Демо-навигация каркаса">
+                <div class="sidebar-header">
+                  <h4 class="sidebar-title">Разделы</h4>
+                </div>
+                <div class="sidebar-body">
+                  <ul class="sidebar-nav">
+                    <li class="sidebar-nav-item"><a class="sidebar-nav-link active" href="#app-layout" aria-current="page">Заявки</a></li>
+                    <li class="sidebar-nav-item"><a class="sidebar-nav-link" href="#app-layout">Каталог</a></li>
+                    <li class="sidebar-nav-item"><a class="sidebar-nav-link" href="#app-layout">Отчёты</a></li>
+                  </ul>
+                </div>
+              </aside>
+              <!-- В подмакетнике центр — <div>: <main> на странице уже есть -->
+              <div class="app-content">
+                <p class="demo-shell__note">
+                  Центральная колонка. Пока панель открыта, её отступ равен ширине панели —
+                  контент не перекрыт. Закрытие панели снимает отступ тем же переходом.
+                </p>
+              </div>
+              <aside class="sidebar sidebar--right is-open" aria-label="Демо-панель сведений">
+                <div class="sidebar-header">
+                  <h4 class="sidebar-title">Сведения</h4>
+                </div>
+                <div class="sidebar-body">
+                  <div class="sidebar-widget">
+                    <div class="sidebar-widget-title">Статус</div>
+                    <div class="sidebar-widget-content">Черновик</div>
+                  </div>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Узкий экран: панель поверх контента и подложка</h3></div>
+        <div class="card-body">
+          <p class="text-muted mb-2">
+            До 767&nbsp;px центр не раздвигается: панель выезжает поверх и включается
+            подложка <code>.sidebar-overlay.is-visible</code> — клик по ней закрывает панель.
+          </p>
+          <div class="demo-frame demo-shell demo-shell--over">
+            <div class="app-layout">
+              <div class="app-content">
+                <p class="demo-shell__note">Содержимое остаётся на месте и затемняется подложкой.</p>
+              </div>
+              <div class="sidebar-overlay is-visible" aria-hidden="true"></div>
+              <aside class="sidebar sidebar--left is-open" aria-label="Демо-шторка навигации">
+                <div class="sidebar-header">
+                  <h4 class="sidebar-title">Меню</h4>
+                  <button type="button" class="sidebar-close" aria-label="Закрыть меню (демо)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                  </button>
+                </div>
+                <div class="sidebar-body">
+                  <ul class="sidebar-nav">
+                    <li class="sidebar-nav-item"><a class="sidebar-nav-link active" href="#app-layout" aria-current="page">Заявки</a></li>
+                    <li class="sidebar-nav-item"><a class="sidebar-nav-link" href="#app-layout">Каталог</a></li>
+                  </ul>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- </BLOCK:section-app-layout> -->
+
+    <!-- ===== Sidebar Section ===== -->
+    <!-- [BLOCK:section-sidebar] -->
+    <section id="sidebar" class="mb-4">
+      <h2 class="mb-2">Sidebar — наполнение боковой панели</h2>
+      <p class="text-muted mb-2">
+        Постоянная колонка приложения: навигация со счётчиками, виджеты, карточка
+        пользователя, теги-фильтры и лента активности; на узком экране — выезжающая
+        шторка с подложкой, на широком — тянется за ручку <code>.sidebar-resize-handle</code>.
+        Сетку вокруг панели даёт <a href="#app-layout">app-layout</a>, метрики внутри —
+        <a href="#stats">stats</a> (плитка <code>.stat-card-tile</code>), временная панель
+        поверх контента — <a href="#drawer">drawer</a>.
+        Обе панели самой витрины собраны на этом компоненте.
+      </p>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Анатомия панели</h3></div>
+        <div class="card-body">
+          <div class="demo-frame demo-shell">
+            <div class="app-layout">
+              <aside class="sidebar sidebar--left is-open" aria-label="Демо-панель приложения">
+                <div class="sidebar-resize-handle" aria-hidden="true"></div>
+                <div class="sidebar-header">
+                  <h4 class="sidebar-title">Проект</h4>
+                  <button type="button" class="sidebar-close" aria-label="Свернуть панель (демо)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+                  </button>
+                </div>
+                <div class="sidebar-body">
+                  <div class="sidebar-section">
+                    <div class="sidebar-section-title">Навигация</div>
+                    <ul class="sidebar-nav">
+                      <li class="sidebar-nav-item">
+                        <a class="sidebar-nav-link active" href="#sidebar" aria-current="page">
+                          Входящие <span class="sidebar-nav-badge">12</span>
+                        </a>
+                      </li>
+                      <li class="sidebar-nav-item"><a class="sidebar-nav-link" href="#sidebar">Черновики</a></li>
+                      <li class="sidebar-nav-item"><a class="sidebar-nav-link" href="#sidebar">Архив</a></li>
+                    </ul>
+                  </div>
+
+                  <div class="sidebar-widget">
+                    <div class="sidebar-widget-title">Метрики</div>
+                    <div class="stats-grid stats-grid-2">
+                      <div class="stat-card stat-card-tile">
+                        <div class="stat-value">42</div>
+                        <div class="stat-label">Позиций</div>
+                      </div>
+                      <div class="stat-card stat-card-tile">
+                        <div class="stat-value">7</div>
+                        <div class="stat-label">В работе</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="sidebar-widget">
+                    <div class="sidebar-widget-title">Метки</div>
+                    <div class="sidebar-tags">
+                      <span class="sidebar-tag active">срочные</span>
+                      <span class="sidebar-tag">типовые</span>
+                    </div>
+                  </div>
+
+                  <ul class="sidebar-activity">
+                    <li class="sidebar-activity-item">
+                      <span class="sidebar-activity-icon" aria-hidden="true">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+                      </span>
+                      <div class="sidebar-activity-content">
+                        <div class="sidebar-activity-text">Заявка № 1042 согласована</div>
+                        <div class="sidebar-activity-time">14:32</div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div class="sidebar-footer">
+                  <div class="sidebar-user">
+                    <span class="sidebar-user-avatar" aria-hidden="true">ДБ</span>
+                    <div class="sidebar-user-info">
+                      <div class="sidebar-user-name">Дмитрий Белобородов</div>
+                      <div class="sidebar-user-role">Администратор</div>
+                    </div>
+                  </div>
+                </div>
+              </aside>
+              <!-- В подмакетнике центр — <div>: <main> на странице уже есть -->
+              <div class="app-content">
+                <p class="demo-shell__note">
+                  Панель прокручивается независимо от контента: шапка и подвал панели
+                  остаются на месте, скроллится только <code>.sidebar-body</code>.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- </BLOCK:section-sidebar> -->
+
       </div><!-- /.container -->
     </main><!-- /.app-content -->
 
     <!-- Right Sidebar - Info -->
-    <aside class="app-sidebar right resizable" id="right-sidebar">
+    <aside class="sidebar sidebar--right sidebar--resizable" id="right-sidebar">
       <div class="sidebar-resize-handle"></div>
       <div class="sidebar-header">
         <h4 class="sidebar-title">Информация</h4>
@@ -4350,14 +5235,15 @@
       <div class="sidebar-body">
         <div class="sidebar-widget">
           <div class="sidebar-widget-title">Статистика</div>
-          <div class="sidebar-stats">
-            <div class="sidebar-stat">
-              <div class="sidebar-stat-value">42</div>
-              <div class="sidebar-stat-label">Компонентов</div>
+          <!-- Метрики панели — компонент stats (плитка .stat-card-tile) -->
+          <div class="stats-grid stats-grid-2">
+            <div class="stat-card stat-card-tile">
+              <div class="stat-value">42</div>
+              <div class="stat-label">Компонентов</div>
             </div>
-            <div class="sidebar-stat">
-              <div class="sidebar-stat-value">4</div>
-              <div class="sidebar-stat-label">Бренда</div>
+            <div class="stat-card stat-card-tile">
+              <div class="stat-value">4</div>
+              <div class="stat-label">Бренда</div>
             </div>
           </div>
         </div>
@@ -4413,7 +5299,7 @@
     </div>
     <div class="footer-right">
       <div class="footer-status">
-        <span class="footer-status-dot"></span>
+        <span class="badge-dot badge-dot-success" aria-hidden="true"></span>
         Система работает
       </div>
     </div>
@@ -4447,8 +5333,13 @@
     // Toggle tree folders
     document.querySelectorAll('.tree-folder > .tree-item').forEach(item => {
       item.addEventListener('click', () => {
-        item.parentElement.classList.toggle('open');
+        const branch = item.parentElement;
+        const open = branch.classList.toggle('is-open');
+        if (item.tagName === 'BUTTON') item.setAttribute('aria-expanded', String(open));
       });
+      if (item.tagName === 'BUTTON') {
+        item.setAttribute('aria-expanded', String(item.parentElement.classList.contains('is-open')));
+      }
     });
 
     // Toggle dropdown on click
@@ -4521,17 +5412,21 @@
     const searchBar = document.querySelector('.search-bar');
 
     function updateSidebarState() {
-      const leftOpen = leftSidebar?.classList.contains('open');
-      const rightOpen = rightSidebar?.classList.contains('open');
+      const leftOpen = leftSidebar?.classList.contains('is-open');
+      const rightOpen = rightSidebar?.classList.contains('is-open');
       const anyOpen = leftOpen || rightOpen;
       const isMobile = window.innerWidth < 768; // Match CSS breakpoint @media (max-width: 767px)
 
       // Update overlay (only on mobile)
       if (anyOpen && isMobile) {
-        sidebarOverlay?.classList.add('visible');
+        sidebarOverlay?.classList.add('is-visible');
       } else {
-        sidebarOverlay?.classList.remove('visible');
+        sidebarOverlay?.classList.remove('is-visible');
       }
+
+      // aria-expanded триггеров синхронно с состоянием панелей
+      burgerMenu?.setAttribute('aria-expanded', String(!!leftOpen));
+      infoToggle?.setAttribute('aria-expanded', String(!!rightOpen));
 
       // Fallback classes for browsers without :has() support
       appContent?.classList.toggle('sidebar-left-open', leftOpen);
@@ -4551,35 +5446,35 @@
     }
 
     function closeAllSidebars() {
-      leftSidebar?.classList.remove('open');
-      rightSidebar?.classList.remove('open');
+      leftSidebar?.classList.remove('is-open');
+      rightSidebar?.classList.remove('is-open');
       updateSidebarState();
     }
 
     function toggleLeftSidebar() {
-      leftSidebar?.classList.toggle('open');
+      leftSidebar?.classList.toggle('is-open');
       updateSidebarState();
     }
 
     function toggleRightSidebar() {
-      rightSidebar?.classList.toggle('open');
+      rightSidebar?.classList.toggle('is-open');
       updateSidebarState();
     }
 
     function closeLeftSidebar() {
-      leftSidebar?.classList.remove('open');
+      leftSidebar?.classList.remove('is-open');
       updateSidebarState();
     }
 
     function closeRightSidebar() {
-      rightSidebar?.classList.remove('open');
+      rightSidebar?.classList.remove('is-open');
       updateSidebarState();
     }
 
     // Open sidebars by default on desktop (width > 1024px)
     if (window.innerWidth > 1024) {
-      leftSidebar?.classList.add('open');
-      rightSidebar?.classList.add('open');
+      leftSidebar?.classList.add('is-open');
+      rightSidebar?.classList.add('is-open');
       updateSidebarState();
     }
 
@@ -4596,8 +5491,8 @@
       }
       // Switching from mobile to desktop - optionally reopen sidebars
       else if (wasMobile && !isMobile && currentWidth > 1024) {
-        leftSidebar?.classList.add('open');
-        rightSidebar?.classList.add('open');
+        leftSidebar?.classList.add('is-open');
+        rightSidebar?.classList.add('is-open');
         updateSidebarState();
       }
 
@@ -4625,7 +5520,7 @@
     });
 
     // Highlight current nav item on scroll
-    const navLinks = document.querySelectorAll('.app-sidebar.left .sidebar-nav-link');
+    const navLinks = document.querySelectorAll('#left-sidebar .sidebar-nav-link');
     const sections = document.querySelectorAll('section[id]');
 
     window.addEventListener('scroll', () => {

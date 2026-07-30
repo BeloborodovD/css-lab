@@ -1,17 +1,17 @@
 /* ==========================================================================
-   notification-badge.css — индикаторы уведомлений + dropdown panel
+   notification-badge.css — индикатор уведомлений на иконке + панель списка
    --------------------------------------------------------------------------
-   Локальные размеры компонента живут в :root через префикс --notification-*
-   и не пересекаются с дизайн-системой. Pulse сохранён как функциональный
-   индикатор (новые уведомления).
+   Сам индикатор — это бейдж из badge.css: точка .badge-dot или счётчик
+   .badge с накладкой .badge-float. Здесь остаётся только то, чего у бейджа
+   нет: контейнер-якорь, варианты угла и пульсация «есть новое».
+   Разметка: <span class="notification-badge">
+               <button …/>
+               <span class="badge-dot badge-dot-error badge-float"></span>
+             </span>
    ========================================================================== */
 
 /* ====================== Local CSS variables ====================== */
 :root {
-  --notification-badge-size:    20px;
-  --notification-badge-size-sm: 16px;
-  --notification-badge-size-lg: 24px;
-  --notification-dot-size:      10px;
   --notification-panel-width:   360px;
   --notification-item-padding:  var(--space-3) var(--space-4);
 }
@@ -32,107 +32,47 @@
   cursor: pointer;
 }
 
-/* ====================== Dot ====================== */
-.notification-dot {
+/* ====================== Position variants ======================
+   Композиция на badge.css: контейнер решает, у какого угла висит бейдж.
+   Базовый угол (верхний правый) задан самим .badge-float. */
+.notification-badge-top-left .badge-float {
+  right: auto;
+  left: calc(-1 * var(--space-1));
+}
+.notification-badge-bottom-right .badge-float {
+  top: auto;
+  bottom: calc(-1 * var(--space-1));
+}
+.notification-badge-bottom-left .badge-float {
+  top: auto;
+  right: auto;
+  bottom: calc(-1 * var(--space-1));
+  left: calc(-1 * var(--space-1));
+}
+
+/* ====================== Pulse (есть новое) ======================
+   PURPOSE: state indication — расходящееся кольцо сообщает, что уведомление
+   появилось только что. Одна кривая на все цвета: кольцо наследует заливку
+   самого бейджа (background: inherit), поэтому семантика берётся из
+   .badge-dot-*/.badge-* и не дублируется отдельными keyframes.
+   Постоянное движение → linear (ui-motion-craft §1). */
+.notification-badge-pulse {
+  position: relative;
+}
+.notification-badge-pulse::after {
+  content: '';
   position: absolute;
-  width: var(--notification-dot-size);
-  height: var(--notification-dot-size);
-  background: var(--color-error);
-  border-radius: var(--radius-full);
-  border: 2px solid var(--color-surface);
-}
-.notification-dot-sm { width: 8px;  height: 8px;  border-width: 1px; }
-.notification-dot-lg { width: 12px; height: 12px; border-width: 2px; }
-
-/* ====================== Count ====================== */
-.notification-count {
-  position: absolute;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: var(--notification-badge-size);
-  height: var(--notification-badge-size);
-  padding: 0 5px;
-  font-family: var(--font-sans);
-  font-size: var(--fs-xs);
-  font-weight: var(--fw-semi);
-  line-height: 1;
-  color: #fff;
-  background: var(--color-error);
-  border-radius: calc(var(--notification-badge-size) / 2);
-  border: 2px solid var(--color-surface);
-}
-.notification-count-sm {
-  min-width: var(--notification-badge-size-sm);
-  height: var(--notification-badge-size-sm);
-  padding: 0 4px;
-  font-size: 10px;
-  border-radius: calc(var(--notification-badge-size-sm) / 2);
-}
-.notification-count-lg {
-  min-width: var(--notification-badge-size-lg);
-  height: var(--notification-badge-size-lg);
-  padding: 0 var(--space-2);
-  font-size: var(--fs-xs);
-  border-radius: calc(var(--notification-badge-size-lg) / 2);
+  inset: 0;
+  border-radius: inherit;
+  background: inherit;
+  pointer-events: none;
+  animation: notification-ripple var(--duration-pulse) linear infinite;
 }
 
-/* ====================== Position variants ====================== */
-.notification-dot,
-.notification-count {
-  top: -4px;
-  right: -4px;
+@keyframes notification-ripple {
+  from { opacity: 0.5; transform: scale(1); }
+  to   { opacity: 0;   transform: scale(2.4); }
 }
-.notification-badge-top-left .notification-dot,
-.notification-badge-top-left .notification-count,
-.notification-dot-top-left,
-.notification-count-top-left {
-  top: -4px; right: auto; left: -4px;
-}
-.notification-badge-bottom-right .notification-dot,
-.notification-badge-bottom-right .notification-count,
-.notification-dot-bottom-right,
-.notification-count-bottom-right {
-  top: auto; bottom: -4px; right: -4px;
-}
-.notification-badge-bottom-left .notification-dot,
-.notification-badge-bottom-left .notification-count,
-.notification-dot-bottom-left,
-.notification-count-bottom-left {
-  top: auto; right: auto; bottom: -4px; left: -4px;
-}
-
-/* ====================== Color variants ====================== */
-.notification-dot-primary,
-.notification-count-primary { background: var(--color-accent); }
-.notification-dot-success,
-.notification-count-success { background: var(--color-success); }
-.notification-dot-warning,
-.notification-count-warning { background: var(--color-warning); }
-.notification-dot-error,
-.notification-count-error   { background: var(--color-error); }
-.notification-dot-info,
-.notification-count-info    { background: var(--color-info); }
-
-/* ====================== Pulse animation (новые уведомления) ====================== */
-@keyframes notification-pulse-error   { 0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.5); } 70% { box-shadow: 0 0 0 8px rgba(220, 38, 38, 0); } 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); } }
-@keyframes notification-pulse-primary { 0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.5); } 70% { box-shadow: 0 0 0 8px rgba(37, 99, 235, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); } }
-@keyframes notification-pulse-success { 0% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.5); } 70% { box-shadow: 0 0 0 8px rgba(22, 163, 74, 0); } 100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); } }
-@keyframes notification-pulse-warning { 0% { box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.5); } 70% { box-shadow: 0 0 0 8px rgba(217, 119, 6, 0); } 100% { box-shadow: 0 0 0 0 rgba(217, 119, 6, 0); } }
-@keyframes notification-pulse-info    { 0% { box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.5); } 70% { box-shadow: 0 0 0 8px rgba(2, 132, 199, 0); } 100% { box-shadow: 0 0 0 0 rgba(2, 132, 199, 0); } }
-
-.notification-dot-pulse,
-.notification-count-pulse {
-  animation: notification-pulse-error 2s var(--ease-out) infinite;
-}
-.notification-dot-pulse.notification-dot-primary,
-.notification-count-pulse.notification-count-primary { animation-name: notification-pulse-primary; }
-.notification-dot-pulse.notification-dot-success,
-.notification-count-pulse.notification-count-success { animation-name: notification-pulse-success; }
-.notification-dot-pulse.notification-dot-warning,
-.notification-count-pulse.notification-count-warning { animation-name: notification-pulse-warning; }
-.notification-dot-pulse.notification-dot-info,
-.notification-count-pulse.notification-count-info    { animation-name: notification-pulse-info; }
 
 /* ==========================================================================
    Notification Panel Dropdown
@@ -413,24 +353,19 @@
   line-height: var(--lh-normal);
 }
 
-/* ====================== Inline (standalone) ====================== */
+/* ====================== Inline (standalone) ======================
+   Бейдж не поверх иконки, а в строку с текстом: накладка отключается. */
 .notification-badge-inline {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
 }
-.notification-badge-inline .notification-dot,
-.notification-badge-inline .notification-count {
+.notification-badge-inline .badge-float {
   position: static;
+  border: none;
 }
 
 /* ====================== Dark theme ====================== */
-.dark .notification-dot,
-.dark .notification-count,
-[data-theme="dark"] .notification-dot,
-[data-theme="dark"] .notification-count {
-  border-color: var(--color-surface);
-}
 .dark .notification-panel,
 [data-theme="dark"] .notification-panel {
   background: var(--color-surface);
@@ -445,12 +380,21 @@
 
 /* ====================== Reduced motion ====================== */
 @media (prefers-reduced-motion: reduce) {
+  /* Мягче, а не «в ноль»: сдвиг и масштаб панели снимаются, кроссфейд по
+     opacity остаётся — он и есть носитель смены состояния. Прежний
+     «выключатель» на 0.01ms убирал и его (RULES.md §6) */
   .notification-panel {
-    transition: opacity 0.01ms, visibility 0.01ms;
+    transition: opacity var(--duration-exit) var(--ease-out),
+                visibility 0s linear var(--duration-exit);
     transform: translateY(0) scale(1);
   }
-  .notification-dot-pulse,
-  .notification-count-pulse { animation: none; }
+  .notification-badge.is-open .notification-panel,
+  .notification-badge.open .notification-panel {
+    transition: opacity var(--duration-dropdown) var(--ease-out),
+                visibility 0s;
+  }
+  /* Мягче, но не «выключено»: кольцо замирает, сам бейдж остаётся виден */
+  .notification-badge-pulse::after { animation: none; opacity: 0; }
   .notification-item,
   .notification-item-action,
   .notification-item-actions,
@@ -464,18 +408,10 @@
               visibility var(--t-fast) var(--ease),
               transform var(--t-fast) var(--ease-out) !important;
 }
-.force-animations .notification-dot-pulse,
-.force-animations .notification-count-pulse {
-  animation: notification-pulse-error 2s var(--ease-out) infinite !important;
+.force-animations .notification-badge-pulse::after {
+  animation: notification-ripple var(--duration-pulse) linear infinite !important;
+  opacity: 0.5;
 }
-.force-animations .notification-dot-pulse.notification-dot-primary,
-.force-animations .notification-count-pulse.notification-count-primary { animation-name: notification-pulse-primary !important; }
-.force-animations .notification-dot-pulse.notification-dot-success,
-.force-animations .notification-count-pulse.notification-count-success { animation-name: notification-pulse-success !important; }
-.force-animations .notification-dot-pulse.notification-dot-warning,
-.force-animations .notification-count-pulse.notification-count-warning { animation-name: notification-pulse-warning !important; }
-.force-animations .notification-dot-pulse.notification-dot-info,
-.force-animations .notification-count-pulse.notification-count-info    { animation-name: notification-pulse-info !important; }
 
 /* ====================== Responsive — bottom-sheet на мобайле ====================== */
 @media (max-width: 767px) {

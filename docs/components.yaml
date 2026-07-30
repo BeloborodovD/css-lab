@@ -67,11 +67,12 @@ components:
 
   - name: alerts
     file: styles/components/alerts.css
-    summary: Статичный баннер сообщения в потоке страницы — info/success/warning/error, мягкая заливка плюс акцентная левая граница.
+    summary: Статичный баннер сообщения в потоке страницы — info/success/warning/error, мягкая заливка плюс акцентная левая граница; единственная плашка сообщения в библиотеке.
     use_when:
       - Нужно объяснить состояние страницы или формы прямо в месте, к которому сообщение относится.
       - Сообщение должно остаться на экране до реакции пользователя (ошибка входа, предупреждение о нестандартном значении).
       - Требуется закрываемое сообщение с крестиком — вариант "alert-dismissible" плюс "alert-close".
+      - Нужна строка «иконка + текст + крестик»: раскладка включается сама, как только внутри есть .alert-icon или .alert-dismissible.
     avoid_when:
       - Сообщение кратковременное и не требует действия — баннер в потоке сдвигает вёрстку.
       - Нужно перечислить ошибки нескольких полей формы со ссылками на них.
@@ -87,7 +88,7 @@ components:
         component: modal
     anatomy:
       block: .alert
-      elements: [alert-title, alert-icon, alert-close]
+      elements: [alert-title, alert-icon, alert-content, alert-close]
       modifiers: ["alert-info", "alert-success", "alert-warning", "alert-error", "alert-danger", "alert-dismissible", "note"]
       states: [alert-animate-in, alert-animate-out, alert-dismissing]
     behavior_contract:
@@ -103,10 +104,13 @@ components:
     tokens: ["--space-1", "--space-2", "--space-3", "--space-4", "--fs-sm", "--fs-lg", "--fw-semi", "--lh-normal", "--border-w", "--border-w-thick", "--border-w-strong", "--color-border", "--color-surface-sunken", "--color-text-muted", "--color-text-secondary", "--color-info", "--color-info-soft", "--color-info-text", "--color-success", "--color-success-soft", "--color-success-text", "--color-warning", "--color-warning-soft", "--color-warning-text", "--color-error", "--color-error-soft", "--color-error-text", "--radius-sm", "--radius-xs", "--shadow-focus", "--t", "--t-fast", "--t-slow", "--ease", "--ease-out"]
     showcase: "components.html#alerts"
     examples:
-      - "витрина: components.html#alerts — четыре семантических варианта"
+      - "витрина: components.html#alerts — четыре семантических варианта плюс строчный вид с иконкой и крестиком"
       - "страница-пример: pages/login.html — сообщение об ошибке авторизации над формой"
       - "класс задач: предупреждение о нестандартных значениях в длинной технической форме-опроснике"
     status: stable
+    notes:
+      - "2026-07-30: сюда сведена вторая реализация плашки — .alert-box из logs.css. Соответствие имён: .alert-box → .alert + .alert-info/.alert-warning/.alert-error/.alert-success, .alert-box-content → .alert-content, .alert-box-close → .alert-close, иконка получает класс .alert-icon."
+      - "Тип сообщения задаётся модификатором .alert-info/…, а не голым .info: односложные имена состояний зарезервированы за другими блоками."
 
   - name: app-layout
     file: styles/components/app-layout.css
@@ -124,13 +128,13 @@ components:
         component: drawer
       - case: только контентная колонка с полями и отступами
         component: page-shell
-      - case: внутреннее наполнение боковой панели (пункты, группы, иконки)
+      - case: сама боковая панель — каркас, шторка, ручка ресайза и наполнение
         component: sidebar
     anatomy:
       block: .app-layout
-      elements: [app-sidebar, app-content, sidebar-resize-handle, sidebar-overlay, width-control, site-footer]
-      modifiers: ["left", "right", "resizable", "demo-app-layout", "demo-app-sidebar", "demo-app-content"]
-      states: [open, resizing, visible, "sidebar-left-open", "sidebar-right-open", "sidebar-both-open", "width-fixed", "width-fluid", "width-full"]
+      elements: [app-content, width-control, site-footer]
+      modifiers: []
+      states: ["sidebar-left-open", "sidebar-right-open", "sidebar-both-open", "width-fixed", "width-fluid", "width-full"]
     behavior_contract:
       keyboard:
         - Кнопка-переключатель панели достижима по Tab и меняет aria-expanded.
@@ -140,19 +144,20 @@ components:
         - Боковая панель — landmark (aside/nav) с aria-label, иначе двух «боковин» не различить.
         - Кнопка переключения ширины нуждается в понятном названии и в объявлении текущего режима.
       js_required:
-        - Переключать класс "open" на .app-sidebar и "visible" на .sidebar-overlay.
+        - "Переключать is-open на панели .sidebar (см. паспорт sidebar) — раскладка реагирует на это состояние сама."
         - Для браузеров без ":has()" — навешивать классы-фолбэки "sidebar-left-open"/"sidebar-right-open"/"sidebar-both-open" на .app-content.
         - При ручном ресайзе — писать ширину в "--sidebar-w-left"/"--sidebar-w-right", иначе отступы центра разъедутся с панелью.
         - Режим ширины — класс "width-fixed"/"width-fluid"/"width-full" на body плюс сохранение выбора.
-    tokens: ["--sidebar-w", "--sidebar-width", "--sidebar-w-left", "--sidebar-w-right", "--sidebar-transition", "--header-h", "--color-bg", "--color-surface", "--color-surface-hover", "--color-surface-sunken", "--color-border", "--color-border-strong", "--color-overlay", "--color-accent", "--color-accent-soft", "--color-text", "--color-text-muted", "--color-success", "--border-w", "--radius-full", "--shadow", "--shadow-lg", "--space-2", "--space-3", "--space-4", "--space-5", "--space-6", "--fs-xs", "--fs-sm", "--z-drawer", "--z-raised", "--z-sticky", "--t", "--t-fast", "--t-slow", "--ease"]
-    showcase: null
+    tokens: ["--sidebar-w", "--sidebar-w-sm", "--sidebar-width", "--sidebar-w-left", "--sidebar-w-right", "--header-h", "--color-bg", "--color-surface", "--color-surface-hover", "--color-surface-sunken", "--color-border", "--color-border-strong", "--color-accent", "--color-text", "--color-text-muted", "--color-success", "--border-w", "--radius-full", "--shadow", "--space-px", "--space-2", "--space-3", "--space-4", "--space-5", "--space-6", "--space-16", "--space-20", "--icon-size-lg", "--touch-target-min", "--fs-xs", "--fs-sm", "--z-sticky", "--duration-press", "--duration-modal", "--ease-out", "--ease-drawer"]
+    showcase: "components.html#app-layout"
     examples:
-      - "витрина: components.html — каркас самой страницы витрины (две боковые панели, оверлей, переключатель ширины); отдельной секции-демо нет"
+      - "витрина: components.html#app-layout — подмакетник каркаса (панель раздвигает контент; узкий экран — панель поверх с подложкой)"
+      - "витрина: components.html — каркас самой страницы витрины (две боковые панели, оверлей, переключатель ширины)"
       - "класс задач: рабочее место оператора или внутренний портал, где слева дерево навигации, справа — служебные фильтры и настройки"
-    status: legacy
+    status: stable
     notes:
-      - "Дублирование: .site-footer здесь стилизуется повторно — подвал уже описан в styles/layout/site-footer.css и styles/components/footer.css."
-      - "Мёртвый код: .demo-app-layout / .demo-app-sidebar / .demo-app-content в разметке репозитория не встречаются."
+      - "Раскладка реагирует на открытую панель только прямым потомком (:has(> .sidebar--left.is-open) > .app-content) — вложенный каркас не двигает внешнюю колонку."
+      - "Дублирование: .site-footer здесь стилизуется повторно — подвал уже описан в styles/layout/site-footer.css и styles/components/footer.css (в беклоге)."
 
   - name: autotrassir
     file: styles/components/autotrassir.css
@@ -176,7 +181,7 @@ components:
         component: search-result-card
     anatomy:
       block: .photo-card
-      elements: [photo-card-image, photo-card-overlay, photo-card-plate, photo-card-content, photo-card-timestamp, photo-card-meta, quick-actions, quick-action-btn, photo-card-skeleton, status-indicator, status-dot, license-plate, lightbox-plate-box, timestamps-grid, timestamp-row]
+      elements: [photo-card-image, photo-card-overlay, photo-card-plate, photo-card-content, photo-card-timestamp, photo-card-meta, quick-actions, quick-action-btn, photo-card-skeleton, status-indicator, status-text, license-plate, lightbox-plate-box, timestamps-grid, timestamp-row]
       modifiers: ["license-plate-highlight", "photo-card-skeleton", "icon-amber", "icon-success", "icon-warning", "icon-error", "icon-primary", "icon-muted", "direction-enter", "direction-exit"]
       states: [success, warning, error, info, highlight]
     behavior_contract:
@@ -184,12 +189,12 @@ components:
         - "Карточка кликабельна (cursor: pointer) — разметка обязана сделать её кнопкой или ссылкой, иначе она недостижима с клавиатуры."
         - Быстрые действия видимы только по hover — им нужен показ и по :focus-within, иначе клавиатурный пользователь их не увидит.
       aria:
-        - Индикатор состояния — цветная точка; смысл обязан дублироваться текстом (.status-text) или aria-label.
+        - "Индикатор состояния — строка .status-indicator: точка (общий примитив .badge-dot из badge.css) плюс обязательная подпись .status-text; цвет носителем смысла не является."
         - Распознанное значение (.license-plate) моноширинное и в верхнем регистре — регистр задаётся стилем, текст в разметке пишется как есть.
       js_required:
         - Открытие полноразмерного просмотра и обработка быстрых действий — целиком на стороне разметки/скриптов, CSS только оформляет.
     tokens: ["--color-surface", "--color-surface-sunken", "--color-surface-hover", "--color-border", "--color-border-strong", "--color-text", "--color-text-muted", "--color-accent", "--color-accent-soft", "--color-success", "--color-warning", "--color-error", "--color-info", "--border-w", "--border-w-strong", "--radius", "--radius-sm", "--radius-xs", "--radius-full", "--shadow-sm", "--space-1", "--space-2", "--space-3", "--font-mono", "--fs-xs", "--fs-sm", "--fs-base", "--fs-2xl", "--fw-medium", "--fw-semi", "--fw-bold", "--tracking-wide", "--t", "--t-fast", "--t-slower", "--ease", "--ease-in-out"]
-    showcase: "components.html#logs"
+    showcase: "components.html#autotrassir"
     examples:
       - "\"витрина: components.html#logs — секция называется «AutoTrassir Components», но якорь секции — id=\\\"logs\\\"\""
       - "класс задач: журнал событий видеонаблюдения или контроля доступа со снимком, распознанным номером и парой временных меток"
@@ -197,6 +202,7 @@ components:
     notes:
       - "Дублирование: .skeleton описан и здесь, и в styles/components/skeleton.css; в каскаде побеждает skeleton.css (импортируется позже) — правило здесь мёртвое."
       - "Именование вне общей схемы: классы привязаны к предметной области (photo-card, license-plate), а не к роли в интерфейсе."
+      - "2026-07-30: собственная точка .status-dot удалена — в разметке .badge-dot с семантическим модификатором (.badge-dot-success/-warning/-error/-info)."
 
   - name: avatar
     file: styles/components/avatar.css
@@ -228,7 +234,7 @@ components:
         - Вариант "avatar-clickable" обязан быть button или ссылкой — стиль даёт только курсор и кольцо фокуса.
       aria:
         - Картинке нужен осмысленный alt (имя), либо alt="" плюс подпись рядом.
-        - Статус присутствия — цветная точка без текста; смысл обязан нести aria-label или видимая подпись.
+        - "Статус присутствия — цветная точка без текста; смысл обязан нести aria-label или видимая подпись. Разметка: <span class=\"badge-dot avatar-status avatar-status-online\" role=\"img\" aria-label=\"в сети\">."
         - Остаток "+N" в группе нуждается в расшифровке для скринридера (сколько ещё участников).
       js_required:
         - "Ничего: компонент полностью декларативный, состояние задаётся классами в разметке."
@@ -239,49 +245,53 @@ components:
       - "класс задач: список участников обсуждения или таблица задач с исполнителями"
     status: stable
     notes:
-      - "Расхождение витрины и стилей: в демо статус задаётся классами avatar-online/avatar-offline/avatar-busy на самом аватаре, а CSS описывает дочерний .avatar-status с модификаторами avatar-status-*."
+      - "Точка статуса выступает за круг аватара, поэтому обрезка по кругу живёт на самой картинке (.avatar-image), а не на блоке: overflow:hidden на .avatar срезал бы индикатор."
+      - "Сама точка — общий примитив .badge-dot (badge.css); .avatar-status добавляет к нему только место у кромки круга, размер под размер аватара и кольцо в цвет поверхности, а .avatar-status-online/-offline/-busy/-away — цвет присутствия."
 
   - name: badge
     file: styles/components/badge.css
-    summary: Счётчик или короткая метка — заполненный бейдж (в том числе накладываемый на иконку) и мягкий «тег» с необязательной кнопкой удаления.
+    summary: "Неинтерактивный носитель статуса: пилюля со счётчиком или короткой подписью, точка-индикатор без подписи и накладка того и другого на иконку."
     use_when:
-      - Нужно показать число (непрочитанные, количество позиций) поверх иконки — вариант "badge-float".
+      - Нужно показать число (непрочитанные, количество позиций) поверх иконки — вариант "badge-float" на позиционированном контейнере.
       - Нужна короткая неинтерактивная подпись состояния рядом с заголовком или в таблице.
-      - Нужен ряд удаляемых меток без логики фильтрации ("tag-group" плюс "tag-removable").
+      - Нужна точка состояния без подписи — "badge-dot" плюс семантический цвет; это единственный примитив точки в библиотеке.
     avoid_when:
-      - Метка кликабельна и переключает состояние — бейдж этого не умеет.
+      - Метка кликабельна, переключается или снимается пользователем — это чип, а не бейдж.
       - "Текст длинный: бейдж рассчитан на цифру или одно-два слова."
       - Нужен полноценный статус со значком и семантической подложкой в карточке — там уместнее чип.
     instead_use:
-      - case: интерактивная метка-переключатель, выбор фильтра
+      - case: интерактивная метка-переключатель, выбор фильтра, удаляемая метка
         component: chip
       - case: снимаемые условия текущей выборки над списком
         component: filter-pills
       - case: облако меток с весами
         component: tag-cloud
-      - case: анимированный счётчик уведомлений на колокольчике
+      - case: тот же бейдж на колокольчике вместе с панелью списка уведомлений и пульсацией
         component: notification-badge
     anatomy:
       block: .badge
-      elements: [tag, tag-remove, tag-group]
-      modifiers: ["badge-float", "badge-outline", "badge-secondary", "badge-success", "badge-warning", "badge-error", "badge-info", "tag-removable"]
+      elements: [badge-dot]
+      modifiers: ["badge-float", "badge-outline", "badge-secondary", "badge-success", "badge-warning", "badge-error", "badge-info", "badge-dot-sm", "badge-dot-lg", "badge-dot-accent", "badge-dot-success", "badge-dot-warning", "badge-dot-error", "badge-dot-info", "badge-dot-muted"]
       states: []
     behavior_contract:
       keyboard:
-        - Кнопка удаления метки — button, достижима по Tab.
+        - "Ничего: бейдж не интерактивен. Если по нему кликают — это чип или кнопка."
       aria:
         - Числовой бейдж на иконке обязан иметь текстовую расшифровку (aria-label на кнопке-носителе), число само по себе бессмысленно.
-        - Кнопке удаления нужен aria-label с названием удаляемой метки.
+        - "Точка .badge-dot декоративна: смысл несёт текст рядом или aria-label, цвет — только подкрепление."
         - Семантические варианты различаются только цветом — состояние обязано дублироваться текстом.
       js_required:
-        - Ничего для отображения; для удаления метки — обработчик, снимающий узел.
-    tokens: ["--space-1", "--space-2", "--space-3", "--fs-xs", "--fw-medium", "--fw-semi", "--color-accent", "--color-accent-soft", "--color-accent-text", "--color-text-on-accent", "--color-text-secondary", "--color-surface-active", "--color-success", "--color-warning", "--color-error", "--color-info", "--border-w", "--radius-full", "--radius-xs", "--t-fast", "--ease"]
+        - "Ничего: компонент декларативный, значение и цвет задаются разметкой."
+    tokens: ["--space-1", "--space-2", "--fs-xs", "--fw-semi", "--color-accent", "--color-accent-text", "--color-text-on-accent", "--color-text-secondary", "--color-text-muted", "--color-surface", "--color-surface-active", "--color-success", "--color-warning", "--color-error", "--color-info", "--border-w", "--border-w-strong", "--radius-full"]
     showcase: "components.html#badges"
     examples:
-      - "витрина: components.html#badges — бейджи и удаляемые теги"
+      - "витрина: components.html#badges — пилюли и точки состояния"
       - "страница-пример: pages/catalog.html — метки классов эффективности на карточках изделий"
       - "класс задач: счётчик новых записей на иконке в шапке, статусные метки в таблице заказов"
     status: stable
+    notes:
+      - "Точка .badge-dot — общий примитив: её используют подвал (.footer-status), галерея событий (.status-indicator), индикатор уведомлений и аватар (.avatar-status добавляет только место у кромки круга и кольцо)."
+      - "Мягкая метка .tag жила здесь до 2026-07-30 и была той же ролью, что чип: удалена, разметка переведена на .chip/.chip-removable."
 
   - name: brand-mark
     file: styles/components/brand-mark.css
@@ -363,6 +373,8 @@ components:
       - "страницы-примеры: pages/catalog.html и pages/datasheet.html — путь над списком и над карточкой изделия"
       - "класс задач: каталог с разделами и карточками, файловый менеджер, база документов"
     status: stable
+    notes:
+      - "Глиф разделителя рисует CSS (.breadcrumbs .breadcrumb-separator::before): в разметке элемент пустой и помечен aria-hidden. Символ, написанный в тексте, даёт двойной разделитель."
 
   - name: buttons
     file: styles/components/buttons.css
@@ -455,6 +467,7 @@ components:
     use_when:
       - Множественный выбор значений в один клик, когда вариантов немного и все видны сразу ("chip-choice" плюс "is-active").
       - Нужно показать набор выбранных значений с возможностью снять каждое ("chip-removable").
+      - Нужен ряд удаляемых меток без логики фильтрации ("chip-group" плюс "chip-removable") — сюда сведена бывшая метка .tag из badge.css.
       - Нужна плотная семантическая метка состояния внутри карточки или строки списка.
     avoid_when:
       - Вариантов десятки — ряд чипов переполнит строку, нужен список с поиском.
@@ -494,6 +507,9 @@ components:
       - "страницы-примеры: pages/catalog.html (быстрые фильтры), pages/form.html (множественный выбор значений), pages/datasheet.html (метки исполнения)"
       - "класс задач: короткий множественный выбор в анкете, набор быстрых фильтров над списком"
     status: stable
+    notes:
+      - "Граница с бейджем: чип — объект, который выбирают, переключают или снимают; бейдж — статус или счётчик, назначаемый системой."
+      - "Родственные чипы внутри других компонентов (.picklist__chip, .swatch-picker__chip, .combobox-tag) остаются собственными реализациями — у каждого свой контракт с JS; сведение отложено в pipeline/backlog.md."
 
   - name: code-panel
     file: styles/components/code-panel.css
@@ -635,8 +651,7 @@ components:
       - "класс задач: внутренний портал с десятками разделов, где нужен быстрый переход по названию"
     status: stable
     notes:
-      - "Расхождение витрины и стилей: демо использует классы command-palette-dialog / -search / -hint / -shortcut, а CSS описывает command-palette / -header / -close-hint / -item-shortcut — статичное демо оформлено не полностью."
-      - "Кнопка вызова #open-command-palette в скриптах витрины обработчика не имеет: живого открытия палитры в репозитории нет."
+      - "Кнопка вызова #open-command-palette в скриптах витрины обработчика не имеет: живого открытия палитры в репозитории нет, демо статичное."
 
   - name: date-picker
     file: styles/components/date-picker.css
@@ -719,15 +734,16 @@ components:
       - "класс задач: разделение блоков формы входа («или войти через…»), панель инструментов с группами кнопок"
     status: stable
     notes:
-      - "Расхождение витрины и стилей: демо «с текстом» задаёт подпись атрибутом data-text на .divider, а CSS ожидает вложенный .divider-text с текстом внутри — в демо подпись не отображается."
+      - "Подпись разделителя — вложенный элемент .divider-text с текстом внутри; атрибута data-text компонент не читает."
 
   - name: drawer
     file: styles/components/drawer.css
-    summary: "Модальная выдвижная панель поверх страницы с затемнением: входит от правого (или левого) края и уходит тем же путём, внутри — шапка с заголовком и закрытием, прокручиваемое тело и подвал с действиями."
+    summary: "Модальная шторка поверх страницы с затемнением — единственная в библиотеке: входит от правого края, левого края или снизу (нижний лист) и уходит тем же путём; внутри — шапка с заголовком и закрытием, прокручиваемое тело и подвал с действиями."
     use_when:
       - Нужно показать подробности или форму, не теряя контекст списка под ней.
       - Содержимое длинное и нуждается в собственной прокрутке с действиями, закреплёнными в подвале.
       - Нужна мобильная навигация, выезжающая слева ("drawer--left").
+      - Нужен нижний лист действий на мобильном ("drawer--sheet") — палец достаёт до низа экрана.
     avoid_when:
       - Нужно короткое решение «да/нет» — панель во весь экран избыточна.
       - Панель должна оставаться открытой параллельно с работой в основной области.
@@ -735,16 +751,16 @@ components:
     instead_use:
       - case: короткое подтверждение или решение по центру экрана
         component: modal
-      - case: немодальная боковая панель, сдвигающая контент и живущая постоянно
-        component: app-layout
+      - case: немодальная боковая панель, живущая постоянно и сдвигающая контент
+        component: sidebar
       - case: небольшая панель, привязанная к своему триггеру
         component: dropdown
       - case: пояснение к элементу по наведению
         component: tooltip
     anatomy:
       block: .drawer
-      elements: ["__overlay", "__panel", "__header", "__title", "__close", "__body", "__footer"]
-      modifiers: ["--left"]
+      elements: ["__overlay", "__panel", "__grabber", "__header", "__title", "__close", "__body", "__footer"]
+      modifiers: ["--left", "--sheet"]
       states: ["is-open"]
     behavior_contract:
       keyboard:
@@ -760,13 +776,15 @@ components:
         - Выключать закрытое поддерево (inert) и включать при открытии.
         - Обрабатывать Escape и клики по элементам с признаком закрытия.
         - Тело панели гасит прокрутку страницы через overscroll-behavior, но саму блокировку скролла body ставит скрипт.
-    tokens: ["--z-modal", "--color-overlay", "--color-surface-overlay", "--color-surface-hover", "--color-border", "--color-text", "--color-text-muted", "--drawer-w", "--border-w", "--border-w-strong", "--radius-sm", "--shadow-xl", "--shadow-focus", "--space-2", "--space-3", "--space-4", "--space-5", "--fs-lg", "--fw-semi", "--duration-modal", "--duration-modal-exit", "--duration-dropdown", "--duration-press", "--ease-drawer", "--ease-out"]
+    tokens: ["--z-modal", "--color-overlay", "--color-surface-overlay", "--color-surface-hover", "--color-border", "--color-text", "--color-text-muted", "--drawer-w", "--border-w", "--border-w-strong", "--radius-sm", "--radius-lg", "--radius-full", "--shadow-xl", "--shadow-focus", "--space-1", "--space-2", "--space-3", "--space-4", "--space-5", "--space-10", "--fs-lg", "--fw-semi", "--duration-modal", "--duration-modal-exit", "--duration-dropdown", "--duration-press", "--ease-drawer", "--ease-out"]
     showcase: "components.html#drawer"
     examples:
-      - "витрина: components.html#drawer — панель карточки документа с подвалом действий"
+      - "витрина: components.html#drawer — боковая панель карточки документа и нижний лист действий (--sheet)"
       - "страница-пример: pages/dashboard.html — боковая панель подробностей события"
-      - "класс задач: карточка записи, открываемая из списка без ухода со страницы; мобильное меню навигации"
+      - "класс задач: карточка записи, открываемая из списка без ухода со страницы; мобильное меню навигации; лист действий над позицией на телефоне"
     status: stable
+    notes:
+      - "Нижний лист — модификатор этого компонента. Прежние .modal-bottom-sheet / .modal-drawer из modal.css удалены как вторая реализация."
 
   - name: dropdown
     file: styles/components/dropdown.css
@@ -790,6 +808,8 @@ components:
         component: user-menu
       - case: поиск команд с клавиатуры
         component: command-palette
+      - case: панель фильтров, встроенная в поток страницы и видимая постоянно
+        component: filter-panel
     anatomy:
       block: .dropdown
       elements: [dropdown-trigger, dropdown-menu, dropdown-item, dropdown-divider, popover, popover-row, popover-col, popover-title, popover-actions]
@@ -809,12 +829,14 @@ components:
         - Закрывать по клику вне, по Escape и после выбора пункта.
         - Для якорения к триггеру задавать "--transform-origin", если панель позиционируется скриптом.
     tokens: ["--space-1", "--space-2", "--space-3", "--space-4", "--space-5", "--space-8", "--fs-sm", "--fs-base", "--fw-medium", "--fw-semi", "--color-surface-elevated", "--color-surface-elevated-hover", "--color-surface-active", "--color-border", "--color-border-subtle", "--color-border-strong", "--color-text", "--color-text-secondary", "--color-text-muted", "--color-accent", "--color-accent-soft", "--border-w", "--border-w-strong", "--radius", "--radius-sm", "--radius-lg", "--shadow", "--shadow-focus", "--z-dropdown", "--z-modal", "--duration-dropdown", "--duration-exit", "--ease-out"]
-    showcase: null
+    showcase: "components.html#dropdown"
     examples:
-      - "витрина: секция «Dropdown» есть (между секциями #pagination и #tree), но у неё нет id — прямой ссылки на компонент не существует"
+      - "витрина: components.html#dropdown"
       - "витрина: шапка страницы витрины использует то же меню (настройки / выход)"
       - "класс задач: меню строки в таблице («редактировать», «дублировать», «удалить»), поповер с набором фильтров над списком"
     status: stable
+    notes:
+      - "Роли внутри файла разведены явно. '.dropdown-menu' — меню действий: однородный список .dropdown-item, выбор пункта закрывает панель, ширина от содержимого. '.popover' — панель произвольного содержимого у триггера (колонки, поля, «Применить/Сбросить»), по клику внутрь не закрывается. '.filter-panel' — та же фильтрация, но панель встроена в поток страницы и видна постоянно."
 
   - name: empty-state
     file: styles/components/empty-state.css
@@ -858,7 +880,7 @@ components:
       - "класс задач: каталог с фасетными фильтрами, где комбинация условий часто даёт пустую выдачу"
     status: stable
     notes:
-      - "Расхождение витрины и стилей: демо и страница каталога используют .empty-state-icon, .empty-state-message и .empty-state-compact, а CSS описывает .empty-state-illustration, .empty-state-description и .empty-state-sm — размеры иллюстрации и отступы не применяются."
+      - "Имена элементов: иллюстрация — .empty-state-illustration (внутрь кладётся svg или img), текст — .empty-state-description, кнопки — .empty-state-action; компактный вид — .empty-state-sm."
 
   - name: file-upload
     file: styles/components/file-upload.css
@@ -907,7 +929,7 @@ components:
       - "класс задач: приложение документов к заявке или к карточке изделия, загрузка фотографий в отчёт"
     status: stable
     notes:
-      - "Расхождение витрины и стилей: в сетке превью демо использует .file-preview-overlay внутри .file-preview-card, а CSS раскрывает наложение только по наведению на .file-preview; для карточек предусмотрен .file-preview-card-remove."
+      - "Два разных превью: миниатюра в строке списка — .file-preview с наложением .file-preview-overlay (раскрывается по наведению), карточка сетки — .file-preview-card с .file-preview-card-remove и подписью .file-preview-card-info; смешивать их элементы нельзя."
 
   - name: filter-panel
     file: styles/components/filter-panel.css
@@ -931,6 +953,10 @@ components:
         component: combobox
       - case: набор переключаемых опций без обвязки панели (шапка, пресеты, сброс)
         component: chip (.chips / .chip-choice)
+      - case: та же фильтрация, но всплывающей панелью от кнопки
+        component: dropdown (.popover)
+      - case: пара полей «от — до» внутри группы фильтров
+        component: inputs (.input-range)
     anatomy:
       block: .filter-panel
       elements: [__header, __title, __stats, __quick, __quick-label, __body, __footer, __reset-all]
@@ -949,11 +975,15 @@ components:
         - Вешать и снимать класс .has-active на .filter-group — от него зависит показ кнопки сброса группы.
         - Реализовать сами пресеты, сброс группы и сброс всех фильтров, а также фильтрацию выдачи.
     tokens: ["--color-surface", "--color-surface-sunken", "--color-border", "--color-border-subtle", "--color-accent", "--color-accent-active", "--color-accent-soft", "--color-accent-border", "--color-accent-text", "--color-text-muted", "--color-error", "--border-w", "--border-w-strong", "--radius-lg", "--radius-sm", "--radius-full", "--shadow-sm", "--shadow-focus", "--space-1", "--space-2", "--space-3", "--space-4", "--space-5", "--fs-xs", "--fs-sm", "--fw-medium", "--fw-semi", "--tracking-wide", "--duration-press", "--ease-out"]
-    showcase: null
+    showcase: "components.html#filter-panel"
     examples:
+      - "витрина: components.html#filter-panel — статичный образец панели (фильтрацию даёт страница)"
       - "Каталог товаров/изделий с фасетными фильтрами — живой пример в репозитории: pages/catalog.html"
       - Список записей с большим числом параметров отбора (реестр, архив, база документов)
     status: stable
+    notes:
+      - "Собственного диапазона у панели нет: прежний дубль .filter-range/.filter-range__dash удалён, в группе используется .input-range из inputs."
+      - "Панель — композиция: чипы-опции берутся из chip (.chips / .chip-choice, счётчик .chip-choice__count описан здесь), поля — из inputs (.input, .select, .input-range)."
 
   - name: filter-pills
     file: styles/components/filter-pills.css
@@ -1016,24 +1046,27 @@ components:
         component: alerts
     anatomy:
       block: .footer
-      elements: [footer-left, footer-center, footer-right, footer-nav, footer-link, footer-copyright, footer-social, footer-social-link, footer-status, footer-status-dot, footer-version, footer-row, footer-columns, footer-column-title, footer-column-links]
+      elements: [footer-left, footer-center, footer-right, footer-nav, footer-link, footer-copyright, footer-social, footer-social-link, footer-status, footer-version, footer-row, footer-columns, footer-column-title, footer-column-links]
       modifiers: [footer-sticky, footer-compact, footer-centered, footer-multi]
-      states: ["footer-status-dot.warning", "footer-status-dot.error"]
+      states: []
     behavior_contract:
       keyboard:
         - Все ссылки — нативные a, порядок Tab совпадает с визуальным; на узком экране цель ссылки не ниже 44px (задано в медиазапросе).
         - Иконки соцсетей — ссылки с текстовой альтернативой, не пустые квадраты.
       aria:
         - Блок оформляется тегом footer (либо role="contentinfo"), навигационная группа — nav с aria-label.
-        - Точка статуса декоративна: состояние обязано дублироваться текстом рядом, цвет — не единственный носитель.
+        - "Точка статуса внутри .footer-status — общий примитив .badge-dot (badge.css) с семантическим модификатором; она декоративна, состояние обязано дублироваться текстом рядом."
       js_required:
         - Ничего; статичный компонент. Подстановка версии и переключение статуса — на стороне приложения.
     tokens: ["--color-surface", "--color-surface-sunken", "--color-border", "--color-border-subtle", "--color-text", "--color-text-muted", "--color-accent", "--color-text-on-accent", "--color-success", "--color-warning", "--color-error", "--border-w", "--radius-full", "--z-sticky", "--space-1", "--space-2", "--space-3", "--space-4", "--space-5", "--space-6", "--fs-xs", "--fs-sm", "--fw-semi", "--t-fast", "--ease"]
-    showcase: null
+    showcase: "components.html#footer"
     examples:
+      - "витрина: components.html#footer — полоса статуса, колонки ссылок, компактный вид"
       - "Элементы подвала (копирайт, версия, статус, nav) переиспользуются внутри служебной полосы сайта — видно в components.html и на всех pages/*"
       - Многоколоночный подвал сайта-витрины или портала
     status: legacy
+    notes:
+      - "2026-07-30: собственная точка .footer-status-dot удалена — в разметке .badge-dot с семантическим модификатором."
 
   - name: form-error-summary
     file: styles/components/form-error-summary.css
@@ -1120,7 +1153,7 @@ components:
     tokens: ["--color-surface", "--color-accent", "--color-accent-soft", "--color-accent-text", "--color-error", "--color-warning", "--color-text-secondary", "--color-text-muted", "--color-text-on-accent", "--color-border", "--border-w", "--border-w-thick", "--border-w-strong", "--radius", "--radius-full", "--shadow-sm", "--space-px", "--space-1", "--space-2", "--space-3", "--space-4", "--space-5", "--space-6", "--fs-xs", "--fs-sm", "--fs-md", "--fw-medium", "--fw-semi", "--fw-bold", "--lh-snug", "--tracking-tight", "--tracking-wide", "--duration-press", "--duration-dropdown", "--ease-out"]
     showcase: "components.html#form-section"
     examples:
-      - "Витрина: components.html#form-section"
+      - "витрина: components.html#form-section — легенда, подсказка и сетка полей; соседи по форме вынесены в собственные секции (#row-card, #rte, #save-status)"
       - "Страница-пример многошаговой формы: pages/form.html"
       - Длинная техническая форма-опросник с разделами, единицами измерения и зависимыми полями
     status: stable
@@ -1172,13 +1205,16 @@ components:
       - "Витрина базовых контролов: components.html#inputs"
       - "Витрина состояний валидации, суффиксов, диапазона и счётчика: components.html#input-states"
       - "Форма-пример: pages/form.html"
+      - "Диапазон .input-range — в группе фильтров каталога: components.html#filter-panel, pages/catalog.html"
     status: stable
+    notes:
+      - "Единственный владелец имён .search-bar (поле + примыкающая кнопка) и .input-range (пара «от — до»). Полоса поиска в шапке — композиция .header .search-bar в components/layout.css; прежний дубль .filter-range из filter-panel.css удалён."
 
   - name: layout
     file: styles/components/layout.css
-    summary: Каркас экрана приложения — липкая шапка (в том числе акцентная app-bar), боковые панели, основная область, оверлей и контейнеры ширины.
+    summary: Липкая шапка экрана приложения (в том числе акцентная app-bar), основная область, оверлей и контейнеры ширины.
     use_when:
-      - "Строится экран приложения: шапка сверху, одна-две выезжающие боковые панели, контент между ними."
+      - "Строится экран приложения: шапка сверху с логотипом, поиском и группами действий."
       - Нужна акцентная брендовая полоса приложения с заголовком, подзаголовком, логотипом и группами действий (вариант --accent).
       - Полосу нужно уплотнять при прокрутке (--condensed) и печатать как шапку бланка.
       - Требуется центрирующий контейнер фиксированной максимальной ширины.
@@ -1191,35 +1227,38 @@ components:
         component: layout/page-shell.css
       - case: служебная шапка и подвал сайта
         component: layout/site-header.css, layout/site-footer.css
-      - case: полноценная колонка приложения с ресайзом
-        component: app-layout (.app-layout / .app-sidebar)
-      - case: наполнение боковой панели (навигация, виджеты, профиль)
+      - case: сетка «панель + контент», сдвиг центра, фиксированный подвал
+        component: app-layout
+      - case: сама боковая панель — каркас, шторка, ресайз, наполнение
         component: sidebar
       - case: временная панель поверх контента
         component: drawer
+      - case: поле поиска само по себе (вне шапки)
+        component: inputs (.search-bar)
     anatomy:
       block: .header
-      elements: [header-left, header-right, "header__titles", "header__title", "header__sub", "header__logo", "header__group", logo, logo-accent, sidebar, sidebar-header, sidebar-title, sidebar-body, main, overlay, container]
-      modifiers: ["header--accent", "header--condensed", sidebar-left, sidebar-right, "main.with-sidebar-left", "main.with-sidebar-right", container-sm, container-lg]
-      states: [collapsed, open, active]
+      elements: [header-left, header-right, "header__titles", "header__title", "header__sub", "header__logo", "header__group", logo, logo-accent, main, overlay, container]
+      modifiers: ["header--accent", "header--condensed", container-sm, container-lg]
+      states: [active]
     behavior_contract:
       keyboard:
-        - Панель в закрытом состоянии уезжает трансформом и остаётся в Tab-порядке — при использовании как модальной шторки её содержимое обязано скрываться атрибутом или inert силами приложения.
         - Все действия в шапке — нативные кнопки/ссылки с видимым фокусом.
       aria:
-        - Шапка размечается тегом header, основная область — main, боковая — aside/nav с меткой.
-        - Кнопка сворачивания панели держит aria-expanded и aria-controls.
+        - Шапка размечается тегом header, основная область — main.
         - Оверлей декоративен и не должен перехватывать фокус в закрытом состоянии.
       js_required:
-        - Переключать классы .open / .collapsed на панелях и .active на оверлее.
         - Вешать .header--condensed при прокрутке с гистерезисом порога (иначе класс дребезжит на границе).
-    tokens: ["--header-h", "--sidebar-w", "--sidebar-width", "--max-content-w", "--color-surface", "--color-border", "--color-text", "--color-accent", "--color-text-on-accent", "--color-on-accent-border", "--color-overlay", "--brand-logo", "--brand-logo-mono", "--font-display", "--border-w", "--border-w-strong", "--shadow-lg", "--z-sticky", "--z-drawer", "--space-px", "--space-1", "--space-2", "--space-3", "--space-4", "--space-6", "--fs-xs", "--fs-base", "--fs-md", "--fs-lg", "--fs-xl", "--fw-semi", "--fw-bold", "--lh-tight", "--lh-snug", "--tracking-tight", "--t", "--t-slow", "--ease"]
+        - "Для ширины поля поиска в шапке без :has() — классы sidebar-none-open / sidebar-one-open / sidebar-both-open на .search-bar."
+    tokens: ["--header-h", "--sidebar-width", "--max-content-w", "--color-surface", "--color-border", "--color-text", "--color-accent", "--color-text-on-accent", "--color-on-accent-border", "--color-overlay", "--brand-logo", "--brand-logo-mono", "--font-display", "--border-w", "--border-w-strong", "--z-sticky", "--z-drawer", "--space-px", "--space-1", "--space-2", "--space-3", "--space-4", "--space-6", "--fs-xs", "--fs-base", "--fs-md", "--fs-lg", "--fs-xl", "--fw-semi", "--fw-bold", "--lh-tight", "--lh-snug", "--tracking-tight", "--duration-modal", "--ease-drawer", "--t", "--ease"]
     showcase: "components.html#app-bar"
     examples:
       - "Витрина акцентной полосы приложения и её уплотнённого варианта: components.html#app-bar"
       - Внутреннее приложение с боковой навигацией и рабочей областью
       - Печатная шапка бланка (полоса теряет заливку в @media print)
     status: stable
+    notes:
+      - "Боковой панели этот файл больше не содержит: дубль каркаса .sidebar/.sidebar-left/.sidebar-right и пара .main.with-sidebar-* удалены, единственная реализация — компонент sidebar."
+      - "Полоса поиска в шапке — композиция .header .search-bar; сам блок .search-bar принадлежит inputs."
 
   - name: logs
     file: styles/components/logs.css
@@ -1231,7 +1270,7 @@ components:
     avoid_when:
       - Данные табличные и требуют сортировки по колонкам и выравнивания по столбцам.
       - События образуют хронологию вех, а не поток строк.
-      - Нужно единичное сообщение пользователю о состоянии — плашка .alert-box здесь дублирует основной компонент оповещений.
+      - Нужно единичное сообщение пользователю о состоянии — у журнала своей плашки нет, это компонент alerts.
     instead_use:
       - case: табличные данные с сортировкой и колонками
         component: table
@@ -1243,7 +1282,7 @@ components:
         component: code-panel
     anatomy:
       block: .log-entry
-      elements: [log-entry-toggle, log-entry-icon, log-entry-timestamp, log-entry-level, log-entry-message, log-entry-details, log-entry-grid, log-entry-label, log-entry-value, log-badge, log-controls, log-controls-group, log-controls-label, log-controls-select, view-mode-toggle, view-mode-btn, log-refresh-btn, log-json-view, log-empty, alert-box, alert-box-content, alert-box-close]
+      elements: [log-entry-toggle, log-entry-icon, log-entry-timestamp, log-entry-level, log-entry-message, log-entry-details, log-entry-grid, log-entry-label, log-entry-value, log-badge, log-controls, log-controls-group, log-controls-label, log-controls-select, view-mode-toggle, view-mode-btn, log-refresh-btn, log-json-view, log-empty]
       modifiers: [info, warning, error, debug, success]
       states: [active, spinning, ":disabled"]
     behavior_contract:
@@ -1264,12 +1303,14 @@ components:
     examples:
       - "Витрина с переключателем «текст/JSON»: components.html#logs"
       - "Панель мониторинга с потоком событий: pages/dashboard.html"
-      - "Плашка .alert-box применяется на странице входа: pages/login.html"
+      - "Плашка сообщения к журналу не относится: на странице входа (pages/login.html) применяется общий компонент alerts"
     status: stable
+    notes:
+      - "2026-07-30: вторая реализация плашки info/warning/error/success (.alert-box) удалена отсюда и сведена в alerts.css."
 
   - name: modal
     file: styles/components/modal.css
-    summary: Модальное окно поверх затемнённого фона — шапка, тело с прокруткой, подвал действий; варианты размеров, шторки и нижнего листа.
+    summary: Модальное окно по центру затемнённого фона — шапка, тело с прокруткой, подвал действий; варианты размеров и полноэкранный режим.
     use_when:
       - Действие требует подтверждения или ввода и не должно продолжаться до ответа пользователя.
       - Содержимое короткое и самодостаточное, а возврат в контекст обязателен сразу после ответа.
@@ -1280,7 +1321,7 @@ components:
       - Содержимое — длинная форма или таблица, для которой нужна отдельная страница.
       - Пользователю нужен быстрый поиск команд по всему приложению.
     instead_use:
-      - case: дополняющая панель сбоку, не блокирующая работу
+      - case: панель от кромки экрана (сбоку или нижний лист)
         component: drawer
       - case: сообщение без ответа, исчезающее само
         component: toast
@@ -1290,8 +1331,8 @@ components:
         component: accordion
     anatomy:
       block: .modal
-      elements: [modal-overlay, modal-header, modal-title, modal-close, modal-body, modal-footer, modal-icon, modal-bottom-sheet-handle]
-      modifiers: [modal-sm, modal-md, modal-lg, modal-xl, modal-fullscreen, modal-fullscreen-mobile, modal-no-header, modal-no-footer, modal-centered, modal-drawer, "modal-drawer-left", "modal-drawer-right", modal-bottom-sheet, modal-footer-left, modal-footer-center, modal-footer-between]
+      elements: [modal-overlay, modal-header, modal-title, modal-close, modal-body, modal-footer, modal-icon]
+      modifiers: [modal-sm, modal-md, modal-lg, modal-xl, modal-fullscreen, modal-fullscreen-mobile, modal-no-header, modal-no-footer, modal-centered, modal-footer-left, modal-footer-center, modal-footer-between]
       states: [modal-enter, modal-exit, modal-slide-up, modal-slide-down]
     behavior_contract:
       keyboard:
@@ -1312,17 +1353,20 @@ components:
       - "Витрина (статичный пример без скрипта): components.html#modal"
       - "Панель мониторинга — окно подтверждения действия: pages/dashboard.html"
     status: stable
+    notes:
+      - "Шторок здесь больше нет: .modal-drawer / .modal-drawer-left / .modal-drawer-right / .modal-bottom-sheet удалены — боковая панель и нижний лист живут в компоненте drawer (.drawer--left / .drawer--sheet)."
+      - "На ширине ≤767px окно по-прежнему прижимается к низу экрана — это адаптация модалки, а не отдельный вариант."
 
   - name: nav
     file: styles/components/nav.css
-    summary: Горизонтальная навигационная полоса сайта с мобильным раскрытием, плюс липкое оглавление страницы и устаревшая разметка хлебных крошек.
+    summary: Горизонтальная навигационная полоса сайта с мобильным раскрытием и липкое оглавление длинной страницы.
     use_when:
       - Публичной странице нужна фиксированная верхняя полоса с логотипом, разделами и CTA-ссылкой.
       - Меню должно схлопываться в бургер на узком экране без отдельного компонента шторки.
       - Длинной странице нужно липкое оглавление сбоку с подсветкой текущего раздела (.page-nav).
     avoid_when:
       - Это интерфейс приложения с боковой панелью — там своя шапка и свой каркас.
-      - "Нужны хлебные крошки: блок .breadcrumb в этом файле дублирует отдельный компонент и создаёт двойной разделитель."
+      - "Нужны хлебные крошки: этот компонент их не содержит."
       - Переключаются представления внутри одной страницы, а не разделы сайта.
       - Показывается прогресс прохождения многошагового сценария.
     instead_use:
@@ -1338,9 +1382,9 @@ components:
         component: sidebar
     anatomy:
       block: .nav
-      elements: [nav-container, nav-logo, nav-menu, nav-link, nav-toggle, page-nav, page-nav-link, breadcrumb, breadcrumb-item, breadcrumb-link, breadcrumb-current]
+      elements: [nav-container, nav-logo, nav-menu, nav-link, nav-toggle, page-nav, page-nav-link]
       modifiers: [nav-link-primary]
-      states: [active, open]
+      states: [is-open, active]
     behavior_contract:
       keyboard:
         - Бургер — нативная кнопка, Enter/Space раскрывают меню; ссылки меню достижимы Tab только когда меню открыто.
@@ -1350,21 +1394,21 @@ components:
         - Бургер держит aria-expanded и aria-controls на .nav-menu.
         - Липкое оглавление — тоже nav с меткой; активная ссылка помечается aria-current="location".
       js_required:
-        - Переключать .open на .nav-menu и aria-expanded на бургере.
+        - Переключать .is-open на .nav-menu и aria-expanded на бургере (легаси-двойник .open ставится тем же обработчиком до снятия последнего потребителя).
         - Проставлять .active по текущему разделу и, для .page-nav, по позиции прокрутки.
     tokens: ["--color-surface", "--color-surface-hover", "--color-border", "--color-text", "--color-text-secondary", "--color-text-muted", "--color-text-disabled", "--color-accent", "--color-accent-soft", "--color-accent-hover", "--color-text-on-accent", "--max-content-w", "--header-h", "--border-w", "--border-w-strong", "--radius", "--radius-sm", "--shadow", "--shadow-focus", "--z-sticky", "--space-1", "--space-2", "--space-3", "--space-4", "--space-5", "--fs-sm", "--fs-md", "--fw-regular", "--fw-medium", "--fw-semi", "--tracking-tight", "--duration-press", "--ease-out"]
-    showcase: null
+    showcase: "components.html#nav"
     examples:
+      - "витрина: components.html#nav — полоса с бургером и липкое оглавление .page-nav"
       - Публичный сайт или лендинг с верхней навигационной полосой
       - "Длинная страница с липким оглавлением разделов (.page-nav)"
-      - "Хлебные крошки на демо-страницах (pages/catalog.html, pages/datasheet.html) собраны на отдельном компоненте breadcrumbs, а не на .breadcrumb из этого файла"
     status: legacy
 
   - name: notification-badge
     file: styles/components/notification-badge.css
-    summary: Индикатор уведомлений на иконке (точка или счётчик) вместе с выпадающей панелью списка уведомлений.
+    summary: "Обвязка индикатора уведомлений на иконке: якорь для бейджа, четыре угла размещения, пульсация «есть новое» — плюс выпадающая панель списка уведомлений. Сам индикатор — бейдж из badge.css."
     use_when:
-      - На иконке в шапке нужно показать число непрочитанного или сам факт наличия нового.
+      - На иконке в шапке нужно показать число непрочитанного или сам факт наличия нового ("badge"/"badge-dot" плюс "badge-float" внутри контейнера).
       - Нужен выпадающий список уведомлений с заголовком, прокруткой, отметкой прочитанного и ссылкой «показать все».
       - Элементы списка должны различаться по типу (успех/предупреждение/ошибка/инфо) и иметь состояние «непрочитано».
       - На мобильном список должен разворачиваться нижним листом — это заложено в компонент.
@@ -1383,8 +1427,8 @@ components:
         component: user-menu
     anatomy:
       block: .notification-badge
-      elements: [notification-badge-trigger, notification-dot, notification-count, notification-panel, notification-panel-header, notification-panel-title, notification-panel-count, notification-list, notification-item, "notification-item-icon", "notification-item-content", "notification-item-title", "notification-item-message", "notification-item-time", "notification-item-actions", "notification-item-action", notification-panel-footer, notification-mark-read, notification-view-all, notification-empty]
-      modifiers: [notification-dot-sm, notification-dot-lg, notification-count-sm, notification-count-lg, "notification-badge-top-left", "notification-badge-bottom-right", "notification-badge-bottom-left", notification-panel-left, notification-badge-inline, "notification-*-primary", "notification-*-success", "notification-*-warning", "notification-*-error", "notification-*-info", "notification-*-pulse"]
+      elements: [notification-badge-trigger, notification-panel, notification-panel-header, notification-panel-title, notification-panel-count, notification-list, notification-item, "notification-item-icon", "notification-item-content", "notification-item-title", "notification-item-message", "notification-item-time", "notification-item-actions", "notification-item-action", notification-panel-footer, notification-mark-read, notification-view-all, notification-empty]
+      modifiers: ["notification-badge-top-left", "notification-badge-bottom-right", "notification-badge-bottom-left", notification-badge-pulse, notification-panel-left, notification-badge-inline]
       states: [open, "notification-item-unread"]
     behavior_contract:
       keyboard:
@@ -1397,12 +1441,14 @@ components:
       js_required:
         - Переключать класс .open на контейнере и aria-expanded на триггере, закрывать по клику вне и Escape.
         - Обновлять счётчики, состояние .notification-item-unread и «отметить всё прочитанным».
-    tokens: ["--notification-badge-size", "--notification-badge-size-sm", "--notification-badge-size-lg", "--notification-dot-size", "--notification-panel-width", "--notification-item-padding", "--color-surface", "--color-surface-hover", "--color-surface-active", "--color-border", "--color-border-subtle", "--color-text", "--color-text-muted", "--color-accent", "--color-accent-soft", "--color-accent-soft-hover", "--color-error", "--color-error-soft", "--color-success", "--color-success-soft", "--color-warning", "--color-warning-soft", "--color-info", "--color-info-soft", "--font-sans", "--border-w", "--border-w-strong", "--radius", "--radius-lg", "--radius-xs", "--radius-full", "--shadow-lg", "--shadow-focus", "--z-dropdown", "--space-1", "--space-2", "--space-3", "--space-4", "--space-6", "--space-12", "--fs-xs", "--fs-sm", "--fs-md", "--fs-lg", "--fw-medium", "--fw-semi", "--lh-snug", "--lh-normal", "--t-fast", "--ease", "--ease-out"]
+    tokens: ["--notification-panel-width", "--notification-item-padding", "--duration-pulse", "--color-surface", "--color-surface-hover", "--color-surface-active", "--color-border", "--color-border-subtle", "--color-text", "--color-text-muted", "--color-accent", "--color-accent-soft", "--color-accent-soft-hover", "--color-error", "--color-error-soft", "--color-success", "--color-success-soft", "--color-warning", "--color-warning-soft", "--color-info", "--color-info-soft", "--font-sans", "--border-w", "--border-w-strong", "--radius", "--radius-lg", "--radius-xs", "--radius-full", "--shadow-lg", "--shadow-focus", "--z-dropdown", "--space-1", "--space-2", "--space-3", "--space-4", "--space-6", "--space-12", "--fs-xs", "--fs-sm", "--fs-md", "--fs-lg", "--fw-medium", "--fw-semi", "--lh-snug", "--lh-normal", "--t-fast", "--ease", "--ease-out"]
     showcase: "components.html#notification"
     examples:
       - "Витрина индикаторов и панели: components.html#notification"
       - Иконка колокольчика в шапке портала со списком событий
     status: stable
+    notes:
+      - "2026-07-30: собственные .notification-dot/.notification-count удалены как дубль бейджа. Соответствие имён: .notification-dot → .badge-dot + .badge-float, .notification-count → .badge + .badge-float, цвет — .badge-dot-*/.badge-*, пульсация — .notification-badge-pulse (одна анимация вместо пяти keyframes на дотокенной палитре)."
 
   - name: pagination
     file: styles/components/pagination.css
@@ -1493,6 +1539,8 @@ components:
       - "Витрина: базовый список, вариант с чипами-опциями, группы, многоколоночная панель, переключатель размещения — components.html#picklist"
       - Анкетные поля технической формы, где у параметра допустимо несколько значений из справочника
     status: stable
+    notes:
+      - "'__panel--sheet' — не шторка из компонента drawer, а мобильная раскладка панели самого контрола: у неё нет оверлея, ловушки фокуса и закрытия по Escape как у модальной поверхности. Для модального листа действий берётся '.drawer--sheet'."
 
   - name: presence-strip
     file: styles/components/presence-strip.css
@@ -1530,9 +1578,9 @@ components:
         - Переключать .is-open и aria-expanded, закрывать по клику вне и по Escape с возвратом фокуса.
         - Наполнять список данными присутствия и поддерживать счётчик «+N».
     tokens: ["--color-surface", "--color-surface-hover", "--color-surface-active", "--color-border", "--color-text", "--color-text-muted", "--color-accent", "--color-success", "--color-warning", "--border-w", "--border-w-strong", "--radius", "--radius-sm", "--radius-full", "--shadow-focus", "--shadow-lg", "--transform-origin", "--z-dropdown", "--space-px", "--space-1", "--space-2", "--space-3", "--fs-xs", "--fs-sm", "--fw-medium", "--fw-semi", "--tracking-wide", "--duration-press", "--duration-dropdown", "--duration-exit", "--ease-out"]
-    showcase: null
+    showcase: "components.html#presence-strip"
     examples:
-      - "Живой экземпляр в шапке витрины компонентов (components.html, элемент #header-presence) — отдельной демо-секции нет"
+      - "витрина: components.html#presence-strip — раскрывающийся список; второй живой экземпляр стоит в шапке витрины (#header-presence)"
       - Корпоративный портал, показывающий коллег онлайн и раздел, в котором они находятся
     status: stable
 
@@ -1577,6 +1625,7 @@ components:
     examples:
       - "Витрина всех вариантов: components.html#progress"
       - Загрузка файла, выполнение фоновой задачи, заполненность квоты
+      - "мини-полоса внутри карточки метрики: .stat-progress > .progress.progress-xs (stats собственной полосы не имеет)"
     status: stable
 
   - name: quiz
@@ -1661,9 +1710,9 @@ components:
         - Перенумеровывать строки после каждого добавления/удаления.
         - Обновлять имена и id полей внутри клонированной строки.
     tokens: ["--color-surface-sunken", "--color-border", "--color-accent", "--color-accent-soft", "--color-accent-soft-hover", "--color-accent-border", "--color-error", "--color-error-soft", "--color-error-soft-hover", "--border-w", "--radius-sm", "--radius-xs", "--space-1", "--space-2", "--space-3", "--fs-xs", "--fs-sm", "--fw-semi", "--duration-press", "--duration-dropdown", "--duration-exit", "--ease-out"]
-    showcase: "components.html#form-section"
+    showcase: "components.html#row-card"
     examples:
-      - "Витрина: блок повторяемых строк внутри раздела формы — components.html#form-section"
+      - "витрина: components.html#row-card — строка массива «аналоги» с добавлением и удалением"
       - "Сравнение с табличной формой массива: components.html#table-form"
       - Форма с перечнем аналогов, применений или вложений переменной длины
     status: stable
@@ -1704,9 +1753,9 @@ components:
         - Ставить data-empty на области при вводе — селектор :empty оставлен лишь фолбэком и ложно срабатывает после Enter+Backspace.
         - Гасить mousedown на кнопках, чтобы не терять выделение.
     tokens: ["--color-surface", "--color-border", "--color-text-secondary", "--color-text-disabled", "--color-accent", "--color-accent-soft", "--color-accent-border", "--border-w", "--border-w-strong", "--radius-xs", "--radius-sm", "--shadow-focus", "--space-px", "--space-1", "--space-2", "--space-3", "--fs-sm", "--fs-base", "--fw-bold", "--lh-relaxed", "--duration-press", "--ease-out"]
-    showcase: "components.html#form-section"
+    showcase: "components.html#rte"
     examples:
-      - "Витрина: редактор примечаний внутри раздела формы — components.html#form-section"
+      - "витрина: components.html#rte — панель форматирования и редактируемая область"
       - Поле «примечание» или «особые требования» в технической форме
     status: stable
 
@@ -1742,9 +1791,9 @@ components:
       js_required:
         - Переключать модификаторы --saved / --dirty и обновлять текст с отметкой времени.
     tokens: ["--color-success-text", "--color-success-soft", "--color-warning-text", "--color-warning-soft", "--color-warning", "--color-text-muted", "--radius-full", "--space-1", "--space-3", "--fs-xs", "--fs-sm", "--fw-medium"]
-    showcase: "components.html#form-section"
+    showcase: "components.html#save-status"
     examples:
-      - "Витрина: строка статуса над разделом формы — components.html#form-section"
+      - "витрина: components.html#save-status — состояния «сохранено» и «есть несохранённое»"
       - "Страница-пример формы с автосохранением: pages/form.html"
     status: stable
 
@@ -1787,8 +1836,9 @@ components:
         - Проставлять data-source, вставлять подсветку совпадений и снимать модификатор --skeleton по приходу данных.
         - Управлять --selected при мастер-детальной раскладке.
     tokens: ["--color-surface", "--color-surface-sunken", "--color-border", "--color-border-strong", "--color-border-subtle", "--color-text", "--color-text-secondary", "--color-text-muted", "--color-text-disabled", "--color-accent", "--color-accent-soft", "--color-accent-border", "--color-highlight", "--color-highlight-text", "--color-source-wiki", "--color-source-wiki-soft", "--color-source-wiki-text", "--color-source-forum", "--color-source-forum-soft", "--color-source-forum-text", "--color-source-catalog", "--color-source-catalog-soft", "--color-source-catalog-text", "--font-mono", "--border-w", "--border-w-thick", "--border-w-strong", "--radius", "--radius-sm", "--radius-xs", "--radius-full", "--shadow-sm", "--shadow-focus", "--space-1", "--space-2", "--space-3", "--space-4", "--space-5", "--fs-xs", "--fs-sm", "--fs-md", "--fw-medium", "--fw-semi", "--lh-snug", "--lh-normal", "--tracking-tight", "--tracking-wide", "--t", "--t-fast", "--ease", "--ease-in-out"]
-    showcase: null
+    showcase: "components.html#search-result-card"
     examples:
+      - "витрина: components.html#search-result-card — выдача по трём источникам, --selected, --skeleton и компактный вариант"
       - Выдача полнотекстового поиска по нескольким источникам (вики, форум, каталог) с подсветкой совпадений
       - "Мастер-деталь: список найденного слева, документ справа (варианты --compact и --selected)"
     status: stable
@@ -1846,11 +1896,11 @@ components:
 
   - name: sidebar
     file: styles/components/sidebar.css
-    summary: 'Боковая панель приложения: навигация, виджеты, мини-статистика и лента активности; на мобильном превращается в выезжающую шторку с затемнением.'
+    summary: 'Боковая панель приложения: фиксированная колонка, мобильная шторка с подложкой, ручка ресайза и наполнение — навигация, виджеты, карточка пользователя, теги, лента активности.'
     use_when:
       - у страницы есть постоянная левая или правая колонка с разделами и счётчиками
       - в колонке нужны не только ссылки, но и виджеты — карточка пользователя, быстрые метрики, теги, активность
-      - панель должна тянуться мышью за край (.resizable + .sidebar-resize-handle) с запоминанием ширины
+      - панель должна тянуться мышью за край (.sidebar--resizable + .sidebar-resize-handle) с запоминанием ширины
       - на узком экране та же панель обязана уезжать за кромку и возвращаться по кнопке
     avoid_when:
       - панель нужна разово, поверх контента, с фокус-ловушкой и закрытием по Escape
@@ -1860,17 +1910,19 @@ components:
     instead_use:
       - case: временная панель поверх контента с модальным поведением
         component: drawer
-      - case: только сетка приложения и позиционирование колонок
+      - case: только сетка приложения, сдвиг центра и фиксированный подвал
         component: app-layout
       - case: горизонтальное меню страницы
         component: nav
       - case: панель фильтров каталога
         component: filter-panel
+      - case: быстрые метрики внутри панели
+        component: stats
     anatomy:
       block: .sidebar
-      elements: [sidebar-header, sidebar-title, sidebar-subtitle, sidebar-close, sidebar-body, sidebar-footer, sidebar-nav, sidebar-nav-item, sidebar-nav-link, sidebar-nav-badge, sidebar-section, sidebar-section-title, sidebar-widget, sidebar-user, sidebar-stats, sidebar-stat, sidebar-tags, sidebar-tag, sidebar-activity, sidebar-overlay, sidebar-resize-handle]
-      modifiers: [left, right, resizable]
-      states: [open, active, resizing, sidebar-enter, sidebar-enter-active, sidebar-exit, sidebar-exit-active]
+      elements: [sidebar-header, sidebar-title, sidebar-subtitle, sidebar-close, sidebar-body, sidebar-footer, sidebar-nav, sidebar-nav-item, sidebar-nav-link, sidebar-nav-badge, sidebar-section, sidebar-section-title, sidebar-widget, sidebar-widget-title, sidebar-widget-content, sidebar-user, sidebar-user-avatar, sidebar-user-info, sidebar-tags, sidebar-tag, sidebar-activity, sidebar-overlay, sidebar-resize-handle]
+      modifiers: ["--left", "--right", "--resizable"]
+      states: [is-open, is-resizing, "is-visible (на .sidebar-overlay)", active]
     behavior_contract:
       keyboard:
         - .sidebar-close достижима с Tab и имеет цель ≥44px на мобильном
@@ -1882,17 +1934,21 @@ components:
         - '.sidebar-close: aria-label; кнопка-триггер снаружи — aria-expanded + aria-controls'
         - .sidebar-overlay скрыт от AT (aria-hidden) — это подложка, а не элемент
       js_required:
-        - переключать .open на .sidebar и .active/.visible на .sidebar-overlay
-        - при .resizable — перетаскивание .sidebar-resize-handle, класс .resizing на время drag и сохранение ширины
+        - переключать is-open на .sidebar и is-visible на .sidebar-overlay
+        - при .sidebar--resizable — перетаскивание .sidebar-resize-handle, класс is-resizing на время drag и сохранение ширины
+        - "ширину при ресайзе писать и в --sidebar-w-left/--sidebar-w-right, иначе отступ центра отстанет от панели"
         - закрытие по клику в подложку и по Escape на ширине <768px
-        - синхронизировать aria-expanded триггера с классом .open
-    tokens: ["--space-1", "--space-2", "--space-3", "--space-4", "--space-5", "--border-w", "--color-border", "--color-border-subtle", "--color-border-strong", "--color-surface", "--color-surface-hover", "--color-surface-sunken", "--color-text", "--color-text-secondary", "--color-text-muted", "--color-text-on-accent", "--color-accent", "--color-accent-soft", "--color-overlay", "--radius-sm", "--radius-full", "--fs-xs", "--fs-sm", "--fs-md", "--fs-xl", "--fw-medium", "--fw-semi", "--fw-bold", "--lh-snug", "--tracking-wide", "--shadow-lg", "--sidebar-w", "--z-drawer", "--z-raised", "--t-fast", "--t-slow", "--ease"]
-    showcase: null
+        - синхронизировать aria-expanded триггера с классом is-open
+    tokens: ["--space-px", "--space-1", "--space-2", "--space-3", "--space-4", "--space-5", "--space-8", "--space-10", "--space-16", "--border-w", "--border-w-strong", "--color-border", "--color-border-subtle", "--color-border-strong", "--color-surface", "--color-surface-hover", "--color-surface-sunken", "--color-text", "--color-text-secondary", "--color-text-muted", "--color-text-on-accent", "--color-accent", "--color-accent-soft", "--color-overlay", "--radius-sm", "--radius-full", "--fs-xs", "--fs-sm", "--fs-md", "--fw-medium", "--fw-semi", "--icon-size", "--lh-snug", "--tracking-wide", "--shadow-lg", "--shadow-focus", "--header-h", "--sidebar-w", "--sidebar-w-sm", "--sidebar-width", "--touch-target-min", "--z-drawer", "--z-raised", "--duration-press", "--duration-dropdown", "--duration-modal", "--duration-modal-exit", "--ease-out", "--ease-drawer"]
+    showcase: "components.html#sidebar"
     examples:
       - "навигация по разделам документации или справочника в левой колонке"
       - "правая инфо-колонка приложения с виджетами: карточка пользователя, быстрые метрики, лента активности"
-      - "в репозитории: components.html — витрина сама собрана на этой панели (#left-sidebar и #right-sidebar), отдельной секции-демонстрации нет; каркас при этом взят из app-layout (.app-sidebar), то есть на одной странице живут обе реализации"
+      - "витрина: components.html#sidebar — анатомия панели целиком; обе панели самой витрины (#left-sidebar, #right-sidebar) собраны на этом же компоненте"
     status: stable
+    notes:
+      - "Единственный владелец имени .sidebar: прежние параллельные каркасы .app-sidebar (app-layout.css) и .sidebar (layout.css) удалены."
+      - "Метрики в панели — компонент stats (.stat-card.stat-card-tile); собственных .sidebar-stat* больше нет."
 
   - name: skeleton
     file: styles/components/skeleton.css
@@ -1935,8 +1991,11 @@ components:
     examples:
       - "список результатов поиска, пока идёт запрос: заглушки повторяют форму будущих карточек"
       - "панель фильтров каталога до загрузки справочников"
-      - "в репозитории: components.html#skeleton — готовая раскладка «карточка результата» (.skeleton-card)"
+      - "в репозитории: components.html#skeleton — готовая раскладка «карточка результата» (.skeleton-card); заглушки ветви дерева — .tree-loading > .skeleton"
     status: new
+    notes:
+      - "Единственная реализация скелетона и единственный пульс библиотеки (@keyframes skeleton-pulse, --duration-pulse): дубль из spinner.css и собственный tree-skeleton в tree.css удалены."
+      - "Остаточные наборы вне компонента (autotrassir.css со своим .skeleton и одноимённым keyframes, base/animations.css с .skeleton-* и .skeleton-card) — в беклоге."
 
   - name: spec-sheet
     file: styles/components/spec-sheet.css
@@ -1952,8 +2011,8 @@ components:
       - нужна только геометрия бумаги без содержимого листа
       - параметры редактируются, а не читаются
     instead_use:
-      - case: массив однородных строк с сортировкой и hover
-        component: table
+      - case: массив однородных строк с сортировкой, скроллом и hover на экране
+        component: table (.table)
       - case: числовые метрики с трендом на дашборде
         component: stats
       - case: только «бумага» A4 (геометрия листа, колонтитулы, видимость экран/печать)
@@ -1984,6 +2043,8 @@ components:
       - "сводка параметров заказа в конце длинной формы (.spec-grid внутри карточки)"
       - "в репозитории: components.html#spec-sheet, pages/datasheet.html (экран), print-forms.html (печать), pages/dashboard.html и pages/form.html (.spec-grid в сводках)"
     status: new
+    notes:
+      - "Правило выбора между .spec-table и .table: внутри листа-паспорта берётся .spec-table — лист вендорится как самодостаточный документ (светлая палитра, печать) и не тянет table.css. Везде на экране, где нужны сортировка, липкая колонка, режим карточек на мобильном и редактируемые строки, берётся .table. Дублирование двух таблиц намеренное; в одном документе используется одна из них."
 
   - name: spinner
     file: styles/components/spinner.css
@@ -2020,14 +2081,15 @@ components:
       js_required:
         - показывать индикатор только на время реального ожидания и снимать по завершении в любом исходе, включая ошибку
         - блокировать повторную отправку, пока индикатор виден
-    tokens: ["--color-border", "--color-accent", "--color-accent-soft", "--color-accent-hover", "--color-success", "--color-success-soft", "--color-warning", "--color-warning-soft", "--color-error", "--color-error-soft", "--color-info", "--color-info-soft", "--color-surface-sunken", "--color-surface-hover", "--color-text-muted", "--surface-veil", "--radius-xs", "--radius-full", "--radius", "--space-1", "--space-2", "--space-3", "--space-8", "--fs-sm", "--z-raised", "--ease-in-out"]
+    tokens: ["--color-border", "--color-accent", "--color-accent-soft", "--color-accent-hover", "--color-success", "--color-success-soft", "--color-warning", "--color-warning-soft", "--color-error", "--color-error-soft", "--color-info", "--color-info-soft", "--color-text-muted", "--surface-veil", "--radius-full", "--space-1", "--space-2", "--space-3", "--space-8", "--fs-sm", "--z-raised", "--ease-in-out"]
     showcase: "components.html#spinner"
     examples:
       - "кнопка отправки формы на время запроса: индикатор внутри кнопки, повторное нажатие заблокировано"
       - "обновление уже отрисованной таблицы под полупрозрачной вуалью (.loading-overlay)"
       - "в репозитории: components.html#spinner, pages/login.html (.login-submit .spinner), pages/form.html (.fp-submit .spinner)"
-      - "внимание: хвост файла содержит устаревший блок .skeleton/.skeleton-text/.skeleton-avatar/.skeleton-image/.skeleton-button — его перекрывает components/skeleton.css, импортируемый позже по каскаду; для новых экранов брать skeleton"
     status: stable
+    notes:
+      - "Заглушек здесь нет: прежний мёртвый набор .skeleton/.skeleton-text/.skeleton-avatar/.skeleton-image/.skeleton-button (его целиком перекрывал components/skeleton.css) удалён — скелетон в библиотеке один."
 
   - name: stats
     file: styles/components/stats.css
@@ -2053,8 +2115,8 @@ components:
         component: progress
     anatomy:
       block: .stat-card
-      elements: [stat-value, stat-label, stat-trend, stat-icon, stat-content, stat-sparkline, stat-progress, stat-progress-bar, stat-progress-fill, stat-progress-label, stat-mini, stat-mini-value, stat-mini-label, stat-mini-dot, stats-grid]
-      modifiers: [stat-card-horizontal, stat-card-icon-right, stat-card-compact, stat-card-lg, stat-card-primary, stat-card-success, stat-card-warning, stat-card-error, stat-card-info, stats-grid-2, stats-grid-3, stats-grid-4]
+      elements: [stat-value, stat-label, stat-trend, stat-icon, stat-content, stat-sparkline, stat-progress, stat-progress-label, stat-mini, stat-mini-value, stat-mini-label, stat-mini-dot, stats-grid]
+      modifiers: [stat-card-horizontal, stat-card-icon-right, stat-card-compact, stat-card-tile, stat-card-lg, stat-card-primary, stat-card-success, stat-card-warning, stat-card-error, stat-card-info, stats-grid-2, stats-grid-3, stats-grid-4]
       states: [up, down, neutral, success, warning, error]
     behavior_contract:
       keyboard:
@@ -2064,16 +2126,18 @@ components:
         - '.stat-value и .stat-label связаны в одну доступную подпись (aria-labelledby или порядок чтения)'
         - при живом обновлении числа контейнер получает aria-live="polite"
       js_required:
-        - подставлять значение и класс тренда; ширину .stat-progress-fill задавать инлайн-стилем
+        - "подставлять значение и класс тренда; полоса внутри .stat-progress — компонент progress, ширину задаёт инлайн-стиль на .progress-bar"
         - при периодическом обновлении менять текст, не пересоздавая карточку (иначе AT читает её заново)
     tokens: ["--space-1", "--space-2", "--space-3", "--space-4", "--space-5", "--space-6", "--border-w", "--border-w-thick", "--color-border", "--color-border-strong", "--color-border-subtle", "--color-surface", "--color-surface-sunken", "--color-text", "--color-text-muted", "--color-accent", "--color-accent-soft", "--color-success", "--color-success-soft", "--color-warning", "--color-warning-soft", "--color-error", "--color-error-soft", "--color-info", "--color-info-soft", "--radius", "--radius-sm", "--radius-full", "--shadow-sm", "--fs-xs", "--fs-sm", "--fs-2xl", "--fs-3xl", "--fs-4xl", "--fw-semi", "--fw-bold", "--lh-tight", "--tracking-tight", "--t", "--t-slow", "--ease"]
     showcase: "components.html#stats"
     examples:
       - "шапка дашборда: 4 ключевых показателя за период с процентом изменения"
       - "сводка по разделу над таблицей: всего записей, успешных, с ошибкой, среднее время"
-      - "в репозитории: components.html#stats, pages/dashboard.html"
-      - "внимание: sidebar.css несёт упрощённый дубль (.sidebar-stat / .sidebar-stat-value) для боковой панели"
+      - "в репозитории: components.html#stats, pages/dashboard.html; плитка .stat-card-tile — в панели витрины и в components.html#sidebar"
     status: stable
+    notes:
+      - "Метрика в библиотеке одна: прежний дубль .sidebar-stat* из sidebar.css заменён вариантом .stat-card-tile."
+      - "Собственной полосы прогресса у карточки нет: .stat-progress-bar/-fill удалены, внутрь кладётся компонент progress (.progress.progress-xs)."
 
   - name: steps
     file: styles/components/steps.css
@@ -2121,6 +2185,8 @@ components:
       - "оформление заказа: корзина → доставка → оплата → подтверждение"
       - "в репозитории: components.html#steps, pages/form.html (.fp-steps > .steps)"
     status: stable
+    notes:
+      - "Номер шага — единственный источник: его считает CSS (counter(step) в .step-number::before), поэтому .step-number в разметке остаётся пустым. Цифра текстом накладывается на счётчик."
 
   - name: swatch-picker
     file: styles/components/swatch-picker.css
@@ -2189,6 +2255,8 @@ components:
     instead_use:
       - case: характеристики одного объекта парами «параметр — значение»
         component: spec-sheet
+      - case: таблица внутри печатного паспорта изделия (.spec-sheet / .print-sheet)
+        component: spec-sheet (.spec-table)
       - case: ключевые метрики с динамикой
         component: stats
       - case: строка-карточка со сложным содержимым, где колонки не выравниваются
@@ -2220,8 +2288,10 @@ components:
       - "таблица рабочих точек изделия в даташите, уходящая в печать вместе с документом"
       - "редактируемый массив однотипных строк: 5–7 числовых параметров в строке, одна шапка на весь массив (.table--form)"
       - "в репозитории: components.html#table и components.html#table-form, pages/dashboard.html"
-      - "внимание: блок .veza-header в конце файла — легаси печатной шапки внешнего документа, в новых интерфейсах не использовать"
     status: stable
+    notes:
+      - "Правило выбора между .table и .spec-table (spec-sheet): экранная таблица данных со скроллом, сортировкой, hover и мобильными карточками — .table; таблица внутри печатного паспорта, который вендорится отдельно и обязан жить в светлой палитре без остальной библиотеки, — .spec-table. Дублирование намеренное; смешивать их в одном документе не нужно."
+      - "Легаси .veza-header* (печатная шапка внешнего даташита) удалён из файла: к таблице он отношения не имел, шапка документа — print-sheet/spec-sheet."
 
   - name: tabs
     file: styles/components/tabs.css
@@ -2312,13 +2382,16 @@ components:
       js_required:
         - раздавать ступени --xs/--sm/--md/--lg по частоте и класс --top для лидеров
         - снимать модификатор --skeleton после загрузки данных
-    tokens: ["--space-2", "--space-3", "--space-5", "--border-w", "--border-w-strong", "--color-border-subtle", "--color-surface-sunken", "--color-surface-active", "--color-text", "--color-text-secondary", "--color-text-muted", "--color-text-disabled", "--color-accent", "--color-accent-soft", "--radius-xs", "--shadow-focus", "--fs-xs", "--fs-sm", "--fw-regular", "--fw-medium", "--fw-semi", "--lh-snug", "--tracking-wide", "--t-fast", "--ease"]
+    tokens: ["--space-px", "--space-1", "--space-2", "--space-3", "--space-5", "--border-w", "--border-w-strong", "--color-border-subtle", "--color-surface-sunken", "--color-surface-active", "--color-text", "--color-text-secondary", "--color-text-muted", "--color-text-disabled", "--color-accent", "--color-accent-soft", "--radius-xs", "--shadow-focus", "--fs-xs", "--fs-sm", "--fs-base", "--fs-md", "--fw-regular", "--fw-medium", "--fw-semi", "--lh-snug", "--lh-relaxed", "--tracking-wide", "--duration-pulse", "--t-fast", "--ease"]
     showcase: "components.html#search-home-empty"
     examples:
       - "стартовый экран поиска до первого запроса: облако популярных тем + список частых запросов"
       - "подвал раздела справочника с точками входа по темам"
       - "в репозитории: components.html#search-home-empty (пара «trending + облако тегов»)"
     status: stable
+    notes:
+      - "Четыре ступени кегля — соседние значения типографической шкалы (--fs-xs → --fs-sm → --fs-base → --fs-md), а не подобранные вручную 12–15px."
+      - "Пульс скелетонов общий с компонентом skeleton (keyframes skeleton-pulse, --duration-pulse, linear): собственной анимации у облака нет."
 
   - name: timeline
     file: styles/components/timeline.css
@@ -2415,6 +2488,8 @@ components:
       - "результат фоновой операции: «Файл удалён» с действием «Отменить»"
       - "в репозитории: components.html#toast (статичные примеры + демо-тосты из main.js), pages/form.html (.fp-toasts)"
     status: stable
+    notes:
+      - "2026-07-30: разметка витрины приведена к контракту CSS — было .toast-info/-success/-warning/-error, стало .toast + .info/.success/.warning/.error (как на pages/form.html). Классов вида .toast-info в библиотеке нет и не было."
 
   - name: toggle
     file: styles/components/toggle.css
@@ -2464,12 +2539,13 @@ components:
 
   - name: tooltip
     file: styles/components/tooltip.css
-    summary: Короткая подсказка у элемента, появляющаяся по наведению или фокусу; четыре реализации — на data-атрибуте, на обёртке, маркерная и позиционируемая скриптом.
+    summary: Короткая подсказка у элемента, появляющаяся по наведению или фокусу; один компонент с двумя носителями — декларативным [data-tooltip] и узлом .tooltip-popup, координаты которого считает скрипт.
     use_when:
       - нужно расшифровать иконку без подписи или сокращение (IP, IC, IE, S3)
       - 'подсказка вспомогательная: без неё интерфейс остаётся работоспособным'
       - текст короткий; для инженерных расшифровок в несколько строк есть .tooltip-multiline
-      - позицию считает скрипт по свободному месту (.tooltip-popup)
+      - 'по умолчанию — [data-tooltip]: ничего, кроме атрибута, не нужно, работают и hover, и фокус'
+      - '.tooltip-popup — когда пузырь обязан выйти за пределы обрезающего контейнера или уклониться от кромки экрана: координаты ставит скрипт'
     avoid_when:
       - внутри нужны ссылки, кнопки или поля — подсказка не удерживает фокус и закрыта для указателя
       - сведения обязательны для выполнения задачи (их надо показать в потоке страницы)
@@ -2484,7 +2560,7 @@ components:
         component: alerts
     anatomy:
       block: "[data-tooltip]"
-      elements: [has-tooltip, tooltip-content, tooltip-popup, selection-tooltip]
+      elements: [tooltip-popup, selection-tooltip]
       modifiers: [tooltip-top, tooltip-bottom, tooltip-left, tooltip-right, tooltip-sm, tooltip-lg, tooltip-light, tooltip-primary, tooltip-multiline, tooltip-interactive]
       states: []
     behavior_contract:
@@ -2498,8 +2574,8 @@ components:
         - подсказка не может быть единственным носителем обязательной информации
         - '[data-tooltip] использует cursor:help — курсор не заменяет программную связь'
       js_required:
-        - ничего для вариантов [data-tooltip] и .has-tooltip — они целиком на CSS
-        - для .tooltip-popup — вставка в DOM, расчёт стороны и координат, класс стороны (tooltip-top/bottom/left/right) для transform-origin, удаление по уходу курсора
+        - ничего для [data-tooltip] — этот носитель целиком на CSS
+        - для .tooltip-popup — вставка в DOM, расчёт стороны и координат, класс стороны (tooltip-top/bottom/left/right) для transform-origin и стрелки, удаление по уходу курсора
         - hover-intent (~400 мс) уже заложен в --tooltip-intent-delay; таймеры в JS дублировать не нужно
     tokens: ["--space-1", "--space-2", "--space-3", "--space-8", "--border-w", "--color-border", "--color-surface", "--color-surface-elevated", "--color-text", "--color-text-on-accent", "--color-accent", "--radius-sm", "--shadow", "--fs-xs", "--fs-sm", "--fw-regular", "--lh-snug", "--lh-normal", "--tooltip-max-w", "--tooltip-intent-delay", "--z-tooltip", "--duration-tooltip", "--duration-dropdown", "--ease-out"]
     showcase: "components.html#tooltip"
@@ -2509,14 +2585,17 @@ components:
       - "многострочная справка со стандартным рядом значений, приходящая готовой строкой (.tooltip-multiline)"
       - "в репозитории: components.html#tooltip — позиции, размеры, варианты и многострочный JS-вариант"
     status: stable
+    notes:
+      - "2026-07-30: из четырёх параллельных реализаций осталось две — по числу способов позиционирования. Удалены обёрточная (.has-tooltip + .tooltip-content, ни одного вхождения в разметке) и маркерная (.tooltip, дублировала position/cursor самого [data-tooltip]); сторона задаётся классом .tooltip-top/-bottom/-left/-right, атрибут data-tooltip-position больше не поддерживается."
+      - "Цвет пузыря и стрелки живёт в локальных свойствах --tooltip-bg/--tooltip-fg: вариант (light/primary/тёмная тема) меняет их один раз, правила стрелок цвета не перечисляют."
 
   - name: tree
     file: styles/components/tree.css
-    summary: 'Иерархический список с раскрытием ветвей: шеврон, иконка, подпись и счётчик; есть облегчённый «модерновый» вариант для боковой панели и состояния пусто/загрузка.'
+    summary: 'Иерархический список с раскрытием ветвей: шеврон, иконка, подпись и счётчик; обёртка-панель для боковой колонки и состояния пусто/загрузка.'
     use_when:
       - данные вложены на несколько уровней и уровень имеет смысл (папки, разделы каталога, группы устройств)
       - нужно раскрывать и сворачивать ветви, не теряя контекст остальных
-      - у ветви полезен счётчик содержимого (.tree-modern-count)
+      - у ветви полезен счётчик содержимого (.tree-count)
       - дерево живёт в боковой панели как навигация по разделам
     avoid_when:
       - структура плоская — дерево из одного уровня только добавляет отступы
@@ -2532,9 +2611,9 @@ components:
         component: picklist
     anatomy:
       block: .tree
-      elements: [tree-item, tree-toggle, tree-folder, icon, label, tree-filter, tree-tools, tree-sidebar, tree-sidebar-header, tree-sidebar-title, tree-sidebar-actions, tree-sidebar-btn, tree-empty, tree-empty-icon, tree-empty-text, tree-empty-hint, tree-loading, tree-loading-item, tree-modern, tree-modern-item, tree-modern-chevron, tree-modern-icon, tree-modern-label, tree-modern-nested, tree-modern-count]
-      modifiers: [tree-modern, tree-sidebar]
-      states: [open, selected, expanded]
+      elements: [tree-item, tree-toggle, "tree-toggle-spacer", tree-count, tree-folder, icon, label, tree-filter, tree-tools, tree-sidebar, tree-sidebar-header, tree-sidebar-title, tree-sidebar-actions, tree-sidebar-btn, tree-empty, tree-empty-icon, tree-empty-text, tree-empty-hint, tree-loading]
+      modifiers: [tree-sidebar]
+      states: [is-open, selected]
     behavior_contract:
       keyboard:
         - стрелки вверх/вниз — по видимым узлам, вправо/влево — раскрыть/свернуть ветвь, Enter — выбрать
@@ -2543,19 +2622,23 @@ components:
       aria:
         - 'контейнер — role="tree", узел — role="treeitem" с aria-expanded для ветвей, вложенный список — role="group"'
         - 'выбранный узел — aria-selected; класс .selected только визуальный'
-        - иконки .icon/.tree-modern-icon декоративны (aria-hidden), смысл несёт .label
-        - '.tree-loading-item помечается aria-hidden, контейнер — aria-busy'
+        - иконка .icon декоративна (aria-hidden), смысл несёт .label
+        - 'заглушки .skeleton внутри .tree-loading помечаются aria-hidden, контейнер — aria-busy'
       js_required:
-        - переключать .open на <li> (базовый вариант) и .expanded на .tree-modern-item — без этого ветви не раскрываются
+        - переключать is-open на <li class="tree-folder"> — без этого ветвь не раскрывается
         - синхронизировать aria-expanded и aria-selected с классами
         - фильтрация по .tree-filter — скрытие узлов классом, а не инлайновым display
-    tokens: ["--space-1", "--space-2", "--space-3", "--space-5", "--space-8", "--border-w", "--border-w-strong", "--color-border-subtle", "--color-surface-hover", "--color-surface-sunken", "--color-text", "--color-text-secondary", "--color-text-muted", "--color-accent", "--color-accent-soft", "--color-warning", "--radius-sm", "--radius-full", "--shadow-focus", "--fs-xs", "--fs-sm", "--fw-medium", "--fw-semi", "--t-fast", "--t-slow", "--ease", "--ease-in-out"]
+    tokens: ["--space-px", "--space-1", "--space-2", "--space-3", "--space-4", "--space-5", "--space-8", "--space-10", "--border-w", "--border-w-strong", "--color-border-subtle", "--color-surface-hover", "--color-surface-sunken", "--color-text", "--color-text-secondary", "--color-text-muted", "--color-accent", "--color-accent-soft", "--color-warning", "--radius-sm", "--radius-full", "--shadow-focus", "--fs-xs", "--fs-sm", "--fw-medium", "--fw-semi", "--duration-press", "--duration-dropdown", "--ease-out", "--ease-in-out"]
     showcase: "components.html#tree"
     examples:
-      - "дерево папок или групп устройств в боковой панели со счётчиками содержимого (.tree-modern)"
+      - "дерево папок или групп устройств в боковой панели со счётчиками содержимого (.tree-count)"
       - "иерархия разделов каталога с раскрытием подкатегорий"
-      - "в репозитории: components.html#tree — базовое дерево с раскрытием (обработчик в инлайн-скрипте страницы)"
+      - "в репозитории: components.html#tree — дерево на <div>-строках и то же дерево на строках-кнопках со счётчиками (обработчик в инлайн-скрипте страницы)"
     status: stable
+    notes:
+      - "Реализация одна: параллельный набор .tree-modern-* (состояние .expanded, раскрытие через max-height: 1000px) удалён, строка узла работает и на <div>, и на <button>."
+      - "Раскрытие ветви намеренно без анимации (гейт частоты ui-motion-craft §0); движется только шеврон."
+      - "Заглушки загрузки — компонент skeleton; собственных keyframes у дерева больше нет."
 
   - name: typography
     file: styles/components/typography.css
@@ -2749,10 +2832,10 @@ components:
       js_required:
         - ничего; разметка копируется между страницами по маркерам [BLOCK:site-footer]
     tokens: ["--space-4", "--space-5", "--space-16", "--border-w", "--color-border", "--color-text-muted", "--color-accent", "--fs-sm"]
-    showcase: null
+    showcase: "components.html#site-footer"
     examples:
+      - "витрина: components.html#site-footer — ряд ссылок и подпись"
       - "index.html, pages/catalog.html, pages/dashboard.html, pages/datasheet.html, pages/form.html"
-      - "на витрине components.html подвала нет — у неё собственный каркас app-layout"
     status: stable
 
   - name: site-header
@@ -2793,8 +2876,9 @@ components:
         - анти-FOUC-сниппет в <head> каждой страницы обязан выставлять тему до отрисовки
         - разметка копируется между страницами по маркерам [BLOCK:site-header]
     tokens: ["--space-1", "--space-2", "--space-3", "--space-4", "--space-5", "--header-h", "--border-w", "--border-w-strong", "--color-border", "--color-surface", "--color-surface-hover", "--color-text", "--color-text-muted", "--color-accent", "--color-accent-soft", "--surface-glass", "--surface-glass-border", "--blur-glass", "--radius-sm", "--shadow-focus", "--fs-sm", "--fw-medium", "--fw-bold", "--z-sticky", "--duration-press", "--ease-out"]
-    showcase: null
+    showcase: "components.html#site-header"
     examples:
+      - "витрина: components.html#site-header — образец в рамке-подмакетнике"
       - "index.html, print-forms.html, ral-colors.html и все pages/* — общий хром сайта"
-      - "витрина components.html эту шапку не использует: у неё собственная шапка каркаса app-layout"
+      - "витрина components.html эту шапку в собственном хроме не использует: у неё каркас app-layout"
     status: stable

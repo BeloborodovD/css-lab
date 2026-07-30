@@ -1,11 +1,12 @@
-/* ==========================================================================
-   app-layout.css — Lightweight redesign
-   --------------------------------------------------------------------------
-   - убран shadow-lg на боковой панели (слишком плотно), заменён на 1px border
-   - sidebar overlay: rgba(0,0,0,0.4) + blur(4px) (стандарт лёгкого UI)
-   - site-footer на surface + 1px border (без gradient)
-   - panels push content (margin-shift), не overlay (как было)
-   ========================================================================== */
+/* [BLOCK:component.app-layout]
+ * Каркас приложения: центральная колонка между двумя выдвижными боковыми
+ * панелями, фиксированный подвал и переключатель ширины контента.
+ * Модуль: css-lab/components. Зависимости: base/variables.css, base/motion.css,
+ * components/sidebar.css (сами панели — .sidebar).
+ *
+ * Здесь только раскладка. Панель, её шторка, подложка и ручка ресайза живут
+ * в components/sidebar.css — дублирующий каркас .app-sidebar удалён.
+ */
 
 :root {
   --sidebar-width: var(--sidebar-w);
@@ -13,125 +14,16 @@
      чтобы отступы центра пересчитывались вместе с панелью */
   --sidebar-w-left: var(--sidebar-width);
   --sidebar-w-right: var(--sidebar-width);
-  --sidebar-transition: var(--t-slow) var(--ease);
 }
 
 /* ==================== Layout container ==================== */
 .app-layout {
   display: flex;
-  min-height: calc(100vh - var(--header-h, 64px));
-  margin-top: var(--header-h, 64px);
-  padding-bottom: 60px;
+  min-height: calc(100vh - var(--header-h));
+  margin-top: var(--header-h);
+  /* Место под фиксированный подвал */
+  padding-bottom: var(--space-16);
   background: var(--color-bg);
-}
-
-/* ==================== Sidebars ==================== */
-.app-sidebar {
-  position: fixed;
-  top: var(--header-h, 64px);
-  bottom: 60px;
-  width: var(--sidebar-width);
-  height: auto;
-  padding: var(--space-4);
-  overflow-y: auto;
-  overflow-x: hidden;
-  background: var(--color-surface);
-  z-index: var(--z-drawer);
-  transition: transform var(--sidebar-transition);
-}
-
-.app-sidebar.left {
-  left: 0;
-  border-right: var(--border-w) solid var(--color-border);
-  transform: translateX(-100%);
-}
-
-.app-sidebar.right {
-  right: 0;
-  border-left: var(--border-w) solid var(--color-border);
-  transform: translateX(100%);
-}
-
-.app-sidebar.open {
-  transform: translateX(0);
-}
-
-/* ==================== Resize handle ==================== */
-.app-sidebar.resizable {
-  min-width: 200px;
-  max-width: 500px;
-}
-
-.app-sidebar .sidebar-resize-handle {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 6px;
-  background: transparent;
-  cursor: ew-resize;
-  z-index: var(--z-raised);
-  transition: background var(--t-fast) var(--ease);
-}
-
-.app-sidebar.left .sidebar-resize-handle  { right: -3px; }
-.app-sidebar.right .sidebar-resize-handle { left: -3px; }
-
-.app-sidebar .sidebar-resize-handle:hover {
-  background: var(--color-accent-soft);
-}
-
-.app-sidebar .sidebar-resize-handle:active,
-.app-sidebar.resizing .sidebar-resize-handle {
-  background: var(--color-accent);
-}
-
-.app-sidebar .sidebar-resize-handle::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 2px;
-  height: 40px;
-  background: var(--color-border-strong);
-  border-radius: var(--radius-full);
-  opacity: 0;
-  transition: opacity var(--t-fast) var(--ease);
-}
-
-.app-sidebar .sidebar-resize-handle:hover::after,
-.app-sidebar.resizing .sidebar-resize-handle::after {
-  opacity: 1;
-}
-
-.app-sidebar.resizing {
-  user-select: none;
-  transition: none;
-}
-
-/* ==================== Sidebar overlay ==================== */
-.sidebar-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  top: var(--header-h, 64px);
-  bottom: 60px;
-  background: var(--color-overlay);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  z-index: calc(var(--z-drawer) - 1);
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: opacity var(--t-slow) var(--ease),
-              visibility var(--t-slow) var(--ease);
-}
-
-.sidebar-overlay.visible {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  cursor: pointer;
 }
 
 /* ==================== Main content ==================== */
@@ -142,20 +34,25 @@
   overflow-y: auto;
   margin-left: 0;
   margin-right: 0;
-  transition: margin-left var(--sidebar-transition),
-              margin-right var(--sidebar-transition);
+  /* PURPOSE: preventing a jarring change — центр расступается вместе с
+     панелью, а не прыгает. Отступ — layout-свойство, поэтому переход
+     ограничен длительностью шторки и один в один с ней совпадает */
+  transition: margin-left var(--duration-modal) var(--ease-drawer),
+              margin-right var(--duration-modal) var(--ease-drawer);
 }
 
-/* :has() — push content при открытии sidebar */
-.app-layout:has(.app-sidebar.left.open) .app-content {
+/* :has() — открытая панель сдвигает контент. Комбинатор «прямой потомок»
+   обязателен: без него вложенный каркас (подмакетник витрины, каркас внутри
+   каркаса) двигал бы и внешнюю колонку тоже */
+.app-layout:has(> .sidebar--left.is-open) > .app-content {
   margin-left: var(--sidebar-w-left);
 }
 
-.app-layout:has(.app-sidebar.right.open) .app-content {
+.app-layout:has(> .sidebar--right.is-open) > .app-content {
   margin-right: var(--sidebar-w-right);
 }
 
-.app-layout:has(.app-sidebar.left.open):has(.app-sidebar.right.open) .app-content {
+.app-layout:has(> .sidebar--left.is-open):has(> .sidebar--right.is-open) > .app-content {
   margin-left: var(--sidebar-w-left);
   margin-right: var(--sidebar-w-right);
 }
@@ -170,7 +67,7 @@
 
 .app-content .container {
   max-width: 100%;
-  transition: max-width var(--t-slow) var(--ease);
+  transition: max-width var(--duration-modal) var(--ease-drawer);
 }
 
 /* ==================== Site footer (fixed) ==================== */
@@ -207,7 +104,7 @@
   color: var(--color-text-muted);
   text-decoration: none;
   font-size: var(--fs-xs);
-  transition: color var(--t-fast) var(--ease);
+  transition: color var(--duration-press) var(--ease-out);
 }
 
 .site-footer .footer-nav a:hover {
@@ -221,7 +118,7 @@
 
 .site-footer .footer-version {
   font-size: var(--fs-xs);
-  padding: 2px var(--space-2);
+  padding: var(--space-px) var(--space-2);
   background: var(--color-surface-sunken);
   border-radius: var(--radius-full);
   color: var(--color-text-muted);
@@ -236,12 +133,9 @@
   color: var(--color-text-muted);
 }
 
-.site-footer .footer-status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: var(--radius-full);
-  background: var(--color-success);
-}
+/* Точка состояния здесь больше не описывается: она переехала на общий
+   примитив .badge-dot (badge.css). Прежнее правило .footer-status-dot
+   осталось без потребителей в разметке и удалено. */
 
 @media (max-width: 767px) {
   .site-footer {
@@ -281,11 +175,11 @@
 /* ==================== Width control ==================== */
 .width-control {
   position: fixed;
-  bottom: 80px;
+  bottom: var(--space-20);
   right: var(--space-5);
   z-index: calc(var(--z-sticky) + 1);
-  width: 48px;
-  height: 48px;
+  width: var(--icon-size-lg);
+  height: var(--icon-size-lg);
   border-radius: var(--radius-full);
   background: var(--color-surface);
   border: var(--border-w) solid var(--color-border);
@@ -294,12 +188,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background var(--t) var(--ease),
-              right var(--sidebar-transition);
+  transition: background-color var(--duration-press) var(--ease-out),
+              right var(--duration-modal) var(--ease-drawer);
 }
 
-.app-layout:has(.app-sidebar.right.open) ~ .width-control,
-body:has(.app-sidebar.right.open) .width-control {
+.app-layout:has(> .sidebar--right.is-open) ~ .width-control,
+body:has(> .app-layout > .sidebar--right.is-open) .width-control {
   right: calc(var(--sidebar-width) + var(--space-5));
 }
 
@@ -307,9 +201,11 @@ body:has(.app-sidebar.right.open) .width-control {
   right: calc(var(--sidebar-width) + var(--space-5));
 }
 
-.width-control:hover {
-  background: var(--color-surface-hover);
-  border-color: var(--color-border-strong);
+@media (hover: hover) and (pointer: fine) {
+  .width-control:hover {
+    background: var(--color-surface-hover);
+    border-color: var(--color-border-strong);
+  }
 }
 
 .width-control svg,
@@ -344,68 +240,9 @@ body.width-full .app-content > .container {
   max-width: 100%;
 }
 
-/* ==================== Demo app layout ==================== */
-.demo-app-layout {
-  display: flex;
-  min-height: 100%;
-  background: var(--color-bg);
-}
-
-.demo-app-sidebar {
-  width: 180px;
-  min-width: 180px;
-  padding: var(--space-3);
-  background: var(--color-surface);
-  overflow: hidden;
-  transition: width var(--t-slow) var(--ease),
-              min-width var(--t-slow) var(--ease),
-              opacity var(--t) var(--ease);
-  flex-shrink: 0;
-}
-
-.demo-app-sidebar.left  { border-right: var(--border-w) solid var(--color-border); }
-.demo-app-sidebar.right { border-left: var(--border-w) solid var(--color-border); }
-
-.demo-app-sidebar.collapsed {
-  width: 0;
-  min-width: 0;
-  padding: 0;
-  opacity: 0;
-  overflow: hidden;
-  border-width: 0;
-}
-
-.demo-app-content {
-  flex: 1;
-  min-width: 0;
-  padding: var(--space-4);
-}
-
 /* ==================== Mobile ==================== */
 @media (max-width: 767px) {
-  .app-layout { min-height: calc(100vh - 56px); }
-
-  .app-sidebar {
-    position: fixed;
-    top: 56px;
-    width: 280px;
-    max-width: 85vw;
-    z-index: var(--z-drawer);
-    box-shadow: var(--shadow-lg);
-  }
-
-  .sidebar-overlay {
-    top: 56px;
-    display: block;
-  }
-
-  .app-sidebar.left  { transform: translateX(-100%); }
-  .app-sidebar.right { transform: translateX(100%); }
-
-  .app-sidebar.left.open,
-  .app-sidebar.right.open { transform: translateX(0); }
-
-  /* На mobile content не пушится — sidebars overlay */
+  /* На мобильном центр не расступается — панели ложатся поверх контента */
   .app-content {
     margin-left: 0 !important;
     margin-right: 0 !important;
@@ -413,9 +250,9 @@ body.width-full .app-content > .container {
     padding: var(--space-4);
   }
 
-  .app-layout:has(.app-sidebar.left.open) .app-content,
-  .app-layout:has(.app-sidebar.right.open) .app-content,
-  .app-layout:has(.app-sidebar.left.open):has(.app-sidebar.right.open) .app-content,
+  .app-layout:has(> .sidebar--left.is-open) > .app-content,
+  .app-layout:has(> .sidebar--right.is-open) > .app-content,
+  .app-layout:has(> .sidebar--left.is-open):has(> .sidebar--right.is-open) > .app-content,
   .app-content.sidebar-left-open,
   .app-content.sidebar-right-open,
   .app-content.sidebar-both-open {
@@ -423,64 +260,39 @@ body.width-full .app-content > .container {
     margin-right: 0 !important;
   }
 
-  .app-sidebar .sidebar-resize-handle { display: none; }
-
   .width-control {
-    bottom: 70px;
+    bottom: var(--space-16);
     right: var(--space-4);
-    width: 44px;
-    height: 44px;
+    width: var(--touch-target-min);
+    height: var(--touch-target-min);
   }
 
-  .app-layout:has(.app-sidebar.right.open) ~ .width-control,
-  body:has(.app-sidebar.right.open) .width-control,
+  .app-layout:has(> .sidebar--right.is-open) ~ .width-control,
+  body:has(> .app-layout > .sidebar--right.is-open) .width-control,
   .width-control.sidebar-right-open {
     right: var(--space-4);
-  }
-
-  .demo-app-layout {
-    flex-direction: column;
-  }
-
-  .demo-app-sidebar {
-    width: 100% !important;
-    min-width: 100% !important;
-    border-right: none !important;
-    border-left: none !important;
-    border-bottom: var(--border-w) solid var(--color-border);
-  }
-
-  .demo-app-sidebar.collapsed {
-    height: 0;
-    border-bottom: none;
   }
 }
 
 @media (max-width: 374px) {
-  .app-layout { min-height: calc(100vh - 52px); }
-  .app-sidebar {
-    top: 52px;
-    width: 100%;
-    max-width: 100%;
-  }
-  .sidebar-overlay { top: 52px; }
   .app-content { padding: var(--space-3); }
 }
 
-/* Tablet — узкий sidebar */
+/* Планшет — узкая боковая панель */
 @media (min-width: 769px) and (max-width: 1024px) {
   :root {
-    --sidebar-width: 240px;
+    --sidebar-width: var(--sidebar-w-sm);
   }
 }
 
 /* ==================== Reduced motion ==================== */
+/* Мягче, а не «в ноль»: сдвиг центра снимается (это layout-движение),
+   остальное смягчают сами компоненты */
 @media (prefers-reduced-motion: reduce) {
-  .app-sidebar,
   .app-content,
-  .width-control,
-  .sidebar-overlay,
-  .demo-app-sidebar {
-    transition: none !important;
+  .app-content .container,
+  .width-control {
+    transition: none;
   }
 }
+/* </BLOCK:component.app-layout> */

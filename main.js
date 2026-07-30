@@ -29,15 +29,16 @@ document.querySelectorAll('.chip-clickable').forEach(chip => {
 // ===== Sidebar Resize =====
 // Инициализация resize для сайдбаров
 function initSidebarResize() {
-  // Support both .sidebar.resizable and .app-sidebar.resizable
-  const sidebars = document.querySelectorAll('.sidebar.resizable, .app-sidebar.resizable');
+  // Единственная реализация панели — .sidebar (components/sidebar.css)
+  const sidebars = document.querySelectorAll('.sidebar--resizable');
 
   sidebars.forEach(sidebar => {
     const handle = sidebar.querySelector('.sidebar-resize-handle');
     if (!handle) return;
 
-    const isLeft = sidebar.classList.contains('left');
-    const minWidth = 200;
+    const isLeft = sidebar.classList.contains('sidebar--left');
+    // Нижняя граница совпадает с --sidebar-w-sm (min-width в CSS)
+    const minWidth = 220;
     const maxWidth = 500;
 
     let isResizing = false;
@@ -50,7 +51,7 @@ function initSidebarResize() {
       startX = e.clientX;
       startWidth = sidebar.offsetWidth;
 
-      sidebar.classList.add('resizing');
+      sidebar.classList.add('is-resizing');
       document.body.style.cursor = 'ew-resize';
       document.body.style.userSelect = 'none';
     });
@@ -81,7 +82,7 @@ function initSidebarResize() {
       if (!isResizing) return;
 
       isResizing = false;
-      sidebar.classList.remove('resizing');
+      sidebar.classList.remove('is-resizing');
       document.body.style.cursor = '';
       document.body.style.userSelect = '';
 
@@ -175,7 +176,7 @@ const demoToast = (function initDemoToast() {
     '.filter-pills, .chips, #demo-log-view-toggle, .form-rows__add, .row-card__remove, ' +
     '.chip-remove, .modal, .dropdown, .tree-item, .toast, #theme-toggle, #width-control, ' +
     '#burger-menu, #info-toggle, .sidebar-close, .tab, .toggle, [data-datepicker], ' +
-    '#demo-drawer-open, .quiz-header__nav, .combobox, .code-panel__string-row, ' +
+    '[data-drawer-open], .quiz-header__nav, .combobox, .code-panel__string-row, ' +
     '.form-error-summary, [data-error-summary], [data-panel-switch], ' +
     '.table--form, .swatch-picker__actions, .picklist__actions';
   document.addEventListener('click', (e) => {
@@ -189,10 +190,11 @@ const demoToast = (function initDemoToast() {
 // ===== Header Search =====
 // Поиск в шапке фильтрует меню компонентов; Enter — переход к первому совпадению
 (function initHeaderSearch() {
-  const input = document.querySelector('.search-bar .input');
-  const btn = document.querySelector('.search-bar .btn');
+  const input = document.querySelector('.header .search-bar .input');
+  const btn = document.querySelector('.header .search-bar .btn');
   if (!input) return;
-  const items = () => [...document.querySelectorAll('.app-sidebar.left .sidebar-nav-item')];
+  // Именно панель витрины, а не любые .sidebar--left (в демо-секциях они тоже есть)
+  const items = () => [...document.querySelectorAll('#left-sidebar .sidebar-nav-item')];
 
   function applyFilter() {
     const q = input.value.trim().toLowerCase();
@@ -241,6 +243,23 @@ const demoToast = (function initDemoToast() {
   const saved = localStorage.getItem('css-lab-brand');
   const valid = [...options].some(btn => btn.dataset.brandValue === saved);
   applyBrand(saved && valid ? saved : 'veza');
+})();
+
+// ===== Nav =====
+// Бургер навигационной полосы: раскрывает .nav-menu на узком экране.
+// Переходное именование: ставим и легаси .open, и канон .is-open (RULES §2.4).
+(function initNav() {
+  document.querySelectorAll('.nav .nav-toggle').forEach(toggle => {
+    const menu = document.getElementById(toggle.getAttribute('aria-controls') || '');
+    if (!menu) return;
+
+    toggle.addEventListener('click', () => {
+      const open = !menu.classList.contains('is-open');
+      menu.classList.toggle('is-open', open);
+      menu.classList.toggle('open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+    });
+  });
 })();
 
 // ===== Presence Strip =====
@@ -336,35 +355,39 @@ const demoToast = (function initDemoToast() {
 // Открытие кнопкой, закрытие по оверлею, крестику и Escape.
 // inert вместо aria-hidden: закрытая панель выпадает из Tab-порядка;
 // фокус переносится в панель при открытии и возвращается триггеру при закрытии.
-(function initDrawer() {
-  const drawer = document.getElementById('demo-drawer');
-  const openBtn = document.getElementById('demo-drawer-open');
-  if (!drawer || !openBtn) return;
-  let lastFocused = null;
+// Триггер связан со шторкой атрибутом data-drawer-open="<id шторки>";
+// боковая панель и нижний лист — один компонент, поведение общее.
+(function initDrawers() {
+  document.querySelectorAll('[data-drawer-open]').forEach(openBtn => {
+    const drawer = document.getElementById(openBtn.dataset.drawerOpen);
+    if (!drawer) return;
+    let lastFocused = null;
 
-  drawer.inert = true;
-  drawer.removeAttribute('aria-hidden');
+    drawer.inert = true;
+    drawer.removeAttribute('aria-hidden');
 
-  function setOpen(open) {
-    if (open === drawer.classList.contains('is-open')) return;
-    drawer.classList.toggle('is-open', open);
-    drawer.inert = !open;
-    // Scroll-lock: фон не прокручивается, пока открыта модальная шторка
-    document.documentElement.style.overflow = open ? 'hidden' : '';
-    if (open) {
-      lastFocused = document.activeElement;
-      drawer.querySelector('.drawer__close')?.focus();
-    } else {
-      (lastFocused || openBtn).focus?.();
+    function setOpen(open) {
+      if (open === drawer.classList.contains('is-open')) return;
+      drawer.classList.toggle('is-open', open);
+      drawer.inert = !open;
+      // Scroll-lock: фон не прокручивается, пока открыта модальная шторка
+      document.documentElement.style.overflow = open ? 'hidden' : '';
+      openBtn.setAttribute('aria-expanded', String(open));
+      if (open) {
+        lastFocused = document.activeElement;
+        drawer.querySelector('.drawer__close')?.focus();
+      } else {
+        (lastFocused || openBtn).focus?.();
+      }
     }
-  }
 
-  openBtn.addEventListener('click', () => setOpen(true));
-  drawer.querySelectorAll('[data-drawer-close]').forEach(el => {
-    el.addEventListener('click', () => setOpen(false));
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && drawer.classList.contains('is-open')) setOpen(false);
+    openBtn.addEventListener('click', () => setOpen(true));
+    drawer.querySelectorAll('[data-drawer-close]').forEach(el => {
+      el.addEventListener('click', () => setOpen(false));
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && drawer.classList.contains('is-open')) setOpen(false);
+    });
   });
 })();
 

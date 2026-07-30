@@ -42,6 +42,16 @@
     --surface-glass-border: var(--color-border);
   }
 
+  /* Бренд-скоуп: усиленное кольцо обязано пересобраться и на элементе
+     бренда. Иначе правило [data-brand] из variables.css (уровень body)
+     перебьёт унаследованные от :root 5px своими 4px — предпочтение
+     пользователя молча потеряется на всех брендовых страницах.
+     Только --shadow-focus: --color-border здесь трогать нельзя, у light
+     и dark он разный, а один селектор [data-brand] кроет обе темы */
+  [data-brand] {
+    --shadow-focus: 0 0 0 2px var(--color-surface), 0 0 0 5px var(--color-accent);
+  }
+
   /* OS-dark без класса — зеркало dark-scope (специфичность 0,3,0) */
   @media (prefers-color-scheme: dark) {
     :root:not(.light):not([data-theme="light"]) {

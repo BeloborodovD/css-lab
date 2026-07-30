@@ -2,7 +2,7 @@
    logs.css — Lightweight redesign
    --------------------------------------------------------------------------
    - log-badge: семантические токены (info/warn/error/debug/success)
-   - alert-box → border-left 3px + soft bg (без border-обводки)
+   - плашка сообщения сюда не входит — она одна на библиотеку (alerts.css)
    - log-entry: hover surface-hover, monospace timestamps
    - log-controls и view-mode-toggle упрощены
    ========================================================================== */
@@ -47,69 +47,9 @@
 
 .log-badge svg { width: 14px; height: 14px; }
 
-/* ==================== Alert/Message boxes ==================== */
-.alert-box {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius);
-  background: var(--color-surface);
-  border-left: var(--border-w-thick) solid var(--color-border);
-}
-
-.alert-box.info {
-  background: var(--color-info-soft);
-  border-left-color: var(--color-info);
-  color: var(--color-info-text);
-}
-
-.alert-box.warning {
-  background: var(--color-warning-soft);
-  border-left-color: var(--color-warning);
-  color: var(--color-warning-text);
-}
-
-.alert-box.error {
-  background: var(--color-error-soft);
-  border-left-color: var(--color-error);
-  color: var(--color-error-text);
-}
-
-.alert-box.success {
-  background: var(--color-success-soft);
-  border-left-color: var(--color-success);
-  color: var(--color-success-text);
-}
-
-.alert-box svg {
-  flex-shrink: 0;
-  width: 20px;
-  height: 20px;
-}
-
-.alert-box-content {
-  flex: 1;
-  font-size: var(--fs-sm);
-  line-height: var(--lh-snug);
-}
-
-.alert-box-close {
-  padding: var(--space-1);
-  border-radius: var(--radius-xs);
-  border: none;
-  background: transparent;
-  color: inherit;
-  opacity: 0.7;
-  cursor: pointer;
-  transition: opacity var(--t-fast) var(--ease),
-              background var(--t-fast) var(--ease);
-}
-
-.alert-box-close:hover {
-  opacity: 1;
-  background: rgba(0, 0, 0, 0.05);
-}
+/* Плашка сообщения (бывший .alert-box) переехала целиком в alerts.css:
+   info/warning/error/success теперь существуют в библиотеке в одном
+   экземпляре — .alert с модификаторами .alert-info/.alert-warning/… */
 
 /* ==================== Log entry row ==================== */
 .log-entry {
@@ -343,7 +283,3 @@
   font-size: var(--fs-sm);
 }
 
-/* ==================== Dark theme — точечно ==================== */
-.dark .alert-box-close:hover {
-  background: rgba(255, 255, 255, 0.08);
-}

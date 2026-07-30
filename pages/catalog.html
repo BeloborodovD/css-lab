@@ -51,8 +51,8 @@
   <main class="page-shell page-shell--wide">
     <nav class="breadcrumbs" aria-label="Хлебные крошки" style="margin-bottom: var(--space-4);">
       <a href="/index.html" class="breadcrumb-item">Главная</a>
-      <span class="breadcrumb-separator">/</span>
-      <span class="breadcrumb-item active" aria-current="page">Каталог электродвигателей</span>
+      <span class="breadcrumb-separator" aria-hidden="true"></span>
+      <span class="breadcrumb-item current" aria-current="page">Каталог электродвигателей</span>
     </nav>
 
     <h1 class="page-shell__title">Каталог электродвигателей</h1>
@@ -133,9 +133,9 @@
                 <span class="filter-group__label">Мощность, кВт</span>
                 <button type="button" class="filter-group__reset">сбросить</button>
               </div>
-              <div class="filter-range">
+              <div class="input-range">
                 <input type="number" class="input" id="catalog-power-min" placeholder="от" min="0" step="0.1" aria-label="Мощность от, кВт">
-                <span class="filter-range__dash">—</span>
+                <span class="input-range__dash" aria-hidden="true">—</span>
                 <input type="number" class="input" id="catalog-power-max" placeholder="до" min="0" step="0.1" aria-label="Мощность до, кВт">
               </div>
             </div>
@@ -169,13 +169,17 @@
         <div class="catalog-grid" id="catalog-grid">
           <!-- Карточки генерирует catalog-page script из CATALOG_DATA -->
         </div>
-        <div class="empty-state catalog-empty">
-          <div class="empty-state-icon">🔍</div>
+        <div class="empty-state empty-state-no-results catalog-empty">
+          <div class="empty-state-illustration" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
+          </div>
           <div class="empty-state-title">Ничего не подобрано</div>
-          <div class="empty-state-message">Ослабьте фильтры или сбросьте их полностью</div>
+          <div class="empty-state-description">Ослабьте фильтры или сбросьте их полностью</div>
           <!-- Пустое состояние само предлагает выход (Apple: wayfinding) -->
-          <button type="button" class="btn btn-outline" style="margin-top: var(--space-3);"
-                  onclick="document.getElementById('catalog-reset-all').click()">Сбросить все фильтры</button>
+          <div class="empty-state-action">
+            <button type="button" class="btn btn-outline"
+                    onclick="document.getElementById('catalog-reset-all').click()">Сбросить все фильтры</button>
+          </div>
         </div>
       </section>
     </div>

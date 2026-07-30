@@ -4,7 +4,7 @@
    - убран gradient `linear-gradient(135deg, accent → accent-700)` — слишком тяжёло
    - nav: surface + 1px bottom-border (как у нормальных современных nav-bar)
    - link active: accent-soft + accent text (а не fill)
-   - breadcrumb сохранён, но с современным разделителем
+   - хлебные крошки вынесены целиком в components/breadcrumbs.css
    ========================================================================== */
 
 .nav {
@@ -117,6 +117,8 @@
     gap: 2px;
   }
 
+  /* Канон — .is-open; .open остаётся до снятия последнего потребителя (RULES §2.4) */
+  .nav-menu.is-open,
   .nav-menu.open { display: flex; }
 
   .nav-link {
@@ -167,41 +169,10 @@
   font-weight: var(--fw-medium);
 }
 
-/* ==================== Breadcrumb ==================== */
-.breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-size: var(--fs-sm);
-  color: var(--color-text-muted);
-}
-
-.breadcrumb-item {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.breadcrumb-item:not(:last-child)::after {
-  content: "/";
-  color: var(--color-text-disabled);
-  font-weight: var(--fw-regular);
-}
-
-.breadcrumb-link {
-  color: var(--color-text-muted);
-  text-decoration: none;
-  transition: color var(--duration-press) var(--ease-out);
-}
-
-.breadcrumb-link:hover {
-  color: var(--color-accent);
-}
-
-.breadcrumb-current {
-  color: var(--color-text);
-  font-weight: var(--fw-medium);
-}
+/* Хлебных крошек здесь нет: единственная реализация — components/breadcrumbs.css
+   (.breadcrumbs + .breadcrumb-item + .breadcrumb-separator). Прежний блок .breadcrumb
+   рисовал «/» через .breadcrumb-item::after без ограничения родителем и дублировал
+   явный разделитель на страницах каталога и даташита. */
 
 @media print {
   .nav,

@@ -1,9 +1,21 @@
-/* ==========================================================================
-   tooltip.css — три варианта реализации:
-   1) [data-tooltip] (CSS-only)
-   2) .has-tooltip (wrapper)
-   3) .tooltip-popup (programmatic JS)
-   ========================================================================== */
+/* [BLOCK:component.tooltip]
+ * Короткая подсказка у элемента — одна реализация с двумя носителями.
+ * Модуль: css-lab/components. Зависимости: base/variables.css, base/motion.css.
+ *
+ * Носитель выбирается тем, кто пишет разметку:
+ *   [data-tooltip="текст"] — декларативный, целиком на CSS. Пузырь рисуется
+ *     псевдоэлементом триггера. Покрывает четыре стороны, три размера, три
+ *     цветовых варианта, многострочный режим, показ по :hover и по :focus.
+ *     Ограничение одно: пузырь не выходит за пределы родителя с overflow:hidden.
+ *   .tooltip-popup — тот же пузырь, но отдельным узлом в <body>: применяется,
+ *     когда координаты считает скрипт (обход кромки вьюпорта, выход из
+ *     обрезающего контейнера). Класс стороны ставит тот же скрипт.
+ *
+ * Оба носителя делят одни и те же объявления поверхности, стрелки, размеров,
+ * цветовых вариантов и тёмной темы: цвет пузыря живёт в локальных свойствах
+ * --tooltip-bg / --tooltip-fg, поэтому стрелка нигде не перечисляет цвета
+ * заново — она всегда красится в цвет своего пузыря.
+ */
 
 /* [CONFIG:tooltip-intent-delay]
  * Задержка hover-intent (~400ms): производная от токенов движения
@@ -16,7 +28,42 @@
 /* </CONFIG:tooltip-intent-delay> */
 
 /* ==========================================================================
-   1. CSS-Only Tooltip
+   1. Поверхность подсказки — общая для обоих носителей
+   ========================================================================== */
+
+/* Палитра пузыря. Стрелка берёт цвет отсюда же — отдельного списка цветов
+   на каждую сторону и каждый вариант больше нет. */
+[data-tooltip],
+.tooltip-popup {
+  --tooltip-bg: var(--color-text);
+  --tooltip-fg: var(--color-surface);
+}
+
+[data-tooltip]::before,
+.tooltip-popup {
+  padding: var(--space-2) var(--space-3);
+  background: var(--tooltip-bg);
+  color: var(--tooltip-fg);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-snug);
+  white-space: nowrap;
+  z-index: var(--z-tooltip);
+  pointer-events: none;
+}
+
+/* Стрелка: прозрачный треугольник, красится одной стороной */
+[data-tooltip]::after,
+.tooltip-popup::after {
+  content: '';
+  position: absolute;
+  border: 5px solid transparent;
+}
+
+/* ==========================================================================
+   2. Носитель A — декларативный [data-tooltip]
    ========================================================================== */
 
 [data-tooltip] {
@@ -28,28 +75,14 @@
 [data-tooltip]::before {
   content: attr(data-tooltip);
   position: absolute;
-  padding: var(--space-2) var(--space-3);
-  background: var(--color-text);
-  color: var(--color-surface);
-  border-radius: var(--radius-sm);
-  font-size: var(--fs-xs);
-  font-weight: var(--fw-regular);
-  line-height: var(--lh-snug);
-  white-space: nowrap;
-  z-index: var(--z-tooltip);
-  pointer-events: none;
   opacity: 0;
   visibility: hidden;
   transition: opacity var(--duration-tooltip) var(--ease-out),
               transform var(--duration-tooltip) var(--ease-out),
               visibility var(--duration-tooltip) var(--ease-out);
-  box-shadow: var(--shadow);
 }
 
 [data-tooltip]::after {
-  content: '';
-  position: absolute;
-  border: 5px solid transparent;
   z-index: var(--z-tooltip);
   pointer-events: none;
   opacity: 0;
@@ -59,7 +92,7 @@
               visibility var(--duration-tooltip) var(--ease-out);
 }
 
-/* PURPOSE: state indication — hover-intent: показ с задержкой 400ms, чтобы
+/* PURPOSE: state indication — hover-intent: показ с задержкой ~400ms, чтобы
    тултипы не мерцали при пролёте курсора; скрытие — мгновенно (delay 0 в базе) */
 [data-tooltip]:hover::before,
 [data-tooltip]:hover::after {
@@ -74,12 +107,11 @@
   visibility: visible;
 }
 
-/* --- Position: Top (default) --- */
+/* --- Сторона: сверху (по умолчанию) --- */
 /* PURPOSE: preventing a jarring change — вход из scale(0.97) + смещение к триггеру;
    transform-origin у края, обращённого к триггеру (поповер растёт от источника) */
 [data-tooltip]::before,
-[data-tooltip].tooltip-top::before,
-[data-tooltip][data-tooltip-position="top"]::before {
+[data-tooltip].tooltip-top::before {
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%) translateY(-4px) scale(0.97);
@@ -89,22 +121,20 @@
 [data-tooltip]:hover::before,
 [data-tooltip]:focus::before,
 [data-tooltip].tooltip-top:hover::before,
-[data-tooltip][data-tooltip-position="top"]:hover::before {
+[data-tooltip].tooltip-top:focus::before {
   transform: translateX(-50%) translateY(0) scale(1);
 }
 [data-tooltip]::after,
-[data-tooltip].tooltip-top::after,
-[data-tooltip][data-tooltip-position="top"]::after {
+[data-tooltip].tooltip-top::after {
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
   margin-bottom: -2px;
-  border-top-color: var(--color-text);
+  border-top-color: var(--tooltip-bg);
 }
 
-/* --- Position: Bottom --- */
-[data-tooltip].tooltip-bottom::before,
-[data-tooltip][data-tooltip-position="bottom"]::before {
+/* --- Сторона: снизу --- */
+[data-tooltip].tooltip-bottom::before {
   bottom: auto;
   top: 100%;
   left: 50%;
@@ -114,23 +144,21 @@
   margin-top: var(--space-2);
 }
 [data-tooltip].tooltip-bottom:hover::before,
-[data-tooltip][data-tooltip-position="bottom"]:hover::before {
+[data-tooltip].tooltip-bottom:focus::before {
   transform: translateX(-50%) translateY(0) scale(1);
 }
-[data-tooltip].tooltip-bottom::after,
-[data-tooltip][data-tooltip-position="bottom"]::after {
+[data-tooltip].tooltip-bottom::after {
   bottom: auto;
   top: 100%;
   left: 50%;
   transform: translateX(-50%);
   margin-top: -2px;
   border-top-color: transparent;
-  border-bottom-color: var(--color-text);
+  border-bottom-color: var(--tooltip-bg);
 }
 
-/* --- Position: Left --- */
-[data-tooltip].tooltip-left::before,
-[data-tooltip][data-tooltip-position="left"]::before {
+/* --- Сторона: слева --- */
+[data-tooltip].tooltip-left::before {
   bottom: auto;
   top: 50%;
   left: auto;
@@ -141,11 +169,10 @@
   margin-right: var(--space-2);
 }
 [data-tooltip].tooltip-left:hover::before,
-[data-tooltip][data-tooltip-position="left"]:hover::before {
+[data-tooltip].tooltip-left:focus::before {
   transform: translateY(-50%) translateX(0) scale(1);
 }
-[data-tooltip].tooltip-left::after,
-[data-tooltip][data-tooltip-position="left"]::after {
+[data-tooltip].tooltip-left::after {
   bottom: auto;
   top: 50%;
   left: auto;
@@ -153,12 +180,11 @@
   transform: translateY(-50%);
   margin-right: -2px;
   border-top-color: transparent;
-  border-left-color: var(--color-text);
+  border-left-color: var(--tooltip-bg);
 }
 
-/* --- Position: Right --- */
-[data-tooltip].tooltip-right::before,
-[data-tooltip][data-tooltip-position="right"]::before {
+/* --- Сторона: справа --- */
+[data-tooltip].tooltip-right::before {
   bottom: auto;
   top: 50%;
   left: 100%;
@@ -168,188 +194,23 @@
   margin-left: var(--space-2);
 }
 [data-tooltip].tooltip-right:hover::before,
-[data-tooltip][data-tooltip-position="right"]:hover::before {
+[data-tooltip].tooltip-right:focus::before {
   transform: translateY(-50%) translateX(0) scale(1);
 }
-[data-tooltip].tooltip-right::after,
-[data-tooltip][data-tooltip-position="right"]::after {
+[data-tooltip].tooltip-right::after {
   bottom: auto;
   top: 50%;
   left: 100%;
   transform: translateY(-50%);
   margin-left: -2px;
   border-top-color: transparent;
-  border-right-color: var(--color-text);
+  border-right-color: var(--tooltip-bg);
 }
 
-/* --- Sizes --- */
-[data-tooltip].tooltip-sm::before {
-  padding: var(--space-1) var(--space-2);
-  font-size: var(--fs-xs);
-}
-[data-tooltip].tooltip-sm::after { border-width: 4px; }
-
-[data-tooltip].tooltip-lg::before {
-  padding: var(--space-3) 14px;
-  font-size: var(--fs-sm);
-}
-[data-tooltip].tooltip-lg::after { border-width: 6px; }
-
-/* --- Variants --- */
-/* Light — светлая панель поверх контента: elevation уровень 2 */
-[data-tooltip].tooltip-light::before {
-  background: var(--color-surface-elevated);
-  color: var(--color-text);
-  border: var(--border-w) solid var(--color-border);
-  box-shadow: var(--shadow);
-}
-[data-tooltip].tooltip-light::after { border-top-color: var(--color-surface-elevated); }
-[data-tooltip].tooltip-light.tooltip-bottom::after { border-top-color: transparent; border-bottom-color: var(--color-surface-elevated); }
-[data-tooltip].tooltip-light.tooltip-left::after   { border-top-color: transparent; border-left-color: var(--color-surface-elevated); }
-[data-tooltip].tooltip-light.tooltip-right::after  { border-top-color: transparent; border-right-color: var(--color-surface-elevated); }
-
-/* Primary — accent */
-[data-tooltip].tooltip-primary::before {
-  background: var(--color-accent);
-  color: var(--color-text-on-accent);
-}
-[data-tooltip].tooltip-primary::after { border-top-color: var(--color-accent); }
-[data-tooltip].tooltip-primary.tooltip-bottom::after { border-top-color: transparent; border-bottom-color: var(--color-accent); }
-[data-tooltip].tooltip-primary.tooltip-left::after   { border-top-color: transparent; border-left-color: var(--color-accent); }
-[data-tooltip].tooltip-primary.tooltip-right::after  { border-top-color: transparent; border-right-color: var(--color-accent); }
-
-/* Multiline. Ширина — токен --tooltip-max-w, зажатый вьюпортом: на узком
-   экране подсказка не должна упираться в кромки (запас — по --space-8) */
-[data-tooltip].tooltip-multiline::before {
-  white-space: normal;
-  max-width: min(var(--tooltip-max-w), calc(100vw - var(--space-8)));
-  text-align: center;
-  line-height: var(--lh-snug);
-}
-
-/* ==========================================================================
-   2. Wrapper-based Tooltip
-   ========================================================================== */
-.has-tooltip {
-  position: relative;
-  display: inline-block;
-}
-
-.tooltip-content {
-  position: absolute;
-  padding: var(--space-2) var(--space-3);
-  background: var(--color-text);
-  color: var(--color-surface);
-  border-radius: var(--radius-sm);
-  font-size: var(--fs-xs);
-  white-space: nowrap;
-  z-index: var(--z-tooltip);
-  pointer-events: none;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity var(--duration-tooltip) var(--ease-out),
-              transform var(--duration-tooltip) var(--ease-out),
-              visibility var(--duration-tooltip) var(--ease-out);
-  box-shadow: var(--shadow);
-
-  /* Default: top */
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%) translateY(-4px) scale(0.97);
-  transform-origin: 50% 100%;
-  margin-bottom: var(--space-2);
-}
-
-.has-tooltip:hover .tooltip-content,
-.has-tooltip:focus-within .tooltip-content {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(-50%) translateY(0) scale(1);
-}
-
-/* PURPOSE: state indication — hover-intent: показ с задержкой ~400ms,
-   чтобы тултип не мерцал при пролёте курсора; скрытие мгновенно
-   (в базовом правиле задержки нет) */
-.has-tooltip:hover .tooltip-content {
-  transition-delay: var(--tooltip-intent-delay);
-}
-/* Фокус клавиатурой — намеренный, без задержки */
-.has-tooltip:focus-within .tooltip-content {
-  transition-delay: 0s;
-}
-
-.has-tooltip.tooltip-bottom .tooltip-content {
-  bottom: auto;
-  top: 100%;
-  transform: translateX(-50%) translateY(4px) scale(0.97);
-  transform-origin: 50% 0%;
-  margin-bottom: 0;
-  margin-top: var(--space-2);
-}
-.has-tooltip.tooltip-bottom:hover .tooltip-content {
-  transform: translateX(-50%) translateY(0) scale(1);
-}
-
-.has-tooltip.tooltip-left .tooltip-content {
-  bottom: auto;
-  top: 50%;
-  left: auto;
-  right: 100%;
-  transform: translateY(-50%) translateX(-4px) scale(0.97);
-  transform-origin: 100% 50%;
-  margin-bottom: 0;
-  margin-right: var(--space-2);
-}
-.has-tooltip.tooltip-left:hover .tooltip-content {
-  transform: translateY(-50%) translateX(0) scale(1);
-}
-
-.has-tooltip.tooltip-right .tooltip-content {
-  bottom: auto;
-  top: 50%;
-  left: 100%;
-  transform: translateY(-50%) translateX(4px) scale(0.97);
-  transform-origin: 0% 50%;
-  margin-bottom: 0;
-  margin-left: var(--space-2);
-}
-.has-tooltip.tooltip-right:hover .tooltip-content {
-  transform: translateY(-50%) translateX(0) scale(1);
-}
-
-.has-tooltip.tooltip-sm .tooltip-content {
-  padding: var(--space-1) var(--space-2);
-  font-size: var(--fs-xs);
-}
-.has-tooltip.tooltip-lg .tooltip-content {
-  padding: var(--space-3) 14px;
-  font-size: var(--fs-sm);
-}
-
-.has-tooltip.tooltip-light .tooltip-content {
-  background: var(--color-surface-elevated);
-  color: var(--color-text);
-  border: var(--border-w) solid var(--color-border);
-}
-.has-tooltip.tooltip-primary .tooltip-content {
-  background: var(--color-accent);
-  color: var(--color-text-on-accent);
-}
-
-/* ==========================================================================
-   3. Tooltip class marker (для триггеров с data-tooltip)
-   ========================================================================== */
-.tooltip {
-  position: relative;
-  cursor: help;
-}
-
-/* Fix overflow:hidden на родителях */
+/* Триггер внутри блока с обрезкой: пузырю нужен видимый выход наружу */
 .btn[data-tooltip],
-.btn.tooltip,
 button[data-tooltip],
-.card[data-tooltip],
-.card.tooltip {
+.card[data-tooltip] {
   overflow: visible;
 }
 .card-loading [data-tooltip]::before,
@@ -358,19 +219,11 @@ button[data-tooltip],
 }
 
 /* ==========================================================================
-   4. Programmatic Tooltip (для JS-позиционирования)
+   3. Носитель B — .tooltip-popup, координаты считает скрипт
    ========================================================================== */
 .tooltip-popup {
   position: absolute;
-  background: var(--color-text);
-  color: var(--color-surface);
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow);
-  padding: var(--space-2) var(--space-3);
   font-size: var(--fs-sm);
-  white-space: nowrap;
-  z-index: var(--z-tooltip);
-  pointer-events: none;
   opacity: 1;
   transform: scale(1);
   /* PURPOSE: preventing a jarring change — вход из scale(0.97) от триггера;
@@ -387,53 +240,21 @@ button[data-tooltip],
     transform: scale(0.97);
   }
 }
-.tooltip-interactive { pointer-events: auto; }
 
-/* Многострочный JS-тултип: инженерные подсказки (ряды мощностей, расшифровки
-   IC/IP/IE) приходят готовыми строками с переводами строк. Базовый
-   .tooltip-popup жёстко nowrap — без сброса white-space ограничение ширины
-   не сработало бы вовсе, подсказка растянулась бы в одну строку на экран */
-.tooltip-popup.tooltip-multiline {
-  white-space: pre-line;
-  max-width: min(var(--tooltip-max-w), calc(100vw - var(--space-8)));
-  text-align: left;
-  line-height: var(--lh-normal);
-}
-
-/* Origin у края, обращённого к триггеру (класс позиции = сторона стрелки) */
+/* Класс стороны = сторона триггера, у которой стоит пузырь: origin у края,
+   обращённого к триггеру, стрелка — на противоположной кромке пузыря. */
 .tooltip-popup.tooltip-top    { transform-origin: 50% 100%; }
 .tooltip-popup.tooltip-bottom { transform-origin: 50% 0%; }
 .tooltip-popup.tooltip-left   { transform-origin: 100% 50%; }
 .tooltip-popup.tooltip-right  { transform-origin: 0% 50%; }
 
-.tooltip-popup::after {
-  content: '';
-  position: absolute;
-  border: 5px solid transparent;
-}
-.tooltip-popup.tooltip-top::after    { top: 100%; left: 50%; transform: translateX(-50%); border-top-color: var(--color-text); }
-.tooltip-popup.tooltip-bottom::after { bottom: 100%; left: 50%; transform: translateX(-50%); border-bottom-color: var(--color-text); }
-.tooltip-popup.tooltip-left::after   { left: 100%; top: 50%; transform: translateY(-50%); border-left-color: var(--color-text); }
-.tooltip-popup.tooltip-right::after  { right: 100%; top: 50%; transform: translateY(-50%); border-right-color: var(--color-text); }
+.tooltip-popup.tooltip-top::after    { top: 100%;    left: 50%; transform: translateX(-50%); border-top-color: var(--tooltip-bg); }
+.tooltip-popup.tooltip-bottom::after { bottom: 100%; left: 50%; transform: translateX(-50%); border-bottom-color: var(--tooltip-bg); }
+.tooltip-popup.tooltip-left::after   { left: 100%;   top: 50%;  transform: translateY(-50%); border-left-color: var(--tooltip-bg); }
+.tooltip-popup.tooltip-right::after  { right: 100%;  top: 50%;  transform: translateY(-50%); border-right-color: var(--tooltip-bg); }
 
-.tooltip-popup.tooltip-light {
-  background: var(--color-surface-elevated);
-  color: var(--color-text);
-  border: var(--border-w) solid var(--color-border);
-}
-.tooltip-popup.tooltip-light.tooltip-top::after    { border-top-color: var(--color-surface-elevated); }
-.tooltip-popup.tooltip-light.tooltip-bottom::after { border-bottom-color: var(--color-surface-elevated); }
-.tooltip-popup.tooltip-light.tooltip-left::after   { border-left-color: var(--color-surface-elevated); }
-.tooltip-popup.tooltip-light.tooltip-right::after  { border-right-color: var(--color-surface-elevated); }
-
-.tooltip-popup.tooltip-primary {
-  background: var(--color-accent);
-  color: var(--color-text-on-accent);
-}
-.tooltip-popup.tooltip-primary.tooltip-top::after    { border-top-color: var(--color-accent); }
-.tooltip-popup.tooltip-primary.tooltip-bottom::after { border-bottom-color: var(--color-accent); }
-.tooltip-popup.tooltip-primary.tooltip-left::after   { border-left-color: var(--color-accent); }
-.tooltip-popup.tooltip-primary.tooltip-right::after  { border-right-color: var(--color-accent); }
+/* Подсказка, внутрь которой можно увести курсор (мини-панель действий) */
+.tooltip-interactive { pointer-events: auto; }
 
 /* Selection tooltip — мини-toolbar при выделении текста */
 .selection-tooltip {
@@ -443,37 +264,76 @@ button[data-tooltip],
 }
 
 /* ==========================================================================
-   5. Dark theme — в dark тултип инвертирован (светлый фон, тёмный текст)
+   4. Размеры и цветовые варианты — общие для обоих носителей
    ========================================================================== */
-.dark [data-tooltip]::before,
-.dark .tooltip-content,
-.dark .tooltip-popup,
-[data-theme="dark"] [data-tooltip]::before,
-[data-theme="dark"] .tooltip-content,
-[data-theme="dark"] .tooltip-popup {
-  /* Elevation уровень 2 — тултип парит над карточками, не сливается с ними */
-  background: var(--color-surface-elevated);
-  color: var(--color-text);
+[data-tooltip].tooltip-sm::before,
+.tooltip-popup.tooltip-sm {
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--fs-xs);
+}
+[data-tooltip].tooltip-sm::after,
+.tooltip-popup.tooltip-sm::after { border-width: 4px; }
+
+[data-tooltip].tooltip-lg::before,
+.tooltip-popup.tooltip-lg {
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--fs-sm);
+}
+[data-tooltip].tooltip-lg::after,
+.tooltip-popup.tooltip-lg::after { border-width: 6px; }
+
+/* Light — светлая панель поверх контента: elevation уровень 2 */
+[data-tooltip].tooltip-light,
+.tooltip-popup.tooltip-light {
+  --tooltip-bg: var(--color-surface-elevated);
+  --tooltip-fg: var(--color-text);
+}
+[data-tooltip].tooltip-light::before,
+.tooltip-popup.tooltip-light {
   border: var(--border-w) solid var(--color-border);
 }
-.dark [data-tooltip]::after,
-[data-theme="dark"] [data-tooltip]::after {
-  border-top-color: var(--color-surface-elevated);
+
+/* Primary — accent */
+[data-tooltip].tooltip-primary,
+.tooltip-popup.tooltip-primary {
+  --tooltip-bg: var(--color-accent);
+  --tooltip-fg: var(--color-text-on-accent);
 }
-.dark [data-tooltip].tooltip-bottom::after,
-[data-theme="dark"] [data-tooltip].tooltip-bottom::after {
-  border-top-color: transparent;
-  border-bottom-color: var(--color-surface-elevated);
+
+/* Многострочная подсказка. Ширина — токен --tooltip-max-w, зажатый вьюпортом:
+   на узком экране подсказка не должна упираться в кромки (запас — --space-8).
+   Базовый пузырь жёстко nowrap, поэтому без сброса white-space ограничение
+   ширины не сработало бы вовсе. Инженерные расшифровки (ряды мощностей,
+   коды IC/IP/IE) приходят готовой строкой с переводами строк — pre-line. */
+[data-tooltip].tooltip-multiline::before {
+  white-space: normal;
+  max-width: min(var(--tooltip-max-w), calc(100vw - var(--space-8)));
+  text-align: center;
+  line-height: var(--lh-snug);
 }
-.dark [data-tooltip].tooltip-left::after,
-[data-theme="dark"] [data-tooltip].tooltip-left::after {
-  border-top-color: transparent;
-  border-left-color: var(--color-surface-elevated);
+.tooltip-popup.tooltip-multiline {
+  white-space: pre-line;
+  max-width: min(var(--tooltip-max-w), calc(100vw - var(--space-8)));
+  text-align: left;
+  line-height: var(--lh-normal);
 }
-.dark [data-tooltip].tooltip-right::after,
-[data-theme="dark"] [data-tooltip].tooltip-right::after {
-  border-top-color: transparent;
-  border-right-color: var(--color-surface-elevated);
+
+/* ==========================================================================
+   5. Тёмная тема — тултип инвертирован (светлая панель, тёмный текст)
+   ========================================================================== */
+.dark [data-tooltip],
+.dark .tooltip-popup,
+[data-theme="dark"] [data-tooltip],
+[data-theme="dark"] .tooltip-popup {
+  /* Elevation уровень 2 — тултип парит над карточками, не сливается с ними */
+  --tooltip-bg: var(--color-surface-elevated);
+  --tooltip-fg: var(--color-text);
+}
+.dark [data-tooltip]::before,
+.dark .tooltip-popup,
+[data-theme="dark"] [data-tooltip]::before,
+[data-theme="dark"] .tooltip-popup {
+  border: var(--border-w) solid var(--color-border);
 }
 
 /* ==========================================================================
@@ -483,8 +343,7 @@ button[data-tooltip],
    fade по opacity остаётся — он помогает пониманию (RULES §6) */
 @media (prefers-reduced-motion: reduce) {
   [data-tooltip]::before,
-  [data-tooltip]::after,
-  .tooltip-content {
+  [data-tooltip]::after {
     transition: opacity var(--duration-tooltip) var(--ease-out),
                 visibility var(--duration-tooltip) var(--ease-out);
   }
@@ -493,3 +352,4 @@ button[data-tooltip],
     transition-delay: var(--tooltip-intent-delay);
   }
 }
+/* </BLOCK:component.tooltip> */

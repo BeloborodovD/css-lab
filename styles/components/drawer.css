@@ -121,15 +121,52 @@
 }
 .drawer--left.is-open .drawer__panel { transform: translateX(0); }
 
-/* Reduced motion: только fade, без сдвига (включая левый вариант) */
+/* ===== Вариант «нижний лист» ============================================
+ * Тот же компонент, другая кромка: лист принадлежит низу экрана, входит и
+ * уходит вниз (RULES.md §3), смещение процентное. Отдельного компонента
+ * bottom-sheet в библиотеке нет — раньше он был переизобретён в modal.css
+ * (.modal-bottom-sheet) и сведён сюда.
+ */
+.drawer--sheet .drawer__panel {
+  top: auto;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  width: auto;
+  max-height: 85vh;
+  border-left: none;
+  border-top: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  transform: translateY(100%);
+}
+.drawer--sheet.is-open .drawer__panel { transform: translateY(0); }
+
+/* Полоска-захват сверху листа: подсказывает, что лист тянется вниз */
+.drawer__grabber {
+  width: var(--space-10);
+  height: var(--space-1);
+  margin: var(--space-2) auto var(--space-1);
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+/* Нижний отступ листа уважает системную полосу жестов */
+.drawer--sheet .drawer__footer {
+  padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+}
+
+/* Reduced motion: только fade, без сдвига (включая левый вариант и лист) */
 @media (prefers-reduced-motion: reduce) {
   .drawer__panel,
-  .drawer--left .drawer__panel {
+  .drawer--left .drawer__panel,
+  .drawer--sheet .drawer__panel {
     transform: none;
     opacity: 0;
     transition: opacity var(--duration-dropdown) var(--ease-out);
   }
   .drawer.is-open .drawer__panel,
-  .drawer--left.is-open .drawer__panel { opacity: 1; }
+  .drawer--left.is-open .drawer__panel,
+  .drawer--sheet.is-open .drawer__panel { opacity: 1; }
 }
 /* </BLOCK:component.drawer> */

@@ -4,7 +4,7 @@
    AutoTrassir — enterprise LPR-система. Оригинал был очень тяжёлый:
      - photo-card hover с translateY(-4px) + box-shadow 0 8px 32px
      - quick-actions с backdrop-filter blur
-     - skeleton с 3-stop gradient + 1.5s shimmer
+     - skeleton с 3-stop gradient + 1.5s shimmer (теперь общий компонент)
      - lightbox-plate-box с border-left + accent-100 фоном
      - icon hardcode #fbbf24 / #d97706 / #10b981 / #ef4444
 
@@ -12,7 +12,7 @@
      - photo-card: тонкая 1px рамка, hover = border-strong + shadow-sm (без
        transform). image scale на hover оставлен для UX.
      - quick-action-btn без backdrop-filter, прозрачный с border на hover
-     - skeleton без 3-stop gradient — pulse opacity 0.55→1
+     - skeleton — общий компонент components/skeleton.css (свой набор удалён)
      - license-plate / lightbox-plate через семантические токены
      - icon-* utility classes маппинг на токены (warning/success/error/info)
    ========================================================================== */
@@ -127,18 +127,13 @@
   border-color: var(--color-accent);
 }
 
-/* ==================== Skeleton ==================== */
-.skeleton {
-  background: var(--color-surface-sunken);
-  border-radius: var(--radius-xs);
-  animation: skeleton-pulse 1.4s var(--ease-in-out) infinite;
-}
-
-@keyframes skeleton-pulse {
-  0%, 100% { opacity: 1; }
-  50%      { opacity: 0.55; }
-}
-
+/* ==================== Skeleton ====================
+   Собственного скелетона здесь нет: заглушка — компонент .skeleton
+   (components/skeleton.css), он же несёт единственный в библиотеке
+   @keyframes skeleton-pulse (--duration-pulse, linear). Прежняя копия правила
+   и одноимённых keyframes жила в этом файле и перебивалась/перебивала
+   компонент по порядку импорта — имя keyframes глобальное.
+   Ниже — только размеры заглушек внутри карточки кадра. */
 .photo-card-skeleton {
   background: var(--color-surface);
   border: var(--border-w) solid var(--color-border);
@@ -172,16 +167,8 @@
   font-size: var(--fs-xs);
 }
 
-.status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: var(--radius-full);
-}
-
-.status-dot.success { background: var(--color-success); }
-.status-dot.warning { background: var(--color-warning); }
-.status-dot.error   { background: var(--color-error); }
-.status-dot.info    { background: var(--color-info); }
+/* Сама точка — общий примитив .badge-dot (badge.css); здесь только строка
+   «точка + подпись», в которой смысл несёт текст, а не цвет. */
 
 .status-text.success { color: var(--color-success); }
 .status-text.warning { color: var(--color-warning); }
@@ -300,8 +287,6 @@
   .photo-card:hover .photo-card-image img {
     transform: none;
   }
-  .skeleton {
-    animation: none;
-    opacity: 0.7;
-  }
+  /* Заглушки смягчает сам компонент skeleton — правило здесь было третьей
+     копией того же и повторять его не нужно */
 }

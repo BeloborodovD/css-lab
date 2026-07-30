@@ -232,84 +232,10 @@
   }
 }
 
-/* ==================== VEZA datasheet header (legacy print) ====================
-   Используется в datasheet_electric_motor.html — оставлен для совместимости */
-.veza-header {
-  width: 100%;
-  padding: var(--space-2) 0 var(--space-3);
-  margin-bottom: var(--space-4);
-  font-family: var(--font-sans);
-  color: var(--color-text);
-  border-bottom: var(--border-w) solid var(--color-border-strong);
-}
-
-.veza-header-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-4);
-  font-size: var(--fs-sm);
-}
-
-.veza-header-top > div:first-child {
-  flex: 0 0 20%;
-}
-
-.veza-header-top img {
-  display: block;
-  max-width: 100%;
-  height: auto;
-  max-height: 50px;
-}
-
-.veza-header-title {
-  flex: 1 1 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--fs-md);
-  font-weight: var(--fw-bold);
-  color: var(--color-text);
-  text-align: center;
-}
-
-.veza-header-contacts {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: var(--space-3);
-}
-
-.veza-header-box {
-  flex: 1 1 22%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-2) var(--space-3);
-  border: var(--border-w-strong) solid var(--color-border-strong);
-  border-radius: var(--radius-sm);
-  font-size: var(--fs-xs);
-  line-height: var(--lh-snug);
-  color: var(--color-text-secondary);
-  text-align: center;
-}
-
-.veza-header-box a,
-.veza-header-box a:visited {
-  color: inherit;
-  text-decoration: underline;
-}
-
-@media (max-width: 768px) {
-  .veza-header-top {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .veza-header-top > div:first-child,
-  .veza-header-title {
-    flex: 1 1 100%;
-  }
-}
+/* Шапки печатного бланка здесь больше нет: легаси-блок .veza-header* (логотип,
+   заголовок документа и плашки контактов внешнего даташита) к таблице
+   отношения не имел. Шапка печатного документа — styles/layout/print-sheet.css
+   и components/spec-sheet.css. */
 
 /* ==================== Card-Style Table on Mobile ==================== */
 @media (max-width: 767px) {

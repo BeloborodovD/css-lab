@@ -1,9 +1,9 @@
 /* ==========================================================================
-   footer.css — Lightweight redesign
+   footer.css — контентный подвал страницы
    --------------------------------------------------------------------------
    - тонкая 1px top-border, surface bg
-   - status-dot: семантические токены (success/warning/error)
-   - убраны хардкоженые зелёный/амбер/красный
+   - колонки ссылок, копирайт, соцсети, версия сборки
+   - точка состояния в .footer-status берётся из badge.css (.badge-dot)
    ========================================================================== */
 
 .footer {
@@ -99,15 +99,8 @@
   font-size: var(--fs-xs);
 }
 
-.footer-status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: var(--radius-full);
-  background: var(--color-success);
-}
-
-.footer-status-dot.warning { background: var(--color-warning); }
-.footer-status-dot.error   { background: var(--color-error); }
+/* Точка состояния внутри .footer-status — общий примитив .badge-dot
+   (badge.css): собственной точки у подвала больше нет. */
 
 /* ==================== Version badge ==================== */
 .footer-version {

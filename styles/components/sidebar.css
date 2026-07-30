@@ -1,51 +1,54 @@
-/* ==========================================================================
-   sidebar.css — Lightweight redesign
-   --------------------------------------------------------------------------
-   - panel: surface + 1px border (без тяжёлых shadow)
-   - nav-link active: accent-soft + accent text (не сплошной accent fill)
-   - widget/stat blocks: surface-sunken (мягкий контраст)
-   - убраны transform: scale на active
-   ========================================================================== */
+/* [BLOCK:component.sidebar]
+ * Боковая панель приложения: каркас фиксированной колонки, мобильная шторка,
+ * ручка ресайза и наполнение (навигация, виджеты, карточка пользователя, теги,
+ * лента активности).
+ * Модуль: css-lab/components. Зависимости: base/variables.css, base/motion.css.
+ *
+ * Единственный владелец имени .sidebar. Раньше каркас панели существовал в трёх
+ * экземплярах — .sidebar в layout.css, .app-sidebar в app-layout.css и .sidebar
+ * здесь; всё сведено в этот файл. Сетку «панель + контент», сдвиг центральной
+ * колонки и подвал даёт app-layout.css, наполнение — этот блок.
+ *
+ * Сторона — вариант разметки (.sidebar--left / .sidebar--right), ручной ресайз —
+ * .sidebar--resizable; состояния .is-open и .is-resizing ставит JS.
+ */
 
 .sidebar {
-  background: var(--color-surface);
-  padding: var(--space-4);
-  overflow-y: auto;
-  overflow-x: hidden;
+  position: fixed;
+  top: var(--header-h);
+  /* Нижняя кромка — над фиксированным подвалом каркаса приложения */
+  bottom: var(--space-16);
+  width: var(--sidebar-width, var(--sidebar-w));
   display: flex;
   flex-direction: column;
   min-height: 0;
-  max-height: 100%;
-  border: var(--border-w) solid var(--color-border);
-  transition: transform var(--t-slow) var(--ease),
-              opacity var(--t-slow) var(--ease);
+  padding: var(--space-4);
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--color-surface);
+  z-index: var(--z-drawer);
+  /* PURPOSE: spatial consistency — панель живёт за кромкой экрана и уходит туда
+     же, откуда пришла (RULES.md §3). Базовое состояние = выход, он быстрее
+     входа; кривая шторки одна на все выдвижные поверхности */
+  transition: transform var(--duration-modal-exit) var(--ease-drawer);
 }
 
-/* Slide transitions */
-.sidebar.sidebar-enter { opacity: 0; }
-.sidebar.left.sidebar-enter  { transform: translateX(-100%); }
-.sidebar.right.sidebar-enter { transform: translateX(100%); }
-.sidebar.sidebar-enter-active {
-  opacity: 1;
-  transform: translateX(0);
-}
-.sidebar.sidebar-exit { opacity: 1; transform: translateX(0); }
-.sidebar.left.sidebar-exit-active  { opacity: 0; transform: translateX(-100%); }
-.sidebar.right.sidebar-exit-active { opacity: 0; transform: translateX(100%); }
-
-/* Только нужная сторона имеет border */
-.sidebar.left {
+/* Границу рисует только та сторона, которой панель примыкает к контенту */
+.sidebar--left {
+  left: 0;
   border-right: var(--border-w) solid var(--color-border);
-  border-left: none;
-  border-top: none;
-  border-bottom: none;
+  transform: translateX(-100%);
 }
 
-.sidebar.right {
+.sidebar--right {
+  right: 0;
   border-left: var(--border-w) solid var(--color-border);
-  border-right: none;
-  border-top: none;
-  border-bottom: none;
+  transform: translateX(100%);
+}
+
+.sidebar.is-open {
+  transform: translateX(0);
+  transition-duration: var(--duration-modal);
 }
 
 /* ==================== Header ==================== */
@@ -78,13 +81,22 @@
   cursor: pointer;
   color: var(--color-text-muted);
   border-radius: var(--radius-sm);
-  transition: background var(--t-fast) var(--ease),
-              color var(--t-fast) var(--ease);
+  /* PURPOSE: feedback — кнопка отзывается на наведение и нажатие */
+  transition: background-color var(--duration-press) var(--ease-out),
+              color var(--duration-press) var(--ease-out);
 }
 
-.sidebar-close:hover {
-  background: var(--color-surface-hover);
-  color: var(--color-text);
+@media (hover: hover) and (pointer: fine) {
+  .sidebar-close:hover {
+    background: var(--color-surface-hover);
+    color: var(--color-text);
+  }
+}
+
+.sidebar-close:focus-visible {
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--shadow-focus);
 }
 
 /* ==================== Body / Footer ==================== */
@@ -109,7 +121,7 @@
 }
 
 .sidebar-nav-item {
-  margin-bottom: 2px;
+  margin-bottom: var(--space-px);
 }
 
 .sidebar-nav-link {
@@ -121,13 +133,21 @@
   color: var(--color-text-secondary);
   text-decoration: none;
   font-size: var(--fs-sm);
-  transition: background var(--t-fast) var(--ease),
-              color var(--t-fast) var(--ease);
+  transition: background-color var(--duration-press) var(--ease-out),
+              color var(--duration-press) var(--ease-out);
 }
 
-.sidebar-nav-link:hover {
-  background: var(--color-surface-hover);
-  color: var(--color-text);
+@media (hover: hover) and (pointer: fine) {
+  .sidebar-nav-link:hover {
+    background: var(--color-surface-hover);
+    color: var(--color-text);
+  }
+}
+
+.sidebar-nav-link:focus-visible {
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--shadow-focus);
 }
 
 .sidebar-nav-link.active {
@@ -147,7 +167,7 @@
   background: var(--color-accent);
   color: var(--color-text-on-accent);
   font-size: var(--fs-xs);
-  padding: 2px var(--space-2);
+  padding: var(--space-px) var(--space-2);
   border-radius: var(--radius-full);
   font-weight: var(--fw-semi);
   font-variant-numeric: tabular-nums;
@@ -199,8 +219,8 @@
 }
 
 .sidebar-user-avatar {
-  width: 36px;
-  height: 36px;
+  width: var(--icon-size);
+  height: var(--icon-size);
   border-radius: var(--radius-full);
   background: var(--color-accent);
   color: var(--color-text-on-accent);
@@ -230,33 +250,8 @@
   color: var(--color-text-muted);
 }
 
-/* ==================== Quick stats ==================== */
-.sidebar-stats {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-2);
-}
-
-.sidebar-stat {
-  text-align: center;
-  padding: var(--space-3) var(--space-2);
-  background: var(--color-surface-sunken);
-  border-radius: var(--radius-sm);
-}
-
-.sidebar-stat-value {
-  font-size: var(--fs-xl);
-  font-weight: var(--fw-bold);
-  color: var(--color-accent);
-  font-variant-numeric: tabular-nums;
-}
-
-.sidebar-stat-label {
-  font-size: var(--fs-xs);
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wide);
-}
+/* Быстрые метрики в панели — не собственный набор классов, а компонент stats:
+   сетка .stats-grid.stats-grid-2 + плитки .stat-card.stat-card-tile. */
 
 /* ==================== Tags ==================== */
 .sidebar-tags {
@@ -272,13 +267,15 @@
   font-size: var(--fs-xs);
   color: var(--color-text-secondary);
   cursor: pointer;
-  transition: background var(--t-fast) var(--ease),
-              color var(--t-fast) var(--ease);
+  transition: background-color var(--duration-press) var(--ease-out),
+              color var(--duration-press) var(--ease-out);
 }
 
-.sidebar-tag:hover {
-  background: var(--color-surface-hover);
-  color: var(--color-text);
+@media (hover: hover) and (pointer: fine) {
+  .sidebar-tag:hover {
+    background: var(--color-surface-hover);
+    color: var(--color-text);
+  }
 }
 
 .sidebar-tag.active {
@@ -306,8 +303,8 @@
 }
 
 .sidebar-activity-icon {
-  width: 28px;
-  height: 28px;
+  width: var(--space-8);
+  height: var(--space-8);
   border-radius: var(--radius-full);
   background: var(--color-accent-soft);
   color: var(--color-accent);
@@ -335,9 +332,10 @@
   color: var(--color-text-muted);
 }
 
-/* ==================== Overlay (mobile backdrop) ==================== */
+/* ==================== Подложка (мобильная шторка) ====================
+   Скрытие через visibility + opacity, а не display: подложка обязана гаснуть
+   вместе с панелью и не ловить клики в закрытом виде. */
 .sidebar-overlay {
-  display: none;
   position: fixed;
   inset: 0;
   background: var(--color-overlay);
@@ -346,78 +344,50 @@
   z-index: calc(var(--z-drawer) - 1);
   opacity: 0;
   visibility: hidden;
-  transition: opacity var(--t-slow) var(--ease),
-              visibility var(--t-slow) var(--ease);
+  pointer-events: none;
+  /* PURPOSE: preventing a jarring change — фон гаснет вместе со шторкой */
+  transition: opacity var(--duration-modal-exit) var(--ease-drawer),
+              visibility 0s linear var(--duration-modal-exit);
 }
 
-@media (max-width: 767px) {
-  .sidebar-overlay {
-    display: block;
-  }
-  .sidebar-overlay.active,
-  .sidebar-overlay.visible {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  .sidebar {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    width: var(--sidebar-w);
-    max-width: 85vw;
-    z-index: var(--z-drawer);
-    box-shadow: var(--shadow-lg);
-  }
-
-  .sidebar.left  { left: 0;  transform: translateX(-100%); }
-  .sidebar.right { right: 0; left: auto; transform: translateX(100%); }
-  .sidebar.left.open,
-  .sidebar.right.open { transform: translateX(0); }
-
-  .sidebar-nav-link {
-    padding: var(--space-3);
-    min-height: 48px;
-  }
-
-  .sidebar-close {
-    width: 44px;
-    height: 44px;
-    padding: var(--space-3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+.sidebar-overlay.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: opacity var(--duration-modal) var(--ease-drawer),
+              visibility 0s;
 }
 
-@media (max-width: 479px) {
-  .sidebar {
-    width: 100%;
-    max-width: 100%;
-  }
+/* ==================== Ручка ресайза (только мышь) ==================== */
+/* Границы ручного ресайза: нижняя — узкая раскладка панели (--sidebar-w-sm),
+   верхняя — половина экрана. Жёсткий потолок в пикселях держит JS-обработчик. */
+.sidebar--resizable {
+  min-width: var(--sidebar-w-sm);
+  max-width: 50vw;
 }
 
-/* ==================== Resize handle (desktop only) ==================== */
 .sidebar-resize-handle {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 6px;
+  width: var(--space-2);
   background: transparent;
   cursor: ew-resize;
   z-index: var(--z-raised);
-  transition: background var(--t-fast) var(--ease);
+  transition: background-color var(--duration-press) var(--ease-out);
 }
 
-.sidebar.left .sidebar-resize-handle  { right: -3px; }
-.sidebar.right .sidebar-resize-handle { left: -3px; }
+.sidebar--left .sidebar-resize-handle  { right: calc(var(--space-1) * -1); }
+.sidebar--right .sidebar-resize-handle { left: calc(var(--space-1) * -1); }
 
-.sidebar-resize-handle:hover {
-  background: var(--color-accent-soft);
+@media (hover: hover) and (pointer: fine) {
+  .sidebar-resize-handle:hover { background: var(--color-accent-soft); }
+  .sidebar-resize-handle:hover::after { opacity: 1; }
 }
 
 .sidebar-resize-handle:active,
-.sidebar.resizing .sidebar-resize-handle {
+.sidebar.is-resizing .sidebar-resize-handle {
   background: var(--color-accent);
 }
 
@@ -427,46 +397,67 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 2px;
-  height: 40px;
+  width: var(--border-w-strong);
+  height: var(--space-10);
   background: var(--color-border-strong);
   border-radius: var(--radius-full);
   opacity: 0;
-  transition: opacity var(--t-fast) var(--ease);
+  transition: opacity var(--duration-press) var(--ease-out);
 }
 
-.sidebar-resize-handle:hover::after,
-.sidebar.resizing .sidebar-resize-handle::after {
-  opacity: 1;
-}
+.sidebar.is-resizing .sidebar-resize-handle::after { opacity: 1; }
 
-.sidebar.resizing {
+/* Во время перетаскивания переход выключен: ширину ведёт указатель */
+.sidebar.is-resizing {
   user-select: none;
   transition: none;
 }
 
-.sidebar.resizable {
-  min-width: 200px;
-  max-width: 500px;
-}
-
+/* ==================== Мобильная шторка ==================== */
 @media (max-width: 767px) {
+  .sidebar {
+    top: 0;
+    bottom: 0;
+    max-width: 85vw;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .sidebar-nav-link {
+    padding: var(--space-3);
+    min-height: var(--touch-target-min);
+  }
+
+  .sidebar-close {
+    width: var(--touch-target-min);
+    height: var(--touch-target-min);
+    padding: var(--space-3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .sidebar-resize-handle { display: none; }
 }
 
-/* ==================== Reduced motion ==================== */
-@media (prefers-reduced-motion: reduce) {
-  .sidebar,
-  .sidebar-nav-link,
-  .sidebar-close,
-  .sidebar-tag {
-    transition: none;
-  }
-  .sidebar.sidebar-enter,
-  .sidebar.sidebar-exit,
-  .sidebar.sidebar-enter-active,
-  .sidebar.sidebar-exit-active {
-    opacity: 1;
-    transform: translateX(0);
+@media (max-width: 479px) {
+  .sidebar {
+    width: 100%;
+    max-width: 100%;
   }
 }
+
+/* ==================== Уменьшенное движение ====================
+   Мягче, а не «в ноль»: выезд снимается, панель проступает по opacity —
+   она остаётся за кромкой в закрытом виде (RULES.md §6). */
+@media (prefers-reduced-motion: reduce) {
+  .sidebar {
+    opacity: 0;
+    transition: opacity var(--duration-dropdown) var(--ease-out);
+  }
+  .sidebar.is-open { opacity: 1; }
+  .sidebar-overlay {
+    transition: opacity var(--duration-dropdown) var(--ease-out),
+                visibility 0s linear var(--duration-dropdown);
+  }
+}
+/* </BLOCK:component.sidebar> */

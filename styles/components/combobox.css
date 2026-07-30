@@ -624,21 +624,27 @@
   .combobox-search-input { font-size: var(--fs-lg); }
 }
 
-/* ==================== Reduced motion ==================== */
-/* Мягче, но не ноль: движение убираем, кроссфейд открытия оставляем —
-   он помогает понять смену состояния (RULES.md §6). */
+/* ==================== Reduced motion ====================
+   Мягче, но не ноль: снимается движение, кроссфейд остаётся — он и есть
+   носитель смены состояния (RULES.md §6).
+
+   Длительность переходов под этим предпочтением задаёт ОДНО правило на весь
+   проект — `transition-duration: 200ms !important` в base/motion.css. Оно
+   лежит в самом раннем слое каскада, а для важных объявлений порядок слоёв
+   инвертируется, поэтому перебить его из компонента нельзя и не нужно.
+   Прежний оптовый выключатель `transition: none !important` на триггере,
+   стрелке, крестике и опции отсюда удалён: после перехода на @layer он
+   перестал действовать (замер: 0 ms → 200 ms), а по §6 обнулять переход и
+   не следовало — «мягче» это не «выключено». Остаётся только то, что
+   выключателем не является: список свойств без движения и снятый transform. */
 @media (prefers-reduced-motion: reduce) {
-  .combobox-trigger,
-  .combobox-arrow,
-  .combobox-clear,
-  .combobox-option {
-    transition: none !important;
-  }
   .combobox-dropdown {
-    /* visibility в списке обязательна: без неё скрытие мгновенно и
-       обещанный кроссфейд выхода не виден */
+    /* Из перехода выпадает transform — движение; visibility в списке
+       обязательна, без неё скрытие мгновенно и кроссфейд выхода не виден */
     transition: opacity var(--duration-exit) var(--ease-out),
-                visibility var(--duration-exit) var(--ease-out) !important;
+                visibility var(--duration-exit) var(--ease-out);
+    /* !important здесь по делу: .combobox.is-open .combobox-dropdown — (0,2,0)
+       и иначе вернёт масштаб со сдвигом */
     transform: none !important;
   }
   .combobox-option:active { transform: none; }

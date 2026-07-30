@@ -238,7 +238,7 @@ components:
         - Остаток "+N" в группе нуждается в расшифровке для скринридера (сколько ещё участников).
       js_required:
         - "Ничего: компонент полностью декларативный, состояние задаётся классами в разметке."
-    tokens: ["--radius", "--radius-sm", "--radius-lg", "--radius-full", "--color-accent", "--color-accent-soft", "--color-surface", "--color-surface-active", "--color-surface-sunken", "--color-border", "--color-text", "--color-text-muted", "--color-success", "--color-error", "--color-warning", "--border-w-strong", "--shadow-sm", "--shadow-focus", "--fw-semi", "--fs-xs", "--fs-sm", "--fs-base", "--fs-md", "--fs-2xl", "--t-fast", "--ease", "--z-raised"]
+    tokens: ["--radius", "--radius-sm", "--radius-lg", "--radius-full", "--color-accent", "--color-accent-soft", "--color-surface", "--color-surface-active", "--color-surface-sunken", "--color-border", "--color-text", "--color-text-muted", "--color-success", "--color-error", "--color-warning", "--border-w-strong", "--shadow-sm", "--shadow-focus", "--fw-semi", "--fs-xs", "--fs-sm", "--fs-base", "--fs-md", "--fs-2xl", "--duration-press", "--ease-out", "--z-raised"]
     showcase: "components.html#avatar"
     examples:
       - "витрина: components.html#avatar — размеры, статусы, группы"
@@ -454,7 +454,7 @@ components:
         - "\"card-loading\" — плейсхолдер: контейнеру нужен aria-busy."
       js_required:
         - Ничего для статики; классы анимации входа и загрузки навешивает логика списка.
-    tokens: ["--color-surface", "--color-surface-hover", "--color-border", "--color-border-strong", "--color-border-subtle", "--color-accent", "--color-accent-soft", "--color-text", "--color-text-secondary", "--color-text-muted", "--surface-glass", "--surface-glass-border", "--blur-glass", "--border-w", "--border-w-thick", "--border-w-strong", "--radius", "--radius-sm", "--shadow", "--shadow-sm", "--shadow-focus", "--space-1", "--space-2", "--space-3", "--space-4", "--space-5", "--fs-xs", "--fs-sm", "--fs-base", "--fs-md", "--fs-lg", "--fw-semi", "--lh-snug", "--lh-normal", "--tracking-tight", "--t", "--t-slow", "--ease", "--ease-out", "--duration-pulse"]
+    tokens: ["--color-surface", "--color-surface-hover", "--color-border", "--color-border-strong", "--color-border-subtle", "--color-accent", "--color-accent-soft", "--color-text", "--color-text-secondary", "--color-text-muted", "--surface-glass", "--surface-glass-border", "--blur-glass", "--border-w", "--border-w-thick", "--border-w-strong", "--radius", "--radius-sm", "--shadow", "--shadow-sm", "--shadow-focus", "--space-1", "--space-2", "--space-3", "--space-4", "--space-5", "--fs-xs", "--fs-sm", "--fs-base", "--fs-md", "--fs-lg", "--fw-semi", "--lh-snug", "--lh-normal", "--tracking-tight", "--duration-dropdown", "--duration-modal", "--duration-pulse", "--ease-out"]
     showcase: "components.html#cards"
     examples:
       - "витрина: components.html#cards, а также обёртка почти всех демо-блоков витрины"
@@ -634,7 +634,7 @@ components:
       keyboard:
         - Вызов и закрытие клавишами; закрытие по Escape обязательно, фокус возвращается туда, откуда палитру вызвали.
         - Стрелки ведут по результатам, Enter выполняет команду; фокус при этом остаётся в поле ввода.
-        - Открытие и закрытие принципиально не анимируются — это действие частотное и клавиатурное.
+        - Открытие и закрытие принципиально не анимируются — это действие частотное и клавиатурное. По той же причине в компоненте нет ни одного перехода: подсветку пункта двигают стрелками, и переход на цвете иконки и подложке пункта отставал бы от нажатий (гейт частоты ui-motion-craft §0). Единственное движение файла — спиннер загрузки.
       aria:
         - Контейнер — role="dialog" с aria-modal="true" и заголовком/меткой.
         - Список результатов — role="listbox", пункт — role="option"; активный пункт связывается с полем через aria-activedescendant.
@@ -644,7 +644,7 @@ components:
         - Переключать класс "open" на оверлее; ловить фокус внутри и возвращать его при закрытии.
         - Фильтровать команды, оборачивать совпадения в "command-palette-highlight", вести подсветку "highlighted"/"active".
         - Блокировать прокрутку страницы под оверлеем.
-    tokens: ["--space-1", "--space-2", "--space-3", "--space-4", "--space-5", "--space-6", "--space-8", "--space-10", "--space-12", "--fs-xs", "--fs-sm", "--fs-base", "--fs-md", "--fs-lg", "--fw-medium", "--fw-semi", "--font-sans", "--tracking-wide", "--color-overlay", "--color-surface-overlay", "--color-surface-sunken", "--color-surface-elevated-hover", "--color-accent", "--color-accent-soft", "--color-border", "--color-border-subtle", "--color-border-strong", "--color-text", "--color-text-muted", "--color-highlight", "--color-highlight-text", "--border-w", "--border-w-strong", "--radius-xs", "--radius-sm", "--radius-lg", "--radius-full", "--shadow-lg", "--z-modal", "--t-fast", "--ease"]
+    tokens: ["--space-1", "--space-2", "--space-3", "--space-4", "--space-5", "--space-6", "--space-8", "--space-10", "--space-12", "--fs-xs", "--fs-sm", "--fs-base", "--fs-md", "--fs-lg", "--fw-medium", "--fw-semi", "--font-sans", "--tracking-wide", "--color-overlay", "--color-surface-overlay", "--color-surface-sunken", "--color-surface-elevated-hover", "--color-accent", "--color-accent-soft", "--color-border", "--color-border-subtle", "--color-border-strong", "--color-text", "--color-text-muted", "--color-highlight", "--color-highlight-text", "--border-w", "--border-w-strong", "--radius-xs", "--radius-sm", "--radius-lg", "--radius-full", "--shadow-lg", "--z-modal"]
     showcase: "components.html#command-palette"
     examples:
       - "витрина: components.html#command-palette — статичный вид палитры, набор клавиш, кнопка вызова"
@@ -689,7 +689,7 @@ components:
         - "Компонент рендерится скриптом: содержимое панели (шапка, недели, сетка дней) генерируется, в разметке остаётся пустой контейнер."
         - Переключать класс "open", писать aria-expanded, ставить классы дней (selected, today, in-range, range-start/end).
         - "На мобильном обрабатывать перетаскивание шторки: закрытие по скорости жеста, а не только по расстоянию."
-    tokens: ["--space-1", "--space-2", "--space-3", "--space-4", "--fs-xs", "--fs-sm", "--fs-base", "--fs-md", "--fw-medium", "--fw-semi", "--fw-bold", "--tracking-wide", "--color-surface", "--color-surface-hover", "--color-surface-elevated", "--color-text", "--color-text-muted", "--color-text-disabled", "--color-text-on-accent", "--color-accent", "--color-accent-soft", "--color-accent-soft-hover", "--color-border", "--color-border-subtle", "--color-border-strong", "--border-w", "--border-w-strong", "--radius", "--radius-sm", "--radius-lg", "--radius-full", "--shadow", "--shadow-lg", "--shadow-focus", "--z-dropdown", "--duration-dropdown", "--duration-modal", "--duration-modal-exit", "--ease", "--ease-drawer"]
+    tokens: ["--space-1", "--space-2", "--space-3", "--space-4", "--fs-xs", "--fs-sm", "--fs-base", "--fs-md", "--fw-medium", "--fw-semi", "--fw-bold", "--tracking-wide", "--color-surface", "--color-surface-hover", "--color-surface-elevated", "--color-text", "--color-text-muted", "--color-text-disabled", "--color-text-on-accent", "--color-accent", "--color-accent-soft", "--color-accent-soft-hover", "--color-border", "--color-border-subtle", "--color-border-strong", "--border-w", "--border-w-strong", "--radius", "--radius-sm", "--radius-lg", "--radius-full", "--shadow", "--shadow-lg", "--shadow-focus", "--z-dropdown", "--duration-press", "--duration-dropdown", "--duration-exit", "--duration-modal", "--duration-modal-exit", "--ease-out", "--ease-drawer"]
     showcase: "components.html#date-picker"
     examples:
       - "витрина: components.html#date-picker — одиночная дата, диапазон, встроенный календарь"
@@ -872,7 +872,7 @@ components:
         - Заголовок пустого состояния должен быть заголовком нужного уровня в структуре страницы.
       js_required:
         - Показ и скрытие блока при изменении выборки; классы анимации входа необязательны.
-    tokens: ["--space-1", "--space-2", "--space-3", "--space-4", "--space-5", "--space-6", "--space-8", "--space-12", "--space-20", "--fs-sm", "--fs-base", "--fs-md", "--fs-xl", "--fs-2xl", "--fw-semi", "--lh-normal", "--tracking-tight", "--color-text", "--color-text-muted", "--color-surface", "--color-border", "--color-accent", "--color-accent-soft", "--color-error", "--color-success", "--border-w", "--radius", "--radius-lg", "--shadow-sm", "--t-slow", "--ease-out", "--ease-in-out"]
+    tokens: ["--space-1", "--space-2", "--space-3", "--space-4", "--space-5", "--space-6", "--space-8", "--space-12", "--space-20", "--fs-sm", "--fs-base", "--fs-md", "--fs-xl", "--fs-2xl", "--fw-semi", "--lh-normal", "--tracking-tight", "--color-text", "--color-text-muted", "--color-surface", "--color-border", "--color-accent", "--color-accent-soft", "--color-error", "--color-success", "--border-w", "--radius", "--radius-lg", "--shadow-sm", "--duration-modal", "--ease-out", "--ease-in-out"]
     showcase: "components.html#empty-state"
     examples:
       - "витрина: components.html#empty-state — нет данных, ничего не найдено, ошибка, компактный вариант"
@@ -1347,7 +1347,7 @@ components:
         - Монтировать/демонтировать окно и управлять классами .modal-enter / .modal-exit (выход должен дожидаться animationend).
         - Реализовать ловушку фокуса, Escape, закрытие по клику на оверлей и возврат фокуса.
         - Блокировать прокрутку фона на время показа.
-    tokens: ["--color-overlay", "--color-surface-overlay", "--color-surface-hover", "--color-border", "--color-border-strong", "--color-text", "--color-text-secondary", "--color-text-muted", "--color-accent", "--color-accent-soft", "--color-success", "--color-success-soft", "--color-warning", "--color-warning-soft", "--color-error", "--color-error-soft", "--color-info", "--color-info-soft", "--drawer-w", "--border-w", "--border-w-strong", "--radius-lg", "--radius-sm", "--radius-full", "--shadow-xl", "--shadow-lg", "--shadow-focus", "--z-modal", "--z-sticky", "--space-2", "--space-3", "--space-4", "--space-5", "--space-6", "--space-8", "--fs-base", "--fs-md", "--fs-lg", "--fw-semi", "--lh-snug", "--lh-relaxed", "--duration-modal", "--duration-modal-exit", "--duration-dropdown", "--duration-exit", "--ease-out", "--ease-drawer"]
+    tokens: ["--color-overlay", "--color-surface-overlay", "--color-surface-hover", "--color-border", "--color-border-strong", "--color-text", "--color-text-secondary", "--color-text-muted", "--color-accent", "--color-accent-soft", "--color-success", "--color-success-soft", "--color-warning", "--color-warning-soft", "--color-error", "--color-error-soft", "--color-info", "--color-info-soft", "--drawer-w", "--border-w", "--border-w-strong", "--radius-lg", "--radius-sm", "--radius-full", "--shadow-xl", "--shadow-lg", "--shadow-focus", "--z-modal", "--z-sticky", "--space-2", "--space-3", "--space-4", "--space-5", "--space-6", "--space-8", "--fs-base", "--fs-md", "--fs-lg", "--fw-semi", "--lh-snug", "--lh-relaxed", "--duration-press", "--duration-modal", "--duration-modal-exit", "--duration-dropdown", "--duration-exit", "--ease-out", "--ease-drawer"]
     showcase: "components.html#modal"
     examples:
       - "Витрина (статичный пример без скрипта): components.html#modal"
@@ -1886,7 +1886,7 @@ components:
         - открывать/закрывать .search-dropdown классом .open вне сценария :focus-within
         - двигать .highlighted по клавишам и оборачивать совпадение в span.search-highlight
         - для search-input-expandable — ставить .expanded при клике по свёрнутому полю
-    tokens: ["--space-1", "--space-2", "--space-3", "--space-4", "--space-6", "--space-8", "--space-10", "--space-12", "--border-w", "--border-w-strong", "--color-border", "--color-border-subtle", "--radius-xs", "--radius-sm", "--radius", "--radius-full", "--color-surface", "--color-surface-hover", "--color-surface-sunken", "--color-text", "--color-text-muted", "--color-text-on-accent", "--color-accent", "--color-accent-hover", "--color-highlight", "--color-highlight-text", "--fs-xs", "--fs-sm", "--fs-base", "--fs-md", "--fs-lg", "--fw-medium", "--fw-semi", "--tracking-wide", "--shadow-sm", "--shadow", "--shadow-focus", "--z-dropdown", "--duration-press", "--duration-modal", "--ease-out"]
+    tokens: ["--space-1", "--space-2", "--space-3", "--space-4", "--space-6", "--space-8", "--space-10", "--space-12", "--border-w", "--border-w-strong", "--color-border", "--color-border-subtle", "--radius-xs", "--radius-sm", "--radius", "--radius-full", "--color-surface", "--color-surface-hover", "--color-surface-sunken", "--color-text", "--color-text-muted", "--color-text-on-accent", "--color-accent", "--color-accent-hover", "--color-highlight", "--color-highlight-text", "--fs-xs", "--fs-sm", "--fs-base", "--fs-md", "--fs-lg", "--fw-medium", "--fw-semi", "--tracking-wide", "--shadow-sm", "--shadow", "--shadow-focus", "--z-dropdown", "--duration-press", "--duration-exit", "--duration-modal", "--ease-out"]
     showcase: "components.html#search"
     examples:
       - "поиск по каталогу товаров или списку записей с подсказками по мере ввода"
@@ -2336,7 +2336,7 @@ components:
         - переставлять .active на .tab и на соответствующем .tab-panel (без JS видна только первая вкладка)
         - вести roving tabindex и обработку стрелок
         - синхронизировать aria-selected с классом .active
-    tokens: ["--space-1", "--space-2", "--space-3", "--space-4", "--space-6", "--border-w", "--border-w-strong", "--color-border", "--color-surface", "--color-surface-hover", "--color-surface-sunken", "--color-text", "--color-text-muted", "--color-text-disabled", "--color-text-on-accent", "--color-accent", "--color-accent-soft", "--color-accent-text", "--radius-xs", "--radius-sm", "--radius-full", "--shadow-xs", "--shadow-focus", "--fs-xs", "--fs-sm", "--fs-base", "--fw-medium", "--fw-semi", "--lh-tight", "--t", "--t-fast", "--ease", "--ease-out"]
+    tokens: ["--space-1", "--space-2", "--space-3", "--space-4", "--space-6", "--border-w", "--border-w-strong", "--color-border", "--color-surface", "--color-surface-hover", "--color-surface-sunken", "--color-text", "--color-text-muted", "--color-text-disabled", "--color-text-on-accent", "--color-accent", "--color-accent-soft", "--color-accent-text", "--radius-xs", "--radius-sm", "--radius-full", "--shadow-xs", "--shadow-focus", "--fs-xs", "--fs-sm", "--fs-base", "--fw-medium", "--fw-semi", "--lh-tight", "--duration-press", "--ease-out"]
     showcase: "components.html#tabs"
     examples:
       - "разделы карточки изделия: описание, характеристики, документы, аналоги"

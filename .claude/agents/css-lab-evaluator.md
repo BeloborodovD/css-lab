@@ -68,7 +68,7 @@ generic method above whenever the work under review lives in css-lab.
    (background). If 5173 is busy — `netstat`, kill the stale node process; do NOT switch
    ports. `npx playwright test --reporter=line` auto-starts its own webServer on 5173 —
    stop your manual server before running the suite. The full suite is the regression
-   gate: currently 20 tests, ALL must pass; paste the real count line into EVIDENCE.
+   gate: currently 48 tests, ALL must pass; paste the real count line into EVIDENCE.
 2. **Brand/theme matrix.** Brands via `body[data-brand]` (`veza` default | `uralelectro` |
    `hemah`), dark via class `.dark`. Use REAL controls, not DOM surgery: the header theme
    toggle and `.brand-switcher` buttons (`[data-brand-value]`); state persists in

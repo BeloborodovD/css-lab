@@ -16,8 +16,10 @@
   border: var(--border-w) solid var(--color-border);
   border-radius: var(--radius);
   padding: var(--space-5);
-  transition: border-color var(--t) var(--ease),
-              box-shadow var(--t) var(--ease);
+  /* Ховер карточки видят десятки раз за сессию (гейт §0): движения нет,
+     меняются только граница и тень */
+  transition: border-color var(--duration-dropdown) var(--ease-out),
+              box-shadow var(--duration-dropdown) var(--ease-out);
 }
 
 .card:hover {
@@ -130,9 +132,11 @@
   gap: var(--space-4);
 }
 
-/* ====================== Animations ====================== */
+/* ====================== Animations ======================
+   Вход карточки — редкое событие (первая отрисовка списка), делает шаг
+   каскада заметным: тайминг шторки, кривая входа. */
 .card-animate-in {
-  animation: card-fade-in-up var(--t-slow) var(--ease-out) forwards;
+  animation: card-fade-in-up var(--duration-modal) var(--ease-out) forwards;
 }
 @keyframes card-fade-in-up {
   from { opacity: 0; transform: translateY(8px); }
@@ -141,7 +145,7 @@
 
 .card-list-animated .card {
   opacity: 0;
-  animation: card-fade-in-up var(--t-slow) var(--ease-out) forwards;
+  animation: card-fade-in-up var(--duration-modal) var(--ease-out) forwards;
 }
 .card-list-animated .card:nth-child(1) { animation-delay: 0ms; }
 .card-list-animated .card:nth-child(2) { animation-delay: 50ms; }

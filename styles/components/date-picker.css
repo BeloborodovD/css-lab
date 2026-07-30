@@ -28,8 +28,8 @@
   font-size: var(--fs-base);
   cursor: pointer;
   min-width: 180px;
-  transition: border-color var(--duration-dropdown) var(--ease),
-              box-shadow var(--duration-dropdown) var(--ease);
+  transition: border-color var(--duration-dropdown) var(--ease-out),
+              box-shadow var(--duration-dropdown) var(--ease-out);
 }
 
 .date-picker-input:hover { border-color: var(--color-border-strong); }
@@ -50,7 +50,7 @@
   flex-shrink: 0;
   width: 18px;
   height: 18px;
-  transition: color var(--duration-dropdown) var(--ease);
+  transition: color var(--duration-dropdown) var(--ease-out);
 }
 
 .date-picker.open .date-picker-icon { color: var(--color-accent); }
@@ -70,9 +70,9 @@
   visibility: hidden;
   transform: translateY(-4px) scale(0.98);
   transform-origin: top left;
-  transition: opacity var(--duration-dropdown) var(--ease),
-              visibility var(--duration-dropdown) var(--ease),
-              transform var(--duration-dropdown) var(--ease);
+  transition: opacity var(--duration-dropdown) var(--ease-out),
+              visibility var(--duration-dropdown) var(--ease-out),
+              transform var(--duration-dropdown) var(--ease-out);
   z-index: var(--z-dropdown);
   overflow: hidden;
 }
@@ -117,7 +117,10 @@
   cursor: pointer;
   padding: var(--space-1) var(--space-2);
   border-radius: var(--radius-sm);
-  transition: background var(--duration-dropdown) var(--ease);
+  /* Ниже — элементы, по которым водят мышью и стучат стрелками десятки раз
+     за одно открытие календаря. По гейту частоты (§0) их отклик обязан быть
+     самым коротким в наборе: --duration-press, а не тайминг раскрытия панели */
+  transition: background var(--duration-press) var(--ease-out);
 }
 .date-picker-title:hover { background: var(--color-surface-hover); }
 
@@ -140,8 +143,8 @@
   color: var(--color-text-muted);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: background var(--duration-dropdown) var(--ease),
-              color var(--duration-dropdown) var(--ease);
+  transition: background var(--duration-press) var(--ease-out),
+              color var(--duration-press) var(--ease-out);
 }
 .date-picker-nav-btn:hover {
   background: var(--color-surface-hover);
@@ -198,8 +201,8 @@
   font-variant-numeric: tabular-nums;
   border-radius: var(--radius-full);
   cursor: pointer;
-  transition: background var(--duration-dropdown) var(--ease),
-              color var(--duration-dropdown) var(--ease);
+  transition: background var(--duration-press) var(--ease-out),
+              color var(--duration-press) var(--ease-out);
 }
 
 .date-picker-day:hover:not(:disabled):not(.selected):not(.range-start):not(.range-end) {
@@ -296,8 +299,8 @@
   font-size: var(--fs-sm);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: background var(--duration-dropdown) var(--ease),
-              color var(--duration-dropdown) var(--ease);
+  transition: background var(--duration-press) var(--ease-out),
+              color var(--duration-press) var(--ease-out);
 }
 
 .date-picker-month-item:hover,
@@ -343,7 +346,7 @@
   font-weight: var(--fw-medium);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: background var(--duration-dropdown) var(--ease);
+  transition: background var(--duration-press) var(--ease-out);
 }
 
 .date-picker-today-btn { color: var(--color-accent); }
@@ -432,13 +435,23 @@
   .date-picker-nav-btn { width: 40px; height: 40px; }
 }
 
-/* ==================== Reduced motion ==================== */
+/* ==================== Reduced motion ====================
+   Мягче, а не «в ноль» (RULES.md §6). Оптовый выключатель
+   `transition: none !important` на поле, панели, дне и кнопках навигации
+   отсюда удалён: после перехода каскада на @layer он перестал действовать —
+   `transition-duration: 200ms !important` из base/motion.css лежит в самом
+   раннем слое, а важные объявления сравниваются в обратном порядке слоёв
+   (замер: 0 ms → 200 ms). Да он и противоречил §6: поле, день и стрелки
+   меняют только цвет, движения в них нет — гасить там было нечего.
+   Остаётся единственное, что действительно является движением: сдвиг и
+   масштаб панели. Он выводится из СПИСКА переходимых свойств, а не
+   обнуляется через `transform: none` — иначе на мобильном нижний лист
+   потерял бы свою закрытую позицию translateY(100%) и жест смахивания,
+   который ведёт лист инлайновым transform. */
 @media (prefers-reduced-motion: reduce) {
-  .date-picker-input,
-  .date-picker-dropdown,
-  .date-picker-day,
-  .date-picker-nav-btn {
-    transition: none !important;
+  .date-picker-dropdown {
+    transition: opacity var(--duration-exit) var(--ease-out),
+                visibility var(--duration-exit) var(--ease-out);
   }
 }
 

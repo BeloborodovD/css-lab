@@ -23,8 +23,10 @@
   font-size: var(--fs-base);
   /* Обрезка по кругу живёт на самой картинке, а не на блоке: overflow:hidden
      на .avatar срезал бы точку статуса, которая по анатомии выступает за круг */
-  transition: box-shadow var(--t-fast) var(--ease),
-              border-color var(--t-fast) var(--ease);
+  /* Наведение на аватар — частое действие (гейт §0): переход остаётся
+     самым коротким в наборе, только цвет и кольцо, без движения */
+  transition: box-shadow var(--duration-press) var(--ease-out),
+              border-color var(--duration-press) var(--ease-out);
 }
 
 .avatar-image,

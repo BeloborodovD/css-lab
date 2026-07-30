@@ -118,9 +118,11 @@
 .empty-state-error      .empty-state-title       { color: var(--color-error); }
 .empty-state-success    .empty-state-illustration { color: var(--color-success); }
 
-/* ====================== Animations ====================== */
+/* ====================== Animations ======================
+   Пустое состояние показывается редко и один раз — это тот самый «редкий»
+   ярус гейта §0, где вход имеет право быть заметным: тайминг шторки. */
 .empty-state-animated {
-  animation: empty-state-fade-in var(--t-slow) var(--ease-out);
+  animation: empty-state-fade-in var(--duration-modal) var(--ease-out);
 }
 @keyframes empty-state-fade-in {
   from { opacity: 0; transform: translateY(8px); }

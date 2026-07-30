@@ -60,12 +60,17 @@
   flex-shrink: 0;
 }
 
+/* Переходов в палитре нет ни одного — и это решение, а не упущение.
+   Палитру команд открывают с клавиатуры десятки раз в день, а подсветку
+   пункта двигают стрелками: по гейту частоты (ui-motion-craft §0)
+   клавиатурные действия не анимируются вовсе. Прежние 0.12s на цвете иконки
+   и подложке пункта отставали от нажатий стрелок и смазывали список.
+   Единственное движение файла — спиннер загрузки (ниже). */
 .command-palette-search-icon {
   flex-shrink: 0;
   width: 20px;
   height: 20px;
   color: var(--color-text-muted);
-  transition: color var(--t-fast) var(--ease);
 }
 
 .command-palette-header:focus-within .command-palette-search-icon {
@@ -140,7 +145,7 @@
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: background var(--t-fast) var(--ease);
+  /* Подсветку двигают стрелками — переход здесь запрещён гейтом §0 */
 }
 
 .command-palette-item:hover,
@@ -163,7 +168,6 @@
   width: 20px;
   height: 20px;
   color: var(--color-text-muted);
-  transition: color var(--t-fast) var(--ease);
 }
 
 .command-palette-item:hover .command-palette-item-icon,

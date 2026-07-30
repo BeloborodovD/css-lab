@@ -266,9 +266,10 @@
             .palette-swatch {
               padding: var(--space-3);
               background: var(--color-surface);
-              border: 1px solid var(--color-border);
+              border: var(--border-w) solid var(--color-border);
               border-radius: var(--radius);
-              transition: border-color var(--t) var(--ease), box-shadow var(--t) var(--ease);
+              transition: border-color var(--duration-dropdown) var(--ease-out),
+                          box-shadow var(--duration-dropdown) var(--ease-out);
             }
             .palette-swatch:hover { border-color: var(--color-border-strong); box-shadow: var(--shadow-sm); }
             .palette-chip {

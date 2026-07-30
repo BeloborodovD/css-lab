@@ -39,8 +39,10 @@
   cursor: pointer;
   position: relative;
   white-space: nowrap;
-  transition: color var(--t-fast) var(--ease),
-              background-color var(--t-fast) var(--ease);
+  /* Вкладки переключают часто и с клавиатуры (гейт §0), поэтому у всего
+     файла самый короткий тайминг набора — --duration-press */
+  transition: color var(--duration-press) var(--ease-out),
+              background-color var(--duration-press) var(--ease-out);
 }
 
 .tab:hover:not(.active):not(:disabled) {
@@ -68,7 +70,7 @@
   height: 2px;
   background: var(--color-accent);
   border-radius: 2px 2px 0 0;
-  animation: tab-indicator-in var(--t) var(--ease-out) forwards;
+  animation: tab-indicator-in var(--duration-press) var(--ease-out) forwards;
   transform-origin: center;
 }
 
@@ -161,15 +163,15 @@
 
 .tab-panel.fade {
   opacity: 0;
-  transition: opacity var(--t) var(--ease);
+  transition: opacity var(--duration-press) var(--ease-out);
 }
 .tab-panel.fade.active { opacity: 1; }
 
 .tab-panel.slide {
   opacity: 0;
   transform: translateY(8px);
-  transition: opacity var(--t) var(--ease-out),
-              transform var(--t) var(--ease-out);
+  transition: opacity var(--duration-press) var(--ease-out),
+              transform var(--duration-press) var(--ease-out);
 }
 .tab-panel.slide.active {
   opacity: 1;
@@ -237,19 +239,26 @@
   color: var(--color-text);
 }
 
-/* ====================== Reduced motion ====================== */
+/* ====================== Reduced motion ======================
+   Мягче, а не «в ноль» (RULES.md §6). Строка `.tab { transition: color
+   0.01ms, background-color 0.01ms }` отсюда удалена: это выключатель того же
+   рода, что уже сняты с alerts и notification-badge, к тому же с переходом
+   каскада на @layer он перестал действовать (длительность диктует
+   `transition-duration: 200ms !important` из base/motion.css — самый ранний
+   слой, важные объявления сравниваются в обратном порядке слоёв). Движения
+   в смене цвета вкладки нет, гасить там нечего.
+   Остаётся то, что действительно движется: рост индикатора и сдвиг панели. */
 @media (prefers-reduced-motion: reduce) {
-  .tab { transition: color 0.01ms, background-color 0.01ms; }
   .tab.active::after {
     animation: none;
     transform: scaleX(1);
     opacity: 1;
   }
-  .tab-panel.fade,
+  /* Кроссфейд панели сохраняется — он несёт смену вкладки; снимается
+     только вертикальный сдвиг варианта .slide */
   .tab-panel.slide {
-    transition: none;
-    opacity: 1;
     transform: none;
+    transition: opacity var(--duration-press) var(--ease-out);
   }
 }
 

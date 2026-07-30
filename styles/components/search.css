@@ -318,20 +318,29 @@
   border-top: none;
 }
 
-/* ==================== Reduced motion ==================== */
+/* ==================== Reduced motion ====================
+   Мягче, а не «в ноль» (RULES.md §6). Оптовый выключатель
+   `transition: none !important` на поле, иконке, крестике, выпадашке и её
+   пунктах отсюда удалён: он перестал действовать после перехода каскада на
+   @layer (`transition-duration: 200ms !important` из base/motion.css лежит в
+   самом раннем слое, а важные объявления сравниваются в обратном порядке
+   слоёв — замер: 0 ms → 200 ms) и по §6 был неверен: у поля, иконки, крестика
+   и пунктов меняется только цвет, движения в них нет.
+   Точечно гасится ровно то, что движется. */
 @media (prefers-reduced-motion: reduce) {
-  .search-input input,
-  .search-icon,
-  .search-clear,
-  .search-dropdown,
-  .search-dropdown-item {
-    transition: none !important;
+  /* Сдвиг и масштаб выпадашки выводятся из списка переходимых свойств —
+     остаётся кроссфейд, он и несёт смену состояния */
+  .search-dropdown {
+    transition: opacity var(--duration-exit) var(--ease-out),
+                visibility var(--duration-exit) var(--ease-out);
   }
-  .search-input-loading .search-icon { animation: none; }
-  .search-input-expandable {
-    transition: none;
-    width: 240px;
-  }
+  /* Бесконечный индикатор поиска не замораживается — он замедляется:
+     остановленная иконка перестаёт сообщать «идёт запрос» (тот же приём,
+     что у .combobox-spinner и спиннеров) */
+  .search-input-loading .search-icon { animation-duration: 1.5s; }
+  /* Раскрытие по ширине — layout-свойство (§5): под этим предпочтением поле
+     просто всегда развёрнуто, анимировать нечего */
+  .search-input-expandable { width: 240px; }
 }
 
 } /* @layer components */

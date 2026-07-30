@@ -116,8 +116,12 @@
 .shadow { box-shadow: var(--shadow); }
 .shadow-lg { box-shadow: var(--shadow-lg); }
 
-/* Transitions */
-.transition { transition: var(--transition); }
+/* Transitions — утилиты нет намеренно.
+   `.transition { transition: var(--transition) }` объявляла длительность без
+   списка свойств, то есть разворачивалась в переход по ключевому слову all —
+   прямой запрет ui-motion-craft §5 («свойства называются поимённо»).
+   Потребителей в разметке у неё не было. Переход задаётся в компоненте,
+   поимённо по свойствам, токенами --duration-* / --ease-* из base/motion.css. */
 
 /* Visibility */
 .sr-only {

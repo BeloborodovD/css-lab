@@ -33,7 +33,8 @@
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius);
-  background: var(--color-surface);
+  /* Elevation уровень 2 — плавающее уведомление выше карточек */
+  background: var(--color-surface-elevated);
   border: var(--border-w) solid var(--color-border);
   border-left: var(--border-w-thick) solid var(--color-text-muted);
   box-shadow: var(--shadow);

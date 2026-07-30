@@ -38,7 +38,10 @@
 }
 
 .btn:focus-visible {
-  outline: none;
+  /* Прозрачный контур вместо none: в forced-colors box-shadow вырезается,
+     а прозрачный outline система перекрашивает в Highlight — фокус видим */
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   box-shadow: var(--shadow-focus);
   border-color: var(--color-accent);
 }
@@ -227,10 +230,36 @@
   background: var(--color-surface-hover);
   border-color: var(--color-border-strong);
 }
+/* Filled-варианты идут ПОСЛЕ .dark .btn/.dark .btn:hover и повторяют
+   background/border: иначе (0,2,0)/(0,3,0) перебивают заливку и
+   accent-кнопка сливалась с surface (тёмный текст на тёмном фоне) */
 .dark .btn-primary,
 [data-theme="dark"] .btn-primary {
   /* В dark — accent светлый, текст тёмный для контраста */
+  background: var(--color-accent);
+  border-color: var(--color-accent);
   color: var(--color-accent-text);
+}
+.dark .btn-primary:hover,
+[data-theme="dark"] .btn-primary:hover {
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+}
+.dark .btn-primary:active,
+[data-theme="dark"] .btn-primary:active {
+  background: var(--color-accent-active);
+  border-color: var(--color-accent-active);
+}
+.dark .btn-danger,
+[data-theme="dark"] .btn-danger {
+  background: var(--color-error);
+  border-color: var(--color-error);
+  color: var(--color-bg);  /* near-black на светлом error-red: 7.3:1 */
+}
+.dark .btn-danger:hover,
+[data-theme="dark"] .btn-danger:hover {
+  background: var(--color-error-hover);
+  border-color: var(--color-error-hover);
 }
 .dark .btn-ghost:hover,
 [data-theme="dark"] .btn-ghost:hover {

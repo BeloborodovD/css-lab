@@ -87,3 +87,7 @@
 @import './themes/hemah.css';
 @import './themes/veza.css';
 @import './themes/uralelectro.css';
+
+/* Предпочтения контраста/прозрачности — САМЫЙ последний импорт:
+   media-переопределения пользовательских предпочтений бьют темы и бренды */
+@import './base/contrast-preferences.css';

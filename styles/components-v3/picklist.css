@@ -35,7 +35,8 @@
 }
 .picklist.is-open .picklist__control,
 .picklist__control:focus-visible {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   border-color: var(--color-accent);
   box-shadow: var(--shadow-focus);
 }
@@ -63,7 +64,8 @@
   cursor: pointer;
 }
 .picklist__toggle:focus-visible {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   box-shadow: var(--shadow-focus);
 }
 .picklist__caret {

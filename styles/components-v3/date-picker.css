@@ -35,7 +35,8 @@
 .date-picker.open .date-picker-input {
   border-color: var(--color-accent);
   box-shadow: var(--shadow-focus);
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
 }
 
 .date-picker-input-text { flex: 1; }
@@ -57,7 +58,8 @@
   top: calc(100% + var(--space-1));
   left: 0;
   min-width: 280px;
-  background: var(--color-surface);
+  /* Elevation уровень 2 — всплывающая панель календаря */
+  background: var(--color-surface-elevated);
   border: var(--border-w) solid var(--color-border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
@@ -148,7 +150,8 @@
 .date-picker-day:focus-visible,
 .date-picker-today-btn:focus-visible,
 .date-picker-clear-btn:focus-visible {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   box-shadow: var(--shadow-focus);
 }
 

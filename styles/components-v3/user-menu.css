@@ -40,7 +40,8 @@
   border-color: var(--color-border);
 }
 .user-menu__trigger:focus-visible {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   box-shadow: var(--shadow-focus);
 }
 
@@ -205,7 +206,8 @@
 }
 .user-menu__item:focus-visible {
   background: var(--color-surface-hover);
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
 }
 .user-menu__item--danger { color: var(--color-error); }
 @media (hover: hover) and (pointer: fine) {

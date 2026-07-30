@@ -43,7 +43,8 @@
 .combobox.is-open .combobox-trigger {
   border-color: var(--color-accent);
   box-shadow: var(--shadow-focus);
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
 }
 
 .combobox-value {
@@ -103,7 +104,8 @@
 }
 /* Фокус с клавиатуры — видимое кольцо, кнопка не должна прятаться */
 .combobox-clear:focus-visible {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   box-shadow: var(--shadow-focus);
   opacity: 1;
 }
@@ -115,7 +117,8 @@
   top: calc(100% + var(--space-1));
   left: 0;
   right: 0;
-  background: var(--color-surface);
+  /* Elevation уровень 2 — выпадающий listbox выше карточек */
+  background: var(--color-surface-elevated);
   border: var(--border-w) solid var(--color-border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
@@ -211,7 +214,7 @@
 
 .combobox-option:hover,
 .combobox-option.highlighted {
-  background: var(--color-surface-hover);
+  background: var(--color-surface-elevated-hover);
   color: var(--color-text);
 }
 
@@ -222,7 +225,8 @@
 
 /* Фокус с клавиатуры по опции — кольцо через токен тени */
 .combobox-option:focus-visible {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   box-shadow: var(--shadow-focus);
 }
 
@@ -333,7 +337,8 @@
 }
 /* Фокус с клавиатуры по кнопке удаления тега */
 .combobox-tag-remove:focus-visible {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   box-shadow: var(--shadow-focus);
   opacity: 1;
 }
@@ -567,7 +572,8 @@
 }
 .combobox-footer-btn:hover { background: var(--color-accent-soft); }
 .combobox-footer-btn:focus-visible {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   box-shadow: var(--shadow-focus);
 }
 

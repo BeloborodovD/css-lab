@@ -35,7 +35,8 @@
 
 .search-input:focus-within input,
 .search-input input:focus {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   border-color: var(--color-accent);
   box-shadow: var(--shadow-focus);
 }

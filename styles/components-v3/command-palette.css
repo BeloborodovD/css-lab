@@ -38,7 +38,8 @@
   max-height: 70vh;
   display: flex;
   flex-direction: column;
-  background: var(--color-surface);
+  /* Elevation уровень 3 — модальный слой */
+  background: var(--color-surface-overlay);
   border: var(--border-w) solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
@@ -141,7 +142,7 @@
 
 .command-palette-item:hover,
 .command-palette-item.highlighted {
-  background: var(--color-surface-hover);
+  background: var(--color-surface-elevated-hover);
 }
 
 /* Active = accent-soft (не сплошной accent) */

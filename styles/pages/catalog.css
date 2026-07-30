@@ -74,7 +74,8 @@
   }
 }
 .catalog-card:focus-visible {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   box-shadow: var(--shadow-focus);
 }
 /* PURPOSE: feedback — карточка-ссылка отзывается на нажатие (тактильность) */

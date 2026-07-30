@@ -196,17 +196,17 @@
 [data-tooltip].tooltip-lg::after { border-width: 6px; }
 
 /* --- Variants --- */
-/* Light — белая на тёмном тексте, для контраста */
+/* Light — светлая панель поверх контента: elevation уровень 2 */
 [data-tooltip].tooltip-light::before {
-  background: var(--color-surface);
+  background: var(--color-surface-elevated);
   color: var(--color-text);
   border: var(--border-w) solid var(--color-border);
   box-shadow: var(--shadow);
 }
-[data-tooltip].tooltip-light::after { border-top-color: var(--color-surface); }
-[data-tooltip].tooltip-light.tooltip-bottom::after { border-top-color: transparent; border-bottom-color: var(--color-surface); }
-[data-tooltip].tooltip-light.tooltip-left::after   { border-top-color: transparent; border-left-color: var(--color-surface); }
-[data-tooltip].tooltip-light.tooltip-right::after  { border-top-color: transparent; border-right-color: var(--color-surface); }
+[data-tooltip].tooltip-light::after { border-top-color: var(--color-surface-elevated); }
+[data-tooltip].tooltip-light.tooltip-bottom::after { border-top-color: transparent; border-bottom-color: var(--color-surface-elevated); }
+[data-tooltip].tooltip-light.tooltip-left::after   { border-top-color: transparent; border-left-color: var(--color-surface-elevated); }
+[data-tooltip].tooltip-light.tooltip-right::after  { border-top-color: transparent; border-right-color: var(--color-surface-elevated); }
 
 /* Primary — accent */
 [data-tooltip].tooltip-primary::before {
@@ -326,7 +326,7 @@
 }
 
 .has-tooltip.tooltip-light .tooltip-content {
-  background: var(--color-surface);
+  background: var(--color-surface-elevated);
   color: var(--color-text);
   border: var(--border-w) solid var(--color-border);
 }
@@ -405,14 +405,14 @@ button[data-tooltip],
 .tooltip-popup.tooltip-right::after  { right: 100%; top: 50%; transform: translateY(-50%); border-right-color: var(--color-text); }
 
 .tooltip-popup.tooltip-light {
-  background: var(--color-surface);
+  background: var(--color-surface-elevated);
   color: var(--color-text);
   border: var(--border-w) solid var(--color-border);
 }
-.tooltip-popup.tooltip-light.tooltip-top::after    { border-top-color: var(--color-surface); }
-.tooltip-popup.tooltip-light.tooltip-bottom::after { border-bottom-color: var(--color-surface); }
-.tooltip-popup.tooltip-light.tooltip-left::after   { border-left-color: var(--color-surface); }
-.tooltip-popup.tooltip-light.tooltip-right::after  { border-right-color: var(--color-surface); }
+.tooltip-popup.tooltip-light.tooltip-top::after    { border-top-color: var(--color-surface-elevated); }
+.tooltip-popup.tooltip-light.tooltip-bottom::after { border-bottom-color: var(--color-surface-elevated); }
+.tooltip-popup.tooltip-light.tooltip-left::after   { border-left-color: var(--color-surface-elevated); }
+.tooltip-popup.tooltip-light.tooltip-right::after  { border-right-color: var(--color-surface-elevated); }
 
 .tooltip-popup.tooltip-primary {
   background: var(--color-accent);
@@ -439,28 +439,29 @@ button[data-tooltip],
 [data-theme="dark"] [data-tooltip]::before,
 [data-theme="dark"] .tooltip-content,
 [data-theme="dark"] .tooltip-popup {
-  background: var(--color-surface);
+  /* Elevation уровень 2 — тултип парит над карточками, не сливается с ними */
+  background: var(--color-surface-elevated);
   color: var(--color-text);
   border: var(--border-w) solid var(--color-border);
 }
 .dark [data-tooltip]::after,
 [data-theme="dark"] [data-tooltip]::after {
-  border-top-color: var(--color-surface);
+  border-top-color: var(--color-surface-elevated);
 }
 .dark [data-tooltip].tooltip-bottom::after,
 [data-theme="dark"] [data-tooltip].tooltip-bottom::after {
   border-top-color: transparent;
-  border-bottom-color: var(--color-surface);
+  border-bottom-color: var(--color-surface-elevated);
 }
 .dark [data-tooltip].tooltip-left::after,
 [data-theme="dark"] [data-tooltip].tooltip-left::after {
   border-top-color: transparent;
-  border-left-color: var(--color-surface);
+  border-left-color: var(--color-surface-elevated);
 }
 .dark [data-tooltip].tooltip-right::after,
 [data-theme="dark"] [data-tooltip].tooltip-right::after {
   border-top-color: transparent;
-  border-right-color: var(--color-surface);
+  border-right-color: var(--color-surface-elevated);
 }
 
 /* ==========================================================================

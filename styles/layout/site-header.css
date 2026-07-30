@@ -17,8 +17,23 @@
   gap: var(--space-4);
   height: var(--header-h);
   padding: 0 var(--space-5);
-  background: var(--color-surface);
-  border-bottom: var(--border-w) solid var(--color-border);
+  /* Glass-шапка — единственное легитимное стекло уровня страницы:
+     контент скроллится под ней. Alpha 0.72 + blur 12px сохраняют
+     читаемость muted-текста (≈6.9:1). Внутренние элементы НЕ стеклим —
+     два translucent-слоя не стекуются (RULES.md §8) */
+  background: var(--surface-glass);
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  backdrop-filter: blur(var(--blur-glass));
+  border-bottom: var(--border-w) solid var(--surface-glass-border);
+}
+
+/* Solid-фоллбек: без поддержки backdrop-filter полупрозрачная шапка
+   давала бы «грязное» просвечивание контента */
+@supports not (backdrop-filter: blur(12px)) {
+  .site-header {
+    background: var(--color-surface);
+    border-bottom-color: var(--color-border);
+  }
 }
 
 .site-header__brand {
@@ -67,7 +82,8 @@
   }
 }
 .site-nav__link:focus-visible {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   box-shadow: var(--shadow-focus);
 }
 .site-nav__link[aria-current="page"] {
@@ -107,7 +123,8 @@ button.site-header__theme {
   .site-header__theme:hover { background: var(--color-surface-hover); }
 }
 .site-header__theme:focus-visible {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   box-shadow: var(--shadow-focus);
 }
 /* Иконки темы: показывается противоположная текущей */

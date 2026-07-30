@@ -84,7 +84,8 @@
 
 .toggle:focus-visible .toggle-track,
 .toggle input:focus-visible + .toggle-track {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   box-shadow: var(--shadow-focus);
 }
 

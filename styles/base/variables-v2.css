@@ -41,6 +41,14 @@
   --color-surface-active:   #e7e5e4;  /* stone-200 — pressed state */
   --color-surface-sunken:   #f5f5f4;  /* для inputs/code blocks внутри карточки */
 
+  /* Elevation ladder — высота плавающих слоёв (в light все белые: глубину
+     несут тени; в dark каждый уровень светлее — см. .dark-блок).
+     Уровень 1 = surface (карточки), 2 = elevated (dropdown/popover/toast),
+     3 = overlay (modal/drawer/command-palette) */
+  --color-surface-elevated:       #ffffff;
+  --color-surface-overlay:        #ffffff;
+  --color-surface-elevated-hover: #f5f5f4;  /* hover пунктов на elevated/overlay */
+
   /* Borders — warm-gray, очень тонкие. Stone-шкала вместо холодного gray */
   --color-border:           #e7e5e4;  /* stone-200 — основной 1px */
   --color-border-strong:    #d6d3d1;  /* stone-300 — focus, акцент */
@@ -221,6 +229,20 @@
   --color-on-accent-border:   rgba(255, 255, 255, 0.30);
   --color-on-accent-dim:      rgba(24, 24, 27, 0.28);
 
+  /* Glass — frosted-панель ТОЛЬКО там, где контент скроллится под ней
+     (site-header). Alpha ≥0.72 + blur 12px держат читаемость текста.
+     Никогда не стекуем два translucent-слоя (RULES.md §8) */
+  --surface-glass:            rgba(255, 255, 255, 0.72);
+  --surface-glass-border:     rgba(16, 24, 40, 0.08);
+  --blur-glass:               12px;
+
+  /* Loading-вуаль поверх собственного контента (spinner .loading-overlay):
+     светлая в light, тёмная в dark — вместо слепящей белой rgba */
+  --surface-veil:             rgba(255, 255, 255, 0.70);
+
+  /* Дефолтное приглушение фото/видео в dark; в light — none */
+  --media-dim:                none;
+
   /* Плашка-подпись поверх произвольного цвета (код RAL-образца):
      значения фиксированы и НЕ зависят от темы — фон под ними произвольный */
   --color-scrim-light:        rgba(255, 255, 255, 0.85);
@@ -343,7 +365,7 @@
    Активируется через `.dark` (совместимо с текущим css-lab).
 
    Ключевые отличия от старого AutoTrassir-dark:
-     - Базовый bg: #15171c (НЕ #0a0a0f). Чёрный режет глаз, особенно в светлой
+     - Базовый bg: #18181b (НЕ #0a0a0f). Чёрный режет глаз, особенно в светлой
        комнате. Open WebUI / GitHub dark / Linear используют ~#15-#1a.
      - 4 surface-уровня вместо 9. Больше — путаница, не читается иерархия.
      - Accent muted: #60a5fa (blue-400) вместо #2563eb. На тёмном bg яркий
@@ -361,17 +383,24 @@
   --color-surface-active:   #28282b;
   --color-surface-sunken:   #0d0d0e;  /* ниже bg — inputs, code */
 
+  /* Elevation ladder: bg #18181b → surface #1c1c1f → elevated #222226 →
+     overlay #27272c. Монотонный подъём светлоты (Material overlays 5/8/12%).
+     Контрасты текста проверены: muted #a1a1aa на elevated 6.2:1, на overlay 5.8:1 */
+  --color-surface-elevated:       #222226;  /* dropdown, popover, toast, listbox */
+  --color-surface-overlay:        #27272c;  /* modal, drawer, command-palette */
+  --color-surface-elevated-hover: #2c2c31;  /* hover пунктов на elevated/overlay */
+
   /* Borders в dark играют роль теней. Тёплые zinc-оттенки */
   --color-border:           #2a2a2e;
   --color-border-strong:    #3f3f46;  /* zinc-700 */
   --color-border-subtle:    #222225;
 
-  /* Text. High-contrast premium-style на zinc-900 (#18181b):
-     #fafafa = 17.4:1 (AAA) — almost-white, premium
-     #d4d4d8 = 12.5:1 (AAA) — zinc-300
-     #a1a1aa = 7.0:1  (AAA) — zinc-400
+  /* Text. Off-white premium-style на zinc-900 (#18181b):
+     #f4f4f5 = 16.1:1 (AAA) — off-white, без halation на OLED
+     #d4d4d8 = 12.0:1 (AAA) — zinc-300
+     #a1a1aa = 6.9:1  (AA+) — zinc-400
      #71717a = 3.9:1  (large/decorative only) — zinc-500 */
-  --color-text:             #fafafa;  /* zinc-50 — high-contrast primary */
+  --color-text:             #f4f4f5;  /* zinc-100 — off-white primary */
   --color-text-secondary:   #d4d4d8;  /* zinc-300 — body */
   --color-text-muted:       #a1a1aa;  /* zinc-400 — AAA 7:1 */
   --color-text-disabled:    #71717a;  /* zinc-500 */
@@ -387,10 +416,11 @@
   --color-accent-text:      #1e1b4b;  /* indigo-950 — dark text на light accent */
   --color-accent-border:    rgba(129, 140, 248, 0.35);
 
-  /* Semantic — desaturated, спокойные. Не кричащие неон-цвета. */
-  --color-success:          #4ade80;  /* green-400 */
-  --color-success-hover:    #86efac;
-  --color-success-soft:     rgba(74, 222, 128, 0.10);
+  /* Semantic — desaturated, единый OKLCH-ramp: L 0.73–0.78, C 0.09–0.115.
+     Success/error выровнены с warning/info, неон green-400/red-400 ушёл */
+  --color-success:          #6fc98d;  /* ~oklch(0.76 0.10 150) — 8.8:1 на bg */
+  --color-success-hover:    #91d6a9;
+  --color-success-soft:     rgba(111, 201, 141, 0.10);
   --color-success-text:     #bbf7d0;
 
   --color-warning:          #d4a373;  /* warm desaturated amber, не fbbf24 (vivid) */
@@ -398,9 +428,9 @@
   --color-warning-soft:     rgba(212, 163, 115, 0.10);
   --color-warning-text:     #fde68a;
 
-  --color-error:            #f87171;  /* red-400 */
-  --color-error-hover:      #fca5a5;
-  --color-error-soft:       rgba(248, 113, 113, 0.10);
+  --color-error:            #ee8b84;  /* ~oklch(0.73 0.11 25) — 7.3:1 на bg */
+  --color-error-hover:      #f4a9a3;
+  --color-error-soft:       rgba(238, 139, 132, 0.10);
   --color-error-text:       #fecaca;
 
   /* Info — тот же hue что accent (indigo), на 1 шаг светлее */
@@ -429,8 +459,8 @@
   --color-highlight-text:     #fde68a;  /* amber-200 — читаемый текст */
 
   /* Confidence — подогнаны под новые semantic */
-  --color-confidence-high:        #4ade80;
-  --color-confidence-high-soft:   rgba(74, 222, 128, 0.10);
+  --color-confidence-high:        #6fc98d;
+  --color-confidence-high-soft:   rgba(111, 201, 141, 0.10);
   --color-confidence-medium:      #d4a373;
   --color-confidence-medium-soft: rgba(212, 163, 115, 0.10);
   --color-confidence-low:         #71717a;  /* zinc-500 */
@@ -468,16 +498,20 @@
   --brand-hemah-highlight-soft:       rgba(47, 198, 246, 0.18);
   --brand-hemah-highlight-text:       #0d2229;
 
-  /* Shadows — в dark менее эффективны. Усилены alpha, но в основном
-     полагаемся на border */
+  /* Shadows — в dark тень тонет, поэтому первый слой — полупрозрачное светлое
+     кольцо 1px (RULES.md §8: ring, не сплошной border), оно очерчивает
+     elevated-поверхность; семантическую границу несёт border-strong */
   --shadow-xs:    0 1px 2px rgba(0, 0, 0, 0.30);
   --shadow-sm:    0 1px 2px rgba(0, 0, 0, 0.30),
                   0 1px 3px rgba(0, 0, 0, 0.40);
-  --shadow:       0 4px 8px -2px rgba(0, 0, 0, 0.40),
+  --shadow:       0 0 0 1px rgba(255, 255, 255, 0.06),
+                  0 4px 8px -2px rgba(0, 0, 0, 0.40),
                   0 2px 4px -1px rgba(0, 0, 0, 0.30);
-  --shadow-lg:    0 12px 24px -6px rgba(0, 0, 0, 0.50),
+  --shadow-lg:    0 0 0 1px rgba(255, 255, 255, 0.07),
+                  0 12px 24px -6px rgba(0, 0, 0, 0.50),
                   0 4px 8px -2px rgba(0, 0, 0, 0.30);
-  --shadow-xl:    0 24px 48px -12px rgba(0, 0, 0, 0.60),
+  --shadow-xl:    0 0 0 1px rgba(255, 255, 255, 0.08),
+                  0 24px 48px -12px rgba(0, 0, 0, 0.60),
                   0 8px 16px -4px rgba(0, 0, 0, 0.40);
   --shadow-focus: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-accent);
   --shadow-focus-error: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-error);
@@ -490,7 +524,15 @@
   --color-on-accent-border:   rgba(24, 24, 27, 0.30);
   --color-on-accent-dim:      rgba(255, 255, 255, 0.30);
   --color-swatch-inset:       rgba(255, 255, 255, 0.14);
-  --color-error-soft-hover:   rgba(248, 113, 113, 0.16);
+  --color-error-soft-hover:   rgba(238, 139, 132, 0.16);
+
+  /* Glass/veil в dark — тёмное стекло (никогда светлое translucent на тёмном) */
+  --surface-glass:            rgba(24, 24, 27, 0.72);
+  --surface-glass-border:     rgba(255, 255, 255, 0.08);
+  --surface-veil:             rgba(24, 24, 27, 0.70);
+
+  /* Приглушение фото/видео в dark — по умолчанию, opt-out через .img-keep */
+  --media-dim:                brightness(0.9);
 
   /* Legacy mapping для dark */
   --bg:           var(--color-bg);
@@ -511,30 +553,152 @@
 @media (prefers-color-scheme: dark) {
   :root:not(.light):not([data-theme="light"]) {
     color-scheme: dark;
-    /* Применяем те же значения что в .dark — luxury warm-black + indigo */
+    /* ПОЛНОЕ зеркало .dark-блока выше. Частичное зеркало оставляло при
+       OS-dark светлые semantic/shadow/overlay/brand токены
+       (error #b91c1c на #18181b = 1.9:1 — fail). Правишь .dark — правь и здесь */
     --color-bg:               #18181b;
     --color-surface:          #1c1c1f;
     --color-surface-hover:    #222225;
     --color-surface-active:   #28282b;
     --color-surface-sunken:   #0d0d0e;
+
+    /* Elevation ladder */
+    --color-surface-elevated:       #222226;
+    --color-surface-overlay:        #27272c;
+    --color-surface-elevated-hover: #2c2c31;
+
     --color-border:           #2a2a2e;
     --color-border-strong:    #3f3f46;
     --color-border-subtle:    #222225;
-    --color-text:             #fafafa;
+
+    --color-text:             #f4f4f5;
     --color-text-secondary:   #d4d4d8;
     --color-text-muted:       #a1a1aa;
     --color-text-disabled:    #71717a;
+    --color-text-on-accent:   #ffffff;
+
+    /* Accent */
     --color-accent:           #818cf8;
     --color-accent-hover:     #a5b4fc;
+    --color-accent-active:    #6366f1;
     --color-accent-soft:      rgba(129, 140, 248, 0.10);
-    --color-highlight:        #3f3a26;
+    --color-accent-soft-hover: rgba(129, 140, 248, 0.16);
+    --color-accent-text:      #1e1b4b;
+    --color-accent-border:    rgba(129, 140, 248, 0.35);
 
-    --bg:     var(--color-bg);
-    --panel:  var(--color-surface);
-    --text:   var(--color-text);
-    --muted:  var(--color-text-muted);
-    --border: var(--color-border);
-    --accent: var(--color-accent);
+    /* Semantic */
+    --color-success:          #6fc98d;
+    --color-success-hover:    #91d6a9;
+    --color-success-soft:     rgba(111, 201, 141, 0.10);
+    --color-success-text:     #bbf7d0;
+
+    --color-warning:          #d4a373;
+    --color-warning-hover:    #e9c598;
+    --color-warning-soft:     rgba(212, 163, 115, 0.10);
+    --color-warning-text:     #fde68a;
+
+    --color-error:            #ee8b84;
+    --color-error-hover:      #f4a9a3;
+    --color-error-soft:       rgba(238, 139, 132, 0.10);
+    --color-error-text:       #fecaca;
+
+    --color-info:             #a5b4fc;
+    --color-info-hover:       #c7d2fe;
+    --color-info-soft:        rgba(165, 180, 252, 0.10);
+    --color-info-text:        #c7d2fe;
+
+    /* Source colors */
+    --color-source-wiki:        #a1a1aa;
+    --color-source-wiki-soft:   rgba(161, 161, 170, 0.10);
+    --color-source-wiki-text:   #d4d4d8;
+
+    --color-source-forum:       #71717a;
+    --color-source-forum-soft:  rgba(113, 113, 122, 0.10);
+    --color-source-forum-text:  #a1a1aa;
+
+    --color-source-catalog:     #d4d4d8;
+    --color-source-catalog-soft: rgba(212, 212, 216, 0.08);
+    --color-source-catalog-text: #e4e4e7;
+
+    /* Highlight */
+    --color-highlight:        #3f3a26;
+    --color-highlight-strong: #57502f;
+    --color-highlight-text:   #fde68a;
+
+    /* Confidence */
+    --color-confidence-high:        #6fc98d;
+    --color-confidence-high-soft:   rgba(111, 201, 141, 0.10);
+    --color-confidence-medium:      #d4a373;
+    --color-confidence-medium-soft: rgba(212, 163, 115, 0.10);
+    --color-confidence-low:         #71717a;
+    --color-confidence-low-soft:    rgba(113, 113, 122, 0.10);
+
+    /* Brand colors — dark-варианты */
+    --brand-veza:                       #5fc16f;
+    --brand-veza-soft:                  rgba(95, 193, 111, 0.15);
+    --brand-veza-text:                  #18181b;
+    --brand-veza-secondary:             #a1a1aa;
+    --brand-veza-secondary-soft:        rgba(161, 161, 170, 0.15);
+    --brand-veza-secondary-text:        #18181b;
+
+    --brand-uralelectro:                #8fa6ae;
+    --brand-uralelectro-soft:           rgba(143, 166, 174, 0.15);
+    --brand-uralelectro-text:           #10181b;
+    --brand-uralelectro-dark:           #7a939c;
+    --brand-uralelectro-dark-soft:      rgba(122, 147, 156, 0.15);
+    --brand-uralelectro-light:          #a9bcc3;
+    --brand-uralelectro-light-soft:     rgba(169, 188, 195, 0.18);
+
+    --brand-hemah:                      #6fb3c7;
+    --brand-hemah-soft:                 rgba(111, 179, 199, 0.15);
+    --brand-hemah-text:                 #0d2229;
+    --brand-hemah-dark:                 #4d97ad;
+    --brand-hemah-dark-soft:            rgba(77, 151, 173, 0.15);
+    --brand-hemah-highlight:            #2fc6f6;
+    --brand-hemah-highlight-soft:       rgba(47, 198, 246, 0.18);
+    --brand-hemah-highlight-text:       #0d2229;
+
+    /* Shadows — светлое кольцо 1px + глубокие тени (как в .dark) */
+    --shadow-xs:    0 1px 2px rgba(0, 0, 0, 0.30);
+    --shadow-sm:    0 1px 2px rgba(0, 0, 0, 0.30),
+                    0 1px 3px rgba(0, 0, 0, 0.40);
+    --shadow:       0 0 0 1px rgba(255, 255, 255, 0.06),
+                    0 4px 8px -2px rgba(0, 0, 0, 0.40),
+                    0 2px 4px -1px rgba(0, 0, 0, 0.30);
+    --shadow-lg:    0 0 0 1px rgba(255, 255, 255, 0.07),
+                    0 12px 24px -6px rgba(0, 0, 0, 0.50),
+                    0 4px 8px -2px rgba(0, 0, 0, 0.30);
+    --shadow-xl:    0 0 0 1px rgba(255, 255, 255, 0.08),
+                    0 24px 48px -12px rgba(0, 0, 0, 0.60),
+                    0 8px 16px -4px rgba(0, 0, 0, 0.40);
+    --shadow-focus: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-accent);
+    --shadow-focus-error: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-error);
+
+    /* Оверлеи и on-accent слои */
+    --color-overlay:            rgba(0, 0, 0, 0.60);
+    --color-on-accent-soft:     rgba(24, 24, 27, 0.14);
+    --color-on-accent-strong:   rgba(24, 24, 27, 0.26);
+    --color-on-accent-border:   rgba(24, 24, 27, 0.30);
+    --color-on-accent-dim:      rgba(255, 255, 255, 0.30);
+    --color-swatch-inset:       rgba(255, 255, 255, 0.14);
+    --color-error-soft-hover:   rgba(238, 139, 132, 0.16);
+
+    /* Glass / veil / media dimming */
+    --surface-glass:            rgba(24, 24, 27, 0.72);
+    --surface-glass-border:     rgba(255, 255, 255, 0.08);
+    --surface-veil:             rgba(24, 24, 27, 0.70);
+    --media-dim:                brightness(0.9);
+
+    /* Legacy mapping */
+    --bg:           var(--color-bg);
+    --panel:        var(--color-surface);
+    --text:         var(--color-text);
+    --muted:        var(--color-text-muted);
+    --border:       var(--color-border);
+    --card-border:  var(--color-border);
+    --accent:       var(--color-accent);
+    --accent-700:   var(--color-accent-hover);
+    --accent-100:   var(--color-accent-soft);
   }
 }
 

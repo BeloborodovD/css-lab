@@ -231,7 +231,8 @@
 }
 
 .log-controls-select:focus {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   border-color: var(--color-accent);
   box-shadow: var(--shadow-focus);
 }

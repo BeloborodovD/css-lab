@@ -183,7 +183,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.7);
+  /* Вуаль темо-зависима: светлая в light, тёмная в dark —
+     белая rgba слепила поверх тёмного контента */
+  background: var(--surface-veil);
   backdrop-filter: blur(2px);
   z-index: var(--z-raised);
 }
@@ -233,10 +235,9 @@
 }
 
 /* ====================== Dark theme ====================== */
-.dark .loading-overlay,
-[data-theme="dark"] .loading-overlay {
-  background: rgba(21, 23, 28, 0.75);
-}
+/* .loading-overlay отдельного dark-правила не требует: тёмная вуаль
+   приходит из токена --surface-veil (и корректно становится solid
+   при prefers-reduced-transparency) */
 
 /* skeleton — токены автоматически сменятся, но шиммер чуть мягче */
 .dark .skeleton,

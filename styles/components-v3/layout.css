@@ -156,7 +156,7 @@ body:not(:has(.app-sidebar.left.open)):not(:has(.app-sidebar.right.open)) .searc
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: var(--color-overlay);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   opacity: 0;

@@ -101,7 +101,8 @@
   text-underline-offset: 2px;
 }
 .trending-list__link:focus-visible {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   color: var(--color-accent);
   box-shadow: var(--shadow-focus);
   border-radius: var(--radius-xs);
@@ -186,7 +187,8 @@
   text-decoration-thickness: 1px;
 }
 .tag-cloud__tag:focus-visible {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   color: var(--color-accent);
   box-shadow: var(--shadow-focus);
 }

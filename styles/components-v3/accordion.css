@@ -38,7 +38,8 @@
   .accordion__header:hover { background: var(--color-surface-hover); }
 }
 .accordion__header:focus-visible {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   box-shadow: inset var(--shadow-focus);
 }
 

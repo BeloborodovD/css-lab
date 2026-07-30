@@ -22,7 +22,8 @@
   right: 0;
   min-width: 180px;
   padding: var(--space-1);
-  background: var(--color-surface);
+  /* Elevation уровень 2 — плавающая панель выше карточек */
+  background: var(--color-surface-elevated);
   border: var(--border-w) solid var(--color-border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
@@ -67,15 +68,16 @@
 }
 
 .dropdown-item:hover {
-  background: var(--color-surface-hover);
+  background: var(--color-surface-elevated-hover);
   color: var(--color-text);
 }
 /* PURPOSE: feedback — пункт меню отзывается на нажатие (тактильность) */
 .dropdown-item:active { background: var(--color-surface-active); }
 
 .dropdown-item:focus-visible {
-  outline: none;
-  background: var(--color-surface-hover);
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
+  background: var(--color-surface-elevated-hover);
   box-shadow: var(--shadow-focus);
 }
 
@@ -109,7 +111,8 @@
   left: 0;
   min-width: 300px;
   padding: var(--space-4);
-  background: var(--color-surface);
+  /* Elevation уровень 2 — как dropdown-menu */
+  background: var(--color-surface-elevated);
   border: var(--border-w) solid var(--color-border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);

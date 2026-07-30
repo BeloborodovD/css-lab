@@ -38,7 +38,8 @@
 }
 
 .page-btn:focus-visible {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   box-shadow: var(--shadow-focus);
   border-color: var(--color-accent);
 }
@@ -113,7 +114,8 @@
 }
 
 .pagination-btn:focus-visible {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   box-shadow: var(--shadow-focus);
 }
 

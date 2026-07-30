@@ -126,7 +126,8 @@
   }
 }
 .chip-choice:focus-visible {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   box-shadow: var(--shadow-focus);
 }
 .chip-choice.is-active,
@@ -143,7 +144,8 @@
   background: var(--color-accent-soft-hover);
 }
 .chip-clickable:focus-visible {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   box-shadow: var(--shadow-focus);
 }
 
@@ -173,7 +175,8 @@
   background: rgba(0, 0, 0, 0.08);
 }
 .chip-remove:focus-visible {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   box-shadow: var(--shadow-focus);
   opacity: 1;
 }

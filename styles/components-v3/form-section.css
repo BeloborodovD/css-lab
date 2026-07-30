@@ -104,7 +104,8 @@
   }
 }
 .form-field__tip:focus-visible {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   background: var(--color-accent);
   color: var(--color-accent-text);
 }

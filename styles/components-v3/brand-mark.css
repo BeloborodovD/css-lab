@@ -76,7 +76,8 @@
   box-shadow: var(--shadow-sm);
 }
 .brand-switcher__option:focus-visible {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   box-shadow: var(--shadow-focus);
 }
 /* </BLOCK:component.brand-mark> */

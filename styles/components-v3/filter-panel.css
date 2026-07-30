@@ -84,7 +84,8 @@
   }
 }
 .filter-preset:focus-visible {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   box-shadow: var(--shadow-focus);
 }
 .filter-preset svg {
@@ -189,7 +190,8 @@
   }
 }
 .filter-panel__reset-all:focus-visible {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   box-shadow: var(--shadow-focus);
 }
 /* </BLOCK:component.filter-panel> */

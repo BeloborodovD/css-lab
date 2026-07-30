@@ -13,7 +13,7 @@
      - shared utility (.divider, .kbd) — общие, не привязанные к компоненту
      - photo-card / lightbox / sidebar-panel из AutoTrassir-секции (упрощены)
 
-   Базовый bg: #15171c (НЕ #0a0a0f). Контраст комфортный, не давит на глаз.
+   Базовый bg: #18181b (НЕ #0a0a0f). Контраст комфортный, не давит на глаз.
 
    Ключевые отличия от старой dark.css:
      - 4 surface-уровня вместо 9 (см. variables-v2.css)
@@ -73,13 +73,15 @@ body.dark,
 }
 
 /* ==================== Selection ==================== */
+/* 28% акцента: alpha 0.16 была почти невидима (эффективный фон ≈1.2:1 к bg).
+   color-mix от --color-accent — бренды перекрашивают выделение автоматически */
 .dark ::selection {
-  background: var(--color-accent-soft-hover);
+  background: color-mix(in srgb, var(--color-accent) 28%, transparent);
   color: var(--color-text);
 }
 
 .dark ::-moz-selection {
-  background: var(--color-accent-soft-hover);
+  background: color-mix(in srgb, var(--color-accent) 28%, transparent);
   color: var(--color-text);
 }
 
@@ -90,14 +92,17 @@ body.dark,
   box-shadow: var(--shadow-focus);
 }
 
-/* Снимаем глобальный focus-ring с явно стилизованных элементов */
+/* Снимаем глобальный focus-ring с явно стилизованных элементов.
+   Прозрачный контур, а не none: в forced-colors box-shadow вырезается,
+   прозрачный outline перекрашивается системой в Highlight (фокус видим) */
 .dark .btn:focus-visible,
 .dark .input:focus-visible,
 .dark .textarea:focus-visible,
 .dark .select:focus-visible,
 .dark .toggle:focus-visible,
 .dark .tab:focus-visible {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
 }
 
 /* ==================== Shared utilities ==================== */
@@ -178,12 +183,28 @@ body.dark,
 }
 
 /* ==================== Image / SVG в dark ==================== */
-.dark img,
+/* Приглушение медиа — ДЕФОЛТ для контентных изображений и видео (токен
+   --media-dim = brightness(0.9) в dark, none в light). Opt-out — .img-keep */
+.dark :is(.photo-card-image, .avatar) img,
 .dark video {
-  /* Снижение яркости картинок в dark — опционально, через class */
-  /* По умолчанию НЕ применяется, чтобы не «убивать» photo-card */
+  filter: var(--media-dim);
 }
 
+.dark .img-keep {
+  filter: none;
+}
+
+/* Белый mono-логотип не бликует на тёмном фоне */
+.dark .brand-mark {
+  filter: brightness(0.92);
+}
+
+/* Внутри фирменной плашки логотип — эталон цвета, не приглушаем */
+.dark .brand-plate .brand-mark {
+  filter: none;
+}
+
+/* Усиленный opt-in вариант приглушения (оставлен как был) */
 .dark .img-dim {
   filter: brightness(0.85) contrast(1.05);
 }

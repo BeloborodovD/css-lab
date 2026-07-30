@@ -86,6 +86,17 @@ user-menu, presence-strip («кто на портале»: стек аватар
 - **Футер печатных форм прижат к низу листа** (было: прилипал к контенту). Механизм из motor-datasheet (generateDatasheetHTML.ts:44-52,116-126), адаптация: `.pf-sheet` — flex-колонка 210×297mm, `.spec-sheet` flex:1, футер `margin-top:auto` (в потоке — не наезжает при переполнении, в отличие от absolute донора); print: min-height 271mm (297 − поля @page). Проверено скептиком: ratio 1.414, зазор до кромки = паддинг листа 16mm (60.5px на экране, 0 в print-эмуляции), 20/20 e2e.
 - ⚠️ Git-ловушка: cwd Bash-сессии может сброситься в корень воркспейса — все git-команды css-lab ТОЛЬКО с явным `cd /d/_claude_project/css-lab &&`. В корне воркспейса `git add -A` падает на `archive/nul`.
 
+### Тёмная тема по трендам 2026 (2026-07-30)
+
+- Конвейер: тренд-ресёрч → спека dev-brand-identity (аудит 10 пунктов, 7 gap) → dev-css → REJECT скептика (3 находки) → фиксы → PASS.
+- **Elevation ladder**: base #18181b → surface #1c1c1f → elevated #222226 (dropdown/toast/combobox/date-picker/tooltip) → overlay #27272c (modal/drawer/command-palette) + светлое кольцо 1px в dark-тенях.
+- **Семантика OKLCH-выровнена**: success #6fc98d, error #ee8b84 (алерты 10.5–12.2:1); текст #f4f4f5; selection через color-mix 28%.
+- **Авто-dark починен**: media-блок variables-v2 — полное зеркало `.dark` (раньше error #b91c1c на тёмном = 1.9:1).
+- **Стекло**: шапка/`.card-glass` на токенах --surface-glass/--blur-glass с @supports-фолбэком; вуаль --surface-veil; 5 хардкод-скримов → --color-overlay; приглушение media/лого в dark (--media-dim, opt-out .img-keep).
+- **contrast-preferences.css** (последний импорт core): prefers-contrast: more, forced-colors: active, prefers-reduced-transparency.
+- **Фиксы после REJECT**: 62 конверсии `outline: none` → `outline: 2px solid transparent` (forced-colors красит в Highlight, обычные режимы пиксель-в-пиксель); `.dark .btn-primary/.btn-danger` — акцентный фон (было: невидимая кнопка 1.03–1.14:1, каскадный фикс хрупок к перестановке правил в buttons.css:221-252); хардкод вуали spinner.css удалён.
+- Осталось 3 намеренных `outline: none`: reset.css (:focus:not(:focus-visible)), combobox.css:180, command-palette.css:80 (базовые правила инпутов — фокус получает Highlight из contrast-preferences).
+
 ## Следующий шаг
 
 По желанию: консолидация 4 реализаций чипов, миграция combobox-нэйминга на is-*, тёмная тема print-forms/ral-colors, gap-filler тостов (Sonner) при переводе на transitions.

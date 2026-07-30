@@ -27,7 +27,8 @@
   cursor: pointer;
 }
 .card-interactive:focus-visible {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   border-color: var(--color-accent);
   box-shadow: var(--shadow-focus);
 }
@@ -41,11 +42,14 @@
   box-shadow: var(--shadow);
 }
 
-/* Glass — прозрачный фон поверх изображений */
+/* Glass — прозрачный фон поверх изображений.
+   Токены темо-зависимы: в dark стекло тёмное (светлое translucent
+   на тёмном фоне — дефект, RULES.md §8) */
 .card-glass {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(10px);
-  border-color: rgba(255, 255, 255, 0.4);
+  background: var(--surface-glass);
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  backdrop-filter: blur(var(--blur-glass));
+  border-color: var(--surface-glass-border);
 }
 
 /* Accent left-border (для AnswerBox / featured) */
@@ -211,11 +215,8 @@
   border-color: var(--color-border-strong);
   box-shadow: 0 0 0 1px var(--color-accent-soft);
 }
-.dark .card-glass,
-[data-theme="dark"] .card-glass {
-  background: rgba(28, 31, 38, 0.6);
-  border-color: rgba(255, 255, 255, 0.05);
-}
+/* .card-glass в dark отдельного правила не требует: тёмное стекло
+   приходит из токенов --surface-glass / --surface-glass-border */
 .dark .card-loading::after,
 [data-theme="dark"] .card-loading::after {
   background: linear-gradient(

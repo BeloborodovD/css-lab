@@ -92,7 +92,8 @@
 }
 .alert-close:hover { opacity: 1; }
 .alert-close:focus-visible {
-  outline: none;
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
   box-shadow: var(--shadow-focus);
   border-radius: var(--radius-xs);
 }

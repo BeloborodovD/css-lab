@@ -1,0 +1,123 @@
+/* ==========================================================================
+   contrast-preferences.css — медиазапросы предпочтений контраста и прозрачности
+   --------------------------------------------------------------------------
+   Модуль: css-lab/base. Зависимости: base/variables-v2.css (токены),
+   themes/dark-v3.css (перекрываемый focus-ring).
+   Импортируется ПОСЛЕДНИМ в core.css (после themes/*): переопределения
+   пользовательских предпочтений обязаны бить и темы, и бренды.
+
+   Три блока:
+     1. prefers-contrast: more            — усиленный текст/границы/фокус
+     2. forced-colors: active             — фокус через outline (box-shadow
+                                            в forced-colors вырезается)
+     3. prefers-reduced-transparency      — стекло и вуали становятся solid
+
+   NB о специфичности: auto-dark блок variables-v2 использует селектор
+   :root:not(.light):not([data-theme="light"]) (0,3,0) — здесь для OS-dark
+   зеркалим тот же селектор, иначе переопределение проиграет каскад.
+   ========================================================================== */
+
+/* [CONFIG:contrast-preferences] */
+
+/* ==================== 1. prefers-contrast: more ==================== */
+@media (prefers-contrast: more) {
+  /* Light-scope минимально: границы читаются, а не угадываются;
+     фокус-кольцо 3px вместо 2px (одно правило кроет обе темы —
+     цвета берутся из var() текущей темы) */
+  :root {
+    --color-border: #a8a29e;
+    --shadow-focus: 0 0 0 2px var(--color-surface), 0 0 0 5px var(--color-accent);
+  }
+
+  /* Dark-scope: белый текст, светлее границы */
+  .dark,
+  [data-theme="dark"] {
+    --color-text: #ffffff;             /* 17.7:1 на #18181b */
+    --color-text-secondary: #e4e4e7;   /* 14.0:1 */
+    --color-text-muted: #d4d4d8;       /* 12.0:1 */
+    --color-border: #52525b;
+    --color-border-strong: #71717a;
+    --shadow-focus: 0 0 0 2px var(--color-surface), 0 0 0 5px var(--color-accent);
+    --surface-glass: var(--color-surface);
+    --surface-glass-border: var(--color-border);
+  }
+
+  /* OS-dark без класса — зеркало dark-scope (специфичность 0,3,0) */
+  @media (prefers-color-scheme: dark) {
+    :root:not(.light):not([data-theme="light"]) {
+      --color-text: #ffffff;
+      --color-text-secondary: #e4e4e7;
+      --color-text-muted: #d4d4d8;
+      --color-border: #52525b;
+      --color-border-strong: #71717a;
+      --shadow-focus: 0 0 0 2px var(--color-surface), 0 0 0 5px var(--color-accent);
+      --surface-glass: var(--color-surface);
+      --surface-glass-border: var(--color-border);
+    }
+  }
+
+  /* Стекло становится solid-панелью — без blur */
+  .site-header,
+  .card-glass {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* ==================== 2. forced-colors: active ==================== */
+@media (forced-colors: active) {
+  /* Восстановление фокус-индикатора: базовый ring живёт в box-shadow
+     (dark-v3.css), а box-shadow в forced-colors вырезается — фокус
+     исчезал полностью. Системный Highlight, outline не подавляем нигде */
+  :focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+    box-shadow: none;
+  }
+
+  /* Подлинные цветовые образцы (RAL-палитра, пикер цвета) обязаны
+     остаться настоящими — принудительную перекраску отключаем */
+  .swatch,
+  .swatch-picker__chip-color,
+  .ral-card__swatch {
+    forced-color-adjust: none;
+  }
+}
+
+/* ==================== 3. prefers-reduced-transparency: reduce ==================== */
+@media (prefers-reduced-transparency: reduce) {
+  /* Стекло и вуаль — solid-поверхности текущей темы */
+  :root,
+  .dark,
+  [data-theme="dark"] {
+    --surface-glass: var(--color-surface);
+    --surface-veil: var(--color-surface);
+  }
+
+  /* Скримы остаются (это затемнение, а не прозрачная поверхность),
+     но без blur; в dark оверлей плотнее — компенсация отсутствия blur */
+  .dark,
+  [data-theme="dark"] {
+    --color-overlay: rgba(0, 0, 0, 0.72);
+  }
+
+  /* OS-dark без класса — зеркало (специфичность 0,3,0) */
+  @media (prefers-color-scheme: dark) {
+    :root:not(.light):not([data-theme="light"]) {
+      --surface-glass: var(--color-surface);
+      --surface-veil: var(--color-surface);
+      --color-overlay: rgba(0, 0, 0, 0.72);
+    }
+  }
+
+  .site-header,
+  .card-glass,
+  .modal-overlay,
+  .command-palette-overlay,
+  .loading-overlay {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* </CONFIG:contrast-preferences> */

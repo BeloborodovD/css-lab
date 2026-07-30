@@ -388,7 +388,6 @@
                 visibility 0s linear var(--duration-exit);
     transform: translateY(0) scale(1);
   }
-  .notification-badge.is-open .notification-panel,
   .notification-badge.open .notification-panel {
     transition: opacity var(--duration-dropdown) var(--ease-out),
                 visibility 0s;

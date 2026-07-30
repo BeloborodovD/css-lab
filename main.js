@@ -370,8 +370,12 @@ const demoToast = (function initDemoToast() {
       if (open === drawer.classList.contains('is-open')) return;
       drawer.classList.toggle('is-open', open);
       drawer.inert = !open;
-      // Scroll-lock: фон не прокручивается, пока открыта модальная шторка
+      // Scroll-lock: фон не прокручивается, пока открыта модальная шторка.
+      // Замок ставится и на <html>, и на <body>: на витрине полосу прокрутки
+      // держит body (у него собственные отступы под шапку и фиксированный
+      // подвал), и одного documentElement не хватало
       document.documentElement.style.overflow = open ? 'hidden' : '';
+      document.body.style.overflow = open ? 'hidden' : '';
       openBtn.setAttribute('aria-expanded', String(open));
       if (open) {
         lastFocused = document.activeElement;

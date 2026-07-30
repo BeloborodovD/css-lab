@@ -200,7 +200,7 @@ components:
       - "класс задач: журнал событий видеонаблюдения или контроля доступа со снимком, распознанным номером и парой временных меток"
     status: legacy
     notes:
-      - "Дублирование: .skeleton описан и здесь, и в styles/components/skeleton.css; в каскаде побеждает skeleton.css (импортируется позже) — правило здесь мёртвое."
+      - "2026-07-30: собственный .skeleton и одноимённый @keyframes skeleton-pulse удалены. Имя keyframes глобальное, и вторая копия перебивала компонент по порядку импорта; заглушка карточки кадра теперь берёт .skeleton из styles/components/skeleton.css, здесь остались только её размеры внутри .photo-card-skeleton."
       - "Именование вне общей схемы: классы привязаны к предметной области (photo-card, license-plate), а не к роли в интерфейсе."
       - "2026-07-30: собственная точка .status-dot удалена — в разметке .badge-dot с семантическим модификатором (.badge-dot-success/-warning/-error/-info)."
 
@@ -1994,8 +1994,8 @@ components:
       - "в репозитории: components.html#skeleton — готовая раскладка «карточка результата» (.skeleton-card); заглушки ветви дерева — .tree-loading > .skeleton"
     status: new
     notes:
-      - "Единственная реализация скелетона и единственный пульс библиотеки (@keyframes skeleton-pulse, --duration-pulse): дубль из spinner.css и собственный tree-skeleton в tree.css удалены."
-      - "Остаточные наборы вне компонента (autotrassir.css со своим .skeleton и одноимённым keyframes, base/animations.css с .skeleton-* и .skeleton-card) — в беклоге."
+      - "Единственная реализация скелетона в бандле и единственное объявление @keyframes skeleton-pulse (--duration-pulse, linear): дубль из spinner.css, собственный tree-skeleton в tree.css и копия правила с одноимёнными keyframes в autotrassir.css удалены. Заглушки .photo-card-skeleton и .trending-list--skeleton — потребители этого компонента."
+      - "Остаточные однотипные анимации вне компонента (themes/dark.css skeleton-pulse-dark, base/utilities.css pulse, base/animations.css с .skeleton-* и .skeleton-card) — в беклоге."
 
   - name: spec-sheet
     file: styles/components/spec-sheet.css

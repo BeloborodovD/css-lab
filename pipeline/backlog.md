@@ -59,14 +59,16 @@ _meta:
 
 #### Дубликаты (кандидаты на консолидацию)
 
-- [ ] Остатки пульса вне компонента `skeleton`: `@keyframes pulse` в
-      `base/utilities.css`; своя копия `@keyframes skeleton-pulse` вместе с
-      `.skeleton` в `autotrassir.css` (имя keyframes глобальное — две копии под
-      одним именем перебивают друг друга по порядку импорта); третий пульс
-      `skeleton-pulse-dark` и своя `.dark .skeleton` в `themes/dark.css`;
-      плюс `.skeleton-*`/`.skeleton-card`/`.skeleton-shimmer` в
+- [ ] Остатки пульса вне компонента `skeleton` (коллизия имён устранена —
+      `@keyframes skeleton-pulse` в бандле остался один, но однотипных
+      анимаций всё ещё несколько): `@keyframes pulse` в `base/utilities.css`;
+      `skeleton-pulse-dark` вместе с `.dark .skeleton` в `themes/dark.css`
+      (там же литерал `1.4s` и `--ease-in-out` на бесконечном индикаторе —
+      нужен `linear` и `--duration-pulse`); `search-result-card-pulse 1.4s
+      var(--ease-in-out)` в `search-result-card.css`; плюс
+      `.skeleton-*`/`.skeleton-card`/`.skeleton-shimmer` в
       `base/animations.css`, который витрина подключает после `core.css` и
-      который бьёт компонент. Все четыре файла — вне зоны правки группы Б.
+      который бьёт компонент.
 - [ ] Нижний лист, переизобретённый вне компонента `drawer`:
       `notification-panel` и `picklist__panel--sheet`. Первый — чужая зона,
       второй — панель самого пиклиста (нет оверлея и ловушки фокуса, шторкой
@@ -144,6 +146,24 @@ _meta:
 
 ## Сделано
 
+### Производные токены в скоупе бренда (2026-07-30)
+
+- [x] Токен, собранный из `var()` на `:root`, разрешает свои `var()` на
+      элементе объявления — на `<html>`, а бренд живёт на `<body>`
+      (`data-brand`). Из-за этого `--shadow-focus`, `--shadow-focus-error` и
+      легаси-алиасы `--accent/-700/-100` оставались дефолтными (indigo
+      `#3730a3`) на всех брендовых страницах: кольцо фокуса, `::selection`,
+      `outline` из `reset.css` и утилита `.text-accent` светили не тем цветом.
+      Лечение — блок `[BLOCK:brand-scope-derived]` в конце
+      `styles/base/variables.css`: те же производные объявляются селектором
+      `[data-brand]`, то есть в том же скоупе, где бренд задаёт
+      `--color-accent`; одно правило кроет три бренда и обе темы. Зеркало в
+      `styles/base/contrast-preferences.css` (блок `prefers-contrast: more`)
+      обязательно: без него правило уровня body перебило бы усиленное кольцо
+      5px своими 4px и предпочтение пользователя молча терялось.
+      Покрыто e2e: кольцо сверяется с эталоном акцента в 3 брендах × 2 темах
+      и отдельно при `prefers-contrast: more`.
+
 ### Дубликаты, группа «каркас и панели» (2026-07-30)
 
 - [x] Имя `.sidebar` получило единственного владельца — `components/sidebar.css`.
@@ -190,6 +210,27 @@ _meta:
       узкий экран — панель поверх с подложкой) и `#sidebar` (анатомия панели)
       на подмакетнике `.demo-frame`, плюс пункты сайдбара; в реестре паспортов
       у обеих записей `showcase` больше не `null`.
+- [x] Дубль `@keyframes skeleton-pulse` и своё правило `.skeleton` вырезаны из
+      `autotrassir.css` (там же ушли литерал `1.4s` и `--ease-in-out` на
+      бесконечном индикаторе): в `core.css` осталось одно объявление имени —
+      в `components/skeleton.css`, с `--duration-pulse` и `linear`. В файле
+      остались только размеры заглушек внутри `.photo-card-skeleton`.
+- [x] `notification-badge.css`: «выключатель» `transition: opacity 0.01ms,
+      visibility 0.01ms` в `prefers-reduced-motion` заменён на «мягче, но не
+      ноль» — сдвиг и масштаб панели снимаются, кроссфейд по `--duration-exit`
+      / `--duration-dropdown` остаётся (тот же приём, что уже снят с
+      `alerts.css`).
+- [x] Замок прокрутки у шторки в `main.js` ставится и на `<html>`, и на
+      `<body>`: на витрине полосу прокрутки держит `body`, и одного
+      `documentElement` не хватало (на `pages/dashboard.html` поведение
+      было правильным и покрыто тестом).
+- [x] Гонка в e2e-замере кольца фокуса (`measureFocusRing`): значение
+      `box-shadow` снималось во время перехода `--duration-press`, отчего один
+      и тот же дефект давал три разных сообщения в трёх прогонах. Замер теперь
+      ждёт оседания — кадр на старт перехода, `getAnimations().finished`, затем
+      три подряд одинаковых кадра (потолок в кадрах — только страховка от
+      зависания). Стили при этом не менялись: библиотека отдаёт эталонные
+      значения во всех шести комбинациях бренд × тема.
 
 - [x] Версии убраны из имён файлов (`variables-v2` → `variables`, `components-v3/`
       → `components/`, `dark-v3` → `dark`), версия — через build-arg `APP_VERSION`.

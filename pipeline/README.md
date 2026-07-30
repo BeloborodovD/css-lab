@@ -44,7 +44,7 @@ D:\_claude_project\phoenix-dashboard по пайплайну css-lab/pipeline.
 ```
 
 Команда разворачивает этот регламент целиком: чтение шагов, library-first,
-закреплённые агенты, гейты `loop-evaluator`, артефакты в
+закреплённые агенты, гейты `css-lab-evaluator`, артефакты в
 `<проект>/.claude/redesign/`, в конце — коммит и деплой целевого проекта.
 
 Цель: привести целевой проект к дизайн-системе css-lab — токены, компоненты, движение,
@@ -70,11 +70,11 @@ e2e-тест), **и только потом применяется в целев
 | 04 Применение | [steps/04-apply.md](steps/04-apply.md) | `dev-css` + `dev-frontend` (параллельно, файлы не пересекаются) | целевой проект на токенах и компонентах css-lab |
 | 05 Движение | [steps/05-motion.md](steps/05-motion.md) | `dev-web-animation` | анимации по RULES.md ui-motion-craft |
 | 06 Доступность | [steps/06-a11y.md](steps/06-a11y.md) | `dev-accessibility` | WCAG 2.2 AA: фокус, клавиатура, контраст |
-| 07 Верификация | [steps/07-verify.md](steps/07-verify.md) | `loop-evaluator` (скептик, копия в `.claude/agents/`) | PASS/REJECT; при PASS — git → push → deploy |
+| 07 Верификация | [steps/07-verify.md](steps/07-verify.md) | `css-lab-evaluator` (скептик, специализирован под css-lab) | PASS/REJECT; при PASS — git → push → deploy |
 
 Шаги 01–02 читающие, идут параллельно двумя агентами. Шаг 03 выполняется только при
 непустом списке `new` из маппинга. Шаги 04–06 последовательны (общие файлы). После
-каждого генеративного шага — проверка `loop-evaluator` (assume broken), принятие
+каждого генеративного шага — проверка `css-lab-evaluator` (assume broken), принятие
 только при PASS.
 
 ## Правила оркестрации

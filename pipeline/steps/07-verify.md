@@ -3,15 +3,18 @@ _meta:
   type: pipeline-step
   pipeline: redesign-by-css-lab
   step: 7
-  agent: loop-evaluator
+  agent: css-lab-evaluator
   export: false
 ---
 
 # Шаг 07 — Верификация и внедрение
 
-**Агент:** `loop-evaluator` (скептик; копия лежит в `css-lab/.claude/agents/`,
-оригинал — глобальный `~/.claude/agents/`; работает действием: запускает тесты
-и ходит по UI через Playwright). Внедрение — оркестратор.
+**Агент:** `css-lab-evaluator` (скептик; локальный агент в
+`css-lab/.claude/agents/`, специализированный под css-lab — знает матрицу
+бренд/тема, контрастные гейты, token-грепы и деплойный путь проекта; работает
+действием: запускает тесты и ходит по UI через Playwright). На машинах без
+css-lab fallback — глобальный `loop-evaluator` из `~/.claude/agents/`.
+Внедрение — оркестратор.
 
 **Вход:** целевой проект после шагов 04–06, mapping.yaml, отчёты шагов.
 **Выход:** вердикт PASS/REJECT; при PASS — редизайн в проде.

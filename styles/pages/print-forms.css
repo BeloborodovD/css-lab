@@ -1,4 +1,7 @@
 /* [BLOCK:page.print-forms] Страница печатных форм: экранная обёртка A4-листов */
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer pages {
+
 body { background: var(--color-surface-sunken); }
 .pf-page {
   max-width: 900px;
@@ -67,4 +70,5 @@ body { background: var(--color-surface-sunken); }
      остаётся после контента. */
   .pf-sheet { min-height: 271mm; }
 }
+} /* @layer pages */
 /* </BLOCK:page.print-forms> */

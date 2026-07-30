@@ -7,6 +7,9 @@
    - Container'ы на основе --max-content-w
    ========================================================================== */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
 /* ==================== Header ==================== */
 .header {
   position: sticky;
@@ -332,3 +335,5 @@ body:not(:has(> .app-layout > .sidebar--left.is-open)):not(:has(> .app-layout > 
   .main { padding: var(--space-2); }
   .container { padding: 0 var(--space-2); }
 }
+
+} /* @layer components */

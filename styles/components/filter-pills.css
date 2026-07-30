@@ -1,6 +1,6 @@
 /* [BLOCK:component.filter-pills]
  * Полоса активных фильтров: пилюли «ключ: значение ×» + «Сбросить все».
- * Порт идеи из cert-data ActiveFilterPills и motor-datasheet ActiveFilters.
+ * Показывает применённые фильтры выдачи и даёт снять их по одному.
  * Модуль: css-lab/components. Зависимости: base/variables.css, base/motion.css.
  *
  * Отличие от chip: пилюля всегда удаляемая, есть метка поля и значение,
@@ -8,6 +8,9 @@
  * Нэйминг: .filter-pill — вложенный блок внутри .filter-pills (осознанно,
  * не __pill: у пилюли свои элементы __key/__value/__remove).
  */
+
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
 
 .filter-pills {
   display: flex;
@@ -90,4 +93,5 @@
   outline-offset: 2px;
   box-shadow: var(--shadow-focus);
 }
+} /* @layer components */
 /* </BLOCK:component.filter-pills> */

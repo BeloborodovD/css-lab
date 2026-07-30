@@ -1,5 +1,11 @@
 /* ==================== Utilities ==================== */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css.
+   Утилиты живут в слое base (слабее компонентов) — ровно как при прежнем
+   порядке @import; перенос их поверх компонентов меняет приоритеты и
+   выполняется отдельной задачей. */
+@layer base {
+
 /* Flex */
 .flex { display: flex; }
 .flex-col { flex-direction: column; }
@@ -138,7 +144,7 @@
 .z-10 { z-index: var(--z-raised); }
 .z-100 { z-index: var(--z-sticky); }
 
-/* Анимаций здесь больше нет. @keyframes pulse и spin (порт autoTrassir)
+/* Анимаций здесь больше нет. @keyframes pulse и spin (унаследованный дубль)
    были третьей и четвёртой реализациями одного и того же: пульс-заглушка
    живёт в components/skeleton.css (@keyframes skeleton-pulse,
    --duration-pulse, linear), вращение — в самих спиннерах компонентов.
@@ -178,3 +184,5 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+} /* @layer base */

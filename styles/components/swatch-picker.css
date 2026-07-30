@@ -1,11 +1,14 @@
 /* [BLOCK:component.swatch-picker]
- * Выбор цвета из палитры образцов (RAL) — порт из опросного листа R&D
- * Уралэлектро (motor_rnd_request_form v0.6, .ralpick).
+ * Выбор цвета из палитры образцов (RAL): поле анкеты или конфигуратора,
+ * где цвет выбирают по образцу и коду, а не пипеткой.
  * Модуль: css-lab/components. Зависимости: base/variables.css, base/motion.css.
  *
  * Контрол с чипами выбранных цветов + панель: поиск, семейства,
  * сетка образцов с кодами. Открытие — класс .is-open.
  */
+
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
 
 .swatch-picker {
   position: relative;
@@ -392,4 +395,5 @@
   .swatch-picker.is-open .swatch-picker__panel--sheet { transform: none; }
   .swatch:hover { transform: none; }
 }
+} /* @layer components */
 /* </BLOCK:component.swatch-picker> */

@@ -7,6 +7,9 @@
    - in-range: accent-soft (тонкий фон)
    ========================================================================== */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
 .date-picker {
   position: relative;
   display: inline-block;
@@ -438,3 +441,5 @@
     transition: none !important;
   }
 }
+
+} /* @layer components */

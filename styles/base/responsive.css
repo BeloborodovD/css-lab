@@ -1,6 +1,11 @@
 /* ==================== Responsive Design System ==================== */
 /* Mobile-first breakpoints and responsive utilities for CSS Lab */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css.
+   Адаптивные утилиты остаются в слое base (слабее компонентов) — как и при
+   прежнем порядке @import. */
+@layer base {
+
 /* =============================================
    1. Breakpoint CSS Variables
    ============================================= */
@@ -838,3 +843,5 @@ h6.fluid, .h6-fluid {
     padding: 0;
   }
 }
+
+} /* @layer base */

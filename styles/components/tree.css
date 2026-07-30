@@ -14,6 +14,9 @@
  * потолком врёт о содержимом и рвёт длинные ветки. Движется только шеврон.
  */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
 .tree {
   list-style: none;
   margin: 0;
@@ -232,4 +235,5 @@
   padding: var(--space-2);
 }
 .tree-loading .skeleton { height: var(--space-8); }
+} /* @layer components */
 /* </BLOCK:component.tree> */

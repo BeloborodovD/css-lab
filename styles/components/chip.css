@@ -4,6 +4,9 @@
    Pill (radius-full); soft-fill на семантических токенах; без translate hover.
    ========================================================================== */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
 /* ====================== Base ====================== */
 .chip {
   display: inline-flex;
@@ -265,3 +268,5 @@
   border-color: var(--color-accent);
   color: var(--color-accent-text);
 }
+
+} /* @layer components */

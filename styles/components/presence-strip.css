@@ -1,11 +1,15 @@
 /* [BLOCK:component.presence-strip]
  * «Кто сейчас на портале» — стек наложенных аватаров с «+N» и клик-дропдаун
  * со списком: имя, должность, где находится (раздел портала).
- * Порт из corporate-search v2 (presence-strip) + НТБ (OnlineBadge).
+ * Случай применения: шапка корпоративного портала, где видно, кто из коллег
+ * сейчас в системе и в каком разделе.
  * Модуль: css-lab/components. Зависимости: base/variables.css,
  * base/motion.css, components/avatar.css.
  * Открытие — класс .is-open на .presence-strip.
  */
+
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
 
 .presence-strip {
   position: relative;
@@ -208,4 +212,5 @@
   .presence-strip__dropdown { transform: none; }
   .presence-strip.is-open .presence-strip__dropdown { transform: none; }
 }
+} /* @layer components */
 /* </BLOCK:component.presence-strip> */

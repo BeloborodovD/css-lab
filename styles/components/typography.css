@@ -8,6 +8,9 @@
  * Движение не предусмотрено: спецификация статична (gate ui-motion-craft).
  */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
 /* [BLOCK:type-specimen.container] */
 .type-specimen {
   display: flex;
@@ -70,4 +73,5 @@
   }
 }
 /* </BLOCK:type-specimen.responsive> */
+} /* @layer components */
 /* </CONFIG:component-type-specimen> */

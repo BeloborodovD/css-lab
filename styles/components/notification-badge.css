@@ -10,6 +10,9 @@
              </span>
    ========================================================================== */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
 /* ====================== Local CSS variables ====================== */
 :root {
   --notification-panel-width:   360px;
@@ -504,3 +507,5 @@
   .notification-item-icon  { width: 40px; height: 40px; }
   .notification-item-title { font-size: var(--fs-sm); }
 }
+
+} /* @layer components */

@@ -6,6 +6,9 @@
    Focus = ring через box-shadow.
    ========================================================================== */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
 /* ====================== Container ====================== */
 .toggle {
   position: relative;
@@ -247,3 +250,5 @@
   .toggle:active .toggle-thumb { transform: translate(var(--toggle-shift), -50%); }
   .toggle-loading .toggle-thumb::after { animation: none; }
 }
+
+} /* @layer components */

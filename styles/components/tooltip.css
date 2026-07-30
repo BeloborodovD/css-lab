@@ -17,6 +17,9 @@
  * заново — она всегда красится в цвет своего пузыря.
  */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
 /* [CONFIG:tooltip-intent-delay]
  * Задержка hover-intent (~400ms): производная от токенов движения
  * (2 × --duration-dropdown), литеральные ms запрещены.
@@ -358,4 +361,5 @@ button[data-tooltip],
     transition-delay: var(--tooltip-intent-delay);
   }
 }
+} /* @layer components */
 /* </BLOCK:component.tooltip> */

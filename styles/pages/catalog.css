@@ -1,8 +1,12 @@
 /* [CONFIG:page-catalog]
- * Страница-пример «Каталог с фильтрами» (по мотивам motor-datasheet).
+ * Страница-пример «Каталог с фильтрами»: фасетная панель слева, выдача
+ * карточками или таблицей справа.
  * Префикс страницы: .catalog-*. Селекторы вне префикса запрещены;
  * подстройка компонентов — только var-хуками на контейнерах страницы.
  */
+
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer pages {
 
 .catalog-layout {
   display: grid;
@@ -162,4 +166,5 @@
   .catalog-layout { grid-template-columns: 1fr; }
   .catalog-aside { position: static; }
 }
+} /* @layer pages */
 /* </CONFIG:page-catalog> */

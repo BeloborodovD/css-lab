@@ -1,9 +1,13 @@
 /* [BLOCK:component.rte]
  * Мини-редактор примечаний: тулбар форматирования (жирный/курсив/списки)
  * + contenteditable-область с плейсхолдером.
- * Порт из опросного листа R&D Уралэлектро (motor_rnd_request_form v0.6).
+ * Случай применения: поле свободного примечания в анкете или карточке
+ * записи, где нужен минимум форматирования, а не полноценный редактор.
  * Модуль: css-lab/components. Зависимости: base/variables.css, base/motion.css.
  */
+
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
 
 .rte-toolbar {
   display: flex;
@@ -72,4 +76,5 @@
 }
 /* Явное «не пусто» перебивает фолбэк :empty */
 .rte-area[data-empty="false"]::before { content: none; }
+} /* @layer components */
 /* </BLOCK:component.rte> */

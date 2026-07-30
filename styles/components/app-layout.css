@@ -8,6 +8,9 @@
  * в components/sidebar.css — дублирующий каркас .app-sidebar удалён.
  */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
 :root {
   --sidebar-width: var(--sidebar-w);
   /* Пер-сторонние ширины: обновляются JS при ручном ресайзе панели,
@@ -296,4 +299,5 @@ body.width-full .app-content > .container {
     transition: none;
   }
 }
+} /* @layer components */
 /* </BLOCK:component.app-layout> */

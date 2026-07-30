@@ -1,5 +1,5 @@
 /* [BLOCK:component.filter-panel]
- * Панель фильтров каталога — порт из motor-datasheet (FilterPanel + filters.css):
+ * Панель фильтров каталога, встроенная в колонку страницы:
  * градиентная шапка со счётчиком «N из M», быстрые пресеты (пунктирные чипы),
  * группы фильтров (чипы-опции / селекты / диапазон) со сбросом по группе,
  * кнопка «Сбросить все».
@@ -10,6 +10,9 @@
  * Панель встроена в поток страницы. Всплывающая панель фильтров от триггера —
  * это .popover (components/dropdown.css), меню действий — .dropdown-menu там же.
  */
+
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
 
 .filter-panel {
   background: var(--color-surface);
@@ -192,4 +195,5 @@
   outline-offset: 2px;
   box-shadow: var(--shadow-focus);
 }
+} /* @layer components */
 /* </BLOCK:component.filter-panel> */

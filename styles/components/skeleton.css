@@ -1,11 +1,14 @@
 /* [BLOCK:component.skeleton]
- * Скелетон-заглушки загрузки — порт идеи из corporate-search v2 /
- * motor-datasheet FilterPanelSkeleton.
+ * Скелетон-заглушки загрузки: серые прямоугольники на месте будущего
+ * контента — списков, карточек, панелей фильтров.
  * Модуль: css-lab/components. Зависимости: base/variables.css, base/motion.css.
  *
  * Пульс через opacity (не background-position): дешёво для GPU и
  * не задевает layout. Постоянное движение → linear (RULES.md §1).
  */
+
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
 
 .skeleton {
   display: block;
@@ -67,4 +70,5 @@
     opacity: 0.7;
   }
 }
+} /* @layer components */
 /* </BLOCK:component.skeleton> */

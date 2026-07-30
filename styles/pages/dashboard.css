@@ -7,6 +7,9 @@
  * Зависимости: base/variables.css, base/motion.css, components/*.
  */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer pages {
+
 /* ===== Каркас: узкий сайднав слева + контент ============================ */
 .dash-layout {
   display: grid;
@@ -219,4 +222,5 @@
     grid-template-columns: 1fr;
   }
 }
+} /* @layer pages */
 /* </CONFIG:page-dashboard> */

@@ -1,5 +1,5 @@
 /* [BLOCK:component.brand-mark]
- * Логотип бренда и переключатель брендов — порт из corporate-search v2.
+ * Логотип бренда в шапке и переключатель брендов.
  * Модуль: css-lab/components. Зависимости: base/variables.css,
  * темы themes/veza.css | themes/uralelectro.css (дают --brand-logo-* токены).
  *
@@ -7,6 +7,9 @@
  * поэтому один и тот же markup работает для VEZA и Уралэлектро,
  * light (цветной) и dark (белый) вариантов.
  */
+
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
 
 .brand-mark {
   --brand-mark-h: 28px;
@@ -80,4 +83,5 @@
   outline-offset: 2px;
   box-shadow: var(--shadow-focus);
 }
+} /* @layer components */
 /* </BLOCK:component.brand-mark> */

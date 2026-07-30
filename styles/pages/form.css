@@ -7,6 +7,9 @@
  * base/variables.css, base/motion.css.
  */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer pages {
+
 /* ===== Контейнер страницы =============================================== */
 .fp-wrap { max-width: 880px; }
 
@@ -112,4 +115,5 @@
     gap: var(--space-2);
   }
 }
+} /* @layer pages */
 /* </CONFIG:page-form> */

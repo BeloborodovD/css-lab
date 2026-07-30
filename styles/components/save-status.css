@@ -1,9 +1,13 @@
 /* [BLOCK:component.save-status]
  * Статус автосохранения черновика формы: «сохранено» / «есть несохранённое»
  * + индикатор «данные не отправлены» (точка-маркер).
- * Порт из опросного листа R&D Уралэлектро (motor_rnd_request_form v0.6).
+ * Случай применения: длинная форма с черновиком в локальном хранилище —
+ * пользователь должен видеть, что его ввод не потеряется.
  * Модуль: css-lab/components. Зависимости: base/variables.css.
  */
+
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
 
 .save-status {
   display: inline-flex;
@@ -37,4 +41,5 @@
   border-radius: var(--radius-full);
   background: var(--color-warning);
 }
+} /* @layer components */
 /* </BLOCK:component.save-status> */

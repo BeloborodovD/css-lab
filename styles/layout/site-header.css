@@ -8,6 +8,9 @@
  * поведение — js/site.js. Активный пункт — aria-current="page".
  */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer layout {
+
 .site-header {
   position: sticky;
   top: 0;
@@ -142,4 +145,5 @@ button.site-header__theme {
 @media (prefers-reduced-motion: reduce) {
   .site-nav__link:active { transform: none; }
 }
+} /* @layer layout */
 /* </BLOCK:layout.site-header> */

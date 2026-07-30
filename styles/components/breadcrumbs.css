@@ -2,6 +2,9 @@
    breadcrumbs.css — навигация по уровням
    ========================================================================== */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
 /* ====================== Container ====================== */
 .breadcrumbs {
   display: flex;
@@ -129,3 +132,5 @@ a.breadcrumb-item:focus-visible {
   background: var(--color-surface-hover);
   color: var(--color-accent);
 }
+
+} /* @layer components */

@@ -4,6 +4,9 @@
    Без ripple/scale; hover = смена фона/border-color; focus = ring через shadow.
    ========================================================================== */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
 /* ====================== Base ====================== */
 .btn {
   display: inline-flex;
@@ -384,3 +387,5 @@
 [data-theme="dark"] .btn-ghost:hover {
   background: var(--color-surface-hover);
 }
+
+} /* @layer components */

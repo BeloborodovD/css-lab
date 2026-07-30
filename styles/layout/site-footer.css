@@ -4,6 +4,9 @@
  * Разметка копируется между маркерами <!-- [BLOCK:site-footer] -->.
  */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer layout {
+
 .site-footer {
   display: flex;
   align-items: center;
@@ -26,4 +29,5 @@
   text-decoration: none;
 }
 .site-footer__links a:hover { color: var(--color-accent); }
+} /* @layer layout */
 /* </BLOCK:layout.site-footer> */

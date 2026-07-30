@@ -12,6 +12,9 @@
  *   текста. При невозможности использовать Roboto — Arial.
  */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer themes {
+
 /* [BLOCK:theme.veza.light] */
 [data-brand="veza"] {
   /* UI-акцент затемнён до AA: белый на #2a7f37 = 5.0:1 (чистый #2e8a3c
@@ -123,4 +126,5 @@
   }
 }
 /* </BLOCK:theme.veza.dark> */
+} /* @layer themes */
 /* </CONFIG:theme-veza> */

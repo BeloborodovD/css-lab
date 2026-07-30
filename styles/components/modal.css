@@ -7,6 +7,9 @@
    - drawer и bottom-sheet inline
    ========================================================================== */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -271,3 +274,5 @@
 .dark .modal-footer {
   background: var(--color-surface-overlay);
 }
+
+} /* @layer components */

@@ -1,4 +1,7 @@
 /* [BLOCK:page.ral-colors] Страница-справочник RAL: локальная раскладка */
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer pages {
+
 .ral-page {
   max-width: var(--max-content-w);
   margin: 0 auto;
@@ -109,4 +112,5 @@ button.ral-card {
   .ral-card__swatch { height: 14mm; print-color-adjust: exact; }
   .ral-family { break-after: avoid; }
 }
+} /* @layer pages */
 /* </BLOCK:page.ral-colors> */

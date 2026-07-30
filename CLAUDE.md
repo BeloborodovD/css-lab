@@ -61,16 +61,22 @@ make up / make prod / make health   # docker: dev :48621 / prod nginx :48620 / �
 
 ## Архитектура каскада
 
-Один бандл `styles/core.css` (`@import`-цепочка), порядок жёсткий и значимый:
+Один бандл `styles/core.css` (`@import`-цепочка). Приоритет выражен **слоями каскада**, порядок объявлен одной строкой в начале `core.css`:
 
-1. `base/motion.css` — **единственный** источник кривых и длительностей (`--ease-out`, `--duration-*`). Хардкод `cubic-bezier`/`ms` в компонентах — дефект.
-2. `base/variables.css` — все остальные токены (цвета, шрифты, тени, z-index). В компонентах ни одного литерала цвета/отступа — только `var()`.
-3. `base/fonts.css`, `reset.css`, `utilities.css`, `responsive.css`.
-4. `layout/` — каркас сайта: site-header, site-footer, page-shell, print-sheet.
-5. `components/*.css` — один компонент = один файл, BEM + состояния `is-*`.
-6. `themes/` — последними: `dark.css` (нейтральная тёмная база), затем бренды `veza.css` / `uralelectro.css` / `hemah.css`.
+```css
+@layer tokens, base, legacy, layout, components, themes, pages, overrides;
+```
 
-`base/animations.css` в core **не входит** (легаси-зверинец, конфликтует с motion-контрактом) — его подключает только витрина `components.html` отдельным `<link>`.
+1. `tokens` — `base/motion.css` (**единственный** источник кривых и длительностей: `--ease-out`, `--duration-*`; хардкод `cubic-bezier`/`ms` в компонентах — дефект) и `base/variables.css` (все остальные токены; в компонентах ни одного литерала — только `var()`).
+2. `base` — `reset.css`, `utilities.css`, `responsive.css`. `base/fonts.css` — единственный файл вне слоёв (только `@font-face`, в каскаде селекторов не участвует; обоснование записано в его шапке).
+3. `legacy` — `base/animations.css`: в бандл **не входит**, подключается только витриной `components.html` отдельным `<link>`; слой держит его слабее компонентов.
+4. `layout` — каркас сайта: site-header, site-footer, page-shell, print-sheet.
+5. `components` — один компонент = один файл, BEM + состояния `is-*`.
+6. `themes` — `dark.css` (нейтральная тёмная база), затем бренды `veza.css` / `uralelectro.css` / `hemah.css`.
+7. `pages` — `styles/pages/*.css`, подключаются страницей вторым `<link>`.
+8. `overrides` — `base/contrast-preferences.css`, бьёт всё.
+
+**Слой назначается обёрткой ВНУТРИ файла** (`@layer components { … }`), а не формой `@import … layer(name)`: последняя ломается сборщиками (Next 14 css-loader делает из неё невалидный `@media layer(...)`) и не переживает вендоринг отдельных файлов. Новый файл в библиотеке обязан получить обёртку — файл без слоя бьёт любой слой. Порядок `@import` внутри слоя по-прежнему значим для композиций (`form-error-summary` после `alerts`). Для `!important` порядок слоёв инвертируется — побеждает более ранний слой.
 
 ## Брендинг и темы
 

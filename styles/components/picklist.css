@@ -1,6 +1,7 @@
 /* [BLOCK:component.picklist]
  * Мульти-select пиклист: контрол с чипами выбранного + панель с чекбоксами.
- * Порт из опросного листа R&D Уралэлектро (motor_rnd_request_form v0.6, .ms).
+ * Случай применения: анкетное поле с перечислимым множественным выбором
+ * (исполнения, опции, комплектация) и пунктом «другое».
  * Модуль: css-lab/components. Зависимости: base/variables.css, base/motion.css.
  *
  * Разграничение с combobox.css: combobox — одиночный выбор/автокомплит
@@ -8,6 +9,9 @@
  * выбранного в контроле, чекбоксы, поиск-фильтр и поле «другое».
  * Открытие — класс .is-open на .picklist.
  */
+
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
 
 .picklist {
   position: relative;
@@ -384,4 +388,5 @@
   .picklist.is-open .picklist__panel--sheet { transform: none; }
   .picklist__caret { transition: none; }
 }
+} /* @layer components */
 /* </BLOCK:component.picklist> */

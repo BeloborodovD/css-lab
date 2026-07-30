@@ -13,6 +13,9 @@
  * .sidebar--resizable; состояния .is-open и .is-resizing ставит JS.
  */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
 .sidebar {
   position: fixed;
   top: var(--header-h);
@@ -462,4 +465,5 @@
                 visibility 0s linear var(--duration-dropdown);
   }
 }
+} /* @layer components */
 /* </BLOCK:component.sidebar> */

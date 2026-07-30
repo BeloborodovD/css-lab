@@ -1,9 +1,13 @@
 /* [BLOCK:component.row-card]
  * Повторяемые строки-карточки формы (применения, аналоги, вложения)
  * с кнопками «добавить строку» / «удалить строку».
- * Порт из опросного листа R&D Уралэлектро (motor_rnd_request_form v0.6).
+ * Случай применения: табличная часть анкеты, число строк в которой задаёт
+ * сам пользователь.
  * Модуль: css-lab/components. Зависимости: base/variables.css, base/motion.css.
  */
+
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
 
 .form-rows {
   display: flex;
@@ -117,4 +121,5 @@
   }
   .table--form.table-card-mobile td.table__actions::before { content: none; }
 }
+} /* @layer components */
 /* </BLOCK:component.row-card> */

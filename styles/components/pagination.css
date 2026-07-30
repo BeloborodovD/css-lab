@@ -4,6 +4,9 @@
    Hover убран glow (3px shadow ring) — заменён на смену border + soft bg.
    ========================================================================== */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
 /* ====================== Standard ====================== */
 .pagination {
   display: flex;
@@ -171,3 +174,5 @@
 [data-theme="dark"] .page-btn.active {
   color: var(--color-accent-text);
 }
+
+} /* @layer components */

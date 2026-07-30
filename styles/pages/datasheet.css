@@ -6,6 +6,9 @@
  * Модуль: css-lab/pages. Зависимости: core.css (components + темы).
  */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer pages {
+
 /* ===== Шапка изделия =================================================== */
 .ds-hero {
   padding: var(--space-6);
@@ -200,4 +203,5 @@
   .ds-hero__aside { align-items: flex-start; }
   .ds-hero__status { text-align: left; }
 }
+} /* @layer pages */
 /* </CONFIG:page-datasheet> */

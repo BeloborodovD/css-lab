@@ -1,5 +1,8 @@
 /* ==================== CSS Reset ==================== */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer base {
+
 *,
 *::before,
 *::after {
@@ -103,7 +106,7 @@ ol {
   list-style: none;
 }
 
-/* Focus states (AutoTrassir) */
+/* Focus states — видимое кольцо фокуса по умолчанию для всего интерактивного */
 :focus-visible {
   outline: var(--border-w-strong) solid var(--accent);
   outline-offset: 2px;
@@ -113,7 +116,7 @@ ol {
   outline: none;
 }
 
-/* Scrollbar (AutoTrassir dark theme).
+/* Scrollbar — тонкая полоса прокрутки, одинаковая в обеих темах.
    8px — размер системного контрола, а не ступень дизайн-шкалы (§5.3) */
 ::-webkit-scrollbar {
   width: 8px;
@@ -138,3 +141,5 @@ ol {
   background: var(--accent-100);
   color: inherit;
 }
+
+} /* @layer base */

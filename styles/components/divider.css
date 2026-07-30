@@ -2,6 +2,9 @@
    divider.css — горизонтальные/вертикальные разделители с опциональным текстом
    ========================================================================== */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
 /* ====================== Base ====================== */
 .divider {
   display: flex;
@@ -135,3 +138,5 @@
 [data-theme="dark"] .divider-vertical-inline {
   background: var(--color-border);
 }
+
+} /* @layer components */

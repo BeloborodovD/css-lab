@@ -4,6 +4,9 @@
    Без scale на hover; status-online без агрессивной pulse-аура.
    ========================================================================== */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
 /* ====================== Base ====================== */
 .avatar {
   position: relative;
@@ -173,3 +176,5 @@
   background: var(--color-surface-sunken);
   color: var(--color-text-muted);
 }
+
+} /* @layer components */

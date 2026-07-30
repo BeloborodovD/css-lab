@@ -6,6 +6,9 @@
    - убраны хардкоженые #4caf50/#ff9800 etc
    ========================================================================== */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
 .stat-card {
   display: flex;
   flex-direction: column;
@@ -255,3 +258,5 @@
   font-size: var(--fs-xs);
   color: var(--color-text-muted);
 }
+
+} /* @layer components */

@@ -7,6 +7,9 @@
    - log-controls и view-mode-toggle упрощены
    ========================================================================== */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
 /* ==================== Log level badges ==================== */
 .log-badge {
   display: inline-flex;
@@ -282,4 +285,6 @@
   background: var(--color-surface-sunken);
   font-size: var(--fs-sm);
 }
+
+} /* @layer components */
 

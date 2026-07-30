@@ -8,6 +8,9 @@
    - search-hero variant добавлен для главной страницы
    ========================================================================== */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
 .search-input {
   position: relative;
   display: flex;
@@ -330,3 +333,5 @@
     width: 240px;
   }
 }
+
+} /* @layer components */

@@ -10,6 +10,9 @@
    - file-icon types через семантические токены (success/warning/error)
    ========================================================================== */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
 .file-upload {
   display: flex;
   flex-direction: column;
@@ -517,3 +520,5 @@
     width: 50%;
   }
 }
+
+} /* @layer components */

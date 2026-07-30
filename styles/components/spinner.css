@@ -6,6 +6,9 @@
    Заглушки-скелетоны — отдельный компонент components/skeleton.css.
    ========================================================================== */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
 /* ====================== Base spinner ====================== */
 .spinner {
   display: inline-block;
@@ -230,3 +233,5 @@
   .spinner-ring::before { animation-duration: 2s; }
   .spinner-ring::after  { animation-duration: 1s; }
 }
+
+} /* @layer components */

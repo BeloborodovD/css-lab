@@ -1,9 +1,13 @@
 /* [BLOCK:component.quiz]
  * Тест знаний: шапка с таймером/прогрессом/статистикой + карточка вопроса
  * с вариантами и состояниями верно/неверно.
- * Порт из manager_test_v2.2 (Уралэлектро), приведён к токенам css-lab.
+ * Случай применения: обучающий тест или аттестация сотрудников с
+ * ограничением по времени и разбором ответов.
  * Модуль: css-lab/components. Зависимости: base/variables.css, base/motion.css.
  */
+
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
 
 /* ===== Шапка теста ====================================================== */
 .quiz-header {
@@ -230,4 +234,5 @@
 @media (prefers-reduced-motion: reduce) {
   .quiz-header__progress-fill { transition: none; }
 }
+} /* @layer components */
 /* </BLOCK:component.quiz> */

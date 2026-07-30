@@ -5,6 +5,9 @@
  * Подключать первым в каскаде; хардкод cubic-bezier/ms в компонентах запрещён.
  */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer tokens {
+
 :root {
   /* Кривые. Встроенные ease-* слишком слабые — используются только эти три. */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);        /* вход и выход элементов */
@@ -73,3 +76,4 @@ button:not([disabled]):active,
   }
 }
 /* </CONFIG:motion-tokens> */
+} /* @layer tokens */

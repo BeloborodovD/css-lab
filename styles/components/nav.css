@@ -7,6 +7,9 @@
    - хлебные крошки вынесены целиком в components/breadcrumbs.css
    ========================================================================== */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
 .nav {
   position: fixed;
   top: 0;
@@ -178,3 +181,5 @@
   .nav,
   .page-nav { display: none !important; }
 }
+
+} /* @layer components */

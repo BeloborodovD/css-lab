@@ -2,6 +2,14 @@
 /* Core animation system for CSS Lab */
 /* GPU-accelerated, accessible, consistent timing */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css.
+   Файл в бандл core.css не входит: это витринный экспонат легаси-анимаций
+   (собственные словари кривых и длительностей, конкурирующие с motion.css),
+   и витрина подключает его отдельным <link> ПОСЛЕ core.css. Без слоя он
+   поэтому перебивал компоненты; слой legacy стоит раньше layout/components
+   и возвращает приоритет библиотеке. */
+@layer legacy {
+
 /* =============================================
    1. Animation CSS Custom Properties
    ============================================= */
@@ -1805,3 +1813,5 @@
 .force-animations .animate-toast-out {
   animation: toast-slide-out-right var(--duration-normal) var(--ease-accelerate) forwards !important;
 }
+
+} /* @layer legacy */

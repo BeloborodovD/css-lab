@@ -1,11 +1,14 @@
 /* [BLOCK:component.accordion]
- * Сворачиваемые секции (accordion / collapsible) — порт идеи из
- * motor-datasheet CollapsibleSection / FilterSection.
+ * Сворачиваемые секции (accordion / collapsible): длинные карточки изделий,
+ * группы фильтров, разделы справки — всё, что должно сворачиваться в строку.
  * Модуль: css-lab/components. Зависимости: base/variables.css, base/motion.css.
  *
  * Высота анимируется через grid-template-rows 0fr→1fr — без анимации
  * height/margin. Открытие — класс .is-open или details[open].
  */
+
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
 
 .accordion {
   border: var(--border-w) solid var(--color-border);
@@ -43,7 +46,7 @@
   box-shadow: inset var(--shadow-focus);
 }
 
-/* Счётчик выбранного (как в фильтрах motor-datasheet) */
+/* Счётчик выбранного в заголовке группы фильтров */
 .accordion__count {
   margin-left: auto;
   min-width: 20px;
@@ -109,4 +112,5 @@
   .accordion__panel { transition: none; }
   .accordion__chevron { transition: none; }
 }
+} /* @layer components */
 /* </BLOCK:component.accordion> */

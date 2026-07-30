@@ -2,6 +2,9 @@
    empty-state.css — placeholder для пустых списков, no-results, ошибок
    ========================================================================== */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
 /* ====================== Base ====================== */
 .empty-state {
   display: flex;
@@ -203,3 +206,5 @@
 [data-theme="dark"] .empty-state-subtle {
   background: var(--color-accent-soft);
 }
+
+} /* @layer components */

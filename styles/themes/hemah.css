@@ -12,6 +12,9 @@
  * .hemah/[data-theme="hemah"], блок совместимости в конце файла).
  */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer themes {
+
 /* [BLOCK:theme.hemah.light] */
 [data-brand="hemah"] {
   /* UI-акцент затемнён до AA: белый на #2d6274 = 5.5:1 (сайтовый #367589
@@ -137,4 +140,5 @@
   --accent-100: rgba(111, 179, 199, 0.12);
 }
 /* </BLOCK:theme.hemah.legacy> */
+} /* @layer themes */
 /* </CONFIG:theme-hemah> */

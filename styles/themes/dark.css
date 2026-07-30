@@ -11,7 +11,7 @@
      - selection (CSS pseudo-elements)
      - focus-visible base ring (для интерактивных элементов без явного focus)
      - shared utility (.divider, .kbd) — общие, не привязанные к компоненту
-     - photo-card / lightbox / sidebar-panel из AutoTrassir-секции (упрощены)
+     - карточка кадра / лайтбокс / боковая панель журнала событий (упрощены)
 
    Базовый bg: #18181b (НЕ #0a0a0f). Контраст комфортный, не давит на глаз.
 
@@ -22,6 +22,9 @@
      - НЕТ skeleton с 3-stop linear-gradient — заменено на opacity-pulse
      - shadow-lg для всех popover/drawer/modal (через переменные)
    ========================================================================== */
+
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer themes {
 
 /* ==================== Body / html ==================== */
 .dark,
@@ -132,7 +135,7 @@ body.dark,
   color: var(--color-text-muted);
 }
 
-/* ==================== AutoTrassir overrides (только то, что осталось) ==================== */
+/* ============ Журнал событий с кадрами: остаток переопределений ============ */
 
 /* Photo card в dark — без translateY(-4px) и тяжёлого 0 8px 32px */
 .dark .photo-card {
@@ -235,3 +238,5 @@ body.dark,
     color-scheme: light;
   }
 }
+
+} /* @layer themes */

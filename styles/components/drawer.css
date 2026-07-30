@@ -1,11 +1,14 @@
 /* [BLOCK:component.drawer]
- * Выдвижная боковая панель (drawer / slide-over) — порт идеи из
- * corporate-search v2 drawer и cert-data SlideOver.
+ * Выдвижная боковая панель (drawer / slide-over): карточка записи, фильтры
+ * или детали объекта поверх списка, без ухода со страницы.
  * Модуль: css-lab/components. Зависимости: base/variables.css, base/motion.css.
  *
  * Открытие — класс .is-open на .drawer. Панель входит справа и уходит
  * вправо (вход и выход по одному пути, RULES.md §3), кривая --ease-drawer.
  */
+
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
 
 .drawer {
   position: fixed;
@@ -169,4 +172,5 @@
   .drawer--left.is-open .drawer__panel,
   .drawer--sheet.is-open .drawer__panel { opacity: 1; }
 }
+} /* @layer components */
 /* </BLOCK:component.drawer> */

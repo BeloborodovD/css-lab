@@ -9,6 +9,9 @@
      - sticky-col и responsive card-mode сохранены
    ========================================================================== */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -315,3 +318,5 @@
 .dark .table-responsive::after {
   background: linear-gradient(to left, rgba(0, 0, 0, 0.4), transparent);
 }
+
+} /* @layer components */

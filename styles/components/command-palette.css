@@ -9,6 +9,9 @@
    - .kbd: surface-sunken + 1px border (чище чем box-shadow)
    ========================================================================== */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
 /* Частотный гейт (Emil, RULES.md §0): палитра вызывается с клавиатуры
    сотни раз в день — открытие и закрытие МГНОВЕННЫЕ, без анимации.
    Эталон — Raycast: никакого open/close перехода. */
@@ -408,3 +411,5 @@
 .dark .command-palette {
   border-color: var(--color-border-strong);
 }
+
+} /* @layer components */

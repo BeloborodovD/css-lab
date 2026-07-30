@@ -17,6 +17,9 @@
    popover; постоянный блок фильтров в колонке страницы → filter-panel.
    ========================================================================== */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
 .dropdown {
   position: relative;
   display: inline-block;
@@ -246,3 +249,5 @@
   /* Border более явный в dark — компенсация теней */
   border-color: var(--color-border-strong);
 }
+
+} /* @layer components */

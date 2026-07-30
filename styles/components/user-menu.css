@@ -1,5 +1,6 @@
 /* [BLOCK:component.user-menu]
- * Меню пользователя портала — порт из corporate-search v2 / НТБ.
+ * Меню пользователя в шапке портала: аватар с именем и ролью, выпадающий
+ * список действий учётной записи, выход.
  * Модуль: css-lab/components. Зависимости: base/variables.css,
  * base/motion.css, components/avatar.css (аватар в триггере).
  *
@@ -8,6 +9,9 @@
  * Открытие — класс .is-open на контейнере; [hidden] остаётся для a11y.
  * Онлайн-точка — ::after у .user-menu__avatar-wrap.
  */
+
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
 
 .user-menu {
   position: relative;
@@ -267,4 +271,5 @@
   .user-menu.is-open .user-menu__dropdown { transform: none; }
   .user-menu__chevron { transition: none; }
 }
+} /* @layer components */
 /* </BLOCK:component.user-menu> */

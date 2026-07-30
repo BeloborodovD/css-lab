@@ -3,6 +3,9 @@
  * Модуль: css-lab/layout. Зависимости: base/variables.css.
  */
 
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer layout {
+
 .page-shell {
   max-width: var(--max-content-w);
   margin: 0 auto;
@@ -56,4 +59,5 @@
   font-size: var(--fs-sm);
   max-width: 72ch;
 }
+} /* @layer layout */
 /* </BLOCK:layout.page-shell> */

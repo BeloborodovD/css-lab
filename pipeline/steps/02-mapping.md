@@ -11,7 +11,7 @@ _meta:
 
 **Агент:** `dev-css`.
 
-**Вход:** `audit.yaml` (шаг 01), каталог `css-lab/styles/components-v3/`,
+**Вход:** `audit.yaml` (шаг 01), каталог `css-lab/styles/components/`,
 витрина `css-lab/components.html`.
 **Выход:** `<target>/.claude/redesign/mapping.yaml`.
 
@@ -35,7 +35,7 @@ BEM, элементы, состояния `is-*`, какие токены нуж
 mapped:
   - element: <из audit.yaml>
     verdict: exists|gap|new
-    component: components-v3/<file>.css   # для exists/gap
+    component: components/<file>.css   # для exists/gap
     classes: [<точные классы>]            # для exists
     missing: <чего не хватает>            # для gap
     proposal:                             # для new

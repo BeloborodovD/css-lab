@@ -1,7 +1,7 @@
 /* [BLOCK:component.picklist]
  * Мульти-select пиклист: контрол с чипами выбранного + панель с чекбоксами.
  * Порт из опросного листа R&D Уралэлектро (motor_rnd_request_form v0.6, .ms).
- * Модуль: css-lab/components-v3. Зависимости: base/variables-v2.css, base/motion.css.
+ * Модуль: css-lab/components. Зависимости: base/variables.css, base/motion.css.
  *
  * Разграничение с combobox.css: combobox — одиночный выбор/автокомплит
  * по вводу; picklist — перечислимый мультивыбор анкетных полей: чипы

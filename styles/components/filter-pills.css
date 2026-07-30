@@ -1,7 +1,7 @@
 /* [BLOCK:component.filter-pills]
  * Полоса активных фильтров: пилюли «ключ: значение ×» + «Сбросить все».
  * Порт идеи из cert-data ActiveFilterPills и motor-datasheet ActiveFilters.
- * Модуль: css-lab/components-v3. Зависимости: base/variables-v2.css, base/motion.css.
+ * Модуль: css-lab/components. Зависимости: base/variables.css, base/motion.css.
  *
  * Отличие от chip: пилюля всегда удаляемая, есть метка поля и значение,
  * полоса живёт над результатами каталога/таблицы.

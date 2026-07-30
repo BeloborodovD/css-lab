@@ -1,7 +1,7 @@
 /* [BLOCK:component.user-menu]
  * Меню пользователя портала — порт из corporate-search v2 / НТБ.
- * Модуль: css-lab/components-v3. Зависимости: base/variables-v2.css,
- * base/motion.css, components-v3/avatar.css (аватар в триггере).
+ * Модуль: css-lab/components. Зависимости: base/variables.css,
+ * base/motion.css, components/avatar.css (аватар в триггере).
  *
  * Структура: .user-menu > .user-menu__trigger (аватар + имя + роль + шеврон)
  *            + .user-menu__dropdown (identity-шапка, пункты, выход).

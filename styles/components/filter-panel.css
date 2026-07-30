@@ -3,9 +3,9 @@
  * градиентная шапка со счётчиком «N из M», быстрые пресеты (пунктирные чипы),
  * группы фильтров (чипы-опции / селекты / диапазон) со сбросом по группе,
  * кнопка «Сбросить все».
- * Модуль: css-lab/components-v3. Зависимости: base/variables-v2.css,
- * base/motion.css, components-v3/chip.css (.chips/.chip-choice),
- * components-v3/inputs.css (select/input).
+ * Модуль: css-lab/components. Зависимости: base/variables.css,
+ * base/motion.css, components/chip.css (.chips/.chip-choice),
+ * components/inputs.css (select/input).
  */
 
 .filter-panel {

@@ -32,6 +32,8 @@ services:
       dockerfile: Dockerfile
       args:
         BASE_PATH: ${BASE_PATH:-}
+        # Версия для футера витрины; по умолчанию — версия из package.json
+        APP_VERSION: ${APP_VERSION:-3.0.0}
     image: css-lab:latest
     container_name: css-lab-web
     profiles: ["prod"]

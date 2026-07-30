@@ -19,9 +19,9 @@ _meta:
 ## Порядок на каждый новый компонент
 
 1. **`dev-brand-identity`** — только если `proposal.tokens` содержит отсутствующие
-   токены: добавить их в `styles/base/variables-v2.css` (light + dark + перекрытия
+   токены: добавить их в `styles/base/variables.css` (light + dark + перекрытия
    в трёх темах `styles/themes/`). Ни одного литерала в будущем компоненте.
-2. **`dev-css`** — `styles/components-v3/<block>.css` строго по proposal из
+2. **`dev-css`** — `styles/components/<block>.css` строго по proposal из
    mapping.yaml (BEM, состояния `is-*`, [BLOCK:] теги, скрытие панелей через
    visibility+opacity, hover за `@media (hover:hover)`), `@import` в
    `styles/core.css`. Для `gap` — доработка существующего файла компонента.

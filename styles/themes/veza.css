@@ -1,6 +1,6 @@
 /* [CONFIG:theme-veza]
  * Тема бренда VEZA — корпоративный зелёный Pantone 356 C.
- * Модуль: css-lab/themes. Зависимости: base/variables-v2.css (перекрывает её токены),
+ * Модуль: css-lab/themes. Зависимости: base/variables.css (перекрывает её токены),
  * assets/logos/veza.svg + veza-mono-light.svg.
  *
  * Активация: <html data-brand="veza">. Сочетается с .dark (тёмная тема).
@@ -16,7 +16,7 @@
 [data-brand="veza"] {
   /* UI-акцент затемнён до AA: белый на #2a7f37 = 5.0:1 (чистый #2e8a3c
      даёт 4.36:1 — ниже AA для мелкого текста). Эталонный брендовый цвет
-     остаётся в --brand-veza (variables-v2) — для крупных плашек и печати */
+     остаётся в --brand-veza (variables) — для крупных плашек и печати */
   --color-accent:            #2a7f37;
   --color-accent-hover:      #257231;
   --color-accent-active:     #1c5926;
@@ -102,7 +102,7 @@
 }
 
 /* Авто-тёмная тема ОС без класса .dark: html получает тёмный фон из
-   variables-v2 — бренд обязан подсветить акцент сам, иначе тёмный
+   variables — бренд обязан подсветить акцент сам, иначе тёмный
    #2a7f37 нечитаем на тёмном фоне */
 @media (prefers-color-scheme: dark) {
   [data-brand="veza"]:not(.light):not([data-theme="light"]) {

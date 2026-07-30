@@ -1,6 +1,6 @@
 /* [CONFIG:theme-hemah]
  * Тема бренда HEMAH (hemah.pro) — производитель систем автоматики ОВиК.
- * Модуль: css-lab/themes. Зависимости: base/variables-v2.css (перекрывает её токены),
+ * Модуль: css-lab/themes. Зависимости: base/variables.css (перекрывает её токены),
  * base/fonts.css (Manrope + Open Sans), assets/logos/hemah*.svg.
  *
  * Активация: <html data-brand="hemah">. Сочетается с .dark (тёмная тема).

@@ -1,8 +1,8 @@
 /* [BLOCK:layout.site-header]
  * Общая шапка сайта-примеров: лого CSSLab + бренд-марка, навигация по
  * страницам, справа — переключатели бренда и темы.
- * Модуль: css-lab/layout. Зависимости: base/variables-v2.css, base/motion.css,
- * components-v3/brand-mark.css (лого и brand-switcher).
+ * Модуль: css-lab/layout. Зависимости: base/variables.css, base/motion.css,
+ * components/brand-mark.css (лого и brand-switcher).
  * Разметка копируется между страницами между маркерами
  * <!-- [BLOCK:site-header] --> … <!-- </BLOCK:site-header> --> (grep-цель),
  * поведение — js/site.js. Активный пункт — aria-current="page".

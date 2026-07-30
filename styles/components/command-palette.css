@@ -403,7 +403,7 @@
 }
 
 /* ==================== Dark Theme ==================== */
-/* Оверлей в dark берётся автоматически из токена --color-overlay (variables-v2) */
+/* Оверлей в dark берётся автоматически из токена --color-overlay (variables) */
 
 .dark .command-palette {
   border-color: var(--color-border-strong);

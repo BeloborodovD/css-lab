@@ -97,6 +97,12 @@ user-menu, presence-strip («кто на портале»: стек аватар
 - **Фиксы после REJECT**: 62 конверсии `outline: none` → `outline: 2px solid transparent` (forced-colors красит в Highlight, обычные режимы пиксель-в-пиксель); `.dark .btn-primary/.btn-danger` — акцентный фон (было: невидимая кнопка 1.03–1.14:1, каскадный фикс хрупок к перестановке правил в buttons.css:221-252); хардкод вуали spinner.css удалён.
 - Осталось 3 намеренных `outline: none`: reset.css (:focus:not(:focus-visible)), combobox.css:180, command-palette.css:80 (базовые правила инпутов — фокус получает Highlight из contrast-preferences).
 
+### Деверсификация имён (2026-07-30)
+
+- Переименовано через git mv: `base/variables-v2.css` → `variables.css`, `components-v3/` → `components/` (58 файлов), `themes/dark-v3.css` → `dark.css`; зачистка ссылок в 46 файлах, `.palette-grid-v3` → `.palette-grid`, title и мёртвый `.v3-banner` убраны. `index-v3.html` оставлен как легаси-редирект.
+- Версия теперь НЕ в именах файлов: источник — package.json; в футер витрины подставляется build-arg'ом `APP_VERSION` (Dockerfile sed по `__APP_VERSION__`, compose передаёт `${APP_VERSION:-3.0.0}`), без Docker рантайм-фолбэк в components.html показывает «vdev».
+- Проверено скептиком: e2e 20/20, греп-остаток 0, два реальных Docker-билда (BASE_PATH+APP_VERSION и дефолтный) — все переименованные пути 200 из контейнера. Нюанс Git Bash: docker build с `BASE_PATH=/css-lab` требует `MSYS_NO_PATHCONV=1`, иначе путь искажается. `/css-lab/healthz` → 404 by design (healthz в корне контейнера, HEALTHCHECK работает).
+
 ## Следующий шаг
 
 По желанию: консолидация 4 реализаций чипов, миграция combobox-нэйминга на is-*, тёмная тема print-forms/ral-colors, gap-filler тостов (Sonner) при переводе на transitions.

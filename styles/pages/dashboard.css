@@ -4,7 +4,7 @@
  * Префикс страницы: .dash-*. Селекторы вне префикса запрещены;
  * компоненты (stats, table, drawer, logs, timeline, filter-pills) не
  * перестилизуются — только раскладка и собственные элементы страницы.
- * Зависимости: base/variables-v2.css, base/motion.css, components-v3/*.
+ * Зависимости: base/variables.css, base/motion.css, components/*.
  */
 
 /* ===== Каркас: узкий сайднав слева + контент ============================ */

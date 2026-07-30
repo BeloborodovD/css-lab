@@ -1,6 +1,6 @@
 /* [CONFIG:theme-uralelectro]
  * Тема бренда Уралэлектро — графитово-синий RAL 5008 (брендбук 2025).
- * Модуль: css-lab/themes. Зависимости: base/variables-v2.css (перекрывает её токены),
+ * Модуль: css-lab/themes. Зависимости: base/variables.css (перекрывает её токены),
  * base/fonts.css (Wadik + NT Somic), assets/logos/uralelectro*.svg.
  *
  * Активация: <html data-brand="uralelectro">. Сочетается с .dark (тёмная тема).
@@ -11,7 +11,7 @@
  *   H2+ и подзаголовки  — NT Somic Medium
  *   Основной текст      — NT Somic Regular
  * NB: патиновая палитра #136B5C (RAL 6026) — предыдущая версия айдентики,
- * оставлена в variables-v2.css как --brand-uralelectro-* для legacy-страниц.
+ * оставлена в variables.css как --brand-uralelectro-* для legacy-страниц.
  */
 
 /* [BLOCK:theme.uralelectro.light] */

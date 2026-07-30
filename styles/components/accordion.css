@@ -1,7 +1,7 @@
 /* [BLOCK:component.accordion]
  * Сворачиваемые секции (accordion / collapsible) — порт идеи из
  * motor-datasheet CollapsibleSection / FilterSection.
- * Модуль: css-lab/components-v3. Зависимости: base/variables-v2.css, base/motion.css.
+ * Модуль: css-lab/components. Зависимости: base/variables.css, base/motion.css.
  *
  * Высота анимируется через grid-template-rows 0fr→1fr — без анимации
  * height/margin. Открытие — класс .is-open или details[open].

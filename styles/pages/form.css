@@ -4,7 +4,7 @@
  * Префикс страницы: .fp-*.
  * Модуль: css-lab/styles/pages. Зависимости: core.css (steps, form-section,
  * inputs, chip, spec-sheet, save-status, toast, buttons, spinner) +
- * base/variables-v2.css, base/motion.css.
+ * base/variables.css, base/motion.css.
  */
 
 /* ===== Контейнер страницы =============================================== */

@@ -1,8 +1,8 @@
 /* ==========================================================================
    contrast-preferences.css — медиазапросы предпочтений контраста и прозрачности
    --------------------------------------------------------------------------
-   Модуль: css-lab/base. Зависимости: base/variables-v2.css (токены),
-   themes/dark-v3.css (перекрываемый focus-ring).
+   Модуль: css-lab/base. Зависимости: base/variables.css (токены),
+   themes/dark.css (перекрываемый focus-ring).
    Импортируется ПОСЛЕДНИМ в core.css (после themes/*): переопределения
    пользовательских предпочтений обязаны бить и темы, и бренды.
 
@@ -12,7 +12,7 @@
                                             в forced-colors вырезается)
      3. prefers-reduced-transparency      — стекло и вуали становятся solid
 
-   NB о специфичности: auto-dark блок variables-v2 использует селектор
+   NB о специфичности: auto-dark блок variables использует селектор
    :root:not(.light):not([data-theme="light"]) (0,3,0) — здесь для OS-dark
    зеркалим тот же селектор, иначе переопределение проиграет каскад.
    ========================================================================== */
@@ -67,7 +67,7 @@
 /* ==================== 2. forced-colors: active ==================== */
 @media (forced-colors: active) {
   /* Восстановление фокус-индикатора: базовый ring живёт в box-shadow
-     (dark-v3.css), а box-shadow в forced-colors вырезается — фокус
+     (dark.css), а box-shadow в forced-colors вырезается — фокус
      исчезал полностью. Системный Highlight, outline не подавляем нигде */
   :focus-visible {
     outline: 2px solid Highlight;

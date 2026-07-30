@@ -18,6 +18,8 @@ services:
       dockerfile: Dockerfile
       args:
         BASE_PATH: /css-lab
+        # Версия для футера витрины; по умолчанию — версия из package.json
+        APP_VERSION: ${APP_VERSION:-3.0.0}
     image: css-lab:hr
     container_name: css-lab-web
     networks:

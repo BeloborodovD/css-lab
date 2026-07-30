@@ -2,7 +2,7 @@
  * Повторяемые строки-карточки формы (применения, аналоги, вложения)
  * с кнопками «добавить строку» / «удалить строку».
  * Порт из опросного листа R&D Уралэлектро (motor_rnd_request_form v0.6).
- * Модуль: css-lab/components-v3. Зависимости: base/variables-v2.css, base/motion.css.
+ * Модуль: css-lab/components. Зависимости: base/variables.css, base/motion.css.
  */
 
 .form-rows {

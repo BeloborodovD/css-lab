@@ -1,7 +1,7 @@
 /* [BLOCK:component.skeleton]
  * Скелетон-заглушки загрузки — порт идеи из corporate-search v2 /
  * motor-datasheet FilterPanelSkeleton.
- * Модуль: css-lab/components-v3. Зависимости: base/variables-v2.css, base/motion.css.
+ * Модуль: css-lab/components. Зависимости: base/variables.css, base/motion.css.
  *
  * Пульс через opacity (не background-position): дешёво для GPU и
  * не задевает layout. Постоянное движение → linear (RULES.md §1).

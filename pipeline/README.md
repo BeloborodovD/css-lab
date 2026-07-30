@@ -60,11 +60,11 @@ e2e-тест), **и только потом применяется в целев
 Библиотека — чистый CSS, подключается копированием (vendor), а не ссылкой:
 
 1. Обязательный слой: `styles/base/motion.css` (первым в каскаде!),
-   `styles/base/variables-v2.css`, `styles/base/fonts.css` + нужные шрифты из
+   `styles/base/variables.css`, `styles/base/fonts.css` + нужные шрифты из
    `assets/fonts/` и логотипы из `assets/logos/`.
 2. Тема бренда целевого проекта: `styles/themes/<brand>.css`, атрибут
    `data-brand` на `<body>`.
-3. Только используемые компоненты из `styles/components-v3/` — не весь core.css.
+3. Только используемые компоненты из `styles/components/` — не весь core.css.
 4. В целевом проекте фиксируется файл `VENDORED-FROM-CSS-LAB.md` со списком
    скопированных файлов и коммитом css-lab — для будущей синхронизации.
 5. React-проекты: стили берутся отсюда темой, поведение — библиотеки по вердикту

@@ -1,7 +1,7 @@
 /* [BLOCK:layout.print-sheet]
  * «Бумага» A4: экранный лист с тенью, при печати — чистая страница.
  * Общий слой печати для print-forms, datasheet и справочников.
- * Модуль: css-lab/layout. Зависимости: base/variables-v2.css.
+ * Модуль: css-lab/layout. Зависимости: base/variables.css.
  */
 
 .print-sheet {

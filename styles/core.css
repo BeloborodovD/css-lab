@@ -1,12 +1,11 @@
 /* ==================== CSS Lab — core bundle ====================
    Единая точка входа для всех страниц: base → layout → components → themes.
    Страничные стили НЕ входят сюда — каждая страница подключает вторым
-   <link> свой styles/pages/<name>.css (см. чек-лист в .claude/context.md).
-   index-v3.css оставлен как тонкий алиас для обратной совместимости. */
+   <link> свой styles/pages/<name>.css (см. чек-лист в .claude/context.md). */
 
 /* Base — motion-токены первыми в каскаде (ui-motion-craft), затем переменные */
 @import './base/motion.css';
-@import './base/variables-v2.css';
+@import './base/variables.css';
 @import './base/fonts.css';
 @import './base/reset.css';
 @import './base/utilities.css';
@@ -22,68 +21,68 @@
 @import './layout/print-sheet.css';
 
 /* Components */
-@import './components-v3/buttons.css';
-@import './components-v3/cards.css';
-@import './components-v3/inputs.css';
-@import './components-v3/layout.css';
-@import './components-v3/dropdown.css';
-@import './components-v3/badge.css';
-@import './components-v3/tree.css';
-@import './components-v3/pagination.css';
-@import './components-v3/tooltip.css';
-@import './components-v3/alerts.css';
-@import './components-v3/table.css';
-@import './components-v3/nav.css';
-@import './components-v3/logs.css';
-@import './components-v3/tabs.css';
-@import './components-v3/breadcrumbs.css';
-@import './components-v3/steps.css';
-@import './components-v3/toast.css';
-@import './components-v3/modal.css';
-@import './components-v3/spinner.css';
-@import './components-v3/progress.css';
-@import './components-v3/stats.css';
-@import './components-v3/timeline.css';
-@import './components-v3/toggle.css';
-@import './components-v3/search.css';
-@import './components-v3/sidebar.css';
-@import './components-v3/footer.css';
-@import './components-v3/app-layout.css';
-@import './components-v3/autotrassir.css';
-@import './components-v3/avatar.css';
-@import './components-v3/divider.css';
-@import './components-v3/chip.css';
-@import './components-v3/empty-state.css';
-@import './components-v3/file-upload.css';
-@import './components-v3/date-picker.css';
-@import './components-v3/command-palette.css';
-@import './components-v3/notification-badge.css';
-@import './components-v3/combobox.css';
-@import './components-v3/tag-cloud.css';
-@import './components-v3/search-result-card.css';
+@import './components/buttons.css';
+@import './components/cards.css';
+@import './components/inputs.css';
+@import './components/layout.css';
+@import './components/dropdown.css';
+@import './components/badge.css';
+@import './components/tree.css';
+@import './components/pagination.css';
+@import './components/tooltip.css';
+@import './components/alerts.css';
+@import './components/table.css';
+@import './components/nav.css';
+@import './components/logs.css';
+@import './components/tabs.css';
+@import './components/breadcrumbs.css';
+@import './components/steps.css';
+@import './components/toast.css';
+@import './components/modal.css';
+@import './components/spinner.css';
+@import './components/progress.css';
+@import './components/stats.css';
+@import './components/timeline.css';
+@import './components/toggle.css';
+@import './components/search.css';
+@import './components/sidebar.css';
+@import './components/footer.css';
+@import './components/app-layout.css';
+@import './components/autotrassir.css';
+@import './components/avatar.css';
+@import './components/divider.css';
+@import './components/chip.css';
+@import './components/empty-state.css';
+@import './components/file-upload.css';
+@import './components/date-picker.css';
+@import './components/command-palette.css';
+@import './components/notification-badge.css';
+@import './components/combobox.css';
+@import './components/tag-cloud.css';
+@import './components/search-result-card.css';
 
 /* Компоненты, собранные с проектов воркспейса */
-@import './components-v3/user-menu.css';
-@import './components-v3/presence-strip.css';
-@import './components-v3/brand-mark.css';
-@import './components-v3/skeleton.css';
-@import './components-v3/drawer.css';
-@import './components-v3/accordion.css';
-@import './components-v3/picklist.css';
-@import './components-v3/swatch-picker.css';
-@import './components-v3/quiz.css';
-@import './components-v3/form-section.css';
-@import './components-v3/row-card.css';
-@import './components-v3/save-status.css';
-@import './components-v3/rte.css';
-@import './components-v3/filter-pills.css';
-@import './components-v3/filter-panel.css';
-@import './components-v3/spec-sheet.css';
-@import './components-v3/code-panel.css';
-@import './components-v3/typography.css';
+@import './components/user-menu.css';
+@import './components/presence-strip.css';
+@import './components/brand-mark.css';
+@import './components/skeleton.css';
+@import './components/drawer.css';
+@import './components/accordion.css';
+@import './components/picklist.css';
+@import './components/swatch-picker.css';
+@import './components/quiz.css';
+@import './components/form-section.css';
+@import './components/row-card.css';
+@import './components/save-status.css';
+@import './components/rte.css';
+@import './components/filter-pills.css';
+@import './components/filter-panel.css';
+@import './components/spec-sheet.css';
+@import './components/code-panel.css';
+@import './components/typography.css';
 
 /* Themes — последними: перекрывают токены, страницы работают поверх тем */
-@import './themes/dark-v3.css';
+@import './themes/dark.css';
 @import './themes/hemah.css';
 @import './themes/veza.css';
 @import './themes/uralelectro.css';

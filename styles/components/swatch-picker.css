@@ -1,7 +1,7 @@
 /* [BLOCK:component.swatch-picker]
  * Выбор цвета из палитры образцов (RAL) — порт из опросного листа R&D
  * Уралэлектро (motor_rnd_request_form v0.6, .ralpick).
- * Модуль: css-lab/components-v3. Зависимости: base/variables-v2.css, base/motion.css.
+ * Модуль: css-lab/components. Зависимости: base/variables.css, base/motion.css.
  *
  * Контрол с чипами выбранных цветов + панель: поиск, семейства,
  * сетка образцов с кодами. Открытие — класс .is-open.

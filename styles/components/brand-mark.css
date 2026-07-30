@@ -1,6 +1,6 @@
 /* [BLOCK:component.brand-mark]
  * Логотип бренда и переключатель брендов — порт из corporate-search v2.
- * Модуль: css-lab/components-v3. Зависимости: base/variables-v2.css,
+ * Модуль: css-lab/components. Зависимости: base/variables.css,
  * темы themes/veza.css | themes/uralelectro.css (дают --brand-logo-* токены).
  *
  * .brand-mark рисует логотип текущего бренда через background-image из токена,

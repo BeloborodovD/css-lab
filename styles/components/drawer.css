@@ -1,7 +1,7 @@
 /* [BLOCK:component.drawer]
  * Выдвижная боковая панель (drawer / slide-over) — порт идеи из
  * corporate-search v2 drawer и cert-data SlideOver.
- * Модуль: css-lab/components-v3. Зависимости: base/variables-v2.css, base/motion.css.
+ * Модуль: css-lab/components. Зависимости: base/variables.css, base/motion.css.
  *
  * Открытие — класс .is-open на .drawer. Панель входит справа и уходит
  * вправо (вход и выход по одному пути, RULES.md §3), кривая --ease-drawer.

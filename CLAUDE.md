@@ -51,11 +51,11 @@ make up / make prod / make health   # docker: dev :48621 / prod nginx :48620 / �
 Один бандл `styles/core.css` (`@import`-цепочка), порядок жёсткий и значимый:
 
 1. `base/motion.css` — **единственный** источник кривых и длительностей (`--ease-out`, `--duration-*`). Хардкод `cubic-bezier`/`ms` в компонентах — дефект.
-2. `base/variables-v2.css` — все остальные токены (цвета, шрифты, тени, z-index). В компонентах ни одного литерала цвета/отступа — только `var()`.
+2. `base/variables.css` — все остальные токены (цвета, шрифты, тени, z-index). В компонентах ни одного литерала цвета/отступа — только `var()`.
 3. `base/fonts.css`, `reset.css`, `utilities.css`, `responsive.css`.
 4. `layout/` — каркас сайта: site-header, site-footer, page-shell, print-sheet.
-5. `components-v3/*.css` — один компонент = один файл, BEM + состояния `is-*`.
-6. `themes/` — последними: `dark-v3.css` (нейтральная тёмная база), затем бренды `veza.css` / `uralelectro.css` / `hemah.css`.
+5. `components/*.css` — один компонент = один файл, BEM + состояния `is-*`.
+6. `themes/` — последними: `dark.css` (нейтральная тёмная база), затем бренды `veza.css` / `uralelectro.css` / `hemah.css`.
 
 `base/animations.css` в core **не входит** (легаси-зверинец, конфликтует с motion-контрактом) — его подключает только витрина `components.html` отдельным `<link>`.
 

@@ -2,8 +2,8 @@
  * Секция сложной формы: fieldset с брендовой засечкой, сетка полей,
  * подсказки и метки. Порт из опросного листа R&D Уралэлектро
  * (motor_rnd_request_form v0.6).
- * Модуль: css-lab/components-v3. Зависимости: base/variables-v2.css,
- * base/motion.css, components-v3/inputs.css (стили input/select/textarea).
+ * Модуль: css-lab/components. Зависимости: base/variables.css,
+ * base/motion.css, components/inputs.css (стили input/select/textarea).
  * Смежные блоки вынесены отдельно: row-card.css (повторяемые строки),
  * save-status.css (статус автосохранения), rte.css (редактор примечаний).
  */

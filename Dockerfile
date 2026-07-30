@@ -12,6 +12,9 @@
 FROM nginxinc/nginx-unprivileged:1.29-alpine
 
 ARG BASE_PATH=""
+# Версия сайта для футера витрины: подставляется вместо __APP_VERSION__ в *.html.
+# Значение передают compose-файлы (build arg APP_VERSION); без docker в футере 'dev'.
+ARG APP_VERSION=dev
 
 LABEL org.opencontainers.image.title="css-lab" \
       org.opencontainers.image.description="Дизайн-система и сайт-витрина VEZA / Уралэлектро / HEMAH" \
@@ -28,6 +31,11 @@ COPY js/ ./js/
 COPY pages/ ./pages/
 COPY styles/ ./styles/
 COPY assets/ ./assets/
+
+# Подстановка версии в футер (__APP_VERSION__ → значение APP_VERSION)
+RUN find . -name '*.html' -exec sed -i \
+      -e "s|__APP_VERSION__|${APP_VERSION}|g" \
+      {} +
 
 # Переписывание корневых путей под BASE_PATH (только если префикс задан):
 # html: href="/… src="/… url=/… (meta-refresh) и строки '/…' в инлайн-скриптах;

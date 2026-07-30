@@ -3,28 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CSS Lab v3 — Lightweight Full Preview</title>
+  <title>CSS Lab — Библиотека стилей</title>
   <link rel="stylesheet" href="/styles/core.css">
   <!-- Легаси-библиотека анимаций — только для секции #animations витрины -->
   <link rel="stylesheet" href="/styles/base/animations.css">
   <style>
-    /* === v3 Preview banner === */
-    :root { --banner-h: 0px; } /* баннер версии удалён — версия в футере */
-    .v3-banner {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
-      height: var(--banner-h);
-      padding: 8px 16px;
-      box-sizing: border-box;
-      background: var(--color-surface);
-      border-bottom: 1px solid var(--color-border);
-      color: var(--color-text-secondary);
-      font: 500 12px/1.4 var(--font-sans, system-ui);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      text-align: center;
-    }
-    .v3-banner a { color: var(--color-accent); text-decoration: none; margin-left: 16px; text-transform: none; letter-spacing: 0; }
-    .v3-banner a:hover { text-decoration: underline; }
+    /* Баннер версии удалён — версия в футере; переменная оставлена для отступов шапки/панелей */
+    :root { --banner-h: 0px; }
     body { padding-top: var(--banner-h); }
     /* Шапка липнет ПОД баннером, а не под самым верхом */
     .header { top: var(--banner-h); }
@@ -252,7 +237,7 @@
           </p>
 
           <style>
-            .palette-grid-v3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: var(--space-3); }
+            .palette-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: var(--space-3); }
             .palette-swatch {
               padding: var(--space-3);
               background: var(--color-surface);
@@ -292,7 +277,7 @@
           </style>
 
           <h3 class="palette-group-title">Surfaces & Text</h3>
-          <div class="palette-grid-v3">
+          <div class="palette-grid">
             <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-bg)"></span><span class="palette-name">--color-bg</span><span class="palette-desc">warm off-white</span></div>
             <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-surface)"></span><span class="palette-name">--color-surface</span><span class="palette-desc">карточки</span></div>
             <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-surface-hover)"></span><span class="palette-name">--color-surface-hover</span><span class="palette-desc">hover</span></div>
@@ -306,7 +291,7 @@
           </div>
 
           <h3 class="palette-group-title">Accent (один — indigo desaturated)</h3>
-          <div class="palette-grid-v3">
+          <div class="palette-grid">
             <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-accent)"></span><span class="palette-name">--color-accent</span><span class="palette-desc">primary, AAA 9.7:1</span></div>
             <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-accent-hover)"></span><span class="palette-name">--color-accent-hover</span><span class="palette-desc">hover state</span></div>
             <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-accent-soft)"></span><span class="palette-name">--color-accent-soft</span><span class="palette-desc">selected/active bg</span></div>
@@ -314,7 +299,7 @@
           </div>
 
           <h3 class="palette-group-title">Semantic (приглушённые, для alerts/toasts)</h3>
-          <div class="palette-grid-v3">
+          <div class="palette-grid">
             <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-success)"></span><span class="palette-name">--color-success</span><span class="palette-desc">green-700</span></div>
             <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-success-soft)"></span><span class="palette-name">--color-success-soft</span><span class="palette-desc">edge tint</span></div>
             <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-warning)"></span><span class="palette-name">--color-warning</span><span class="palette-desc">amber-700</span></div>
@@ -326,7 +311,7 @@
           </div>
 
           <h3 class="palette-group-title">Source (монохромная zinc-шкала, не пестрит)</h3>
-          <div class="palette-grid-v3">
+          <div class="palette-grid">
             <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-source-wiki)"></span><span class="palette-name">--color-source-wiki</span><span class="palette-desc">zinc — нейтральный</span></div>
             <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-source-wiki-soft)"></span><span class="palette-name">--color-source-wiki-soft</span><span class="palette-desc">subtle bg</span></div>
             <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-source-forum)"></span><span class="palette-name">--color-source-forum</span><span class="palette-desc">zinc — светлее</span></div>
@@ -336,7 +321,7 @@
           </div>
 
           <h3 class="palette-group-title">Confidence (для AskMessage)</h3>
-          <div class="palette-grid-v3">
+          <div class="palette-grid">
             <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-confidence-high)"></span><span class="palette-name">--color-confidence-high</span><span class="palette-desc">3+ цитат</span></div>
             <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-confidence-medium)"></span><span class="palette-name">--color-confidence-medium</span><span class="palette-desc">2 цитаты</span></div>
             <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-confidence-low)"></span><span class="palette-name">--color-confidence-low</span><span class="palette-desc">1 цитата</span></div>
@@ -3522,7 +3507,15 @@
   <footer class="site-footer">
     <div class="footer-left">
       <span class="footer-copyright">© 2026 CSS Lab</span>
-      <span class="footer-version" title="Версия дизайн-системы">v3 · lightweight</span>
+      <span class="footer-version" title="Версия дизайн-системы">v__APP_VERSION__ · lightweight</span>
+      <script>
+        // Версия подставляется sed-ом при docker-сборке (см. Dockerfile, ARG APP_VERSION);
+        // вне docker плейсхолдер остаётся — показываем 'dev' вместо него.
+        (() => {
+          const el = document.currentScript.previousElementSibling;
+          if (el.textContent.includes('__APP_VERSION__')) el.textContent = el.textContent.replace('__APP_VERSION__', 'dev');
+        })();
+      </script>
     </div>
     <div class="footer-center">
       <nav class="footer-nav">

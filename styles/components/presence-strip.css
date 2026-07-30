@@ -2,8 +2,8 @@
  * «Кто сейчас на портале» — стек наложенных аватаров с «+N» и клик-дропдаун
  * со списком: имя, должность, где находится (раздел портала).
  * Порт из corporate-search v2 (presence-strip) + НТБ (OnlineBadge).
- * Модуль: css-lab/components-v3. Зависимости: base/variables-v2.css,
- * base/motion.css, components-v3/avatar.css.
+ * Модуль: css-lab/components. Зависимости: base/variables.css,
+ * base/motion.css, components/avatar.css.
  * Открытие — класс .is-open на .presence-strip.
  */
 

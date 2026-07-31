@@ -102,7 +102,14 @@
   --brand-secondary-text: #0d2229;
 }
 
-/* Авто-тёмная тема ОС без класса .dark — бренд подсвечивает акцент сам */
+/* Авто-тёмная тема ОС без класса .dark — бренд подсвечивает акцент сам.
+   Ряд --color-info* здесь ОБЯЗАТЕЛЕН по той же причине, что и акцент: его
+   светлые значения объявлены на [data-brand] (уровень body) и бьют тёмную
+   базу с :root. Без зеркала при системной тёмной теме info оставался
+   #24505f — 2.01:1 на #18181b, ниже любого гейта.
+   --brand-secondary* здесь нет намеренно: в этой теме тёмные значения
+   совпадают со светлыми (#2fc6f6 даёт 8.88:1 на #18181b), повторять их —
+   значит добавить строки, которые ничего не меняют. */
 @media (prefers-color-scheme: dark) {
   [data-brand="hemah"]:not(.light):not([data-theme="light"]) {
     --color-accent:            #6fb3c7;
@@ -113,6 +120,12 @@
     --color-accent-text:       #0d2229;
     --color-accent-border:     rgba(111, 179, 199, 0.35);
     --color-text-on-accent:    #0d2229;
+
+    --color-info:              #94c8d7;  /* 9.70:1 на #18181b */
+    --color-info-hover:        #b7dae4;  /* 11.95:1 */
+    --color-info-soft:         rgba(148, 200, 215, 0.10);
+    --color-info-text:         #b7dae4;  /* 9.80:1 на info-soft */
+
     --brand-logo:              url("/assets/logos/hemah-mono-light.svg");
   }
 }

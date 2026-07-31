@@ -111,7 +111,14 @@
 
 /* Авто-тёмная тема ОС без класса .dark: html получает тёмный фон из
    variables — бренд обязан подсветить акцент сам, иначе тёмный
-   #2a7f37 нечитаем на тёмном фоне */
+   #2a7f37 нечитаем на тёмном фоне.
+   Ряды --color-info* и --brand-secondary* здесь ОБЯЗАТЕЛЬНЫ по той же
+   причине, что и акцент: их светлые значения объявлены на [data-brand]
+   (уровень body) и бьют тёмную базу с :root. Без зеркала при системной
+   тёмной теме info оставался #257231 — 2.98:1 на #18181b, а вторичный
+   серый #5b5b5b — 2.61:1; оба ниже любого гейта. Блок обязан повторять
+   .dark целиком: пропущенное семейство проявляется только у пользователя
+   с тёмной ОС и без переключателя темы. */
 @media (prefers-color-scheme: dark) {
   [data-brand="veza"]:not(.light):not([data-theme="light"]) {
     --color-accent:            #5fc16f;
@@ -122,6 +129,15 @@
     --color-accent-text:       #052e16;
     --color-accent-border:     rgba(95, 193, 111, 0.35);
     --color-text-on-accent:    #052e16;
+
+    --color-info:              #82d290;  /* 9.76:1 на #18181b */
+    --color-info-hover:        #a8e0b3;  /* 11.79:1 */
+    --color-info-soft:         rgba(130, 210, 144, 0.10);
+    --color-info-text:         #a8e0b3;  /* 9.66:1 на info-soft */
+
+    --brand-secondary:         #a1a1aa;  /* 6.91:1 на #18181b */
+    --brand-secondary-soft:    rgba(161, 161, 170, 0.15);
+
     --brand-logo:              url("/assets/logos/veza-mono-light.svg");
   }
 }

@@ -76,9 +76,12 @@
   border-radius: var(--radius-sm);
   cursor: pointer;
   user-select: none;
-  /* var(--transition-press) первым — пункт меню это <button>, и свой шорткат
+  /* var(--transition-press) первым — пункт меню бывает <button>, и свой шорткат
      иначе стирает отклик нажатия из base/motion.css (ловушка каскада описана
-     в его шапке). Дальше — background-color, а не шорткат background:
+     в его шапке). На варианте-ссылке (<a>, как на витрине) сегмент безвреден:
+     правило :active из motion.css к <a> не применяется, и масштаба нажатия у
+     такого пункта нет — при необходимости он включается атрибутом
+     [data-pressable] на самом узле. Дальше — background-color, а не шорткат background:
      тот тянет в переход ещё и background-image с -position (RULES §5) */
   transition: var(--transition-press),
               background-color var(--duration-dropdown) var(--ease-out),

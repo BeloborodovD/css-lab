@@ -118,7 +118,10 @@
   cursor: pointer;
   font: inherit;
   font-size: var(--fs-sm);
-  transition: background-color var(--duration-press) var(--ease-out),
+  /* var(--transition-press) первым — иначе свой шорткат стирает отклик
+     нажатия из base/motion.css (см. ловушку каскада в его шапке) */
+  transition: var(--transition-press),
+              background-color var(--duration-press) var(--ease-out),
               border-color var(--duration-press) var(--ease-out),
               color var(--duration-press) var(--ease-out);
 }
@@ -172,7 +175,10 @@
   color: inherit;
   opacity: 0.6;
   cursor: pointer;
-  transition: opacity var(--duration-press) var(--ease-out),
+  /* var(--transition-press) первым — крестик это <button> (см. ловушку
+     каскада в шапке base/motion.css) */
+  transition: var(--transition-press),
+              opacity var(--duration-press) var(--ease-out),
               background-color var(--duration-press) var(--ease-out);
 }
 .chip-remove:hover {

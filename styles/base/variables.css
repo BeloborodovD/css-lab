@@ -126,6 +126,18 @@
   --color-source-forum-soft:  rgba(161, 161, 170, 0.08);
   --color-source-forum-text:  #52525b;  /* zinc-600 */
 
+  /* Ступени шкалы, занятые в порядке «светлее → темнее»:
+     forum zinc-400 · wiki zinc-600 · cert zinc-700 · ntb zinc-800 · catalog zinc-900.
+     Новый источник берёт свободную ступень той же шкалы, а не новый hue —
+     иначе бейдж источника перестаёт читаться как одна система. */
+  --color-source-cert:        #3f3f46;  /* zinc-700 — 10.0:1 на #fafaf9 */
+  --color-source-cert-soft:   rgba(63, 63, 70, 0.06);
+  --color-source-cert-text:   #27272a;  /* zinc-800 — 13.4:1 на cert-soft */
+
+  --color-source-ntb:         #27272a;  /* zinc-800 — 14.3:1 на #fafaf9 */
+  --color-source-ntb-soft:    rgba(39, 39, 42, 0.05);
+  --color-source-ntb-text:    #18181b;  /* zinc-900 — 16.1:1 на ntb-soft */
+
   --color-source-catalog:     #18181b;  /* zinc-900 — самый тёмный */
   --color-source-catalog-soft: rgba(24, 24, 27, 0.05);
   --color-source-catalog-text: #18181b; /* zinc-900 */
@@ -146,6 +158,38 @@
   --color-confidence-low-soft:    rgba(113, 113, 122, 0.08);
 
   /* ======================================================================
+     CHART SERIES — КАЧЕСТВЕННАЯ (категориальная) шкала на четыре серии.
+     Нужна отдельно от семантики: составленная из --color-accent + --color-info
+     пара в теме veza давала два одинаковых зелёных, то есть две разные серии
+     графика визуально сливались. Здесь ступени различаются ТОНОМ, а не ролью.
+
+     Устройство шкалы:
+       1 — брендовая: алиас на --color-accent, «основная серия». График с
+           одной серией обязан выглядеть фирменным, а не случайным.
+           Пересобирается в скоупе бренда — см. [BLOCK:brand-scope-derived]:
+           токен-алиас, объявленный на :root, читает акцент элемента <html>
+           и брендовым не становится.
+       2-4 — НЕЙТРАЛЬНЫЕ К БРЕНДУ, одинаковые во всех трёх темах. Иначе
+           каждый бренд пересобирал бы всю палитру, а разойтись ей негде:
+           брендовые акценты занимают дугу тонов 129-244°, поэтому ступени
+           2 и 3 стоят вне неё (23° и 311°), а 4 — вне цветности вообще.
+
+     Минимальная попарная дистанция по тону — 67° (magenta ↔ indigo);
+     светлотой шкала не разводится принципиально: гейт 3:1 к белой
+     поверхности держит все ступени в диапазоне яркости 0-0.30, четыре
+     ступени в нём по светлоте не расставить. Поэтому носителей различия
+     три, и цвет из них только один: тон + цветность + штрих и форма
+     маркера самого компонента (1.4.1, forced-colors).
+     Порядок ступеней задан ЦВЕТНОСТЬЮ (насыщенностью), а не контрастом:
+     на графике серия «весит» насыщенностью, нейтральная ступень читается
+     как вспомогательная при любой светлоте.
+     Контраст к поверхности (#ffffff / #fafaf9) — у каждой ступени ниже. */
+  --color-chart-1: var(--color-accent);  /* брендовая; 5.0-9.9:1 в зависимости от темы */
+  --color-chart-2: #92400e;  /* amber-800, тон 23°  — 7.09:1 / 6.79:1 */
+  --color-chart-3: #c92aad;  /* magenta,   тон 311° — 4.75:1 / 4.55:1 */
+  --color-chart-4: #3f3f46;  /* zinc-700, нейтраль — 10.4:1 / 10.0:1 */
+
+  /* ======================================================================
      BRAND COLORS — официальные корпоративные цвета (из брендбуков)
      Использовать ТОЛЬКО для брендированных страниц/элементов (header, лого, печатные шаблоны).
      В обычном UI применять --color-accent (indigo) — это нейтральный design-system primary.
@@ -157,13 +201,13 @@
        NB: цвет #374A51 (slate-teal) из motor-datasheet — НЕ корпоративный
        VEZA, это был стиль конкретного datasheet-документа.
 
-     ── Уралэлектро (брендбук 2025) ──────────────────────────────
-       Primary  #374A51 — RAL 5008 графитово-синий (CMYK 78/50/45/54)
-       Dark     #28363B — производный тёмный тон (hover/active)
-       Light    #5C757F — производный светлый тон (tints/secondary)
+     ── Уралэлектро ──────────────────────────────────────────────
+       Primary  #136B5C — RAL 6026 «патина» (RGB 19/107/92)
+       Dark     #0F5849 — производный тёмный тон (hover/active)
+       Light    #217F6C — производный светлый тон (tints/secondary)
        Шрифты:  Wadik (заголовки, одно начертание), NT Somic (текст)
-       NB: патиновая палитра #136B5C (RAL 6026) — предыдущая айдентика,
-       при необходимости берётся из истории git.
+       NB: графитово-синяя палитра #374A51 (RAL 5008) — предыдущая версия
+       айдентики, из библиотеки выведена; берётся из истории git.
      ====================================================================== */
 
   /* VEZA — emerald green Pantone 356 C + neutral grey */
@@ -174,14 +218,14 @@
   --brand-veza-secondary-soft:        rgba(91, 91, 91, 0.08);
   --brand-veza-secondary-text:        #ffffff;  /* AAA 7.0:1 на grey */
 
-  /* Уралэлектро — графитово-синяя палитра RAL 5008 (брендбук 2025) */
-  --brand-uralelectro:                #374a51;  /* primary RAL 5008 — AAA 8.7:1 на white */
-  --brand-uralelectro-soft:           rgba(55, 74, 81, 0.08);
-  --brand-uralelectro-text:           #ffffff;  /* белый на primary графите */
-  --brand-uralelectro-dark:           #28363b;  /* производный тёмный — hover/active */
-  --brand-uralelectro-dark-soft:      rgba(40, 54, 59, 0.08);
-  --brand-uralelectro-light:          #5c757f;  /* производный светлый — tints/secondary */
-  --brand-uralelectro-light-soft:     rgba(92, 117, 127, 0.10);
+  /* Уралэлектро — патиновая палитра RAL 6026 */
+  --brand-uralelectro:                #136b5c;  /* primary RAL 6026 — 6.39:1 на white */
+  --brand-uralelectro-soft:           rgba(19, 107, 92, 0.08);
+  --brand-uralelectro-text:           #ffffff;  /* белый на патине: 6.39:1 — AA */
+  --brand-uralelectro-dark:           #0f5849;  /* производный тёмный — hover/active */
+  --brand-uralelectro-dark-soft:      rgba(15, 88, 73, 0.08);
+  --brand-uralelectro-light:          #217f6c;  /* производный светлый — tints/secondary */
+  --brand-uralelectro-light-soft:     rgba(33, 127, 108, 0.10);
 
   /* HEMAH (hemah.pro) — тил + яркий голубой CTA */
   --brand-hemah:                      #367589;  /* primary тил — шапка/навигация сайта */
@@ -370,9 +414,14 @@
      --drawer-w, — тултип не должен читаться как панель. */
   --tooltip-max-w:  360px;
   --max-content-w:  1280px;
-  /* --max-prose-w (72ch) удалён: ни одного потребителя. Меру строки задают
-     сами блоки текста (layout/page-shell.css .page-shell__sub). Понадобится
-     общая — заводится заново по §1.3 скилла css-architecture-craft */
+  /* Мера строки длинного текста: 72ch — верх комфортного диапазона 45-75
+     знаков. Единица ch намеренная: величина считается от гарнитуры темы,
+     поэтому перекрытий в themes/ токен не требует. Возвращён после
+     удаления в разбор сирот — потребителей теперь двое: типографика
+     документа (components/doc-prose.css) и поле ввода реплики
+     (components/chat-composer.css), которое обязано совпадать по ширине
+     с ответом; §1.3 выполнен */
+  --max-prose-w:    72ch;
   --icon-size:      36px;
   --icon-size-sm:   24px;
   --icon-size-lg:   48px;
@@ -502,6 +551,17 @@
   --dark-color-source-forum-soft:  rgba(113, 113, 122, 0.10);
   --dark-color-source-forum-text:  #a1a1aa;  /* zinc-400 */
 
+  /* Порядок шкалы в dark зеркальный: forum самый тёмный → catalog самый
+     светлый. Между wiki (#a1a1aa) и catalog (#d4d4d8) официальных ступеней
+     zinc нет, поэтому cert и ntb — две равные ступени интерполяции рампы */
+  --dark-color-source-cert:         #b2b2b9;  /* 8.40:1 на #18181b */
+  --dark-color-source-cert-soft:    rgba(178, 178, 185, 0.10);
+  --dark-color-source-cert-text:    #d4d4d8;  /* zinc-300 — 10.1:1 на cert-soft */
+
+  --dark-color-source-ntb:          #c3c3c9;  /* 10.09:1 на #18181b */
+  --dark-color-source-ntb-soft:     rgba(195, 195, 201, 0.08);
+  --dark-color-source-ntb-text:     #e4e4e7;  /* zinc-200 — 11.9:1 на ntb-soft */
+
   --dark-color-source-catalog:      #d4d4d8;  /* zinc-300 — самый светлый */
   --dark-color-source-catalog-soft: rgba(212, 212, 216, 0.08);
   --dark-color-source-catalog-text: #e4e4e7; /* zinc-200 */
@@ -519,8 +579,17 @@
   --dark-color-confidence-low:         #71717a;  /* zinc-500 */
   --dark-color-confidence-low-soft:    rgba(113, 113, 122, 0.10);
 
+  /* Серии графика в dark — те же тоны, поднятые на тёмный ramp.
+     Ступень 1 здесь не объявляется: это алиас на --color-accent, и он
+     пересобирается в блоке .dark (см. ниже) и в скоупе бренда.
+     Контраст к поверхности #1c1c1f / фону #18181b — у каждой ступени.
+     Нижняя ступень 3.52:1 проверена и на elevated #222226 (3.28:1). */
+  --dark-color-chart-2: #e2a44e;  /* amber,   тон 35°  — 7.82:1 / 8.14:1 */
+  --dark-color-chart-3: #e37ec9;  /* magenta, тон 315° — 6.55:1 / 6.83:1 */
+  --dark-color-chart-4: #71717a;  /* zinc-500, нейтраль — 3.52:1 / 3.67:1 */
+
   /* Brand colors — на dark подсветлены до читаемого варианта.
-     Оригинальные #2E8A3C и #136b5c слишком тёмные на dark-bg #18181b
+     Оригинальные #2E8A3C и #136B5C слишком тёмные на dark-bg #18181b
      (контраст < 3:1). Поднимаем на 2-3 шага светлее, сохраняя hue.
      RAL/Pantone эталоны остаются для печати — light-варианты в брендбуке. */
 
@@ -532,14 +601,14 @@
   --dark-brand-veza-secondary-soft:        rgba(161, 161, 170, 0.15);
   --dark-brand-veza-secondary-text:        #18181b;
 
-  /* Уралэлектро dark — графит RAL 5008 подсветлён до AA (hue 196° сохранён) */
-  --dark-brand-uralelectro:                #8fa6ae;  /* светлый графит — 6.9:1 на dark */
-  --dark-brand-uralelectro-soft:           rgba(143, 166, 174, 0.15);
-  --dark-brand-uralelectro-text:           #10181b;  /* near-black на светлом графите */
-  --dark-brand-uralelectro-dark:           #7a939c;  /* на dark играет роль hover/active */
-  --dark-brand-uralelectro-dark-soft:      rgba(122, 147, 156, 0.15);
-  --dark-brand-uralelectro-light:          #a9bcc3;  /* ещё светлее — для secondary/tints */
-  --dark-brand-uralelectro-light-soft:     rgba(169, 188, 195, 0.18);
+  /* Уралэлектро dark — патина RAL 6026 подсветлена до AAA (hue 170° сохранён) */
+  --dark-brand-uralelectro:                #5bb39d;  /* светлая патина — 7.07:1 на dark */
+  --dark-brand-uralelectro-soft:           rgba(91, 179, 157, 0.15);
+  --dark-brand-uralelectro-text:           #052e24;  /* тёмная патина на светлой — 5.89:1 */
+  --dark-brand-uralelectro-dark:           #489681;  /* на dark играет роль hover/active */
+  --dark-brand-uralelectro-dark-soft:      rgba(72, 150, 129, 0.15);
+  --dark-brand-uralelectro-light:          #7dc7b4;  /* ещё светлее — для secondary/tints */
+  --dark-brand-uralelectro-light-soft:     rgba(125, 199, 180, 0.18);
 
   /* HEMAH dark — тил подсветлён до AA, голубой CTA остаётся */
   --dark-brand-hemah:                      #6fb3c7;  /* светлый тил — 6.5:1 на dark */
@@ -649,6 +718,14 @@
   --color-source-forum-soft:  var(--dark-color-source-forum-soft);
   --color-source-forum-text:  var(--dark-color-source-forum-text);
 
+  --color-source-cert:        var(--dark-color-source-cert);
+  --color-source-cert-soft:   var(--dark-color-source-cert-soft);
+  --color-source-cert-text:   var(--dark-color-source-cert-text);
+
+  --color-source-ntb:         var(--dark-color-source-ntb);
+  --color-source-ntb-soft:    var(--dark-color-source-ntb-soft);
+  --color-source-ntb-text:    var(--dark-color-source-ntb-text);
+
   --color-source-catalog:      var(--dark-color-source-catalog);
   --color-source-catalog-soft: var(--dark-color-source-catalog-soft);
   --color-source-catalog-text: var(--dark-color-source-catalog-text);
@@ -663,6 +740,14 @@
   --color-confidence-medium-soft: var(--dark-color-confidence-medium-soft);
   --color-confidence-low:         var(--dark-color-confidence-low);
   --color-confidence-low-soft:    var(--dark-color-confidence-low-soft);
+
+  /* Ступень 1 — алиас на акцент, поэтому пересобирается здесь так же, как
+     --shadow-focus: носитель класса .dark может быть НИЖЕ :root, а var()
+     разрешается на элементе объявления */
+  --color-chart-1: var(--color-accent);
+  --color-chart-2: var(--dark-color-chart-2);
+  --color-chart-3: var(--dark-color-chart-3);
+  --color-chart-4: var(--dark-color-chart-4);
 
   --brand-veza:                       var(--dark-brand-veza);
   --brand-veza-soft:                  var(--dark-brand-veza-soft);
@@ -792,6 +877,14 @@
     --color-source-forum-soft:  var(--dark-color-source-forum-soft);
     --color-source-forum-text:  var(--dark-color-source-forum-text);
 
+    --color-source-cert:        var(--dark-color-source-cert);
+    --color-source-cert-soft:   var(--dark-color-source-cert-soft);
+    --color-source-cert-text:   var(--dark-color-source-cert-text);
+
+    --color-source-ntb:         var(--dark-color-source-ntb);
+    --color-source-ntb-soft:    var(--dark-color-source-ntb-soft);
+    --color-source-ntb-text:    var(--dark-color-source-ntb-text);
+
     --color-source-catalog:      var(--dark-color-source-catalog);
     --color-source-catalog-soft: var(--dark-color-source-catalog-soft);
     --color-source-catalog-text: var(--dark-color-source-catalog-text);
@@ -806,6 +899,13 @@
     --color-confidence-medium-soft: var(--dark-color-confidence-medium-soft);
     --color-confidence-low:         var(--dark-color-confidence-low);
     --color-confidence-low-soft:    var(--dark-color-confidence-low-soft);
+
+    /* --color-chart-1 здесь НЕ повторяется намеренно: это алиас на акцент,
+       носитель тот же :root, и var() внутри него уже читает тёмные значения
+       (та же логика, что у --shadow-focus в шапке блока) */
+    --color-chart-2: var(--dark-color-chart-2);
+    --color-chart-3: var(--dark-color-chart-3);
+    --color-chart-4: var(--dark-color-chart-4);
 
     --brand-veza:                       var(--dark-brand-veza);
     --brand-veza-soft:                  var(--dark-brand-veza-soft);
@@ -872,9 +972,9 @@
    а contrast-preferences.css (импорт последним) — своё усиленное.
 
    Правило распространяется на ЛЮБОЙ токен-производную от акцента. Сейчас
-   их два семейства: фокус-кольцо и легаси-алиасы --accent* (их читают
+   их три семейства: фокус-кольцо, легаси-алиасы --accent* (их читают
    reset.css ::selection/outline и утилита .text-accent — на брендовых
-   страницах они тоже светили indigo).
+   страницах они тоже светили indigo) и первая ступень шкалы серий графика.
    ========================================================================== */
 [data-brand] {
   --shadow-focus: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-accent);
@@ -883,6 +983,10 @@
   --accent:         var(--color-accent);
   --accent-700:     var(--color-accent-hover);
   --accent-100:     var(--color-accent-soft);
+
+  /* Основная серия графика следует бренду; ступени 2-4 к бренду нейтральны
+     и здесь не пересобираются */
+  --color-chart-1:  var(--color-accent);
 }
 /* </BLOCK:brand-scope-derived> */
 

@@ -143,6 +143,29 @@
   background: var(--color-accent-soft);
 }
 
+/* ==================== Усечённая ячейка ====================
+   Длинная произвольная строка (запрос, ID, причина блокировки) в колонке
+   ограниченной ширины: одна строка с многоточием.
+   Полное значение обязано быть доступно НЕ только визуально: элемент несёт
+   [data-tooltip] и связан с текстом через aria-describedby. Внутри
+   .table-responsive штатный тултип обрезается скролл-контейнером — там
+   применяется .tooltip-popup (позиционируется от вьюпорта). */
+.table__truncate {
+  display: block;
+  max-width: var(--space-24);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--fs-sm);
+}
+/* Без min-width: 0 у родителя усечение не срабатывает: и грид-раскладка
+   мобильного режима (.table-card-mobile td), и флекс-ячейка дают потомку
+   min-content-ширину, которая не даёт содержимому сжаться */
+.table th:has(.table__truncate),
+.table td:has(.table__truncate) {
+  min-width: 0;
+}
+
 /* ==================== Параметрическая (datasheet) ==================== */
 .table-params {
   font-size: var(--fs-sm);

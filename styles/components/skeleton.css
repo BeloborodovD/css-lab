@@ -24,7 +24,17 @@
   border-radius: var(--radius-xs);
 }
 .skeleton--text + .skeleton--text { margin-top: var(--space-2); }
-.skeleton--title { height: 20px; width: 40%; }
+.skeleton--title { height: 20px; }
+
+/* Шкала ширин полосы — четыре ступени. Заглушка обязана повторять форму
+   будущего контента, а не быть всегда во всю ширину; ступеней намеренно
+   четыре, чтобы список не превращался в набор произвольных процентов.
+   --title остаётся алиасом ступени 40% (§2.4): имя из разметки не ломаем */
+.skeleton--w-25 { width: 25%; }
+.skeleton--w-40,
+.skeleton--title { width: 40%; }
+.skeleton--w-60 { width: 60%; }
+.skeleton--w-80 { width: 80%; }
 .skeleton--avatar {
   width: 36px;
   height: 36px;
@@ -56,6 +66,24 @@
   gap: var(--space-3);
 }
 .skeleton-card__body { flex: 1; min-width: 0; }
+
+/* Пресет строки таблицы: повторяет геометрию строки .table--compact
+   (те же --space-2 / --space-3 и та же нижняя граница), чтобы при подмене
+   заглушки данными таблица не подпрыгнула. Число ячеек задаёт разметка,
+   ширина каждой — ступень .skeleton--w-* на вложенном .skeleton--text */
+.skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: var(--border-w) solid var(--color-border-subtle);
+}
+.skeleton-row:last-child { border-bottom: none; }
+
+.skeleton-row__cell {
+  flex: 1 1 0;
+  min-width: 0;
+}
 
 @keyframes skeleton-pulse {
   0%, 100% { opacity: 1; }

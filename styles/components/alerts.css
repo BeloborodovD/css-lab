@@ -116,7 +116,11 @@
   color: inherit;
   opacity: 0.6;
   cursor: pointer;
-  transition: opacity var(--duration-press) var(--ease-out);
+  /* var(--transition-press) первым — крестик это <button>, а свой `transition`
+     шорткатом стирает отклик нажатия из base/motion.css (ловушка каскада
+     описана в шапке того файла) */
+  transition: var(--transition-press),
+              opacity var(--duration-press) var(--ease-out);
 }
 .alert-close svg { width: 16px; height: 16px; }
 .alert-close:hover { opacity: 1; }

@@ -1,0 +1,122 @@
+/* [BLOCK:component.cite-ref]
+ * Кликабельный надстрочный маркер ссылки на источник внутри текста — [N].
+ * Случай применения: доказательный текст, каждое утверждение которого обязано
+ * быть проверяемо: ответ ассистента, досье расследования, сниппет со ссылкой
+ * на документ.
+ * Модуль: css-lab/components. Зависимости: base/variables.css, base/motion.css.
+ * Композиции: живёт внутри .doc-prose; подсказка — библиотечный [data-tooltip]
+ * (в прокручиваемой ленте — .tooltip-popup), собственного портала компонент
+ * не заводит; переход к источнику подсвечивает карточку .search-result-card
+ * состоянием .is-flashed.
+ *
+ * НОСИТЕЛЬ. Только настоящий <button> или <a href="#источник">. Маркер обязан
+ * попадать в Tab-порядок и срабатывать по Enter — span с обработчиком дефект.
+ *
+ * ЦЕЛЬ НАЖАТИЯ. Известный дефект прототипа: маркер 18×16px, то есть меньше
+ * минимума SC 2.5.8. Здесь площадь поднята до 24×24 прозрачным ::before, а не
+ * увеличением кегля: увеличивать шрифт нельзя — маркер перестанет читаться как
+ * сноска и раздвинет строку.
+ *
+ * ДВИЖЕНИЕ. PURPOSE: feedback. Только переход цвета на --duration-press
+ * var(--ease-out) плюс press-feedback из base/motion.css. Геометрия не
+ * анимируется: маркер стоит в поле чтения, движение здесь мешает читать.
+ */
+
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
+/* ====================== Маркер ======================
+   vertical-align: baseline у inline-flex, а НЕ отрицательный margin: маркер
+   не поднимает и не опускает строку, межстрочный ритм абзаца не меняется.
+   line-height: 1 не даёт мелкому inline-flex растянуть строчный бокс. */
+.cite-ref {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: baseline;
+  padding: var(--space-px) var(--space-1);
+  font-family: inherit;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border: var(--border-w) solid var(--color-accent-border);
+  /* --radius-sm, а не --radius-full: маркер обязан читаться как надстрочная
+     сноска, а не как мелкий чип полосы фильтров */
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  cursor: pointer;
+  /* PURPOSE: feedback — свойства перечислены поимённо (RULES §5).
+     var(--transition-press) первым: носитель маркера — <button> либо <a>, и
+     для кнопочного варианта свой шорткат иначе стирает отклик нажатия из
+     base/motion.css (ловушка каскада описана в шапке того файла) */
+  transition:
+    var(--transition-press),
+    background-color var(--duration-press) var(--ease-out),
+    border-color var(--duration-press) var(--ease-out),
+    color var(--duration-press) var(--ease-out);
+}
+
+/* Расширение площади нажатия до 24×24 (SC 2.5.8; литерал разрешён RULES §5.3,
+   прецеденты .picklist__toggle и .picklist__chip-remove). Прозрачный слой
+   центрируется на маркере и намеренно перекрывает соседние знаки строки —
+   ради этого он и заведён; на раскладку и на выделение текста не влияет */
+.cite-ref::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  width: 24px;
+  height: 24px;
+  transform: translate(-50%, -50%);
+}
+
+/* ====================== Номер ======================
+   Скобки — форма, а не цвет: маркер обязан оставаться различимым в
+   forced-colors и для тех, кто не различает акцент (SC 1.4.1) */
+.cite-ref__n {
+  display: inline-flex;
+  align-items: center;
+}
+.cite-ref__n::before { content: "["; }
+.cite-ref__n::after  { content: "]"; }
+
+/* ====================== Наведение и фокус ====================== */
+@media (hover: hover) and (pointer: fine) {
+  .cite-ref:hover {
+    background: var(--color-accent-soft-hover);
+    border-color: var(--color-accent);
+  }
+}
+
+.cite-ref:focus-visible {
+  /* Прозрачный контур обязателен: в forced-colors система перекрашивает его
+     в Highlight, а box-shadow вырезается (RULES §5.5) */
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--shadow-focus);
+}
+
+/* ====================== Состояние is-active ======================
+   Маркер, чей источник сейчас подсвечен. Ставит и снимает JS синхронно с
+   aria-expanded на самом маркере */
+.cite-ref.is-active {
+  color: var(--color-accent-text);
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+/* ====================== Узкий экран ======================
+   Крупная тач-цель на сенсорном экране — --touch-target-min (44px).
+   Визуальный размер маркера при этом не меняется */
+@media (max-width: 767px) {
+  .cite-ref::before {
+    width: var(--touch-target-min);
+    height: var(--touch-target-min);
+  }
+}
+
+} /* @layer components */
+/* </BLOCK:component.cite-ref> */

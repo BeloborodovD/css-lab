@@ -76,7 +76,12 @@
   border-radius: var(--radius-sm);
   cursor: pointer;
   user-select: none;
-  transition: background var(--duration-dropdown) var(--ease-out),
+  /* var(--transition-press) первым — пункт меню это <button>, и свой шорткат
+     иначе стирает отклик нажатия из base/motion.css (ловушка каскада описана
+     в его шапке). Дальше — background-color, а не шорткат background:
+     тот тянет в переход ещё и background-image с -position (RULES §5) */
+  transition: var(--transition-press),
+              background-color var(--duration-dropdown) var(--ease-out),
               color var(--duration-dropdown) var(--ease-out);
 }
 

@@ -1,0 +1,264 @@
+/* [BLOCK:component.coach-mark]
+ * Обучающая подсветка элемента интерфейса (шаг онбординг-тура): затемнение с
+ * вырезом вокруг цели, рамка спотлайта, плавающая панель шага со счётчиком и
+ * навигацией по шагам.
+ * Модуль: css-lab/components. Зависимости: base/variables.css, base/motion.css,
+ * components/buttons.css (кнопки шага — композиция .btn),
+ * components/drawer.css (мобильный лист: геометрия .drawer--sheet и полоска
+ * .drawer__grabber — собственного нижнего листа компонент НЕ заводит).
+ *
+ * Структура: .coach-mark
+ *              > .coach-mark__scrim   (затемнение с вырезом)
+ *              > .coach-mark__spot    (рамка вокруг подсвеченной цели)
+ *              > .coach-mark__panel
+ *                  > .coach-mark__title
+ *                  > .coach-mark__text
+ *                  > .coach-mark__dots     (счётчик шагов)
+ *                  > .coach-mark__actions  (.btn: «Назад», «Далее», «Пропустить»)
+ *
+ * ЧЕМ ОТЛИЧАЕТСЯ ОТ СОСЕДЕЙ (иначе следующий маппинг выберет не то):
+ *   от tooltip  — тултип поясняет элемент по наведению или фокусу, живёт ровно
+ *                 столько, сколько указатель на цели, ничего не затемняет и не
+ *                 имеет ни кнопок, ни порядка. Coach-mark инициирует система,
+ *                 он остаётся до решения пользователя и требует действия.
+ *   от popover  — поповер открывает САМ пользователь по своему триггеру, фон
+ *                 остаётся живым, панель одна и порядка шагов нет. Coach-mark
+ *                 гасит фон, помечает его inert и ведёт последовательность.
+ *   от modal    — модалка не привязана к элементу страницы и масштабируется от
+ *                 центра. Coach-mark привязан к цели: у него есть вырез в
+ *                 затемнении и рамка спотлайта, а панель стоит рядом с целью.
+ *
+ * ГЕОМЕТРИЯ СПОТЛАЙТА НЕ АНИМИРУЕТСЯ. Позиция и размер приходят четырьмя
+ * переменными, которые ставит JS, замерив цель; это каналы данных, а не токены
+ * дизайн-системы (та же роль, что у --transform-origin). Спотлайт между шагами
+ * НЕ переезжает: top/left/width/height — layout-свойства, их анимация дёргается
+ * (ui-motion-craft §5). Между шагами не меняется вообще ничего: is-open стоит,
+ * панель просто переставляется — движение играет один раз за тур.
+ *
+ * ДВИЖЕНИЕ ТУРА. PURPOSE: explanation, тир «редко» (первое знакомство) — здесь
+ * по гейту §0 разрешён delight-бюджет, и он потрачен экономно: затемнение и
+ * рамка спотлайта только гаснут, панель приходит от цели масштабом
+ * scale(0.96) → 1 от верхнего левого угла. Вход --duration-modal, выход
+ * --duration-modal-exit: уход быстрее прихода. Всё на transform и opacity,
+ * @keyframes нет — тур закрывается в любой момент и обязан прерываться (§4).
+ *
+ * Цель, которой может не быть на текущей ширине экрана, обязана иметь запасной
+ * текст шага без подсветки — иначе шаг молча теряется. Это поведение, CSS его
+ * не изображает; фон помечается inert, фокус ловится внутри панели, Escape
+ * закрывает тур и возвращает фокус на исходный элемент.
+ */
+
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
+.coach-mark {
+  /* Каналы геометрии цели: ставит JS (px), значений в CSS нет */
+  --coach-mark-spot-x: 0;
+  --coach-mark-spot-y: 0;
+  --coach-mark-spot-w: 0;
+  --coach-mark-spot-h: 0;
+
+  position: fixed;
+  inset: 0;
+  /* Модальный слой: тур перекрывает шапку и боковые панели целиком */
+  z-index: var(--z-modal);
+  pointer-events: none;
+  visibility: hidden; /* закрытый тур вне Tab-порядка и a11y-дерева */
+  transition: visibility 0s linear var(--duration-modal-exit);
+}
+.coach-mark.is-open {
+  pointer-events: auto;
+  visibility: visible;
+  transition: visibility 0s;
+}
+
+/* ===== Затемнение с вырезом =============================================
+ * Вырез — маска из двух слоёв: сплошной прямоугольник экрана минус
+ * прямоугольник цели (mask-composite: exclude). #000 здесь альфа-канал маски,
+ * а не цвет (RULES §5.5); сама заливка берётся из --color-overlay, поэтому
+ * тёмная тема и prefers-contrast работают сами.
+ * Без поддержки mask-composite вырез не рисуется — затемнение остаётся
+ * сплошным, шаг читается по рамке спотлайта и панели.
+ */
+.coach-mark__scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--color-overlay);
+  opacity: 0;
+  -webkit-mask-image: linear-gradient(#000, #000), linear-gradient(#000, #000);
+  mask-image: linear-gradient(#000, #000), linear-gradient(#000, #000);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%, var(--coach-mark-spot-w) var(--coach-mark-spot-h);
+  mask-size: 100% 100%, var(--coach-mark-spot-w) var(--coach-mark-spot-h);
+  -webkit-mask-position: 0 0, var(--coach-mark-spot-x) var(--coach-mark-spot-y);
+  mask-position: 0 0, var(--coach-mark-spot-x) var(--coach-mark-spot-y);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  /* PURPOSE: explanation — фон гаснет, внимание уходит к цели.
+     Базовое состояние = выход, он быстрее входа. */
+  transition: opacity var(--duration-modal-exit) var(--ease-out);
+}
+.coach-mark.is-open .coach-mark__scrim {
+  opacity: 1;
+  transition: opacity var(--duration-modal) var(--ease-out);
+}
+
+/* ===== Рамка спотлайта ==================================================
+   Позиция и размер приходят от JS теми же четырьмя переменными; переходов у
+   них НЕТ намеренно — это layout-свойства. */
+.coach-mark__spot {
+  position: absolute;
+  top: var(--coach-mark-spot-y);
+  left: var(--coach-mark-spot-x);
+  width: var(--coach-mark-spot-w);
+  height: var(--coach-mark-spot-h);
+  border: var(--border-w-strong) solid var(--color-accent);
+  border-radius: var(--radius);
+  pointer-events: none; /* рамка декоративна, нажатия идут к цели */
+  opacity: 0;
+  transition: opacity var(--duration-modal-exit) var(--ease-out);
+}
+.coach-mark.is-open .coach-mark__spot {
+  opacity: 1;
+  transition: opacity var(--duration-modal) var(--ease-out);
+}
+
+/* ===== Панель шага ======================================================
+   Ширина в ch и процентах, высота по контенту: панель обязана помещаться при
+   zoom 200% и крупных системных шрифтах — жёстких 320px здесь нет.
+   Координаты панели ставит JS, замерив цель и свободное место. */
+.coach-mark__panel {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: max-content;
+  max-width: min(92vw, 44ch);
+  padding: var(--space-5);
+  background: var(--color-surface-overlay);
+  border: var(--border-w) solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  /* Ближайший к цели угол панели — верхний левый: JS ставит панель ПОД целью и
+     выравнивает по её левому краю, поэтому масштаб растёт оттуда, а не от
+     центра. Канала --transform-origin у тура нет и быть не может: собственное
+     смещение панели JS пишет инлайном в top/left, из CSS оно не читается —
+     геометрию цели несут --coach-mark-spot-*, но они в системе координат
+     затемнения, а не панели */
+  transform-origin: top left;
+  opacity: 0;
+  transform: scale(0.96);
+  /* PURPOSE: explanation, тир «редко» — здесь живёт delight-бюджет, но
+     экономно: панель приходит ОТ подсвеченной цели лёгким масштабом (чистое
+     проявление «ниоткуда» запрещено, RULES §3), и это всё. Геометрия спотлайта
+     по-прежнему неподвижна: layout-свойства не анимируются (RULES §5).
+     Базовое состояние = выход, он быстрее входа. */
+  transition:
+    opacity var(--duration-modal-exit) var(--ease-out),
+    transform var(--duration-modal-exit) var(--ease-out);
+}
+.coach-mark.is-open .coach-mark__panel {
+  opacity: 1;
+  transform: scale(1);
+  transition:
+    opacity var(--duration-modal) var(--ease-out),
+    transform var(--duration-modal) var(--ease-out);
+}
+
+.coach-mark__title {
+  margin: 0;
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semi);
+  color: var(--color-text);
+  line-height: var(--lh-snug);
+}
+
+.coach-mark__text {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+  line-height: var(--lh-normal);
+}
+
+/* ===== Счётчик шагов ====================================================
+   Точки — дети .coach-mark__dots; текущий шаг помечается aria-current, класс
+   его не дублирует (носитель нативный). Порядок шагов обязан дублироваться
+   текстом («шаг 2 из 5») — цвет точки не единственный носитель. */
+.coach-mark__dots {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+.coach-mark__dots > * {
+  width: var(--space-2);
+  height: var(--space-2);
+  flex-shrink: 0;
+  background: var(--color-border-subtle);
+  border-radius: var(--radius-full);
+}
+.coach-mark__dots > [aria-current] {
+  background: var(--color-text);
+}
+
+/* ===== Действия шага ====================================================
+   Кнопки — композиция .btn; собственных кнопок компонент не рисует. */
+.coach-mark__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+/* ===== Вариант «нижний лист» ============================================
+ * На узком экране панель шага становится нижним листом: геометрия повторяет
+ * .drawer--sheet, полоска-захват берётся готовым .drawer__grabber и кладётся
+ * первым узлом внутрь панели. Вариант выбирает вёрстка по брейкпоинту.
+ */
+.coach-mark--sheet .coach-mark__panel {
+  top: auto;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: auto;
+  max-width: none;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding-bottom: calc(var(--space-5) + env(safe-area-inset-bottom));
+  transform: translateY(100%);
+  transform-origin: bottom center;
+  /* Лист уходит вниз тем же путём, которым пришёл; кривая шторок */
+  transition:
+    opacity var(--duration-modal-exit) var(--ease-drawer),
+    transform var(--duration-modal-exit) var(--ease-drawer);
+}
+.coach-mark--sheet.is-open .coach-mark__panel {
+  transform: translateY(0);
+  transition:
+    opacity var(--duration-modal) var(--ease-drawer),
+    transform var(--duration-modal) var(--ease-drawer);
+}
+
+/* ===== Узкий экран ====================================================== */
+@media (max-width: 767px) {
+  .coach-mark__actions { gap: var(--space-3); }
+  .coach-mark__actions > * { min-height: var(--touch-target-min); }
+}
+
+/* Reduced motion: мягче, а не ноль — снимаются масштаб панели и сдвиг листа,
+   кроссфейд по непрозрачности остаётся: он и есть носитель смены шага.
+   Затемнение и рамка спотлайта не трогаются вовсе — они и так только гаснут */
+@media (prefers-reduced-motion: reduce) {
+  .coach-mark__panel,
+  .coach-mark.is-open .coach-mark__panel,
+  .coach-mark--sheet .coach-mark__panel,
+  .coach-mark--sheet.is-open .coach-mark__panel {
+    transform: none;
+  }
+}
+
+} /* @layer components */
+/* </BLOCK:component.coach-mark> */

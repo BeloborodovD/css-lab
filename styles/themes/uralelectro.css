@@ -1,17 +1,23 @@
 /* [CONFIG:theme-uralelectro]
- * Тема бренда Уралэлектро — графитово-синий RAL 5008 (брендбук 2025).
+ * Тема бренда Уралэлектро — патиновый зелёный RAL 6026.
  * Модуль: css-lab/themes. Зависимости: base/variables.css (перекрывает её токены),
  * base/fonts.css (Wadik + NT Somic), assets/logos/uralelectro*.svg.
  *
  * Активация: <html data-brand="uralelectro">. Сочетается с .dark (тёмная тема).
- * Источник палитры: брендбук АО «МЭЗ «Уралэлектро» 2025
- *   Primary #374A51 — RGB 55/74/81 · CMYK 78/50/45/54 · RAL 5008
+ * Источник палитры: фирменный стиль АО «МЭЗ «Уралэлектро»
+ *   Primary #136B5C — RGB 19/107/92 · RAL 6026 «патина»
+ *   Dark    #0F5849 — производный тёмный тон (hover)
+ *   Light   #217F6C — производный светлый тон (info, tints, secondary)
+ * Эталонные значения бренда — --brand-uralelectro* в base/variables.css.
  * Типографика по брендбуку:
  *   Заголовок H1        — Wadik (единое начертание)
  *   H2+ и подзаголовки  — NT Somic Medium
  *   Основной текст      — NT Somic Regular
- * NB: патиновая палитра #136B5C (RAL 6026) — предыдущая версия айдентики,
- * оставлена в variables.css как --brand-uralelectro-* для legacy-страниц.
+ * NB: графит #374A51 (RAL 5008) — предыдущая версия айдентики, из библиотеки
+ * выведен полностью; при необходимости берётся из истории git.
+ * NB: в отличие от veza и hemah, служебного затемнения UI-акценту не
+ * потребовалось — фирменный #136B5C сам проходит AA в обе стороны
+ * (белый на нём 6.39:1, он как текст на #fafaf9 6.12:1).
  */
 
 /* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
@@ -19,34 +25,39 @@
 
 /* [BLOCK:theme.uralelectro.light] */
 [data-brand="uralelectro"] {
-  /* Accent → графитово-синий RAL 5008. На #fafaf9: 8.89:1 — AAA
-     (на белой поверхности #ffffff — 9.29:1) */
-  --color-accent:            #374a51;
-  --color-accent-hover:      #2d3d43;
-  --color-accent-active:     #28363b;
-  --color-accent-soft:       rgba(55, 74, 81, 0.08);
-  --color-accent-soft-hover: rgba(55, 74, 81, 0.14);
-  --color-accent-text:       #ffffff;
-  --color-accent-border:     rgba(55, 74, 81, 0.30);
+  /* Accent → фирменная патина RAL 6026. Служебного затемнения не требует:
+     как текст — 6.12:1 на #fafaf9 и 6.39:1 на #ffffff (AA);
+     белый текст на нём — 6.39:1 (AA, у крупного и UI — с запасом) */
+  --color-accent:            #136b5c;
+  --color-accent-hover:      #0f5849;  /* производный тёмный; белый на нём 8.36:1 */
+  --color-accent-active:     #0b4539;  /* ступень ниже hover; белый на нём 10.91:1 */
+  --color-accent-soft:       rgba(19, 107, 92, 0.08);
+  --color-accent-soft-hover: rgba(19, 107, 92, 0.14);
+  --color-accent-text:       #ffffff;  /* 6.39:1 на #136b5c — AA */
+  --color-accent-border:     rgba(19, 107, 92, 0.30);
   --color-text-on-accent:    #ffffff;
 
-  /* Info наследует брендовый hue вместо indigo */
-  --color-info:              #4a6570;
-  --color-info-hover:        #374a51;
-  --color-info-soft:         rgba(55, 74, 81, 0.07);
-  --color-info-text:         #28363b;
+  /* Info наследует брендовый hue вместо indigo: светлый тон патины, чтобы
+     info читался отдельно от акцента. Белый на #217f6c — 4.87:1 (AA),
+     как текст на #fafaf9 — 4.66:1 (AA) */
+  --color-info:              #217f6c;
+  --color-info-hover:        #136b5c;
+  --color-info-soft:         rgba(33, 127, 108, 0.07);
+  --color-info-text:         #0b4539;  /* 9.9:1 на info-soft */
 
-  /* Highlight — графитовый tint вместо indigo базы */
-  --color-highlight:         #edf1f2;
-  --color-highlight-strong:  #dde4e7;
+  /* Highlight — патиновый tint вместо indigo базы.
+     --color-highlight-text #18181b: 15.6:1 на highlight, 14.0:1 на strong */
+  --color-highlight:         #e9f3f0;
+  --color-highlight-strong:  #d6e9e3;
   --color-highlight-text:    #18181b;
 
-  /* Плашка под белый логотип: всегда насыщенный бренд, не инвертируется */
-  --brand-plate-bg:          #374a51;
+  /* Плашка под белый логотип: всегда насыщенный бренд, не инвертируется.
+     Белый логотип на патине — 6.39:1 */
+  --brand-plate-bg:          #136b5c;
 
   /* Бумага (.print-sheet) не инвертируется в dark, поэтому акцент и логотип
-     листа берутся отсюда: тот же AAA-акцент 9.29:1 на белом и цветной логотип */
-  --color-accent-paper:      #374a51;
+     листа берутся отсюда: фирменная патина 6.39:1 на белом и цветной логотип */
+  --color-accent-paper:      #136b5c;
   --brand-logo-paper:        url("/assets/logos/uralelectro.svg");
 
   /* Типографика бренда */
@@ -59,9 +70,10 @@
   --brand-logo-aspect: 3.738; /* тесный viewBox по контенту — без масштабных хаков */
   --brand-logo-scale:  1;
 
-  /* Дополнительный тон бренда (светлый графит для второстепенных блоков) */
-  --brand-secondary:      #5c757f;
-  --brand-secondary-soft: rgba(92, 117, 127, 0.10);
+  /* Дополнительный тон бренда (светлая патина для второстепенных блоков).
+     Как текст на #fafaf9 — 4.66:1, AA */
+  --brand-secondary:      #217f6c;
+  --brand-secondary-soft: rgba(33, 127, 108, 0.10);
 }
 /* </BLOCK:theme.uralelectro.light> */
 
@@ -89,42 +101,58 @@
 /* </BLOCK:theme.uralelectro.headings> */
 
 /* [BLOCK:theme.uralelectro.dark]
- * Тёмная тема: графит подсвечен до AA на zinc-900 (hue 196° сохранён),
- * логотип по умолчанию переключается на белый (mono). */
+ * Тёмная тема: патина подсвечена до AAA на zinc-900 (hue 170° сохранён),
+ * логотип по умолчанию переключается на белый (mono).
+ * Здесь акцент СЛУЖЕБНЫЙ, а не фирменный: чистый #136b5c на #18181b даёт
+ * 2.77:1 — ниже любого гейта. Фирменное значение остаётся в --brand-plate-bg,
+ * --color-accent-paper и --brand-uralelectro. */
 .dark[data-brand="uralelectro"],
 .dark [data-brand="uralelectro"],
 [data-brand="uralelectro"] .dark,
 [data-brand="uralelectro"][data-theme="dark"] {
-  --color-accent:            #8fa6ae;  /* светлый графит — 6.95:1 на #18181b */
-  --color-accent-hover:      #a9bcc3;
-  --color-accent-active:     #7a939c;
-  --color-accent-soft:       rgba(143, 166, 174, 0.12);
-  --color-accent-soft-hover: rgba(143, 166, 174, 0.18);
-  --color-accent-text:       #10181b;  /* почти чёрный на светлом акценте */
-  --color-accent-border:     rgba(143, 166, 174, 0.35);
-  --color-text-on-accent:    #10181b;
+  --color-accent:            #5bb39d;  /* светлая патина — 7.07:1 на #18181b, AAA */
+  --color-accent-hover:      #7dc7b4;  /* 9.03:1 */
+  --color-accent-active:     #489681;  /* 5.02:1 */
+  --color-accent-soft:       rgba(91, 179, 157, 0.12);
+  --color-accent-soft-hover: rgba(91, 179, 157, 0.18);
+  --color-accent-text:       #052e24;  /* тёмная патина на светлом акценте — 5.89:1 */
+  --color-accent-border:     rgba(91, 179, 157, 0.35);
+  --color-text-on-accent:    #052e24;
 
-  --color-info:              #a9bcc3;
-  --color-info-hover:        #c2d1d6;
-  --color-info-soft:         rgba(169, 188, 195, 0.10);
-  --color-info-text:         #c2d1d6;
+  --color-info:              #7dc7b4;  /* 9.03:1 на #18181b */
+  --color-info-hover:        #a0d8c9;  /* 11.10:1 */
+  --color-info-soft:         rgba(125, 199, 180, 0.10);
+  --color-info-text:         #a0d8c9;
 
   --brand-logo:      url("/assets/logos/uralelectro-mono-light.svg");
-  --brand-secondary: #a9bcc3;
-  --brand-secondary-soft: rgba(169, 188, 195, 0.14);
+  --brand-secondary: #7dc7b4;
+  --brand-secondary-soft: rgba(125, 199, 180, 0.14);
 }
 
-/* Авто-тёмная тема ОС без класса .dark — бренд подсвечивает акцент сам */
+/* Авто-тёмная тема ОС без класса .dark — бренд подсвечивает акцент сам.
+   Ряды --color-info* и --brand-secondary* здесь ОБЯЗАТЕЛЬНЫ: их светлые
+   значения объявлены на [data-brand] (уровень body) и перебивают тёмную
+   базу с :root, поэтому без зеркала info оставался светлым #217f6c —
+   3.06:1 на #18181b, ниже AA. Проверено при переводе темы на канон. */
 @media (prefers-color-scheme: dark) {
   [data-brand="uralelectro"]:not(.light):not([data-theme="light"]) {
-    --color-accent:            #8fa6ae;
-    --color-accent-hover:      #a9bcc3;
-    --color-accent-active:     #7a939c;
-    --color-accent-soft:       rgba(143, 166, 174, 0.12);
-    --color-accent-soft-hover: rgba(143, 166, 174, 0.18);
-    --color-accent-text:       #10181b;
-    --color-accent-border:     rgba(143, 166, 174, 0.35);
-    --color-text-on-accent:    #10181b;
+    --color-accent:            #5bb39d;
+    --color-accent-hover:      #7dc7b4;
+    --color-accent-active:     #489681;
+    --color-accent-soft:       rgba(91, 179, 157, 0.12);
+    --color-accent-soft-hover: rgba(91, 179, 157, 0.18);
+    --color-accent-text:       #052e24;
+    --color-accent-border:     rgba(91, 179, 157, 0.35);
+    --color-text-on-accent:    #052e24;
+
+    --color-info:              #7dc7b4;
+    --color-info-hover:        #a0d8c9;
+    --color-info-soft:         rgba(125, 199, 180, 0.10);
+    --color-info-text:         #a0d8c9;
+
+    --brand-secondary:         #7dc7b4;
+    --brand-secondary-soft:    rgba(125, 199, 180, 0.14);
+
     --brand-logo:              url("/assets/logos/uralelectro-mono-light.svg");
   }
 }

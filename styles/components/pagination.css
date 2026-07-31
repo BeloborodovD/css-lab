@@ -29,7 +29,11 @@
   border: var(--border-w) solid var(--color-border);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: color var(--duration-press) var(--ease-out),
+  /* var(--transition-press) первым — кнопка страницы это <button>, свой
+     шорткат иначе стирает отклик нажатия из base/motion.css (ловушка
+     каскада описана в его шапке) */
+  transition: var(--transition-press),
+              color var(--duration-press) var(--ease-out),
               background-color var(--duration-press) var(--ease-out),
               border-color var(--duration-press) var(--ease-out),
               box-shadow var(--duration-press) var(--ease-out);
@@ -71,6 +75,45 @@
   user-select: none;
 }
 
+/* ====================== Быстрый переход к странице ======================
+   «Подпись + числовое поле + кнопка» в одну строку с рядом номеров.
+   Поле — композиция .input.input-sm.input--numeric, кнопка —
+   .btn.btn-outline.btn-sm: собственных правил контролов здесь нет.
+   Выход за диапазон сообщается .form-field__error рядом, а не молчаливым
+   клампом — иначе пользователь не узнает, что номер не существует. */
+.pagination-jump {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+/* Ряд номеров у .pagination не переносится; перенос включается только тогда,
+   когда в нём есть поле перехода — иначе на узком экране строка уезжает */
+.pagination:has(.pagination-jump) { flex-wrap: wrap; }
+
+.pagination-jump-label {
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+/* Ширина по числу разрядов номера (ch — не литерал, §5.7). Перебивает
+   width: 100% у .input: pagination.css импортируется после inputs.css */
+.pagination-jump-input {
+  flex: none;
+  width: 6ch;
+  text-align: center;
+}
+
+@media (max-width: 767px) {
+  /* Поле перехода уходит под ряд страниц целой строкой */
+  .pagination-jump {
+    flex-basis: 100%;
+    margin-top: var(--space-1);
+  }
+  .pagination-jump-input { width: 7ch; }
+}
+
 /* Compact size */
 .pagination-compact .page-btn {
   min-width: 32px;
@@ -107,7 +150,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color var(--duration-press) var(--ease-out),
+  /* var(--transition-press) первым — та же ловушка каскада, что у .page-btn */
+  transition: var(--transition-press),
+              background-color var(--duration-press) var(--ease-out),
               color var(--duration-press) var(--ease-out);
 }
 

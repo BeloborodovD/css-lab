@@ -40,8 +40,11 @@
   position: relative;
   white-space: nowrap;
   /* Вкладки переключают часто и с клавиатуры (гейт §0), поэтому у всего
-     файла самый короткий тайминг набора — --duration-press */
-  transition: color var(--duration-press) var(--ease-out),
+     файла самый короткий тайминг набора — --duration-press.
+     var(--transition-press) первым: вкладка это <button>, и свой шорткат
+     иначе стирает отклик нажатия из base/motion.css (ловушка в его шапке) */
+  transition: var(--transition-press),
+              color var(--duration-press) var(--ease-out),
               background-color var(--duration-press) var(--ease-out);
 }
 

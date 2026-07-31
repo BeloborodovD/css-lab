@@ -1,0 +1,186 @@
+/* [BLOCK:component.chat-composer]
+ * Форма ввода реплики: многострочное поле, тулбар режимов, действия отправки и
+ * остановки, счётчик символов и подпись клавиатурного контракта.
+ * Случай применения: низ ленты .chat-thread — пользователь пишет свободный
+ * текст произвольной длины, отправку можно прервать.
+ * Модуль: css-lab/components. Зависимости: base/variables.css, base/motion.css.
+ * Композиции: __field — .textarea (inputs.css); __counter — .form-field__counter
+ * с порогами .is-near-limit / .is-over-limit (form-section.css); видимая подпись
+ * поля — .form-field__label; тулбар наполняется .chip.chip-choice; действия —
+ * .btn / .btn-icon. Собственных поля, счётчика и кнопок компонент НЕ рисует.
+ *
+ * ШИРИНА. Равна мере строки ответа — var(--max-prose-w). Литерал 820px и
+ * инлайн-стиль в разметке прототипа уходят: поле ввода и ответ обязаны стоять
+ * в одной колонке, иначе диалог визуально разъезжается.
+ *
+ * ФОКУС. Кольцо рисуется НА ПОЛЕ, а не на всей карточке через :focus-within:
+ * подсвеченная целиком карточка не показывает, куда именно уйдёт ввод, и
+ * мигает при переходе между полем и кнопкой.
+ *
+ * ДВИЖЕНИЕ. PURPOSE: state indication, тир occasional. Единственное движение —
+ * подмена «Отправить» ↔ «Стоп» кросс-фейдом opacity на --duration-press
+ * var(--ease-out); геометрия не меняется, ширина действия зафиксирована.
+ * Больше движения нет: ввод текста — самое частое действие маршрута.
+ */
+
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
+/* ====================== Форма ======================
+   Сетка «поле | действие» с явными колонками у каждого элемента: авторазмещение
+   здесь недопустимо — в форму приходит чужой узел (.form-field__label) и порядок
+   поехал бы. Ряды: подпись → поле+действия → тулбар → подсказка+счётчик */
+.chat-composer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: var(--space-2) var(--space-3);
+  inline-size: 100%;
+  max-inline-size: var(--max-prose-w);
+  margin-inline: auto;
+  padding: var(--space-3);
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+/* Видимая подпись поля обязательна (aria-label её не заменяет: подпись нужна и
+   зрячему пользователю, и голосовому управлению). Композиция — правило задаёт
+   только место в сетке */
+.chat-composer .form-field__label {
+  grid-column: 1 / -1;
+}
+
+/* ====================== Поле ======================
+   Композиция .textarea. Авторазмер даёт field-sizing (либо JS в браузерах без
+   поддержки) — набора фиксированных высот в CSS нет; ручная ручка ресайза
+   отключена, чтобы пользователь не спорил с авторазмером */
+.chat-composer__field {
+  grid-column: 1;
+  inline-size: 100%;
+  min-block-size: 0;
+  max-block-size: 40vh;
+  field-sizing: content;
+  resize: none;
+  font-size: var(--fs-sm);
+  overflow-y: auto;
+}
+.chat-composer__field:focus-visible {
+  /* Прозрачный контур обязателен: в forced-colors система перекрашивает его
+     в Highlight, а box-shadow вырезается (RULES §5.5) */
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--shadow-focus);
+}
+
+/* ====================== Действия ======================
+   Ровно одно видимое действие: «Отправить» либо «Стоп». Оба узла живут в DOM
+   постоянно и лежат в одной ячейке сетки — так подмена не двигает раскладку.
+   Скрытый узел уходит из Tab-порядка через visibility (display не используется:
+   он оборвал бы кросс-фейд) */
+.chat-composer__actions {
+  grid-column: 2;
+  display: grid;
+  grid-auto-flow: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+.chat-composer__actions > [data-composer-action] {
+  grid-area: 1 / 1;
+  /* Ширина зафиксирована в ch: «Отправить» и «Стоп» разной длины, без резерва
+     подмена дёргала бы кнопку и всю нижнюю строку формы */
+  min-inline-size: 12ch;
+  /* PURPOSE: state indication — кросс-фейд подменяемых действий.
+     Длительность в обе стороны ОДНА намеренно, и это не нарушение асимметрии
+     (RULES §2): здесь нет пары «нажал / отпустил» — есть один обмен двух узлов
+     в одной ячейке. Встречные фейды разной длины дали бы либо провал (ячейка
+     на миг пустая), либо двойную экспозицию (обе подписи разом).
+     Своей геометрии не анимируется: ширина ячейки от состояния не зависит,
+     поэтому подмена не двигает ни кнопку, ни строку счётчика.
+     var(--transition-press) первым — оба действия это <button>, и свой шорткат
+     иначе стирает отклик нажатия из base/motion.css (ловушка каскада описана
+     в шапке того файла); отправка — самая нажимаемая кнопка маршрута. */
+  transition:
+    var(--transition-press),
+    opacity var(--duration-press) var(--ease-out),
+    visibility var(--duration-press) var(--ease-out);
+}
+.chat-composer__actions > [data-composer-action="stop"] {
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* ====================== Тулбар режимов ======================
+   Полоса переключателей режима ответа: .chip.chip-choice из библиотеки */
+.chat-composer__toolbar {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* ====================== Подсказка клавиатурного контракта ======================
+   «Enter — отправить, Shift+Enter — новая строка». Видимый текст, связанный с
+   полем через aria-describedby */
+.chat-composer__hint {
+  grid-column: 1;
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+/* ====================== Счётчик ======================
+   Композиция .form-field__counter — пороги и цвета приходят оттуда, здесь
+   только место в сетке */
+.chat-composer__counter {
+  grid-column: 2;
+  justify-self: end;
+  font-size: var(--fs-xs);
+}
+
+/* ====================== Состояние is-busy ======================
+   Идёт генерация ответа. Ставит и снимает JS. Поле остаётся доступным —
+   пользователь вправе набирать следующий вопрос, пока идёт текущий */
+.chat-composer.is-busy .chat-composer__actions > [data-composer-action="send"] {
+  visibility: hidden;
+  opacity: 0;
+}
+.chat-composer.is-busy .chat-composer__actions > [data-composer-action="stop"] {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* ====================== Вариант --sticky ======================
+   Форма остаётся доступной при прокрутке длинной ленты. Край обозначается
+   границей и тенью, а НЕ градиентной вуалью к --color-bg: вуаль не совпадает
+   с фоном, когда под композером проходит карточка или таблица */
+.chat-composer--sticky {
+  position: sticky;
+  inset-block-end: 0;
+  z-index: var(--z-sticky);
+  border-block-start: var(--border-w) solid var(--color-border-subtle);
+  box-shadow: var(--shadow-sm);
+  /* Запас под системной панелью жестов; при её отсутствии — обычный отступ */
+  padding-block-end: max(var(--space-3), env(safe-area-inset-bottom));
+}
+
+/* ====================== Узкий экран ======================
+   Композер НЕ разворачивается в колонку с кнопкой во всю ширину: поле и
+   действие остаются в строке — так большой палец достаёт до отправки, не
+   уводя поле за клавиатуру. Кнопка — .btn.btn-icon 44×44 из библиотеки */
+@media (max-width: 767px) {
+  .chat-composer {
+    padding: var(--space-2);
+    gap: var(--space-2);
+  }
+  .chat-composer__actions > [data-composer-action] {
+    min-inline-size: var(--touch-target-min);
+    min-block-size: var(--touch-target-min);
+  }
+  .chat-composer__field {
+    max-block-size: 30vh;
+  }
+}
+
+} /* @layer components */
+/* </BLOCK:component.chat-composer> */

@@ -232,7 +232,16 @@
           <li class="sidebar-nav-item"><a href="#filter-panel" class="sidebar-nav-link">Filter Panel</a></li>
           <li class="sidebar-nav-item"><a href="#presence-strip" class="sidebar-nav-link">Presence Strip</a></li>
           <li class="sidebar-nav-item"><a href="#search-result-card" class="sidebar-nav-link">Search Result Card</a></li>
-          <li class="sidebar-nav-item"><a href="#nav" class="sidebar-nav-link">Nav · Page Nav</a></li>
+          <li class="sidebar-nav-item"><a href="#doc-prose" class="sidebar-nav-link">Doc Prose</a></li>
+          <li class="sidebar-nav-item"><a href="#cite-ref" class="sidebar-nav-link">Cite Ref</a></li>
+          <li class="sidebar-nav-item"><a href="#chat-thread" class="sidebar-nav-link">Chat Thread</a></li>
+          <li class="sidebar-nav-item"><a href="#chat-message" class="sidebar-nav-link">Chat Message</a></li>
+          <li class="sidebar-nav-item"><a href="#chat-composer" class="sidebar-nav-link">Chat Composer</a></li>
+          <li class="sidebar-nav-item"><a href="#chart" class="sidebar-nav-link">Chart</a></li>
+          <li class="sidebar-nav-item"><a href="#app-launcher" class="sidebar-nav-link">App Launcher</a></li>
+          <li class="sidebar-nav-item"><a href="#coach-mark" class="sidebar-nav-link">Coach Mark</a></li>
+          <li class="sidebar-nav-item"><a href="#nav" class="sidebar-nav-link">Nav</a></li>
+          <li class="sidebar-nav-item"><a href="#page-nav" class="sidebar-nav-link">Page Nav</a></li>
           <li class="sidebar-nav-item"><a href="#footer" class="sidebar-nav-link">Footer</a></li>
           <li class="sidebar-nav-item"><a href="#site-header" class="sidebar-nav-link">Site Header</a></li>
           <li class="sidebar-nav-item"><a href="#site-footer" class="sidebar-nav-link">Site Footer</a></li>
@@ -337,12 +346,21 @@
           </div>
 
           <h3 class="palette-group-title">Source (монохромная zinc-шкала, не пестрит)</h3>
+          <p class="text-muted mb-2" style="max-width: 720px; font-size: var(--fs-sm);">
+            Пять ступеней одной шкалы в порядке «светлее → темнее»: forum · wiki · cert · ntb · catalog.
+            Новый источник берёт свободную ступень, а не новый тон — иначе бейдж источника перестаёт
+            читаться как одна система. Свотчи идут в том же порядке, что и ступени.
+          </p>
           <div class="palette-grid">
-            <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-source-wiki)"></span><span class="palette-name">--color-source-wiki</span><span class="palette-desc">zinc — нейтральный</span></div>
-            <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-source-wiki-soft)"></span><span class="palette-name">--color-source-wiki-soft</span><span class="palette-desc">subtle bg</span></div>
-            <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-source-forum)"></span><span class="palette-name">--color-source-forum</span><span class="palette-desc">zinc — светлее</span></div>
+            <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-source-forum)"></span><span class="palette-name">--color-source-forum</span><span class="palette-desc">zinc-400 — самый светлый</span></div>
             <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-source-forum-soft)"></span><span class="palette-name">--color-source-forum-soft</span><span class="palette-desc">subtle bg</span></div>
-            <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-source-catalog)"></span><span class="palette-name">--color-source-catalog</span><span class="palette-desc">zinc — самый тёмный</span></div>
+            <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-source-wiki)"></span><span class="palette-name">--color-source-wiki</span><span class="palette-desc">zinc-600 — средне-тёмный</span></div>
+            <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-source-wiki-soft)"></span><span class="palette-name">--color-source-wiki-soft</span><span class="palette-desc">subtle bg</span></div>
+            <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-source-cert)"></span><span class="palette-name">--color-source-cert</span><span class="palette-desc">zinc-700 — сертификаты</span></div>
+            <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-source-cert-soft)"></span><span class="palette-name">--color-source-cert-soft</span><span class="palette-desc">subtle bg</span></div>
+            <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-source-ntb)"></span><span class="palette-name">--color-source-ntb</span><span class="palette-desc">zinc-800 — НТБ</span></div>
+            <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-source-ntb-soft)"></span><span class="palette-name">--color-source-ntb-soft</span><span class="palette-desc">subtle bg</span></div>
+            <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-source-catalog)"></span><span class="palette-name">--color-source-catalog</span><span class="palette-desc">zinc-900 — самый тёмный</span></div>
             <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-source-catalog-soft)"></span><span class="palette-name">--color-source-catalog-soft</span><span class="palette-desc">subtle bg</span></div>
           </div>
 
@@ -351,6 +369,22 @@
             <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-confidence-high)"></span><span class="palette-name">--color-confidence-high</span><span class="palette-desc">3+ цитат</span></div>
             <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-confidence-medium)"></span><span class="palette-name">--color-confidence-medium</span><span class="palette-desc">2 цитаты</span></div>
             <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-confidence-low)"></span><span class="palette-name">--color-confidence-low</span><span class="palette-desc">1 цитата</span></div>
+          </div>
+
+          <h3 class="palette-group-title">Chart — качественная шкала серий графика</h3>
+          <p class="text-muted mb-2" style="max-width: 720px; font-size: var(--fs-sm);">
+            Ступени разведены по тону и цветности, а не по светлоте: на графике серия «весит»
+            насыщенностью. Первая ступень — <strong>алиас на <code>--color-accent</code></strong>,
+            поэтому её свотч <strong>меняется при переключении бренда</strong>, а три остальные —
+            нет: сравните ряд в VEZA, Уралэлектро и HEMAH переключателем в шапке. Цвет здесь не
+            единственный носитель — <a href="#chart">chart</a> добавляет к каждой серии свой штрих
+            линии и свою форму маркера.
+          </p>
+          <div class="palette-grid">
+            <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-chart-1)"></span><span class="palette-name">--color-chart-1</span><span class="palette-desc">алиас --color-accent — следует за брендом</span></div>
+            <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-chart-2)"></span><span class="palette-name">--color-chart-2</span><span class="palette-desc">amber, тон 23° — постоянная</span></div>
+            <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-chart-3)"></span><span class="palette-name">--color-chart-3</span><span class="palette-desc">magenta, тон 311° — постоянная</span></div>
+            <div class="palette-swatch"><span class="palette-chip" style="background: var(--color-chart-4)"></span><span class="palette-name">--color-chart-4</span><span class="palette-desc">zinc — нейтраль, вспомогательная серия</span></div>
           </div>
 
           <h3 class="palette-group-title">Brand — корпоративные цвета (из официальных брендбуков)</h3>
@@ -442,17 +476,17 @@
               </div>
             </div>
 
-            <!-- ===== Уралэлектро brand card (брендбук 2025) ===== -->
+            <!-- ===== Уралэлектро brand card ===== -->
             <div class="brand-card">
               <h4 class="brand-card__title">Уралэлектро</h4>
-              <div class="brand-card__sub">Графитово-синий RAL 5008 (брендбук 2025) + Wadik / NT Somic.</div>
+              <div class="brand-card__sub">Патина RAL 6026 + Wadik / NT Somic.</div>
 
               <div class="brand-swatch">
                 <span class="brand-swatch__chip" style="background: var(--brand-uralelectro)"></span>
                 <div class="brand-swatch__info">
                   <span class="brand-swatch__role">PRIMARY · --brand-uralelectro</span>
-                  <span class="brand-swatch__name">#374A51 · RGB 55 74 81 · RAL 5008</span>
-                  <span class="brand-swatch__codes">CMYK 78 / 50 / 45 / 54</span>
+                  <span class="brand-swatch__name">#136B5C · RGB 19 107 92 · RAL 6026</span>
+                  <span class="brand-swatch__codes">белый на нём 6.39:1 — AA</span>
                 </div>
               </div>
 
@@ -460,7 +494,7 @@
                 <span class="brand-swatch__chip" style="background: var(--brand-uralelectro-dark)"></span>
                 <div class="brand-swatch__info">
                   <span class="brand-swatch__role">DARK · --brand-uralelectro-dark</span>
-                  <span class="brand-swatch__name">#28363B · производный тёмный</span>
+                  <span class="brand-swatch__name">#0F5849 · производный тёмный</span>
                   <span class="brand-swatch__codes">hover / active состояния</span>
                 </div>
               </div>
@@ -469,14 +503,14 @@
                 <span class="brand-swatch__chip" style="background: var(--brand-uralelectro-light)"></span>
                 <div class="brand-swatch__info">
                   <span class="brand-swatch__role">LIGHT · --brand-uralelectro-light</span>
-                  <span class="brand-swatch__name">#5C757F · производный светлый</span>
-                  <span class="brand-swatch__codes">tints / secondary-блоки</span>
+                  <span class="brand-swatch__name">#217F6C · производный светлый</span>
+                  <span class="brand-swatch__codes">info / tints / secondary-блоки</span>
                 </div>
               </div>
 
               <div class="brand-header-demo" style="background: var(--brand-uralelectro); color: var(--brand-uralelectro-text);">
                 <div style="font-weight: var(--fw-bold); font-size: var(--fs-md); letter-spacing: 0.04em;">УРАЛ ЭЛЕКТРО</div>
-                <div style="font-size: var(--fs-xs); margin-top: 2px;">CATALOG · графитово-синий RAL 5008</div>
+                <div style="font-size: var(--fs-xs); margin-top: 2px;">CATALOG · патина RAL 6026</div>
               </div>
             </div>
 
@@ -3055,7 +3089,7 @@
           <h2 class="font-display" style="margin: 0 0 var(--space-2);">ШРИФТЫ WADIK</h2>
           <p style="font-weight: var(--fw-medium); margin: 0 0 var(--space-1);">Подзаголовок — NT Somic Medium</p>
           <p style="margin: 0 0 var(--space-1);">Основной текст — NT Somic Regular. Нейтральный и функциональный шрифт обеспечивает высокую читаемость больших объёмов текста.</p>
-          <p class="text-muted" style="font-size: var(--fs-xs); margin: 0;">Дисклаймер — NT Somic Regular. Базовый цвет #374A51 · RAL 5008 · CMYK 78/50/45/54.</p>
+          <p class="text-muted" style="font-size: var(--fs-xs); margin: 0;">Дисклаймер — NT Somic Regular. Базовый цвет #136B5C · RAL 6026 · RGB 19/107/92.</p>
         </div>
       </div>
 
@@ -3249,6 +3283,40 @@
               <div class="accordion__panel" id="acc-demo-3">
                 <div class="accordion__panel-inner">
                   <div class="accordion__body">Монтажные исполнения IM1001, IM1081, IM2081, IM3001, IM3081.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Без анимации высоты (<code>--plain</code>)</h3></div>
+        <div class="card-body">
+          <p class="text-muted mb-2">
+            Внутри секции таблица со своим скроллом: раскрытие через <code>0fr→1fr</code>
+            дёргалось бы. Модификатор меняет только способ раскрытия — классы, состояния и
+            <code>aria-expanded</code> у потребителя те же.
+          </p>
+          <div class="accordion accordion--plain" id="demo-accordion-plain" style="max-width: 520px;">
+            <div class="accordion__item">
+              <button type="button" class="accordion__header" id="demo-accordion-plain-header"
+                aria-expanded="false" aria-controls="demo-accordion-plain-panel">
+                Ряд мощностей серии
+                <svg class="accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="accordion__panel" id="demo-accordion-plain-panel">
+                <div class="accordion__panel-inner">
+                  <div class="accordion__body">
+                    <table class="table table--compact">
+                      <thead><tr><th>Типоразмер</th><th>Мощность, кВт</th><th>Обороты</th></tr></thead>
+                      <tbody>
+                        <tr><td>АДМ 132S4</td><td>7,5</td><td>1455</td></tr>
+                        <tr><td>АДМ 132M4</td><td>11,0</td><td>1455</td></tr>
+                        <tr><td>АДМ 160S4</td><td>15,0</td><td>1465</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
@@ -4227,6 +4295,32 @@
         </div>
       </div>
 
+      <!-- Кнопка-суффикс показа пароля: состояние несёт aria-pressed, класса нет -->
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Показ пароля</h3></div>
+        <div class="card-body">
+          <p class="text-muted mb-2">
+            Кнопка-суффикс <code>.input-password-toggle</code> меняет только представление
+            значения, поэтому её состояние несёт нативный <code>aria-pressed</code>, а не класс.
+            Иконки различаются атрибутом <code>[data-icon]</code>, переключает их CSS;
+            доступное имя кнопки при этом не меняется — иначе AT объявит смену имени вместо
+            смены состояния.
+          </p>
+          <div class="form-field" style="max-width: 360px;">
+            <label class="form-field__label" for="demo-password">Пароль</label>
+            <div class="input-group input-group--suffix">
+              <input id="demo-password" class="input" type="password" value="demo-123" autocomplete="current-password">
+              <button type="button" class="input-password-toggle" id="demo-password-toggle"
+                aria-pressed="false" aria-controls="demo-password" aria-label="Показать пароль">
+                <svg data-icon="reveal" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg data-icon="conceal" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/><path d="m3 3 18 18"/></svg>
+              </button>
+            </div>
+            <span class="form-field__unit">Показ доступен, пока политика не запрещает читать секрет</span>
+          </div>
+        </div>
+      </div>
+
       <!-- Парный контрол диапазона -->
       <div class="card mb-4">
         <div class="card-header"><h3 class="card-title">Диапазон значений</h3></div>
@@ -4720,6 +4814,34 @@
               </div>
             </article>
 
+            <article class="search-result-card" data-source="cert">
+              <div class="search-result-card__header">
+                <h3 class="search-result-card__title"><a href="#search-result-card">Сертификат соответствия ТР ТС 004/2011 на серию АДМ</a></h3>
+                <span class="search-result-card__score" title="Оценка релевантности">0,81</span>
+              </div>
+              <div class="search-result-card__snippet">
+                <p>Декларация действует до 14.03.2029; область распространения — <mark>двигатели</mark> габаритов 71–200 напряжением до 660 В.</p>
+              </div>
+              <div class="search-result-card__meta">
+                <span class="search-result-card__source-badge search-result-card__source-badge--cert">Сертификаты</span>
+                <span class="search-result-card__meta-item">PDF, 2 страницы</span>
+              </div>
+            </article>
+
+            <article class="search-result-card" data-source="ntb">
+              <div class="search-result-card__header">
+                <h3 class="search-result-card__title"><a href="#search-result-card">Асинхронные машины: расчёт нагрева обмотки статора</a></h3>
+                <span class="search-result-card__score" title="Оценка релевантности">0,76</span>
+              </div>
+              <div class="search-result-card__snippet">
+                <p>Глава 7: тепловая схема замещения, превышение температуры <mark>обмотки</mark> в режимах S1 и S3, поправка на высоту над уровнем моря.</p>
+              </div>
+              <div class="search-result-card__meta">
+                <span class="search-result-card__source-badge search-result-card__source-badge--ntb">НТБ</span>
+                <span class="search-result-card__meta-item">книга, с. 214</span>
+              </div>
+            </article>
+
             <article class="search-result-card search-result-card--skeleton" aria-hidden="true">
               <div class="search-result-card__header">
                 <h3 class="search-result-card__title">Загружается следующая карточка выдачи</h3>
@@ -4728,6 +4850,24 @@
                 <p>Текст сниппета подгружается вместе с остальной выдачей и заменяет эту заглушку.</p>
               </div>
             </article>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Пять источников шкалы в ряд</h3></div>
+        <div class="card-body">
+          <p class="text-muted mb-2">
+            Бейдж источника — текстовая метка, а не кнопка: фильтр по источнику живёт в панели
+            фасетов (<code>.chip.chip-choice</code>). Ступени идут от светлой к тёмной, тон один —
+            токены <code>--color-source-*</code> в разделе <a href="#palette">палитры</a>.
+          </p>
+          <div class="flex gap-2 flex-wrap items-center">
+            <span class="search-result-card__source-badge search-result-card__source-badge--forum">Форум</span>
+            <span class="search-result-card__source-badge search-result-card__source-badge--wiki">Вики</span>
+            <span class="search-result-card__source-badge search-result-card__source-badge--cert">Сертификаты</span>
+            <span class="search-result-card__source-badge search-result-card__source-badge--ntb">НТБ</span>
+            <span class="search-result-card__source-badge search-result-card__source-badge--catalog">Каталог</span>
           </div>
         </div>
       </div>
@@ -4795,8 +4935,9 @@
         Фиксированная верхняя полоса публичной страницы: логотип, разделы, CTA-ссылка
         (<code>.nav-link-primary</code>) и бургер для узкого экрана. Ниже 768&nbsp;px меню
         схлопывается и раскрывается кнопкой. Хлебных крошек этот компонент не содержит —
-        путь по уровням даёт <a href="#breadcrumbs">breadcrumbs</a>, а общий хром сайта-витрины —
-        <a href="#site-header">site-header</a>.
+        путь по уровням даёт <a href="#breadcrumbs">breadcrumbs</a>, общий хром сайта-витрины —
+        <a href="#site-header">site-header</a>, а оглавление внутри документа — отдельный
+        компонент <a href="#page-nav">page-nav</a>.
       </p>
 
       <div class="card mb-4">
@@ -4822,26 +4963,39 @@
         </div>
       </div>
 
+    </section>
+    <!-- </BLOCK:section-nav> -->
+
+    <!-- ===== Page Nav Section ===== -->
+    <!-- [BLOCK:section-page-nav] -->
+    <section id="page-nav" class="mb-4">
+      <h2 class="mb-2">Page Nav — липкое оглавление документа</h2>
+      <p class="text-muted mb-2">
+        Навигация ВНУТРИ длинного документа: боковой список разделов, текущий помечается
+        <code>.active</code> по позиции прокрутки и <code>aria-current="location"</code>.
+        Компонент вынесен из легаси-файла <code>nav.css</code> в собственный
+        <code>styles/components/page-nav.css</code> без изменения имён и поведения:
+        полоса разделов сайта — это <a href="#nav">nav</a>, путь по уровням иерархии —
+        <a href="#breadcrumbs">breadcrumbs</a>, а вертикальное меню разделов приложения —
+        <a href="#sidebar">sidebar</a>.
+      </p>
+
       <div class="card mb-4">
-        <div class="card-header"><h3 class="card-title">Липкое оглавление страницы (<code>.page-nav</code>)</h3></div>
+        <div class="card-header"><h3 class="card-title">Оглавление длинной страницы</h3></div>
         <div class="card-body">
-          <p class="text-muted mb-2">
-            Боковой список разделов длинной страницы; текущий раздел помечается
-            <code>.active</code> по позиции прокрутки и <code>aria-current="location"</code>.
-          </p>
           <div class="demo-frame">
             <nav class="page-nav" aria-label="Разделы страницы">
-              <a class="page-nav-link active" href="#nav" aria-current="location">Назначение</a>
-              <a class="page-nav-link" href="#nav">Характеристики</a>
-              <a class="page-nav-link" href="#nav">Габариты</a>
-              <a class="page-nav-link" href="#nav">Документация</a>
+              <a class="page-nav-link active" href="#page-nav" aria-current="location">Назначение</a>
+              <a class="page-nav-link" href="#page-nav">Характеристики</a>
+              <a class="page-nav-link" href="#page-nav">Габариты</a>
+              <a class="page-nav-link" href="#page-nav">Документация</a>
             </nav>
             <p class="demo-frame__body">Оглавление держится у правого края и не уезжает с прокруткой.</p>
           </div>
         </div>
       </div>
     </section>
-    <!-- </BLOCK:section-nav> -->
+    <!-- </BLOCK:section-page-nav> -->
 
     <!-- ===== Footer Section ===== -->
     <!-- [BLOCK:section-footer] -->
@@ -5220,6 +5374,777 @@
       </div>
     </section>
     <!-- </BLOCK:section-sidebar> -->
+
+    <!-- ===== Doc Prose Section ===== -->
+    <!-- [BLOCK:section-doc-prose] -->
+    <section id="doc-prose" class="mb-4">
+      <h2 class="mb-2">Doc Prose — типографика длинного документа</h2>
+      <p class="text-muted mb-2">
+        Оформление контента, который собран не нами: markdown-отчёт, ответ модели, справочная
+        статья. Компонент задаёт меру строки и вертикальный ритм, но <em>не</em> переопределяет
+        кегли заголовков — они приходят из <code>base/reset.css</code>. Внутри живут широкая
+        таблица со своим скроллом, блок кода и выключная формула с кнопкой копирования, а также
+        сноски <a href="#cite-ref">cite-ref</a>. Образцы самой типографической шкалы — это
+        <a href="#typography">typography</a>, а строка-шифр с расшифровкой —
+        <a href="#code-panel">code-panel</a>.
+      </p>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Документ целиком</h3></div>
+        <div class="card-body">
+          <article class="doc-prose" id="demo-doc-prose">
+            <h2>Замена двигателя на линии гранулирования</h2>
+            <p class="doc-prose__lead">
+              Отчёт по замещению импортного двигателя Siemens 1LE1 отечественной серией АДМ:
+              что проверено, чем подтверждено и какие ограничения остаются.
+            </p>
+
+            <section class="doc-prose__section">
+              <h3>Исходные данные</h3>
+              <p>
+                Расчёт выполнен для продолжительного режима S1 по
+                ГОСТ IEC 60034-1<a class="cite-ref" href="#demo-doc-src-1" aria-label="источник 1, ГОСТ IEC 60034-1"><span class="cite-ref__n">1</span></a>
+                при температуре окружающего воздуха до 40&nbsp;°C. Номинальные данные сняты
+                с шильдика и сверены с каталогом завода<a class="cite-ref" href="#demo-doc-src-2" aria-label="источник 2, каталог АО «МЭЗ Уралэлектро»"><span class="cite-ref__n">2</span></a>.
+              </p>
+              <ul>
+                <li>Мощность на валу — 11&nbsp;кВт, обороты 1455&nbsp;об/мин.</li>
+                <li>Режим — S1, число включений в час не превышает 6.</li>
+                <li>
+                  Исполнение — IM1001, степень защиты IP55.
+                  <ul>
+                    <li>Климатическое исполнение У2.</li>
+                    <li>Класс нагревостойкости изоляции F, использование по B.</li>
+                  </ul>
+                </li>
+              </ul>
+              <blockquote>
+                Двигатель подбирается по моменту сопротивления механизма, а не по мощности
+                предшественника: одинаковая мощность при разных оборотах даёт разный момент.
+              </blockquote>
+            </section>
+
+            <section class="doc-prose__section">
+              <h3>Ряд мощностей серии</h3>
+              <p>
+                Полный ряд шире экрана, поэтому таблица прокручивается сама и получает
+                <code>tabindex</code> — иначе горизонтальный скролл недостижим с клавиатуры.
+              </p>
+              <div class="doc-prose__table-wrap table-responsive" tabindex="0" role="group" aria-label="Ряд мощностей серии АДМ">
+                <table class="table table--compact">
+                  <thead>
+                    <tr>
+                      <th>Типоразмер</th>
+                      <th>Мощность, кВт</th>
+                      <th>Обороты, об/мин</th>
+                      <th>КПД, %</th>
+                      <th>cos φ</th>
+                      <th>Масса, кг</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>АДМ 132S4</td><td>7,5</td><td>1455</td><td>87,5</td><td>0,86</td><td>68</td></tr>
+                    <tr><td>АДМ 132M4</td><td>11,0</td><td>1455</td><td>88,4</td><td>0,87</td><td>77</td></tr>
+                    <tr><td>АДМ 160S4</td><td>15,0</td><td>1465</td><td>89,4</td><td>0,87</td><td>125</td></tr>
+                    <tr><td>АДМ 160M4</td><td>18,5</td><td>1465</td><td>90,0</td><td>0,88</td><td>142</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="doc-prose__section">
+              <h3>Проверка момента</h3>
+              <p>Момент на валу считается по мощности и оборотам:</p>
+              <div class="doc-prose__math" tabindex="0" aria-label="Формула момента на валу">
+                <span id="demo-doc-math-src">M = 9550 · P / n</span>
+                <small>(1)</small>
+                <button type="button" class="doc-prose__copy" id="demo-doc-copy-math" data-doc-copy-for="demo-doc-math-src">
+                  <span role="status">Копировать</span>
+                </button>
+              </div>
+              <p>
+                Для 11&nbsp;кВт при 1455&nbsp;об/мин это <mark>72,2&nbsp;Н·м</mark> — момент
+                сопротивления гранулятора на установившемся ходу составляет 61&nbsp;Н·м,
+                запас достаточный.
+              </p>
+              <p>Параметры расчёта заданы конфигурацией стенда:</p>
+<pre class="doc-prose__code" tabindex="0" aria-label="Конфигурация расчёта"><code id="demo-doc-code">motor:
+  series: ADM
+  frame: 132M4
+  power_kw: 11.0
+  speed_rpm: 1455
+duty: S1</code><button type="button" class="doc-prose__copy" id="demo-doc-copy" data-doc-copy-for="demo-doc-code"><span role="status">Копировать</span></button></pre>
+              <figure class="doc-prose__figure">
+                <svg viewBox="0 0 320 120" role="img" aria-label="Схема установки двигателя на раме гранулятора">
+                  <rect x="12" y="34" width="120" height="52" rx="6" fill="none" stroke="currentColor" stroke-width="2"/>
+                  <rect x="132" y="52" width="34" height="16" fill="none" stroke="currentColor" stroke-width="2"/>
+                  <rect x="166" y="24" width="140" height="72" rx="6" fill="none" stroke="currentColor" stroke-width="2"/>
+                  <path d="M12 92H306" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                <figcaption class="doc-prose__caption">
+                  Рис. 1. Двигатель АДМ 132M4 и гранулятор на общей раме; муфта — упругая втулочно-пальцевая.
+                </figcaption>
+              </figure>
+            </section>
+
+            <section class="doc-prose__section">
+              <h3>Что осталось открытым</h3>
+              <p>
+                Виброиспытания по методике завода назначены на следующую неделю; протокол
+                будет приложен к отчёту. Паспорт изделия доступен
+                <a href="#doc-prose" target="_blank" rel="noopener">во внешнем каталоге</a> —
+                внешняя ссылка помечена глифом, а не только цветом.
+              </p>
+            </section>
+
+            <div class="doc-prose__footnotes">
+              <ol>
+                <li id="demo-doc-src-1" tabindex="-1">ГОСТ IEC 60034-1—2014. Машины электрические вращающиеся. Часть 1. Номинальные значения параметров и эксплуатационные характеристики.</li>
+                <li id="demo-doc-src-2" tabindex="-1">Каталог АО «МЭЗ «Уралэлектро»: асинхронные двигатели серии АДМ, редакция 2026 года.</li>
+              </ol>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Плотный вариант <code>--compact</code></h3></div>
+        <div class="card-body">
+          <div class="doc-prose doc-prose--compact" id="demo-doc-prose-compact">
+            <h3>Кратко</h3>
+            <p>АДМ 132M4 подходит по моменту и по габаритам присоединения.</p>
+            <ul>
+              <li>Запас по моменту — 18&nbsp;%.</li>
+              <li>Присоединительные размеры совпадают, рама не переделывается.</li>
+            </ul>
+            <p>Кегль в плотном варианте не меняется — сокращаются только расстояния между блоками.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- </BLOCK:section-doc-prose> -->
+
+    <!-- ===== Cite Ref Section ===== -->
+    <!-- [BLOCK:section-cite-ref] -->
+    <section id="cite-ref" class="mb-4">
+      <h2 class="mb-2">Cite Ref — сноска на источник в тексте</h2>
+      <p class="text-muted mb-2">
+        Надстрочный маркер <code>[N]</code> внутри абзаца: мелкий кегль, но площадь нажатия
+        24×24 (SC 2.5.8) — она поднята прозрачным <code>::before</code>, а не увеличением
+        шрифта. Переход по маркеру подсвечивает карточку источника
+        (<code>.search-result-card.is-flashed</code>) и переносит на неё фокус. Неинтерактивная
+        метка — это <a href="#badges">badge</a>, выбираемое значение — <a href="#chip">chip</a>.
+      </p>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Абзац со сносками и список источников</h3></div>
+        <div class="card-body">
+          <div class="doc-prose doc-prose--compact" id="demo-cite-text">
+            <p>
+              Ряд мощностей серии АДМ начинается с 0,12&nbsp;кВт<a class="cite-ref" id="demo-cite-1" href="#demo-cite-source-1" aria-expanded="false" aria-label="источник 1, каталог серии АДМ"><span class="cite-ref__n">1</span></a>,
+              предельная температура обмотки для класса F ограничена 155&nbsp;°C<a class="cite-ref" id="demo-cite-2" href="#demo-cite-source-2" aria-expanded="false" aria-label="источник 2, ГОСТ IEC 60034-1"><span class="cite-ref__n">2</span></a>,
+              а типовой запас по моменту для гранулятора инженеры завода держат в пределах
+              15–20&nbsp;%<a class="cite-ref" id="demo-cite-3" href="#demo-cite-source-3" aria-expanded="false" aria-label="источник 3, обсуждение на форуме"><span class="cite-ref__n">3</span></a>.
+            </p>
+          </div>
+
+          <div class="flex flex-col gap-2 mt-4" id="demo-cite-sources">
+            <article class="search-result-card search-result-card--compact search-result-card--compact-actions" id="demo-cite-source-1" data-source="catalog" tabindex="-1">
+              <div class="search-result-card__header">
+                <h3 class="search-result-card__title"><a href="#cite-ref">Каталог серии АДМ, редакция 2026</a></h3>
+              </div>
+              <div class="search-result-card__snippet">
+                <p>Ряд мощностей 0,12–315 кВт, число полюсов 2/4/6/8, климатические исполнения У, УХЛ, Т.</p>
+              </div>
+              <div class="search-result-card__meta">
+                <span class="search-result-card__source-badge search-result-card__source-badge--catalog">Каталог</span>
+              </div>
+            </article>
+            <article class="search-result-card search-result-card--compact search-result-card--compact-actions" id="demo-cite-source-2" data-source="wiki" tabindex="-1">
+              <div class="search-result-card__header">
+                <h3 class="search-result-card__title"><a href="#cite-ref">ГОСТ IEC 60034-1: классы нагревостойкости</a></h3>
+              </div>
+              <div class="search-result-card__snippet">
+                <p>Предельные превышения температуры обмоток для классов B, F и H и правила их применения.</p>
+              </div>
+              <div class="search-result-card__meta">
+                <span class="search-result-card__source-badge search-result-card__source-badge--wiki">Вики</span>
+              </div>
+            </article>
+            <article class="search-result-card search-result-card--compact search-result-card--compact-actions" id="demo-cite-source-3" data-source="forum" tabindex="-1">
+              <div class="search-result-card__header">
+                <h3 class="search-result-card__title"><a href="#cite-ref">Какой запас по моменту закладывать на грануляторе</a></h3>
+              </div>
+              <div class="search-result-card__snippet">
+                <p>Обсуждение: пусковой момент, инерция ротора и почему двукратный запас вреден.</p>
+              </div>
+              <div class="search-result-card__meta">
+                <span class="search-result-card__source-badge search-result-card__source-badge--forum">Форум</span>
+                <span class="search-result-card__meta-item">9 ответов</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- </BLOCK:section-cite-ref> -->
+
+    <!-- ===== Chat Thread Section ===== -->
+    <!-- [BLOCK:section-chat-thread] -->
+    <section id="chat-thread" class="mb-4">
+      <h2 class="mb-2">Chat Thread — лента диалога</h2>
+      <p class="text-muted mb-2">
+        Колонка турнов с общим вертикальным ритмом и пустой якорь конца ленты: к нему
+        прокручивает JS, и его запас снизу не даёт липкому композеру накрыть последнюю строку.
+        Разделитель «Новый вопрос» — библиотечный <a href="#divider">divider</a>, сам турн —
+        <a href="#chat-message">chat-message</a>. Хронология вех — это
+        <a href="#timeline">timeline</a>, поток машинных записей — <a href="#logs">logs</a>.
+      </p>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Три турна и разделитель</h3></div>
+        <div class="card-body">
+          <div class="chat-thread" id="demo-chat-thread" role="log" aria-label="Диалог с ассистентом">
+            <div class="chat-thread__turn">
+              <article class="chat-message chat-message--user">
+                <div class="chat-message__bubble">Чем заменить Siemens 1LE1 11 кВт на линии гранулирования?</div>
+                <div class="chat-message__meta">Вы · 14:02</div>
+              </article>
+            </div>
+            <div class="chat-thread__turn">
+              <article class="chat-message chat-message--assistant">
+                <div class="chat-message__row">
+                  <span class="avatar avatar-sm avatar-initials chat-message__avatar" aria-hidden="true">ИИ</span>
+                  <div class="chat-message__bubble">
+                    <div class="chat-message__meta">
+                      <span class="badge badge-secondary">Кратко</span>
+                      <span class="badge badge-confidence-high">Уверенность: высокая</span>
+                      <span>14:02</span>
+                    </div>
+                    <div class="chat-message__body">
+                      Прямой аналог — АДМ 132M4: 11 кВт, 1455 об/мин, IM1001, IP55.
+                      Присоединительные размеры совпадают, раму переделывать не нужно.
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <div class="divider"><span class="divider-text">Новый вопрос</span></div>
+            <div class="chat-thread__turn">
+              <article class="chat-message chat-message--user">
+                <div class="chat-message__bubble">А по моменту запас какой получается?</div>
+                <div class="chat-message__meta">Вы · 14:05</div>
+              </article>
+            </div>
+            <div class="chat-thread__anchor" id="demo-chat-anchor" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- </BLOCK:section-chat-thread> -->
+
+    <!-- ===== Chat Message Section ===== -->
+    <!-- [BLOCK:section-chat-message] -->
+    <section id="chat-message" class="mb-4">
+      <h2 class="mb-2">Chat Message — турн диалога и каретка стриминга</h2>
+      <p class="text-muted mb-2">
+        Реплика пользователя — пузырь, ответ ассистента — строка во всю колонку с аватаром,
+        метаполосой и рядом действий. Тело ответа отдано <a href="#doc-prose">doc-prose</a>,
+        бейджи и кнопки — библиотечные. Каретка <em>не мигает</em>: бесконечная анимация в поле
+        чтения провалила бы гейт частоты, а под <code>prefers-reduced-motion</code> она замирала
+        бы в произвольной фазе. Состояние «идёт генерация» несёт отдельная live-область.
+      </p>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Ответ ассистента: стрим, остановка, действия</h3></div>
+        <div class="card-body">
+          <div class="flex gap-2 flex-wrap mb-4">
+            <button type="button" class="btn btn-primary btn-sm" id="demo-chat-stream-start" data-chat-stream="demo-chat-answer">Запустить стрим</button>
+            <button type="button" class="btn btn-outline btn-sm" id="demo-chat-stream-stop" data-chat-stop="demo-chat-answer">Остановить</button>
+          </div>
+
+          <article class="chat-message chat-message--assistant" id="demo-chat-answer">
+            <div class="chat-message__row">
+              <span class="avatar avatar-sm avatar-initials chat-message__avatar" aria-hidden="true">ИИ</span>
+              <div class="chat-message__bubble">
+                <div class="chat-message__meta">
+                  <span class="badge badge-secondary">Развёрнутый</span>
+                  <span class="badge badge-confidence-medium">Уверенность: средняя</span>
+                  <!-- Место бейджа фазы. Пустой контейнер, а не .badge[hidden]:
+                       .badge объявляет display: inline-flex и перебивает штатное
+                       display: none атрибута hidden — бейдж остался бы виден -->
+                  <span data-chat-phase></span>
+                  <span>14:06</span>
+                </div>
+                <div class="chat-message__body">
+                  <div class="doc-prose doc-prose--compact">
+                    <p><span data-chat-text>Момент на валу при 11 кВт и 1455 об/мин — 72,2 Н·м.</span><span class="chat-message__cursor" aria-hidden="true"></span></p>
+                  </div>
+                </div>
+                <p class="sr-only" role="status" data-chat-status></p>
+                <div class="chat-message__actions">
+                  <button type="button" class="btn btn-ghost btn-sm">Копировать</button>
+                  <button type="button" class="btn btn-ghost btn-sm" aria-pressed="false">Полезно</button>
+                  <button type="button" class="btn btn-ghost btn-sm">Повторить</button>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Реплика пользователя и ошибка турна</h3></div>
+        <div class="card-body">
+          <article class="chat-message chat-message--user mb-4">
+            <div class="chat-message__bubble">Покажи ряд мощностей серии АДМ от 7,5 до 18,5 кВт.</div>
+            <div class="chat-message__meta">Вы · 14:07</div>
+          </article>
+          <article class="chat-message chat-message--assistant">
+            <div class="chat-message__row">
+              <span class="avatar avatar-sm avatar-initials chat-message__avatar" aria-hidden="true">ИИ</span>
+              <div class="chat-message__bubble">
+                <div class="chat-message__meta"><span>14:07</span></div>
+                <div class="chat-message__error">
+                  <div class="alert alert-error" role="alert">
+                    <div class="alert-content">
+                      <div class="alert-title">Каталог не ответил</div>
+                      Источник недоступен, ответ собрать не удалось. Попробуйте повторить запрос.
+                    </div>
+                  </div>
+                </div>
+                <div class="chat-message__actions">
+                  <button type="button" class="btn btn-ghost btn-sm">Повторить</button>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+    <!-- </BLOCK:section-chat-message> -->
+
+    <style>
+      /* [CONFIG:demo-chat] Подмакетник ленты: рамка прокручивается сама, поэтому
+         липкий композер прилипает к её низу, а не к низу окна. Приём тот же, что
+         у .demo-frame (transform создаёт containing block), плюс собственный
+         скроллпорт вместо overflow: hidden. Стили демонстрационные. */
+      .demo-chat {
+        max-height: 340px;
+        overflow-y: auto;
+        padding: var(--space-4);
+      }
+      /* [CONFIG:demo-coach] Подмакетник тура: цели подсветки и панель шага обязаны
+         остаться внутри карточки, поэтому кадру нужна высота под панель. */
+      .demo-coach { min-height: 400px; }
+      .demo-coach .demo-frame__body {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: var(--space-3);
+      }
+      /* [CONFIG:demo-launcher] Кадр мобильного листа лаунчера: лист занимает низ
+         кадра, а не окна. */
+      .demo-launcher { min-height: 420px; }
+    </style>
+
+    <!-- ===== Chat Composer Section ===== -->
+    <!-- [BLOCK:section-chat-composer] -->
+    <section id="chat-composer" class="mb-4">
+      <h2 class="mb-2">Chat Composer — форма ввода реплики</h2>
+      <p class="text-muted mb-2">
+        Многострочное поле, тулбар режимов, счётчик символов и подпись клавиатурного контракта.
+        «Отправить» и «Стоп» лежат в одной ячейке сетки и подменяются кросс-фейдом — ширина
+        действия зафиксирована, раскладка при подмене не двигается. Кольцо фокуса рисуется
+        на поле, а не на всей карточке. Однострочный поиск — это <a href="#search">search</a>,
+        обычное поле формы — <a href="#inputs">inputs</a>.
+      </p>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Поле, тулбар и взаимозаменяемые действия</h3></div>
+        <div class="card-body">
+          <form class="chat-composer" id="demo-chat-composer" onsubmit="return false;">
+            <label class="form-field__label" for="demo-composer-field">Вопрос ассистенту</label>
+            <textarea class="textarea chat-composer__field" id="demo-composer-field" rows="2"
+              maxlength="600" data-counter="demo-composer-counter"
+              aria-describedby="demo-composer-hint demo-composer-counter"
+              placeholder="Чем заменить Siemens 1LE1 11 кВт?"></textarea>
+            <div class="chat-composer__actions">
+              <button type="button" class="btn btn-primary" data-composer-action="send" data-composer-for="demo-chat-composer">Отправить</button>
+              <button type="button" class="btn btn-danger" data-composer-action="stop" data-composer-for="demo-chat-composer">Стоп</button>
+            </div>
+            <div class="chat-composer__toolbar" data-chip-multi>
+              <button type="button" class="chip chip-choice is-active" data-value="Кратко" aria-pressed="true">Кратко</button>
+              <button type="button" class="chip chip-choice" data-value="Развёрнуто" aria-pressed="false">Развёрнуто</button>
+              <button type="button" class="chip chip-choice" data-value="С источниками" aria-pressed="false">С источниками</button>
+            </div>
+            <span class="chat-composer__hint" id="demo-composer-hint">Enter — отправить, Shift+Enter — новая строка</span>
+            <span class="form-field__counter chat-composer__counter" id="demo-composer-counter" aria-live="polite">0 / 600</span>
+          </form>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Липкий вариант <code>--sticky</code> под лентой</h3></div>
+        <div class="card-body">
+          <div class="demo-frame demo-chat">
+            <div class="chat-thread" role="log" aria-label="Демо-лента диалога">
+              <div class="chat-thread__turn">
+                <article class="chat-message chat-message--user">
+                  <div class="chat-message__bubble">Какой запас по моменту закладывать?</div>
+                </article>
+              </div>
+              <div class="chat-thread__turn">
+                <article class="chat-message chat-message--assistant">
+                  <div class="chat-message__row">
+                    <span class="avatar avatar-sm avatar-initials chat-message__avatar" aria-hidden="true">ИИ</span>
+                    <div class="chat-message__bubble">
+                      <div class="chat-message__body">
+                        Для гранулятора обычно держат 15–20 %. Меньше — рискуете на пуске под
+                        загруженной матрицей, больше — двигатель постоянно недогружен, падает
+                        коэффициент мощности и растут потери в сети.
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+              <div class="chat-thread__turn">
+                <article class="chat-message chat-message--user">
+                  <div class="chat-message__bubble">А если пуск идёт под нагрузкой каждые пять минут?</div>
+                </article>
+              </div>
+              <div class="chat-thread__turn">
+                <article class="chat-message chat-message--assistant">
+                  <div class="chat-message__row">
+                    <span class="avatar avatar-sm avatar-initials chat-message__avatar" aria-hidden="true">ИИ</span>
+                    <div class="chat-message__bubble">
+                      <div class="chat-message__body">
+                        Тогда режим уже не S1, а S4: проверяйте допустимое число включений в час
+                        и момент инерции приведённой массы.
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+              <div class="chat-thread__anchor" aria-hidden="true"></div>
+            </div>
+            <form class="chat-composer chat-composer--sticky" id="demo-chat-composer-sticky" onsubmit="return false;">
+              <label class="form-field__label" for="demo-composer-sticky-field">Вопрос ассистенту</label>
+              <textarea class="textarea chat-composer__field" id="demo-composer-sticky-field" rows="1"
+                aria-describedby="demo-composer-sticky-hint" placeholder="Прокрутите ленту — форма остаётся на месте"></textarea>
+              <div class="chat-composer__actions">
+                <button type="button" class="btn btn-primary" data-composer-action="send" data-composer-for="demo-chat-composer-sticky">Отправить</button>
+                <button type="button" class="btn btn-danger" data-composer-action="stop" data-composer-for="demo-chat-composer-sticky">Стоп</button>
+              </div>
+              <span class="chat-composer__hint" id="demo-composer-sticky-hint">Край обозначен границей и тенью, а не градиентной вуалью</span>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- </BLOCK:section-chat-composer> -->
+
+    <!-- ===== Chart Section ===== -->
+    <!-- [BLOCK:section-chart] -->
+    <section id="chart" class="mb-4">
+      <h2 class="mb-2">Chart — линейный график ряда значений</h2>
+      <p class="text-muted mb-2">
+        Оси, сетка, две серии, интерактивная легенда и обязательный табличный эквивалент:
+        без таблицы ряд значений недоступен без зрения. Серии различаются не только цветом —
+        у каждой свой штрих линии и своя форма маркера. Доля одной величины — это
+        <a href="#progress">progress</a>, миниатюра тренда в плитке — <a href="#stats">stats</a>.
+      </p>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Две серии, легенда и таблица</h3></div>
+        <div class="card-body">
+          <div class="chart" id="demo-chart">
+            <figure class="chart__figure">
+              <!-- viewBox 640×360 (16:9, как aspect-ratio компонента) выбран под
+                   реальную ширину поля графика: при вдвое меньшей системе координат
+                   браузер масштабировал бы и кегль подписей осей — --fs-xs на экране
+                   превращался бы в двойной -->
+              <svg class="chart__canvas" viewBox="0 0 640 360" preserveAspectRatio="xMidYMid meet"
+                role="img" aria-labelledby="demo-chart-title demo-chart-desc">
+                <title id="demo-chart-title">Обращения к корпоративному поиску за полугодие</title>
+                <desc id="demo-chart-desc">Две серии по месяцам; те же значения приведены таблицей под графиком.</desc>
+
+                <path class="chart__grid" d="M80 20H620M80 90H620M80 160H620M80 230H620M80 300H620"/>
+                <path class="chart__axis" d="M80 20V300H620"/>
+
+                <text class="chart__axis-label" x="68" y="305" text-anchor="end">0</text>
+                <text class="chart__axis-label" x="68" y="235" text-anchor="end">25</text>
+                <text class="chart__axis-label" x="68" y="165" text-anchor="end">50</text>
+                <text class="chart__axis-label" x="68" y="95" text-anchor="end">75</text>
+                <text class="chart__axis-label" x="68" y="25" text-anchor="end">100</text>
+
+                <text class="chart__axis-label" x="80" y="330" text-anchor="middle">Янв</text>
+                <text class="chart__axis-label" x="188" y="330" text-anchor="middle">Фев</text>
+                <text class="chart__axis-label" x="296" y="330" text-anchor="middle">Мар</text>
+                <text class="chart__axis-label" x="404" y="330" text-anchor="middle">Апр</text>
+                <text class="chart__axis-label" x="512" y="330" text-anchor="middle">Май</text>
+                <text class="chart__axis-label" x="620" y="330" text-anchor="middle">Июн</text>
+
+                <path class="chart__area chart__area--s1" d="M80 188L188 146L296 104L404 118L512 62L620 34V300H80Z"/>
+                <path class="chart__line chart__line--s1" d="M80 188L188 146L296 104L404 118L512 62L620 34"/>
+                <g><circle class="chart__point chart__point--s1" cx="80" cy="188" r="5"/><circle class="chart__hit" cx="80" cy="188" r="16" tabindex="0" role="img" aria-label="Январь, 40 тысяч запросов"/></g>
+                <g><circle class="chart__point chart__point--s1" cx="188" cy="146" r="5"/><circle class="chart__hit" cx="188" cy="146" r="16" tabindex="0" role="img" aria-label="Февраль, 55 тысяч запросов"/></g>
+                <g><circle class="chart__point chart__point--s1" cx="296" cy="104" r="5"/><circle class="chart__hit" cx="296" cy="104" r="16" tabindex="0" role="img" aria-label="Март, 70 тысяч запросов"/></g>
+                <g><circle class="chart__point chart__point--s1" cx="404" cy="118" r="5"/><circle class="chart__hit" cx="404" cy="118" r="16" tabindex="0" role="img" aria-label="Апрель, 65 тысяч запросов"/></g>
+                <g><circle class="chart__point chart__point--s1" cx="512" cy="62" r="5"/><circle class="chart__hit" cx="512" cy="62" r="16" tabindex="0" role="img" aria-label="Май, 85 тысяч запросов"/></g>
+                <g><circle class="chart__point chart__point--s1" cx="620" cy="34" r="5"/><circle class="chart__hit" cx="620" cy="34" r="16" tabindex="0" role="img" aria-label="Июнь, 95 тысяч запросов"/></g>
+
+                <path class="chart__line chart__line--s2" d="M80 244L188 216L296 174L404 160L512 132L620 98"/>
+                <g><rect class="chart__point chart__point--s2" x="76" y="240" width="8" height="8"/><circle class="chart__hit" cx="80" cy="244" r="16" tabindex="0" role="img" aria-label="Январь, 20 тысяч ответов ИИ"/></g>
+                <g><rect class="chart__point chart__point--s2" x="184" y="212" width="8" height="8"/><circle class="chart__hit" cx="188" cy="216" r="16" tabindex="0" role="img" aria-label="Февраль, 30 тысяч ответов ИИ"/></g>
+                <g><rect class="chart__point chart__point--s2" x="292" y="170" width="8" height="8"/><circle class="chart__hit" cx="296" cy="174" r="16" tabindex="0" role="img" aria-label="Март, 45 тысяч ответов ИИ"/></g>
+                <g><rect class="chart__point chart__point--s2" x="400" y="156" width="8" height="8"/><circle class="chart__hit" cx="404" cy="160" r="16" tabindex="0" role="img" aria-label="Апрель, 50 тысяч ответов ИИ"/></g>
+                <g><rect class="chart__point chart__point--s2" x="508" y="128" width="8" height="8"/><circle class="chart__hit" cx="512" cy="132" r="16" tabindex="0" role="img" aria-label="Май, 60 тысяч ответов ИИ"/></g>
+                <g><rect class="chart__point chart__point--s2" x="616" y="94" width="8" height="8"/><circle class="chart__hit" cx="620" cy="98" r="16" tabindex="0" role="img" aria-label="Июнь, 72 тысячи ответов ИИ"/></g>
+              </svg>
+              <figcaption class="text-muted">
+                Обращения к корпоративному поиску и доля вопросов, закрытых ответом ассистента,
+                тыс. за месяц.
+              </figcaption>
+            </figure>
+
+            <ul class="chart__legend">
+              <li>
+                <button type="button" class="chart__legend-item" aria-pressed="true" data-chart-series="s1">
+                  <span class="chart__legend-marker chart__legend-marker--s1" aria-hidden="true"></span>
+                  Запросы
+                </button>
+              </li>
+              <li>
+                <button type="button" class="chart__legend-item" aria-pressed="true" data-chart-series="s2">
+                  <span class="chart__legend-marker chart__legend-marker--s2" aria-hidden="true"></span>
+                  Ответы ИИ
+                </button>
+              </li>
+            </ul>
+
+            <div class="chart__table">
+              <table class="table table--compact">
+                <caption class="sr-only">Табличный эквивалент графика: обращения и ответы ИИ по месяцам</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Месяц</th>
+                    <th scope="col">Запросы, тыс.</th>
+                    <th scope="col">Ответы ИИ, тыс.</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><th scope="row">Январь</th><td>40</td><td>20</td></tr>
+                  <tr><th scope="row">Февраль</th><td>55</td><td>30</td></tr>
+                  <tr><th scope="row">Март</th><td>70</td><td>45</td></tr>
+                  <tr><th scope="row">Апрель</th><td>65</td><td>50</td></tr>
+                  <tr><th scope="row">Май</th><td>85</td><td>60</td></tr>
+                  <tr><th scope="row">Июнь</th><td>95</td><td>72</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- </BLOCK:section-chart> -->
+
+    <!-- ===== App Launcher Section ===== -->
+    <!-- [BLOCK:section-app-launcher] -->
+    <section id="app-launcher" class="mb-4">
+      <h2 class="mb-2">App Launcher — лаунчер корпоративных сервисов</h2>
+      <p class="text-muted mb-2">
+        Кнопка-решётка в шапке и поповер с секциями и сеткой плиток «иконка + название +
+        описание». Escape закрывает панель и возвращает фокус на триггер; закрытая панель
+        выходит из Tab-порядка через <code>visibility</code>. Меню действий над объектом — это
+        <a href="#dropdown">dropdown</a>, личное меню — <a href="#user-menu">user-menu</a>.
+      </p>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Триггер и поповер с двумя секциями</h3></div>
+        <div class="card-body" style="min-height: 360px;">
+          <!-- Место лаунчера — правый край шапки: панель прижата к нему и
+               раскрывается внутрь экрана, поэтому образец повторяет ту же полосу -->
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-muted">Корпоративный поиск</span>
+            <div class="app-launcher" id="demo-app-launcher">
+            <button type="button" class="app-launcher__trigger" id="demo-app-launcher-trigger"
+              aria-expanded="false" aria-controls="demo-app-launcher-popover" aria-label="Сервисы компании">
+              <svg class="app-launcher__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <rect x="3" y="3" width="5" height="5" rx="1"/><rect x="9.5" y="3" width="5" height="5" rx="1"/><rect x="16" y="3" width="5" height="5" rx="1"/>
+                <rect x="3" y="9.5" width="5" height="5" rx="1"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/><rect x="16" y="9.5" width="5" height="5" rx="1"/>
+                <rect x="3" y="16" width="5" height="5" rx="1"/><rect x="9.5" y="16" width="5" height="5" rx="1"/><rect x="16" y="16" width="5" height="5" rx="1"/>
+              </svg>
+            </button>
+            <div class="app-launcher__popover" id="demo-app-launcher-popover">
+              <div class="app-launcher__section">
+                <h3 class="app-launcher__section-title" id="demo-launcher-common">Общие сервисы</h3>
+                <ul class="app-launcher__grid" aria-labelledby="demo-launcher-common">
+                  <li>
+                    <a class="app-launcher__item" href="#app-launcher">
+                      <span class="app-launcher__item-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v14H4z"/><path d="M8 9h8"/><path d="M8 13h5"/></svg>
+                      </span>
+                      <span class="app-launcher__item-label">Вики</span>
+                      <span class="app-launcher__item-desc">Регламенты, инструкции и справочник по оборудованию</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="app-launcher__item" href="#app-launcher">
+                      <span class="app-launcher__item-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                      </span>
+                      <span class="app-launcher__item-label">Форум</span>
+                      <span class="app-launcher__item-desc">Обсуждения инженеров: отказы, наладка, замещение импорта</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="app-launcher__item" href="#app-launcher" target="_blank" rel="noopener">
+                      <span class="app-launcher__item-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h18"/><path d="M3 12h18"/><path d="M3 17h18"/></svg>
+                      </span>
+                      <span class="app-launcher__item-label">
+                        Каталог
+                        <svg class="app-launcher__external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7"/><path d="M9 7h8v8"/></svg>
+                        <span class="sr-only">— откроется в новой вкладке</span>
+                      </span>
+                      <span class="app-launcher__item-desc">Двигатели, вентиляторы и пускатели с параметрами подбора</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div class="app-launcher__section">
+                <h3 class="app-launcher__section-title" id="demo-launcher-personal">Персональные</h3>
+                <ul class="app-launcher__grid" aria-labelledby="demo-launcher-personal">
+                  <li>
+                    <a class="app-launcher__item" href="#app-launcher">
+                      <span class="app-launcher__item-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v5l3 2"/><circle cx="12" cy="12" r="9"/></svg>
+                      </span>
+                      <span class="app-launcher__item-label">Мои заявки</span>
+                      <span class="app-launcher__item-desc">Опросные листы и заявки на подбор в работе</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="app-launcher__item" href="#app-launcher">
+                      <span class="app-launcher__item-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3 2.6 5.6 6.4.8-4.7 4.3 1.3 6.3L12 17l-5.6 3 1.3-6.3L3 9.4l6.4-.8z"/></svg>
+                      </span>
+                      <span class="app-launcher__item-label">Избранное</span>
+                      <span class="app-launcher__item-desc">Сохранённые поиски и закреплённые документы</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            </div>
+          </div>
+          <p class="text-muted mt-2">
+            Нажмите решётку: панель раскрывается от кнопки (<code>--transform-origin</code>
+            ставит JS), Escape закрывает и возвращает фокус.
+          </p>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Мобильный нижний лист <code>--sheet</code></h3></div>
+        <div class="card-body">
+          <p class="text-muted mb-2">
+            Вариант выбирает вёрстка по брейкпоинту. Геометрия листа и полоска-захват взяты
+            у <a href="#drawer">drawer</a> — собственного листа компонент не изобретает.
+          </p>
+          <div class="demo-frame demo-launcher">
+            <div class="app-launcher app-launcher--sheet" id="demo-app-launcher-sheet">
+              <button type="button" class="app-launcher__trigger" aria-expanded="false"
+                aria-controls="demo-app-launcher-sheet-popover" aria-label="Сервисы компании (лист)">
+                <svg class="app-launcher__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <rect x="3" y="3" width="5" height="5" rx="1"/><rect x="9.5" y="3" width="5" height="5" rx="1"/><rect x="16" y="3" width="5" height="5" rx="1"/>
+                  <rect x="3" y="9.5" width="5" height="5" rx="1"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/><rect x="16" y="9.5" width="5" height="5" rx="1"/>
+                  <rect x="3" y="16" width="5" height="5" rx="1"/><rect x="9.5" y="16" width="5" height="5" rx="1"/><rect x="16" y="16" width="5" height="5" rx="1"/>
+                </svg>
+              </button>
+              <div class="app-launcher__popover" id="demo-app-launcher-sheet-popover">
+                <div class="drawer__grabber" aria-hidden="true"></div>
+                <div class="app-launcher__section">
+                  <h3 class="app-launcher__section-title" id="demo-launcher-sheet-common">Общие сервисы</h3>
+                  <ul class="app-launcher__grid" aria-labelledby="demo-launcher-sheet-common">
+                    <li>
+                      <a class="app-launcher__item" href="#app-launcher">
+                        <span class="app-launcher__item-icon" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v14H4z"/><path d="M8 9h8"/><path d="M8 13h5"/></svg>
+                        </span>
+                        <span class="app-launcher__item-label">Вики</span>
+                        <span class="app-launcher__item-desc">Регламенты и инструкции</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="app-launcher__item" href="#app-launcher">
+                        <span class="app-launcher__item-icon" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h18"/><path d="M3 12h18"/><path d="M3 17h18"/></svg>
+                        </span>
+                        <span class="app-launcher__item-label">Каталог</span>
+                        <span class="app-launcher__item-desc">Двигатели и вентиляторы</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <p class="demo-frame__body">Лист принадлежит низу кадра: он приходит снизу и уходит вниз тем же путём.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- </BLOCK:section-app-launcher> -->
+
+    <!-- ===== Coach Mark Section ===== -->
+    <!-- [BLOCK:section-coach-mark] -->
+    <section id="coach-mark" class="mb-4">
+      <h2 class="mb-2">Coach Mark — обучающая подсветка элемента</h2>
+      <p class="text-muted mb-2">
+        Шаг онбординг-тура: затемнение с вырезом вокруг цели, рамка спотлайта и панель с
+        заголовком, пояснением, счётчиком шагов и кнопками. Геометрия спотлайта не
+        анимируется — <code>top/left/width/height</code> ставятся мгновенно четырьмя
+        переменными от JS, меняется только непрозрачность панели. Блокирующее решение — это
+        <a href="#modal">modal</a>, пояснение по наведению — <a href="#tooltip">tooltip</a>.
+      </p>
+
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Тур из трёх шагов</h3></div>
+        <div class="card-body">
+          <div class="demo-frame demo-coach" id="demo-coach-frame">
+            <div class="demo-frame__body">
+              <button type="button" class="btn btn-outline btn-sm" id="demo-coach-target-1"
+                data-coach-step="1" data-coach-title="Режимы ответа"
+                data-coach-text="Здесь выбирается, насколько подробным будет ответ: кратко, развёрнуто или со списком источников.">Режимы ответа</button>
+              <button type="button" class="btn btn-outline btn-sm" id="demo-coach-target-2"
+                data-coach-step="2" data-coach-title="Фильтры источников"
+                data-coach-text="Поиск можно ограничить вики, форумом или каталогом — фильтр сохраняется между запросами.">Фильтры источников</button>
+              <button type="button" class="btn btn-outline btn-sm" id="demo-coach-target-3"
+                data-coach-step="3" data-coach-title="История запросов"
+                data-coach-text="Последние вопросы и сохранённые поиски лежат здесь; историю можно очистить целиком.">История запросов</button>
+              <button type="button" class="btn btn-primary btn-sm" id="demo-coach-start" data-coach-open="demo-coach-mark">Показать тур</button>
+            </div>
+
+            <div class="coach-mark" id="demo-coach-mark" data-coach-scope="demo-coach-frame">
+              <div class="coach-mark__scrim"></div>
+              <div class="coach-mark__spot" aria-hidden="true"></div>
+              <div class="coach-mark__panel" role="dialog" aria-modal="true" aria-labelledby="demo-coach-title">
+                <h4 class="coach-mark__title" id="demo-coach-title">Режимы ответа</h4>
+                <p class="coach-mark__text">Здесь выбирается, насколько подробным будет ответ.</p>
+                <div class="coach-mark__dots" id="demo-coach-dots"></div>
+                <div class="coach-mark__actions">
+                  <button type="button" class="btn btn-ghost btn-sm" data-coach-skip>Пропустить</button>
+                  <button type="button" class="btn btn-outline btn-sm" data-coach-prev>Назад</button>
+                  <button type="button" class="btn btn-primary btn-sm" data-coach-next>Далее</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- </BLOCK:section-coach-mark> -->
 
       </div><!-- /.container -->
     </main><!-- /.app-content -->

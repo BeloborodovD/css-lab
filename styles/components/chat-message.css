@@ -1,0 +1,204 @@
+/* [BLOCK:component.chat-message]
+ * Турн диалога: реплика пользователя пузырём и ответ ассистента строкой с
+ * аватаром, метаполосой, телом и рядом действий. Сюда же сведена каретка
+ * стриминга — отдельного компонента она не образует.
+ * Случай применения: лента .chat-thread, где нужно различать «своё» и «чужое»
+ * сообщение, показать метаданные ответа и отметку «печатается».
+ * Модуль: css-lab/components. Зависимости: base/variables.css, base/motion.css.
+ * Композиции: __avatar — .avatar.avatar-sm.avatar-initials; __meta — полоса
+ * библиотечных .badge (в т.ч. .badge-confidence-* и .badge-dot); __body
+ * содержит .doc-prose; __error — .alert.alert-error; __actions — .btn.btn-sm.
+ * Своей типографики внутри ответа и своей плашки ошибки компонент НЕ заводит.
+ *
+ * ИМЕНОВАНИЕ. --user / --assistant — ВАРИАНТЫ: роль известна автору разметки в
+ * момент вывода турна и не меняется. is-streaming / is-stopped — СОСТОЯНИЯ,
+ * их ставит и снимает JS по ходу генерации.
+ *
+ * ДВИЖЕНИЕ. PURPOSE: state indication. Единственное движение файла — показ и
+ * скрытие каретки переходом opacity (вход --duration-tooltip, выход
+ * --duration-exit, обе стороны var(--ease-out)), не @keyframes: состояние
+ * снимается в произвольный момент и обязано прерываться (ui-motion-craft §4).
+ * Геометрия не участвует, поэтому собственного блока prefers-reduced-motion
+ * компоненту не нужно: кроссфейд — ровно то, что смягчение оставляет.
+ * Появление турна и смена бейджей не анимируются.
+ */
+
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
+/* ====================== Турн ====================== */
+.chat-message {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* ====================== Строка «аватар + содержимое» ====================== */
+.chat-message__row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+/* min-width: 0 обязателен: без него длинная строка кода или широкая таблица
+   внутри .doc-prose распирает флекс-строку и ломает колонку ленты */
+.chat-message__row > :not(.chat-message__avatar) {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+/* ====================== Аватар ======================
+   Композиция .avatar.avatar-sm.avatar-initials. Литеральный кегль 11px из
+   прототипа не переносится: ниже --fs-xs шкала не опускается */
+.chat-message__avatar {
+  flex: none;
+  font-size: var(--fs-xs);
+}
+
+/* ====================== Метаполоса ======================
+   Полоса библиотечных бейджей: режим, уверенность, время, фаза. Компонент
+   задаёт перенос и порядок, но НЕ выбирает, что показывать, и собственных
+   правил бейджа не пишет */
+.chat-message__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-block-end: var(--space-2);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+/* ====================== Тело ======================
+   Содержит .doc-prose — своей типографики здесь нет. Указанные величины нужны
+   для случая, когда тело держит обычный текст без документа */
+.chat-message__body {
+  font-size: var(--fs-base);
+  line-height: var(--lh-relaxed);
+  color: var(--color-text);
+  overflow-wrap: break-word;
+}
+.chat-message__body > *:last-child {
+  margin-block-end: 0;
+}
+
+/* ====================== Каретка стриминга ======================
+   Сплошная акцентная планка в конце последней строки. МИГАНИЯ НЕТ И НЕ БУДЕТ:
+   мигающий курсор — infinite-анимация в поле чтения при частоте «постоянно»
+   (гейт ui-motion-craft §0 провален), а под prefers-reduced-motion она
+   замирала бы в произвольной фазе — в том числе невидимой.
+   Каретка декоративна: разметка обязана дать ей aria-hidden="true", а факт
+   «идёт генерация» несёт отдельная live-область, а не эта планка. */
+.chat-message__cursor {
+  display: inline-block;
+  inline-size: calc(2 * var(--space-px));
+  block-size: 1em;
+  margin-inline-start: var(--space-1);
+  vertical-align: text-bottom;
+  background: var(--color-accent);
+  border-radius: var(--radius-xs);
+  /* Скрыта по умолчанию через visibility + opacity, не display: элемент
+     остаётся в потоке, поэтому появление каретки не сдвигает последнюю строку */
+  visibility: hidden;
+  opacity: 0;
+  /* PURPOSE: state indication — свойства перечислены поимённо (RULES §5).
+     Базовое состояние = снятие каретки, поэтому здесь стоит выходной токен:
+     уход быстрее прихода (асимметрия таймингов, RULES §2) */
+  transition:
+    opacity var(--duration-exit) var(--ease-out),
+    visibility var(--duration-exit) var(--ease-out);
+}
+
+/* ====================== Состояние is-streaming ======================
+   Ставит JS на время генерации ответа, снимает по её завершении */
+.chat-message.is-streaming .chat-message__cursor {
+  visibility: visible;
+  opacity: 1;
+  /* Вход каретки — тир «мелкий индикатор» (--duration-tooltip, 150мс);
+     выход остаётся на --duration-exit из базового правила. Одинаковая
+     длительность в обе стороны была бы симметрией там, где её быть не должно */
+  transition:
+    opacity var(--duration-tooltip) var(--ease-out),
+    visibility var(--duration-tooltip) var(--ease-out);
+}
+
+/* ====================== Состояние is-stopped ======================
+   Генерация прервана пользователем: ответ неполон. Каретка снимается явно —
+   is-stopped может прийти раньше, чем JS уберёт is-streaming.
+   Обрыв обозначен штриховой чертой под телом; слово «остановлено» несёт бейдж
+   в __meta — цвет и линия не единственные носители смысла (SC 1.4.1) */
+.chat-message.is-stopped .chat-message__cursor {
+  visibility: hidden;
+  opacity: 0;
+}
+.chat-message.is-stopped .chat-message__body::after {
+  content: "";
+  display: block;
+  margin-block-start: var(--space-2);
+  border-block-start: var(--border-w) dashed var(--color-border-subtle);
+}
+
+/* ====================== Ряд действий ======================
+   Копировать, оценить, повторить — библиотечные .btn.btn-ghost.btn-sm.
+   Своих кнопок компонент не рисует */
+.chat-message__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-block-start: var(--space-1);
+}
+
+/* ====================== Ошибка турна ======================
+   Композиция .alert.alert-error — собственной плашки нет, только место */
+.chat-message__error {
+  margin-block-start: var(--space-3);
+}
+
+/* ====================== Вариант --user ======================
+   Реплика пользователя: пузырь, прижатый к концу строки. Ширина ограничена
+   долей колонки — пузырь во всю меру строки перестаёт читаться как реплика */
+.chat-message--user {
+  align-items: flex-end;
+}
+.chat-message--user .chat-message__bubble {
+  max-width: 80%;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface-sunken);
+  border-radius: var(--radius-lg);
+  /* Угол у автора реплики — «хвост» пузыря формой, а не картинкой */
+  border-end-end-radius: var(--radius-xs);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-relaxed);
+  color: var(--color-text);
+  overflow-wrap: break-word;
+}
+.chat-message--user .chat-message__meta,
+.chat-message--user .chat-message__actions {
+  justify-content: flex-end;
+}
+
+/* ====================== Вариант --assistant ======================
+   Ответ ассистента: не пузырь, а строка во всю колонку — документ обязан
+   получить полную меру строки .doc-prose */
+.chat-message--assistant .chat-message__bubble {
+  max-width: none;
+  padding: 0;
+  background: none;
+  border-radius: 0;
+}
+
+/* ====================== Узкий экран ====================== */
+@media (max-width: 767px) {
+  .chat-message__row {
+    gap: var(--space-2);
+  }
+  .chat-message--user .chat-message__bubble {
+    /* На 375px доля 80% оставляет полторы буквы на строке */
+    max-width: 92%;
+    padding: var(--space-2) var(--space-3);
+  }
+}
+
+} /* @layer components */
+/* </BLOCK:component.chat-message> */

@@ -172,6 +172,52 @@
   color: var(--color-text);
 }
 
+/* ====================== Password toggle ======================
+   Кнопка-суффикс «показать пароль» внутри .input-group--suffix: правый
+   внутренний отступ поля уже задан модификатором (--space-10), собственного
+   правила полю здесь не пишем.
+   Состояние — нативное aria-pressed (RULES §2.3.3), класса не заводим: очистка
+   меняет ЗНАЧЕНИЕ поля и состояния не имеет, показ меняет только представление
+   и обязан о нём сообщать.
+   24px — размер мелкой цели нажатия WCAG SC 2.5.8 (§5.3, прецедент
+   .picklist__toggle), а не величина дизайн-шкалы. */
+.input-password-toggle {
+  position: absolute;
+  right: var(--space-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  /* PURPOSE: feedback — отклик кнопки на наведение и фокус, без движения */
+  transition: background-color var(--duration-press) var(--ease-out),
+              color var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .input-password-toggle:hover {
+    background: var(--color-surface-hover);
+    color: var(--color-text);
+  }
+}
+.input-password-toggle:focus-visible {
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--shadow-focus);
+  color: var(--color-text);
+}
+/* Две иконки внутри кнопки — показывается ровно та, что соответствует текущему
+   aria-pressed. Носитель — атрибут разметки: заводить класс-состояние на
+   иконку значило бы дублировать нативное состояние кнопки */
+.input-password-toggle [data-icon="conceal"] { display: none; }
+.input-password-toggle[aria-pressed="true"] [data-icon="reveal"]  { display: none; }
+.input-password-toggle[aria-pressed="true"] [data-icon="conceal"] { display: inline-flex; }
+
 /* ====================== Select ====================== */
 .select {
   appearance: none;
@@ -364,6 +410,17 @@
     width: 36px;
     height: 36px;
     right: 52px;
+  }
+  /* Площадь нажатия растёт до крупной тач-цели, вид кнопки не меняется:
+     квадрат добавляется псевдоэлементом поверх, иконка остаётся 24px */
+  .input-password-toggle::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: var(--touch-target-min);
+    height: var(--touch-target-min);
+    transform: translate(-50%, -50%);
   }
   .checkbox,
   .radio {

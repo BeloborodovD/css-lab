@@ -16,13 +16,24 @@
   background: var(--color-surface);
   border: var(--border-w) solid var(--color-border);
   border-radius: var(--radius);
-  transition: border-color var(--duration-dropdown) var(--ease-out),
-              box-shadow var(--duration-dropdown) var(--ease-out);
 }
 
-.stat-card:hover {
-  border-color: var(--color-border-strong);
-  box-shadow: var(--shadow-sm);
+/* Отклик на наведение есть ТОЛЬКО у кликабельной плитки.
+   Раньше он висел на любой .stat-card, включая ту, что просто показывает
+   число, — ложный аффорданс: карточка обещала переход, которого нет.
+   .stat-card-interactive обязана быть настоящей ссылкой или кнопкой, кольцо
+   фокуса приходит из базового слоя.
+   PURPOSE: feedback. Тир «десятки раз в день» по гейту RULES.md §0 → отклик
+   почти незаметный: только цвет границы и тень, никакого transform. */
+.stat-card-interactive {
+  transition: border-color var(--duration-press) var(--ease-out),
+              box-shadow var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .stat-card-interactive:hover {
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-sm);
+  }
 }
 
 /* ==================== Elements ==================== */
@@ -235,13 +246,10 @@
   letter-spacing: var(--tracking-wide);
 }
 
-/* Плитка не интерактивна — отклика на наведение у неё быть не должно */
-@media (hover: hover) and (pointer: fine) {
-  .stat-card-tile:hover {
-    border-color: transparent;
-    box-shadow: none;
-  }
-}
+/* Гасить наведение у плитки больше нечего: отклик перенесён на
+   .stat-card-interactive, и некликабельная плитка его просто не получает.
+   Прежний сброс .stat-card-tile:hover удалён вместе с причиной — он бы ещё и
+   отнимал отклик у плитки, которую сделали ссылкой. */
 
 /* ==================== Progress stat ====================
    Собственной полосы у карточки нет: внутрь .stat-progress кладётся

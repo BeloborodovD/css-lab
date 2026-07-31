@@ -1,0 +1,70 @@
+/* [BLOCK:component.page-nav]
+ * Липкое оглавление длинной страницы: список ссылок на якоря разделов
+ * с подсветкой текущего. Навигация ВНУТРИ документа, не между страницами.
+ * Модуль: css-lab/components. Зависимости: base/variables.css, base/motion.css.
+ *
+ * Компонент выделен из legacy-файла components/nav.css без изменения имён и
+ * поведения: .nav описывает навигационную полосу сайта, оглавление — другой
+ * блок с другим случаем применения, и жить в одном файле с полосой не может.
+ * Активный раздел помечается aria-current="location"; класс .active ставит
+ * наблюдатель прокрутки (легаси-форма состояния, §2.4 — переименование в
+ * .is-active идёт вместе с последним потребителем в разметке и e2e).
+ */
+
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
+.page-nav {
+  position: fixed;
+  top: 50%;
+  right: var(--space-5);
+  transform: translateY(-50%);
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--space-3);
+  z-index: var(--z-sticky);
+}
+
+.page-nav-link {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  margin: 2px 0;
+  background: transparent;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-sm);
+  /* PURPOSE: state indication — ховер и смена активного раздела видны
+     десятки раз за чтение, поэтому переход почти незаметный: только цвет.
+     Свойства перечислены поимённо и точно: background-color, а НЕ шорткат
+     background — тот тянет в список ещё и background-image с -position,
+     то есть анимирует непредвиденное мимо GPU (RULES движения §5) */
+  transition: background-color var(--duration-press) var(--ease-out),
+              color var(--duration-press) var(--ease-out);
+}
+
+/* Единственное отступление от дословного переноса: ховер убран под гейт
+   указателя — на тач-устройстве он срабатывает по тапу и оставляет ссылку
+   подсвеченной так же, как активный раздел (RULES движения §6) */
+@media (hover: hover) and (pointer: fine) {
+  .page-nav-link:hover {
+    background: var(--color-surface-hover);
+    color: var(--color-text);
+  }
+}
+
+.page-nav-link.active {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-weight: var(--fw-medium);
+}
+
+/* Оглавление — экранная навигация: на бумаге ссылок на якоря не существует */
+@media print {
+  .page-nav { display: none !important; }
+}
+
+} /* @layer components */
+/* </BLOCK:component.page-nav> */

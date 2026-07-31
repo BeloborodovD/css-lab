@@ -134,52 +134,19 @@
   }
 }
 
-/* ==================== Page navigation (sticky-toc) ==================== */
-.page-nav {
-  position: fixed;
-  top: 50%;
-  right: var(--space-5);
-  transform: translateY(-50%);
-  background: var(--color-surface);
-  border: var(--border-w) solid var(--color-border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: var(--space-3);
-  z-index: var(--z-sticky);
-}
+/* Липкого оглавления страницы здесь больше нет: .page-nav / .page-nav-link
+   выделены в собственный компонент components/page-nav.css. Это другой блок с
+   другим случаем применения — навигация ВНУТРИ документа, а не между
+   страницами, — и общего с полосой сайта у него было только имя файла.
 
-.page-nav-link {
-  display: block;
-  padding: var(--space-2) var(--space-3);
-  margin: 2px 0;
-  background: transparent;
-  color: var(--color-text-secondary);
-  text-decoration: none;
-  border-radius: var(--radius-sm);
-  font-size: var(--fs-sm);
-  transition: background var(--duration-press) var(--ease-out),
-              color var(--duration-press) var(--ease-out);
-}
-
-.page-nav-link:hover {
-  background: var(--color-surface-hover);
-  color: var(--color-text);
-}
-
-.page-nav-link.active {
-  background: var(--color-accent-soft);
-  color: var(--color-accent);
-  font-weight: var(--fw-medium);
-}
-
-/* Хлебных крошек здесь нет: единственная реализация — components/breadcrumbs.css
-   (.breadcrumbs + .breadcrumb-item + .breadcrumb-separator). Прежний блок .breadcrumb
-   рисовал «/» через .breadcrumb-item::after без ограничения родителем и дублировал
-   явный разделитель на страницах каталога и даташита. */
+   Хлебных крошек здесь нет по той же причине: единственная реализация —
+   components/breadcrumbs.css (.breadcrumbs + .breadcrumb-item +
+   .breadcrumb-separator). Прежний блок .breadcrumb рисовал «/» через
+   .breadcrumb-item::after без ограничения родителем и дублировал явный
+   разделитель на страницах каталога и даташита. */
 
 @media print {
-  .nav,
-  .page-nav { display: none !important; }
+  .nav { display: none !important; }
 }
 
 } /* @layer components */

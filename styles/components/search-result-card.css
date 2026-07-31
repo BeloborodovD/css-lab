@@ -28,7 +28,11 @@
   background: var(--color-surface);
   border: var(--border-w) solid var(--color-border);
   border-radius: var(--radius);
+  /* background-color в списке — ради .is-flashed (переход к источнику по
+     цитате): подсветка обязана прерываться на каждом следующем клике,
+     поэтому это transition, а не keyframes */
   transition: border-color var(--duration-dropdown) var(--ease-out),
+              background-color var(--duration-dropdown) var(--ease-out),
               box-shadow var(--duration-dropdown) var(--ease-out),
               transform var(--duration-dropdown) var(--ease-out);
 }
@@ -58,8 +62,14 @@
   border-bottom-left-radius: var(--radius);
   background: var(--color-text-muted); /* fallback */
 }
+/* Шкала источников монохромная (zinc) и упорядоченная:
+   forum → wiki → cert → ntb → catalog. cert и ntb заняли свободные ступени
+   между wiki и catalog, нового оттенка не вводя, — иначе полоса источника
+   перестала бы читаться как одна система */
 .search-result-card[data-source="wiki"]::before    { background: var(--color-source-wiki); }
 .search-result-card[data-source="forum"]::before   { background: var(--color-source-forum); }
+.search-result-card[data-source="cert"]::before    { background: var(--color-source-cert); }
+.search-result-card[data-source="ntb"]::before     { background: var(--color-source-ntb); }
 .search-result-card[data-source="catalog"]::before { background: var(--color-source-catalog); }
 
 /* ====================== Header ====================== */
@@ -193,6 +203,14 @@
   background: var(--color-source-forum-soft);
   color: var(--color-source-forum-text);
 }
+.search-result-card__source-badge--cert {
+  background: var(--color-source-cert-soft);
+  color: var(--color-source-cert-text);
+}
+.search-result-card__source-badge--ntb {
+  background: var(--color-source-ntb-soft);
+  color: var(--color-source-ntb-text);
+}
 .search-result-card__source-badge--catalog {
   background: var(--color-source-catalog-soft);
   color: var(--color-source-catalog-text);
@@ -273,18 +291,46 @@
 .search-result-card--compact .search-result-card__actions {
   display: none;
 }
+/* Скрытие ряда действий остаётся поведением компактной карточки ПО УМОЛЧАНИЮ —
+   в узкой боковой колонке действия мешают чтению. --compact-actions
+   применяется ВМЕСТЕ с --compact и возвращает ряд там, где копирование и
+   оценка обязаны остаться (шторка «Похожее», список источников ответа);
+   типографика при этом остаётся компактной */
+.search-result-card--compact.search-result-card--compact-actions
+  .search-result-card__actions {
+  display: flex;
+}
 .search-result-card--compact[data-source]::before {
   border-top-left-radius: var(--radius-sm);
   border-bottom-left-radius: var(--radius-sm);
 }
 
-/* ====================== Modifier: --selected (active state) ====================== */
-.search-result-card--selected {
+/* ====================== Выделенная карточка ======================
+   Два написания одного вида по §2.4.2: --selected — легаси-двойник, оставлен
+   ради уже написанной разметки; is-selected — каноническое имя состояния.
+   JS ставит и снимает ТОЛЬКО is-форму: класс с «--» по определению вариант,
+   выбранный автором разметки, и меняться во времени не может. */
+.search-result-card--selected,
+.search-result-card.is-selected {
   border-color: var(--color-accent);
   background: var(--color-accent-soft);
 }
-.search-result-card--selected .search-result-card__title {
+.search-result-card--selected .search-result-card__title,
+.search-result-card.is-selected .search-result-card__title {
   color: var(--color-accent);
+}
+
+/* Подсветка карточки, к которой пользователь пришёл по цитате [N].
+   PURPOSE: feedback — подтверждает, ЧТО именно нашлось по ссылке.
+   Меняются только background и border-color, геометрия не трогается: карточка
+   стоит в потоке ленты, любой сдвиг увёл бы место чтения. Переход, а не
+   @keyframes: по цитатам кликают подряд, и подсветка обязана прерываться
+   (ui-motion-craft §4) — базовый transition блока это и обеспечивает.
+   Под prefers-reduced-motion правило остаётся: движения в нём нет, а гасить
+   подсветку целиком значило бы отнять подтверждение. */
+.search-result-card.is-flashed {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent-border);
 }
 
 /* ====================== Modifier: --skeleton (loading state) ====================== */
@@ -320,6 +366,12 @@
   }
   .search-result-card__score {
     align-self: flex-start;
+  }
+  /* Крупная тач-цель ряда действий на coarse-указателе — тот же приём, что у
+     .btn/.btn-sm/.btn-icon в base/responsive.css. Визуальный кегль действия
+     не меняется, растёт только высота цели */
+  .search-result-card__action {
+    min-height: var(--touch-target-min);
   }
 }
 

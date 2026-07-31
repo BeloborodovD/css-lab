@@ -62,6 +62,31 @@
 .badge-error   { background: var(--color-error); }
 .badge-info    { background: var(--color-info); }
 
+/* ====================== Уверенность ответа ======================
+   Степень уверенности системы в собственном результате (ответ ассистента,
+   оценка сопоставления). Мягкая заливка, текст и граница — от одного токена
+   шкалы --color-confidence-*.
+   Низкая уверенность НЕ красная: --color-confidence-low намеренно нейтральный
+   zinc-500, «низкая уверенность» — не ошибка и не предупреждение, поэтому
+   .badge-error здесь неуместен.
+   Цвет не единственный носитель: уровень обязан дублироваться словом
+   («высокая / средняя / низкая»). */
+.badge-confidence-high {
+  background: var(--color-confidence-high-soft);
+  color: var(--color-confidence-high);
+  border: var(--border-w) solid var(--color-confidence-high);
+}
+.badge-confidence-medium {
+  background: var(--color-confidence-medium-soft);
+  color: var(--color-confidence-medium);
+  border: var(--border-w) solid var(--color-confidence-medium);
+}
+.badge-confidence-low {
+  background: var(--color-confidence-low-soft);
+  color: var(--color-confidence-low);
+  border: var(--border-w) solid var(--color-confidence-low);
+}
+
 /* ====================== Точка состояния ======================
    Точка без подписи: смысл обязан дублироваться текстом рядом либо
    aria-label — цвет носителем информации быть не может. */
@@ -131,6 +156,25 @@
 [data-theme="dark"] .badge-outline {
   background: transparent;
   color: var(--color-accent);
+}
+/* Уверенность повторяется в dark по той же причине, что и .badge-outline:
+   .dark .badge (0,2,0) стоит ниже модификатора (0,1,0) и перекрасил бы
+   подпись в --color-accent-text. Токены шкалы в тёмной теме инвертированы
+   сами, поэтому пара повторяется дословно */
+.dark .badge-confidence-high,
+[data-theme="dark"] .badge-confidence-high {
+  background: var(--color-confidence-high-soft);
+  color: var(--color-confidence-high);
+}
+.dark .badge-confidence-medium,
+[data-theme="dark"] .badge-confidence-medium {
+  background: var(--color-confidence-medium-soft);
+  color: var(--color-confidence-medium);
+}
+.dark .badge-confidence-low,
+[data-theme="dark"] .badge-confidence-low {
+  background: var(--color-confidence-low-soft);
+  color: var(--color-confidence-low);
 }
 } /* @layer components */
 /* </BLOCK:component.badge> */

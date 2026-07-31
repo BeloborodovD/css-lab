@@ -1,0 +1,305 @@
+/* [BLOCK:component.chart]
+ * График ряда значений во времени: оси, сетка, до четырёх серий, интерактивная
+ * легенда, точки данных и обязательный табличный эквивалент.
+ * Модуль: css-lab/components. Зависимости: base/variables.css, base/motion.css,
+ * components/table.css (табличный эквивалент .table.table--compact),
+ * components/tooltip.css (подсказка значения), components/empty-state.css
+ * («нет данных за период»), base/utilities.css (.sr-only).
+ *
+ * Структура: .chart
+ *              > .chart__figure
+ *                  > .chart__canvas   (SVG: __grid, __axis, __axis-label,
+ *                                      __area, __line, __point, __hit)
+ *              > .chart__legend > .chart__legend-item > .chart__legend-marker
+ *              > .chart__table    (.table.table--compact)
+ * Разметку SVG собирает потребитель — здесь фиксируется контракт классов,
+ * отступы поля графика берутся из шкалы --space-*, а не из констант в JS.
+ *
+ * СЕРИЯ РАЗЛИЧАЕТСЯ ТРЕМЯ НОСИТЕЛЯМИ, и цвет — только один из них
+ * (WCAG 1.4.1, forced-colors, дальтонизм, ч/б печать):
+ *   --s1  сплошной штрих     + круглый маркер            (--color-chart-1)
+ *   --s2  длинный пунктир    + квадратный маркер         (--color-chart-2)
+ *   --s3  короткий пунктир   + ромб (квадрат, повёрнутый CSS) (--color-chart-3)
+ *   --s4  штрих-пунктир      + полый маркер (fill: none) (--color-chart-4)
+ * Круг или квадрат — выбор узла в разметке (<circle> / <rect>); поворот ромба и
+ * полость маркера ставит CSS. Цвет серии приходит ОДНОЙ декларацией color на
+ * элементе-носителе, штрих и заливка берут currentColor.
+ *
+ * Цвета берутся из качественной шкалы --color-chart-1..4 (base/variables.css),
+ * а НЕ из семантических ролей. Причина записана историей: на семантике
+ * (accent / info / warning / text-muted) в теме veza первая и вторая серии
+ * читались как один зелёный — семантические цвета в принципе не обязаны быть
+ * попарно различимыми, а --color-info во всех темах намеренно идёт за брендом.
+ * Шкала --color-chart-* разведена по ТОНУ и ЦВЕТНОСТИ, потому что светлотой
+ * четыре серии в светлой теме развести структурно нельзя: гейт 3:1 к белому
+ * держит все ступени в узком диапазоне яркости. Отсюда следствие, которое
+ * ослаблять нельзя: штрих и форма маркера остаются обязательными носителями,
+ * а не декорацией, — цвет сам по себе четыре серии не разводит.
+ * Ступень --color-chart-1 — алиас на акцент темы, поэтому основная серия следует
+ * бренду сама; кросс-брендовых значений (var(--brand-*)) компонент не знает.
+ *
+ * РАЗЛИНОВКА И ДАННЫЕ — РАЗНЫЕ СЕМЬИ ТОКЕНОВ. Сетка и оси берут семью border
+ * (--color-border-subtle / --color-border-strong), подписи осей — мета-текст
+ * (--color-text-muted, роль, против которой выверена нейтральная ступень),
+ * серии — семью chart. Иначе --color-chart-4 тонет в разлиновке: он из того же
+ * zinc-ряда, что и --color-text-muted, на котором ось стояла раньше.
+ * Иерархия чтения сверху вниз: серия > подпись оси > ось > сетка.
+ *
+ * Пустые данные компонент не изображает: «нет данных за период» — композиция
+ * .empty-state внутри .chart__figure, собственного элемента у графика нет.
+ * Подсказка значения — библиотечный [data-tooltip]; внутри скролл-области
+ * берётся .tooltip-popup (штатный обрезается контейнером). role="status" на
+ * подсказке не вешается — при движении указателя это поток объявлений.
+ */
+
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
+.chart {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  color: var(--color-text);
+}
+
+/* ===== Поле графика ===================================================== */
+.chart__figure {
+  position: relative; /* якорь для .empty-state и абсолютных подсказок */
+  margin: 0;
+}
+
+/* Пропорция вместо фиксированной ширины 800: SVG тянется по контейнеру,
+   preserveAspectRatio задаётся в разметке */
+.chart__canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  overflow: visible; /* подписи осей выходят за viewBox */
+}
+
+/* ===== Сетка и оси ====================================================== */
+.chart__grid {
+  stroke: var(--color-border-subtle);
+  stroke-width: var(--border-w);
+  fill: none;
+  /* Толщина линии не растёт вместе с масштабированием viewBox */
+  vector-effect: non-scaling-stroke;
+}
+
+/* Ось — разлиновка, а не данные: она из семьи border, и потому НЕ спорит с
+   нейтральной серией --color-chart-4 (обе взяли бы zinc, стой ось на
+   --color-text-muted). Иерархия чтения: сетка слабее оси, ось слабее любой
+   серии. Подписи осей остаются текстом и берут текстовую роль. */
+.chart__axis {
+  stroke: var(--color-border-strong);
+  stroke-width: var(--border-w);
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Подпись оси — мета-текст разлиновки, поэтому --color-text-muted: именно
+   против этой роли выверена нейтральная ступень --color-chart-4, и держать
+   подписи на более сильной текстовой роли значило бы уехать от калибровки.
+   SVG-текст не наследует цвет темы через color — носитель именно fill. */
+.chart__axis-label {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  fill: var(--color-text-muted);
+}
+
+/* ===== Серии ============================================================
+   Базовые правила одинаковы для всех серий; различие даёт модификатор --sN. */
+.chart__line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--border-w-strong);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  /* PURPOSE: state indication — включение и снятие серии из легенды.
+     Меняются только цвет и непрозрачность, геометрия неподвижна. */
+  transition:
+    opacity var(--duration-press) var(--ease-out),
+    stroke var(--duration-press) var(--ease-out);
+}
+
+/* Заливка под линией — ДЕКОРАЦИЯ, а не носитель различия серии: на 12% она
+   намеренно слабее линии и не спорит с ней за внимание. Отсюда правило
+   применения: заливка ставится максимум ДВУМ сериям. Три и четыре
+   накладывающиеся заливки складывают альфу, дают четыре паразитных оттенка
+   в местах пересечения и топят различие тонов — при таком числе серий рисуются
+   только линии. Правило записано и в паспорте компонента. */
+.chart__area {
+  stroke: none;
+  fill: currentColor;
+  opacity: 0.12; /* безразмерный множитель, не литерал шкалы (RULES §5.7) */
+  transition: opacity var(--duration-press) var(--ease-out);
+}
+
+.chart__point {
+  fill: var(--color-surface);
+  stroke: currentColor;
+  stroke-width: var(--border-w-strong);
+  paint-order: stroke; /* контур не съедает заливку маркера */
+  vector-effect: non-scaling-stroke;
+  transition:
+    opacity var(--duration-press) var(--ease-out),
+    fill var(--duration-press) var(--ease-out);
+}
+
+/* Фокусируемая область точки: прозрачная мишень поверх маркера, шире его.
+   Носителей кольца фокуса два, потому что узел может быть и SVG, и HTML:
+   box-shadow в SVG не рисуется, а прозрачный outline система forced-colors
+   перекрашивает в Highlight. */
+.chart__hit {
+  fill: transparent;
+  cursor: pointer;
+}
+.chart__hit:focus-visible {
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--shadow-focus);
+  stroke: var(--color-text);
+  stroke-width: var(--border-w-strong);
+}
+
+/* --- Штрих и цвет серии ------------------------------------------------
+   Числа в stroke-dasharray — пользовательские единицы SVG (геометрия штриха),
+   а не ступени шкалы отступов. */
+.chart__line--s1,
+.chart__area--s1,
+.chart__point--s1,
+.chart__legend-marker--s1 { color: var(--color-chart-1); }
+
+.chart__line--s2,
+.chart__area--s2,
+.chart__point--s2,
+.chart__legend-marker--s2 { color: var(--color-chart-2); }
+
+.chart__line--s3,
+.chart__area--s3,
+.chart__point--s3,
+.chart__legend-marker--s3 { color: var(--color-chart-3); }
+
+.chart__line--s4,
+.chart__area--s4,
+.chart__point--s4,
+.chart__legend-marker--s4 { color: var(--color-chart-4); }
+
+.chart__line--s1 { stroke-dasharray: none; }
+.chart__line--s2 { stroke-dasharray: 8 5; }
+.chart__line--s3 { stroke-dasharray: 2 4; }
+.chart__line--s4 { stroke-dasharray: 10 4 2 4; }
+
+/* --- Форма маркера -----------------------------------------------------
+   s1 круг и s2 квадрат приходят узлом разметки (<circle> / <rect>);
+   CSS отвечает за ромб (поворот квадрата) и за полый маркер. */
+.chart__point--s3 {
+  transform: rotate(45deg);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.chart__point--s4 { fill: none; }
+
+/* ===== Состояния серии =================================================
+   is-muted ставит JS по снятию серии в легенде, is-active — по наведению или
+   фокусу на серии/точке. Оба меняют только цвет и непрозрачность. */
+.chart__line.is-muted,
+.chart__area.is-muted,
+.chart__point.is-muted {
+  opacity: 0.25;
+}
+.chart__legend-marker.is-muted { opacity: 0.35; }
+
+.chart__line.is-active,
+.chart__point.is-active,
+.chart__area.is-active {
+  opacity: 1;
+}
+/* Активная точка заливается цветом серии — форма и радиус не меняются */
+.chart__point.is-active { fill: currentColor; }
+
+/* ===== Легенда ========================================================== */
+.chart__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Пункт легенды — настоящая кнопка с aria-pressed: состояние «серия
+   показана» несёт нативный атрибут, класс его не дублирует (RULES §2.3.3) */
+.chart__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: var(--border-w) solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  /* PURPOSE: state indication — подтверждение включённости серии */
+  transition:
+    background-color var(--duration-press) var(--ease-out),
+    color var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .chart__legend-item:hover { color: var(--color-text); }
+}
+.chart__legend-item:focus-visible {
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--shadow-focus);
+}
+.chart__legend-item[aria-pressed="false"] {
+  color: var(--color-text-muted);
+  text-decoration: line-through; /* снятая серия читается без цвета */
+}
+
+/* Маркер легенды повторяет форму маркера серии — это единственный способ
+   связать линию и подпись без опоры на цвет */
+.chart__legend-marker {
+  flex-shrink: 0;
+  width: var(--space-3);
+  height: var(--space-3);
+  background: currentColor;
+  border: var(--border-w-strong) solid currentColor;
+  transition: opacity var(--duration-press) var(--ease-out);
+}
+.chart__legend-marker--s1 { border-radius: var(--radius-full); }
+.chart__legend-marker--s2 { border-radius: 0; }
+.chart__legend-marker--s3 { border-radius: 0; transform: rotate(45deg); }
+.chart__legend-marker--s4 { border-radius: var(--radius-full); background: transparent; }
+
+/* ===== Табличный эквивалент =============================================
+   Обязателен: без него ряд значений недоступен AT. Разметка — .table
+   .table--compact; скрывается .sr-only либо раскрывается кнопкой. */
+.chart__table {
+  margin-top: var(--space-2);
+  font-size: var(--fs-sm);
+}
+
+/* ===== Узкий экран ====================================================== */
+@media (max-width: 767px) {
+  .chart__canvas { aspect-ratio: 4 / 3; }
+  /* Кнопка легенды — тач-цель, визуальный кегль не меняется */
+  .chart__legend-item {
+    min-height: var(--touch-target-min);
+    padding-block: var(--space-2);
+  }
+}
+
+/* Reduced motion: собственного блока у графика НЕТ и он не нужен — данные не
+   двигаются, анимируются только цвет и непрозрачность. Это и есть мягкий
+   вариант (RULES §6: «мягче, а не ноль»), гасить его нечем и незачем.
+   Повороты маркера (--s3) статичны — это форма, а не движение. */
+
+} /* @layer components */
+/* </BLOCK:component.chart> */

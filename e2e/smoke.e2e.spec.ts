@@ -1,7 +1,7 @@
 // [TEST:e2e.smoke]
 // Смоук всех страниц сайта-витрины: загрузка без ошибок консоли,
 // переключение бренда, ключевой интерактив каждой страницы.
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Locator, type Page } from '@playwright/test';
 
 // Собираем ошибки консоли страницы (favicon 404 — известный шум статики)
 function collectConsoleErrors(page: Page): string[] {
@@ -43,7 +43,7 @@ test('бренд переключается на UE и меняет акцент
   const accent = await page.evaluate(() =>
     getComputedStyle(document.body).getPropertyValue('--color-accent').trim(),
   );
-  expect(accent).toBe('#374a51');
+  expect(accent).toBe('#136b5c');
 });
 
 test('витрина: combobox открывается и выбирает опцию', async ({ page }) => {
@@ -851,7 +851,7 @@ const DEFAULT_ACCENT_RGB = 'rgb(55, 48, 163)';  // indigo :root — маркер
 // токеном, и попадание в эталон: иначе тест пройдёт на паре сломанных значений
 const BRAND_ACCENT_RGB: Record<string, { light: string; dark: string }> = {
   veza:        { light: 'rgb(42, 127, 55)',  dark: 'rgb(95, 193, 111)' },
-  uralelectro: { light: 'rgb(55, 74, 81)',   dark: 'rgb(143, 166, 174)' },
+  uralelectro: { light: 'rgb(19, 107, 92)',  dark: 'rgb(91, 179, 157)' },
   hemah:       { light: 'rgb(45, 98, 116)',  dark: 'rgb(111, 179, 199)' },
 };
 
@@ -986,4 +986,397 @@ test.describe('усиленный контраст', () => {
   });
 });
 // </TEST:e2e.focus-ring-brand>
+
+// [TEST:e2e.library-first-03]
+// Компоненты, пришедшие в библиотеку шагом 03 пайплайна редизайна: doc-prose,
+// cite-ref, chat-thread, chat-message, chat-composer, chart, app-launcher,
+// coach-mark, page-nav — плюс два gap-варианта с видимым следствием
+// (.accordion--plain и .input-password-toggle).
+
+// Замер вычисленного стиля БЕЗ гонки с переходом. Порядок тот же, что в
+// measureFocusRing: сначала кадр (переход создаётся на ближайшем пересчёте
+// стилей), затем ожидание уже запущенных анимаций, затем несколько одинаковых
+// кадров подряд. Потолок в кадрах — страховка от зависания, а не подмена
+// ожидания; waitForTimeout наугад здесь запрещён.
+async function settledStyle(locator: Locator, property: string): Promise<string> {
+  return locator.evaluate(
+    (el, prop) =>
+      new Promise<string>((resolve) => {
+        const STABLE_FRAMES = 3;
+        const MAX_FRAMES = 240;
+        let last: string | null = null;
+        let stable = 0;
+        let frames = 0;
+
+        const settle = () => {
+          const now = getComputedStyle(el).getPropertyValue(prop);
+          stable = now === last ? stable + 1 : 0;
+          last = now;
+          frames += 1;
+          if (stable >= STABLE_FRAMES || frames >= MAX_FRAMES) {
+            resolve(now);
+            return;
+          }
+          requestAnimationFrame(settle);
+        };
+
+        requestAnimationFrame(() => {
+          const running = el.getAnimations().map((animation) => animation.finished.catch(() => undefined));
+          Promise.all(running).then(() => requestAnimationFrame(settle));
+        });
+      }),
+    property,
+  );
+}
+
+// SVG-узлам className отдаёт SVGAnimatedString, поэтому класс читаем через
+// classList, а не матчером toHaveClass
+function hasClass(locator: Locator, name: string): Promise<boolean> {
+  return locator.evaluate((el, cls) => el.classList.contains(cls), name);
+}
+
+test('витрина: doc-prose копирует блок кода и подтверждает действие', async ({ page }) => {
+  await page.goto('/components.html');
+  const btn = page.locator('#demo-doc-copy');
+  // Кнопка видима всегда, а не по :hover — на сенсорном экране её иначе не достать
+  await expect(btn).toBeVisible();
+  await expect(btn).toHaveText('Копировать');
+
+  await btn.click();
+  await expect(btn).toHaveClass(/is-copied/);
+  await expect(btn).toHaveText('Скопировано');
+
+  // Широкая таблица достижима с клавиатуры: без tabindex горизонтальный скролл
+  // недоступен (SC 2.1.1)
+  const wrap = page.locator('#demo-doc-prose .doc-prose__table-wrap');
+  await expect(wrap).toHaveAttribute('tabindex', '0');
+});
+
+test('палитра: шкала источников показана пятью ступенями по порядку', async ({ page }) => {
+  await page.goto('/components.html');
+  const names = await page.evaluate(() =>
+    [...document.querySelectorAll('#palette .palette-name')]
+      .map((el) => el.textContent || '')
+      .filter((t) => t.startsWith('--color-source-') && !t.endsWith('-soft')),
+  );
+  // Порядок ступеней «светлее → темнее» — часть смысла шкалы, а не вёрстки
+  expect(names).toEqual([
+    '--color-source-forum',
+    '--color-source-wiki',
+    '--color-source-cert',
+    '--color-source-ntb',
+    '--color-source-catalog',
+  ]);
+
+  // Бейджи новых источников живут в компоненте, а не только в палитре
+  const badges = page.locator('#search-result-card .search-result-card__source-badge');
+  await expect(badges.filter({ hasText: 'Сертификаты' }).first()).toBeVisible();
+  await expect(badges.filter({ hasText: 'НТБ' }).first()).toBeVisible();
+});
+
+test('палитра: первая ступень шкалы графика идёт за брендом, остальные три — нет', async ({ page }) => {
+  await page.goto('/components.html');
+
+  // Свотч читается по имени токена под ним: подписи — часть контракта секции
+  const readScale = () =>
+    page.evaluate(() => {
+      const out: Record<string, string> = {};
+      for (const swatch of document.querySelectorAll('#palette .palette-swatch')) {
+        const name = swatch.querySelector('.palette-name')?.textContent || '';
+        const chip = swatch.querySelector('.palette-chip');
+        if (name.startsWith('--color-chart-') && chip) {
+          out[name] = getComputedStyle(chip).backgroundColor;
+        }
+      }
+      const probe = document.createElement('span');
+      document.body.appendChild(probe);
+      probe.style.color = 'var(--color-accent)';
+      out.accent = getComputedStyle(probe).color;
+      probe.remove();
+      return out;
+    });
+
+  await page.click('.js-brand-switcher [data-brand-value="veza"]');
+  await expect(page.locator('body')).toHaveAttribute('data-brand', 'veza');
+  const veza = await readScale();
+  expect(Object.keys(veza)).toHaveLength(5); // четыре ступени + зонд акцента
+
+  await page.click('.js-brand-switcher [data-brand-value="hemah"]');
+  await expect(page.locator('body')).toHaveAttribute('data-brand', 'hemah');
+  const hemah = await readScale();
+
+  // Первая ступень — алиас акцента: в каждом бренде совпадает с ним и меняется
+  expect(veza['--color-chart-1']).toBe(veza.accent);
+  expect(hemah['--color-chart-1']).toBe(hemah.accent);
+  expect(hemah['--color-chart-1']).not.toBe(veza['--color-chart-1']);
+
+  // Остальные три — постоянные: смена бренда их не трогает
+  for (const token of ['--color-chart-2', '--color-chart-3', '--color-chart-4']) {
+    expect(hemah[token], `${token} не зависит от бренда`).toBe(veza[token]);
+  }
+});
+
+test('витрина: doc-prose оформляет документ, а не только размечает его', async ({ page }) => {
+  // РЕГРЕССИЯ. Шапка doc-prose.css перечисляла теги через слэш, и сочетание
+  // «звёздочка + слэш» закрывало блочный комментарий досрочно: парсер съедал
+  // остаток шапки вместе со всем @layer components, в CSSOM у файла было ноль
+  // правил. Перечисление переписано через запятую, в шапке файла оставлено
+  // предупреждение. Тест сторожит именно это: он проверяет не разметку, а факт
+  // применения стилей — если файл снова умрёт целиком, оба замера упадут.
+  await page.goto('/components.html');
+  const probe = await page.evaluate(() => {
+    const code = document.querySelector('#demo-doc-prose .doc-prose__code');
+    const list = document.querySelector('#demo-doc-prose ul');
+    return {
+      // Кнопка копирования стоит в углу блока, а не в потоке текста
+      codePosition: code ? getComputedStyle(code).position : '',
+      // Отступ списка приходит из компонента, а не остаётся сброшенным
+      listPadding: list ? parseFloat(getComputedStyle(list).paddingInlineStart) : 0,
+    };
+  });
+  expect(probe.codePosition).toBe('relative');
+  expect(probe.listPadding).toBeGreaterThan(0);
+});
+
+test('витрина: сноска ведёт к источнику, подсвечивает карточку и держит цель 24×24', async ({ page }) => {
+  await page.goto('/components.html');
+  const marker = page.locator('#demo-cite-1');
+  const card = page.locator('#demo-cite-source-1');
+
+  // Площадь нажатия поднята прозрачным ::before, а не кеглем маркера (SC 2.5.8)
+  const hit = await marker.evaluate((el) => {
+    const cs = getComputedStyle(el, '::before');
+    return { width: parseFloat(cs.width), height: parseFloat(cs.height) };
+  });
+  expect(hit.width).toBeGreaterThanOrEqual(24);
+  expect(hit.height).toBeGreaterThanOrEqual(24);
+
+  // .is-flashed живёт ровно один переход и снимается сама — ловим сам факт
+  // появления наблюдателем, а не гонкой опроса
+  await card.evaluate((el) => {
+    (window as unknown as { __flashed: boolean }).__flashed = false;
+    new MutationObserver(() => {
+      if (el.classList.contains('is-flashed')) {
+        (window as unknown as { __flashed: boolean }).__flashed = true;
+      }
+    }).observe(el, { attributes: true, attributeFilter: ['class'] });
+  });
+
+  await marker.click();
+  await expect(marker).toHaveClass(/is-active/);
+  await expect(marker).toHaveAttribute('aria-expanded', 'true');
+  await expect(card).toBeFocused();
+  await expect
+    .poll(() => page.evaluate(() => (window as unknown as { __flashed: boolean }).__flashed))
+    .toBe(true);
+
+  // Активен ровно один маркер: подсвечен один источник
+  await page.locator('#demo-cite-2').click();
+  await expect(marker).not.toHaveClass(/is-active/);
+  await expect(marker).toHaveAttribute('aria-expanded', 'false');
+});
+
+test('витрина: лента диалога держит якорь конца и не прокручивается плавно', async ({ page }) => {
+  await page.goto('/components.html');
+  const thread = page.locator('#demo-chat-thread');
+  await expect(thread).toHaveAttribute('role', 'log');
+  await expect(thread.locator('.chat-thread__turn')).toHaveCount(3);
+
+  // Прокрутка на каждый токен потока — гейт частоты провален, smooth запрещён
+  expect(await thread.evaluate((el) => getComputedStyle(el).scrollBehavior)).toBe('auto');
+
+  // У якоря есть запас снизу: последняя строка не уходит под липкий композер
+  const margin = await page
+    .locator('#demo-chat-anchor')
+    .evaluate((el) => parseFloat(getComputedStyle(el).scrollMarginBottom));
+  expect(margin).toBeGreaterThan(0);
+});
+
+test('витрина: каретка стриминга появляется на потоке и уходит по остановке', async ({ page }) => {
+  await page.goto('/components.html');
+  const message = page.locator('#demo-chat-answer');
+  const cursor = message.locator('.chat-message__cursor');
+  await expect(cursor).toBeHidden();
+
+  const phase = message.locator('[data-chat-phase]');
+  await expect(phase).toBeEmpty();
+
+  await page.locator('#demo-chat-stream-start').click();
+  await expect(message).toHaveClass(/is-streaming/);
+  await expect(cursor).toBeVisible();
+  // Факт генерации несёт live-область, а не декоративная планка
+  await expect(message.locator('[data-chat-status]')).toHaveText('Идёт генерация ответа');
+
+  await page.locator('#demo-chat-stream-stop').click();
+  await expect(message).toHaveClass(/is-stopped/);
+  await expect(message).not.toHaveClass(/is-streaming/);
+  await expect(cursor).toBeHidden();
+  // Обрыв дублируется словом: штриховая черта не единственный носитель
+  await expect(phase).toHaveText('Остановлено');
+});
+
+test('витрина: композер подменяет «Отправить» на «Стоп» и обратно', async ({ page }) => {
+  await page.goto('/components.html');
+  const composer = page.locator('#demo-chat-composer');
+  const send = composer.locator('[data-composer-action="send"]');
+  const stop = composer.locator('[data-composer-action="stop"]');
+
+  await expect(send).toBeVisible();
+  await expect(stop).toBeHidden();
+
+  await send.click();
+  await expect(composer).toHaveClass(/is-busy/);
+  await expect(stop).toBeVisible();
+  await expect(send).toBeHidden();
+  // Поле остаётся доступным: следующий вопрос набирается, пока идёт текущий
+  await expect(composer.locator('.chat-composer__field')).toBeEditable();
+
+  await stop.click();
+  await expect(composer).not.toHaveClass(/is-busy/);
+  await expect(send).toBeVisible();
+  await expect(stop).toBeHidden();
+
+  // Липкий вариант остаётся у нижнего края своей ленты
+  const sticky = page.locator('#demo-chat-composer-sticky');
+  expect(await sticky.evaluate((el) => getComputedStyle(el).position)).toBe('sticky');
+});
+
+test('витрина: серия графика глушится из легенды и возвращается', async ({ page }) => {
+  await page.goto('/components.html');
+  const chart = page.locator('#demo-chart');
+  const legend = chart.locator('.chart__legend-item[data-chart-series="s2"]');
+  const line = chart.locator('.chart__line--s2');
+
+  // Включённость серии несёт нативный aria-pressed, класс его не дублирует
+  await expect(legend).toHaveAttribute('aria-pressed', 'true');
+  const full = await settledStyle(line, 'opacity');
+  expect(Number(full)).toBe(1);
+
+  await legend.click();
+  await expect(legend).toHaveAttribute('aria-pressed', 'false');
+  expect(await hasClass(line, 'is-muted')).toBe(true);
+  const muted = await settledStyle(line, 'opacity');
+  expect(Number(muted)).toBeLessThan(1);
+
+  await legend.click();
+  await expect(legend).toHaveAttribute('aria-pressed', 'true');
+  expect(await hasClass(line, 'is-muted')).toBe(false);
+
+  // Данные обязаны остаться доступными без графика
+  await expect(chart.locator('.chart__table tbody tr')).toHaveCount(6);
+  await expect(chart.locator('.chart__hit').first()).toHaveAttribute('aria-label', /Январь/);
+});
+
+test('витрина: лаунчер открывается от триггера и закрывается по Escape', async ({ page }) => {
+  await page.goto('/components.html');
+  const launcher = page.locator('#demo-app-launcher');
+  const trigger = page.locator('#demo-app-launcher-trigger');
+  const popover = page.locator('#demo-app-launcher-popover');
+
+  await expect(popover).toBeHidden();
+  await trigger.click();
+  await expect(launcher).toHaveClass(/is-open/);
+  await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+  await expect(popover).toBeVisible();
+
+  // Панель раскрывается ОТ кнопки: канал происхождения ставит JS
+  const origin = await launcher.evaluate((el) =>
+    (el as HTMLElement).style.getPropertyValue('--transform-origin'),
+  );
+  expect(origin).not.toBe('');
+
+  await page.keyboard.press('Escape');
+  await expect(launcher).not.toHaveClass(/is-open/);
+  await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+  await expect(trigger).toBeFocused();
+  await expect(popover).toBeHidden();
+});
+
+test('витрина: тур листается по шагам и возвращает фокус по Escape', async ({ page }) => {
+  await page.goto('/components.html');
+  const coach = page.locator('#demo-coach-mark');
+  const start = page.locator('#demo-coach-start');
+  const title = coach.locator('.coach-mark__title');
+  const dots = coach.locator('.coach-mark__dots span');
+
+  await start.click();
+  await expect(coach).toHaveClass(/is-open/);
+  await expect(title).toHaveText('Режимы ответа');
+  await expect(dots).toHaveCount(3);
+  await expect(dots.nth(0)).toHaveAttribute('aria-current', 'step');
+  // Номер шага дублируется текстом — точка не единственный носитель
+  await expect(coach.locator('.coach-mark__dots')).toContainText('шаг 1 из 3');
+
+  // Геометрию спотлайта ставит JS замером цели, а не CSS
+  const spot = await coach.evaluate((el) =>
+    parseFloat(getComputedStyle(el).getPropertyValue('--coach-mark-spot-w')),
+  );
+  expect(spot).toBeGreaterThan(0);
+
+  await coach.locator('[data-coach-next]').click();
+  await expect(title).toHaveText('Фильтры источников');
+  await expect(dots.nth(1)).toHaveAttribute('aria-current', 'step');
+  await expect(coach.locator('.coach-mark__dots')).toContainText('шаг 2 из 3');
+
+  await page.keyboard.press('Escape');
+  await expect(coach).not.toHaveClass(/is-open/);
+  await expect(start).toBeFocused();
+});
+
+test('витрина: оглавление документа липкое, активный раздел помечен не только цветом', async ({ page }) => {
+  await page.goto('/components.html');
+  const nav = page.locator('#page-nav .page-nav');
+  expect(await nav.evaluate((el) => getComputedStyle(el).position)).toBe('fixed');
+  await expect(nav.locator('.page-nav-link.active')).toHaveAttribute('aria-current', 'location');
+
+  const weight = await nav.evaluate((el) => {
+    const active = el.querySelector('.page-nav-link.active');
+    const plain = el.querySelector('.page-nav-link:not(.active)');
+    return {
+      active: active ? getComputedStyle(active).fontWeight : '',
+      plain: plain ? getComputedStyle(plain).fontWeight : '',
+    };
+  });
+  expect(weight.active).not.toBe(weight.plain);
+});
+
+test('витрина: аккордеон --plain раскрывается без анимации высоты', async ({ page }) => {
+  await page.goto('/components.html');
+  const item = page.locator('#demo-accordion-plain .accordion__item');
+  const header = page.locator('#demo-accordion-plain-header');
+  const panel = page.locator('#demo-accordion-plain-panel');
+
+  await expect(panel).toBeHidden();
+  await header.click();
+  await expect(item).toHaveClass(/is-open/);
+  await expect(header).toHaveAttribute('aria-expanded', 'true');
+  await expect(panel).toBeVisible();
+  await expect(panel.locator('table.table tbody tr')).toHaveCount(3);
+
+  // Высота не анимируется сознательно: связь причины и следствия несёт шеврон
+  expect(await panel.evaluate((el) => getComputedStyle(el).transitionProperty)).toBe('none');
+});
+
+test('витрина: переключатель пароля меняет тип поля и иконку по aria-pressed', async ({ page }) => {
+  await page.goto('/components.html');
+  const field = page.locator('#demo-password');
+  const toggle = page.locator('#demo-password-toggle');
+
+  await expect(field).toHaveAttribute('type', 'password');
+  await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+  await expect(toggle.locator('[data-icon="conceal"]')).toBeHidden();
+
+  await toggle.click();
+  await expect(field).toHaveAttribute('type', 'text');
+  await expect(toggle).toHaveAttribute('aria-pressed', 'true');
+  await expect(toggle.locator('[data-icon="conceal"]')).toBeVisible();
+  await expect(toggle.locator('[data-icon="reveal"]')).toBeHidden();
+  // Доступное имя за состоянием не меняется — состояние несёт aria-pressed
+  await expect(toggle).toHaveAttribute('aria-label', 'Показать пароль');
+
+  await toggle.click();
+  await expect(field).toHaveAttribute('type', 'password');
+  await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+});
+// </TEST:e2e.library-first-03>
 // </TEST:e2e.smoke>

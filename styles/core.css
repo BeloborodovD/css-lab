@@ -68,6 +68,7 @@
 @import './components/alerts.css';
 @import './components/table.css';
 @import './components/nav.css';
+@import './components/page-nav.css';
 @import './components/logs.css';
 @import './components/tabs.css';
 @import './components/breadcrumbs.css';
@@ -120,6 +121,28 @@
 @import './components/spec-sheet.css';
 @import './components/code-panel.css';
 @import './components/typography.css';
+
+/* Диалог и доказательная типографика. Порядок ВНУТРИ группы значим:
+   doc-prose импортируется первым — cite-ref стоит в его текстовом потоке,
+   а chat-message отдаёт ему тело ответа; оба обязаны бить общие правила
+   документа при равной специфичности. Слой components у всех общий, поэтому
+   спор файлов одного уровня решает порядок импорта, а не слой.
+   Композиции наружу (table-responsive, textarea, form-field__counter, alert,
+   avatar, badge, btn, divider) импортированы выше — группа идёт после них. */
+@import './components/doc-prose.css';
+@import './components/cite-ref.css';
+@import './components/chat-thread.css';
+@import './components/chat-message.css';
+@import './components/chat-composer.css';
+
+/* Дашборд и навигация: график ряда значений, лаунчер сервисов, шаг тура.
+   Ни от чего не зависят по каскаду — импортируются в конец блока components.
+   app-launcher--sheet и coach-mark--sheet ПОВТОРЯЮТ геометрию .drawer--sheet
+   и берут его .drawer__grabber, но правил drawer не перекрывают, поэтому
+   порядок относительно drawer.css безразличен. */
+@import './components/chart.css';
+@import './components/app-launcher.css';
+@import './components/coach-mark.css';
 
 /* Themes — слой themes: перекрывают токены поверх компонентов */
 @import './themes/dark.css';

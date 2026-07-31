@@ -25,7 +25,12 @@
   cursor: pointer;
   white-space: nowrap;
   user-select: none;
-  transition: color var(--duration-press) var(--ease-out),
+  /* PURPOSE: feedback. var(--transition-press) ОБЯЗАН стоять первым: свой
+     `transition` — шорткат, он стирает правило нажатия из base/motion.css
+     (слой tokens слабее слоя components), и масштаб :active отыгрывал бы
+     мгновенно. Подробности — в шапке base/motion.css */
+  transition: var(--transition-press),
+              color var(--duration-press) var(--ease-out),
               background-color var(--duration-press) var(--ease-out),
               border-color var(--duration-press) var(--ease-out),
               box-shadow var(--duration-press) var(--ease-out);
@@ -54,6 +59,27 @@
   opacity: 0.5;
   cursor: not-allowed;
   pointer-events: none;
+}
+
+/* Кнопка-переключатель режима: включённое положение.
+   Носитель состояния — нативный aria-pressed, класса .is-active здесь нет и
+   не будет (RULES §2.3.3). Специфичность (0,2,0) выше, чем у вариантов
+   .btn-outline / .btn-ghost (0,1,0), поэтому включённый режим виден на любом
+   из них без дублирования правил. */
+.btn[aria-pressed="true"] {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  border-color: var(--color-accent-border);
+}
+/* Наведение НЕ гасит включённый режим: пара повторяется дословно, иначе
+   .btn-outline:hover / .btn-ghost:hover (0,2,0, ниже по файлу) перекрасили бы
+   кнопку и пользователь потерял бы ответ на вопрос «включено ли» */
+@media (hover: hover) and (pointer: fine) {
+  .btn[aria-pressed="true"]:hover {
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+    border-color: var(--color-accent-border);
+  }
 }
 
 /* ====================== Variants ====================== */
@@ -259,6 +285,14 @@
   to { transform: rotate(360deg); }
 }
 
+/* ====================== Width ======================
+   .btn-block — ПОСТОЯННАЯ полная ширина (единственное действие узкой формы:
+   вход, подтверждение в модалке). Высота и внутренние отступы не меняются.
+   Разграничение с соседом: .btn-block-mobile растягивает кнопку только ниже
+   768px, .btn-block — на всех ширинах. В .btn-group модификатор не применяется:
+   там ширину делят соседи, а скругления задаёт сама группа. */
+.btn-block { width: 100%; }
+
 /* ====================== Responsive ====================== */
 .btn-block-mobile { display: inline-flex; }
 
@@ -386,6 +420,24 @@
 .dark .btn-ghost:hover,
 [data-theme="dark"] .btn-ghost:hover {
   background: var(--color-surface-hover);
+}
+
+/* Включённый режим повторяется в dark по той же причине, что и filled-варианты:
+   .dark .btn (0,2,0) стоит ниже базового .btn[aria-pressed="true"] (0,2,0) и при
+   равной специфичности возвращал бы кнопке обычную поверхность */
+.dark .btn[aria-pressed="true"],
+[data-theme="dark"] .btn[aria-pressed="true"] {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  border-color: var(--color-accent-border);
+}
+@media (hover: hover) and (pointer: fine) {
+  .dark .btn[aria-pressed="true"]:hover,
+  [data-theme="dark"] .btn[aria-pressed="true"]:hover {
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+    border-color: var(--color-accent-border);
+  }
 }
 
 } /* @layer components */

@@ -190,7 +190,11 @@ const demoToast = (function initDemoToast() {
     '#burger-menu, #info-toggle, .sidebar-close, .tab, .toggle, [data-datepicker], ' +
     '[data-drawer-open], .quiz-header__nav, .combobox, .code-panel__string-row, ' +
     '.form-error-summary, [data-error-summary], [data-panel-switch], ' +
-    '.table--form, .swatch-picker__actions, .picklist__actions';
+    '.table--form, .swatch-picker__actions, .picklist__actions, ' +
+    // Компоненты шага 03: у каждого свой обработчик, тост-фолбэк здесь лишний
+    '.app-launcher, .coach-mark, .chat-composer, .chart__legend, ' +
+    '.input-password-toggle, .doc-prose__copy, [data-chat-stream], [data-chat-stop], ' +
+    '[data-coach-open]';
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('button');
     if (!btn || btn.closest(SKIP)) return;
@@ -1553,6 +1557,368 @@ function isPanelSwitchFor(target, pickerRoot) {
 
     control.addEventListener('change', apply);
     apply();
+  });
+})();
+
+// ===== Doc Prose: копирование блока кода и формулы =====
+// Подтверждение — класс .is-copied на кнопке и смена подписи внутри role="status"
+// (цвет фона не единственный носитель). Буфер бывает недоступен (небезопасный
+// контекст, отказ в разрешении) — состояние показываем в любом случае: пользователь
+// нажал, отклик обязан быть.
+(function initDocProseCopy() {
+  document.querySelectorAll('.doc-prose__copy[data-doc-copy-for]').forEach(btn => {
+    const source = document.getElementById(btn.dataset.docCopyFor);
+    if (!source) return;
+    const label = btn.querySelector('[role="status"]') || btn;
+    const idle = label.textContent.trim();
+    let timer = null;
+
+    btn.addEventListener('click', () => {
+      Promise.resolve(navigator.clipboard?.writeText(source.textContent.trim())).catch(() => {});
+      btn.classList.add('is-copied');
+      label.textContent = 'Скопировано';
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        btn.classList.remove('is-copied');
+        label.textContent = idle;
+      }, 1200);
+    });
+  });
+})();
+
+// ===== Cite Ref: переход к источнику =====
+// Маркер, чей источник подсвечен, помечается .is-active синхронно с aria-expanded
+// (если разметка объявила атрибут). Карточка источника получает .is-flashed и
+// фокус; класс снимается по transitionend со страховочным таймером — под
+// prefers-reduced-motion событие может не прийти.
+(function initCiteRefs() {
+  const FLASH_FALLBACK = 600;
+
+  function flash(card) {
+    if (!card || card.classList.contains('is-flashed')) return;
+    card.classList.add('is-flashed');
+    const clear = () => card.classList.remove('is-flashed');
+    card.addEventListener('transitionend', clear, { once: true });
+    setTimeout(clear, FLASH_FALLBACK);
+  }
+
+  document.querySelectorAll('.cite-ref[href^="#"]').forEach(ref => {
+    ref.addEventListener('click', (e) => {
+      const target = document.getElementById(ref.getAttribute('href').slice(1));
+      if (!target) return;
+      e.preventDefault();
+
+      // Активен ровно один маркер документа: подсвечен один источник
+      const scope = ref.closest('.doc-prose') || document;
+      scope.querySelectorAll('.cite-ref.is-active').forEach(other => {
+        other.classList.remove('is-active');
+        if (other.hasAttribute('aria-expanded')) other.setAttribute('aria-expanded', 'false');
+      });
+      ref.classList.add('is-active');
+      if (ref.hasAttribute('aria-expanded')) ref.setAttribute('aria-expanded', 'true');
+
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      target.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' });
+      target.focus({ preventScroll: true });
+      flash(target.classList.contains('search-result-card')
+        ? target : target.closest('.search-result-card'));
+    });
+  });
+})();
+
+// ===== Chat Message: демо-имитация стрима =====
+// is-streaming показывает каретку, is-stopped снимает её и помечает ответ
+// неполным. Факт генерации несёт отдельная live-область, а не планка: каретка
+// декоративна и помечена aria-hidden в разметке.
+(function initChatStream() {
+  const CHUNK_MS = 90;
+  const ANSWER = ' Запас по моменту относительно момента сопротивления гранулятора — ' +
+    'восемнадцать процентов. Пусковой момент двигателя 2,2 номинала, этого хватает для ' +
+    'пуска под загруженной матрицей. Ограничение одно: режим S1, не более шести ' +
+    'включений в час.';
+
+  document.querySelectorAll('[data-chat-stream]').forEach(startBtn => {
+    const id = startBtn.dataset.chatStream;
+    const message = document.getElementById(id);
+    if (!message) return;
+    const out = message.querySelector('[data-chat-text]');
+    const status = message.querySelector('[data-chat-status]');
+    const phase = message.querySelector('[data-chat-phase]');
+    const stopBtn = document.querySelector('[data-chat-stop="' + id + '"]');
+    const base = out ? out.textContent : '';
+    const words = ANSWER.split(' ');
+    let timer = null;
+    let i = 0;
+
+    // Бейдж «Остановлено» именно создаётся и удаляется: .badge объявляет
+    // display: inline-flex и перебил бы штатное display: none атрибута hidden
+    function setPhase(stopped) {
+      if (!phase) return;
+      phase.textContent = '';
+      if (!stopped) return;
+      const badge = document.createElement('span');
+      badge.className = 'badge badge-outline';
+      badge.textContent = 'Остановлено';
+      phase.appendChild(badge);
+    }
+
+    function finish(stopped) {
+      clearInterval(timer);
+      timer = null;
+      message.classList.remove('is-streaming');
+      message.classList.toggle('is-stopped', stopped);
+      setPhase(stopped);
+      if (status) status.textContent = stopped ? 'Генерация остановлена, ответ неполон' : 'Ответ готов';
+    }
+
+    startBtn.addEventListener('click', () => {
+      clearInterval(timer);
+      i = 0;
+      if (out) out.textContent = base;
+      message.classList.remove('is-stopped');
+      message.classList.add('is-streaming');
+      setPhase(false);
+      if (status) status.textContent = 'Идёт генерация ответа';
+      timer = setInterval(() => {
+        if (i >= words.length) {
+          finish(false);
+          return;
+        }
+        if (out) out.textContent += (i ? ' ' : '') + words[i];
+        i += 1;
+      }, CHUNK_MS);
+    });
+
+    stopBtn?.addEventListener('click', () => {
+      if (!message.classList.contains('is-streaming')) return;
+      finish(true);
+    });
+  });
+})();
+
+// ===== Chat Composer: занятость и подмена действий =====
+// is-busy на блоке подменяет «Отправить» на «Стоп» (оба узла живут в DOM, CSS
+// делает кросс-фейд). Поле при этом остаётся доступным: пользователь вправе
+// набирать следующий вопрос, пока идёт текущий ответ, — фокус не уводим.
+(function initChatComposer() {
+  document.querySelectorAll('[data-composer-action][data-composer-for]').forEach(btn => {
+    const composer = document.getElementById(btn.dataset.composerFor);
+    if (!composer) return;
+    btn.addEventListener('click', () => {
+      composer.classList.toggle('is-busy', btn.dataset.composerAction === 'send');
+    });
+  });
+})();
+
+// ===== Chart: легенда и активная точка =====
+// Включённость серии несёт нативный aria-pressed на пункте легенды; JS ставит
+// .is-muted на линию, область, точки и маркер легенды. Активная точка —
+// .is-active по наведению и фокусу: меняются только цвет и непрозрачность,
+// геометрия графика неподвижна.
+(function initCharts() {
+  document.querySelectorAll('.chart').forEach(chart => {
+    chart.querySelectorAll('.chart__legend-item[data-chart-series]').forEach(item => {
+      const s = item.dataset.chartSeries;
+      const parts = chart.querySelectorAll(
+        '.chart__line--' + s + ', .chart__area--' + s + ', ' +
+        '.chart__point--' + s + ', .chart__legend-marker--' + s);
+      item.addEventListener('click', () => {
+        const on = item.getAttribute('aria-pressed') !== 'true';
+        item.setAttribute('aria-pressed', String(on));
+        parts.forEach(node => node.classList.toggle('is-muted', !on));
+      });
+    });
+
+    chart.querySelectorAll('.chart__hit').forEach(hit => {
+      const point = hit.parentElement?.querySelector('.chart__point');
+      if (!point) return;
+      const set = (on) => point.classList.toggle('is-active', on);
+      hit.addEventListener('mouseenter', () => set(true));
+      hit.addEventListener('mouseleave', () => set(false));
+      hit.addEventListener('focus', () => set(true));
+      hit.addEventListener('blur', () => set(false));
+    });
+  });
+})();
+
+// ===== App Launcher =====
+// is-open на корне синхронно с aria-expanded на триггере. Панель раскрывается ОТ
+// кнопки: --transform-origin считается замером триггера (offsetLeft/offsetTop —
+// величины до трансформации, поэтому scale панели на замер не влияет).
+// Закрытие — Escape и клик вне, фокус возвращается на триггер.
+(function initAppLaunchers() {
+  document.querySelectorAll('.app-launcher').forEach(launcher => {
+    const trigger = launcher.querySelector('.app-launcher__trigger');
+    const popover = launcher.querySelector('.app-launcher__popover');
+    if (!trigger || !popover) return;
+
+    const isOpen = () => launcher.classList.contains('is-open');
+
+    function setOrigin() {
+      const x = trigger.offsetLeft + trigger.offsetWidth / 2 - popover.offsetLeft;
+      const y = trigger.offsetTop + trigger.offsetHeight / 2 - popover.offsetTop;
+      launcher.style.setProperty('--transform-origin', Math.round(x) + 'px ' + Math.round(y) + 'px');
+    }
+
+    function setOpen(open) {
+      if (open === isOpen()) return;
+      if (open) setOrigin();
+      launcher.classList.toggle('is-open', open);
+      trigger.setAttribute('aria-expanded', String(open));
+    }
+
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      setOpen(!isOpen());
+    });
+    document.addEventListener('click', (e) => {
+      if (isOpen() && !launcher.contains(e.target)) setOpen(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isOpen()) {
+        setOpen(false);
+        trigger.focus();
+      }
+    });
+  });
+})();
+
+// ===== Coach Mark: шаги тура =====
+// Шаг объявлен на самой цели (data-coach-step/-title/-text) — так подсветка и
+// текст не расходятся. JS ставит is-open, каналы геометрии спотлайта
+// (--coach-mark-spot-x/-y/-w/-h), aria-current на точке счётчика и inert на фоне.
+// Геометрия НЕ анимируется: позиция ставится мгновенно, между шагами спотлайт
+// не переезжает — меняется только непрозрачность панели.
+(function initCoachMarks() {
+  const PAD = 6;   // запас рамки вокруг цели, px
+  const GAP = 12;  // зазор панели от цели и от края кадра, px
+
+  document.querySelectorAll('.coach-mark[data-coach-scope]').forEach(coach => {
+    const scope = document.getElementById(coach.dataset.coachScope);
+    if (!scope) return;
+    const panel = coach.querySelector('.coach-mark__panel');
+    const title = coach.querySelector('.coach-mark__title');
+    const text = coach.querySelector('.coach-mark__text');
+    const dots = coach.querySelector('.coach-mark__dots');
+    const background = scope.querySelector('.demo-frame__body');
+    const opener = document.querySelector('[data-coach-open="' + coach.id + '"]');
+    const nextBtn = coach.querySelector('[data-coach-next]');
+    const prevBtn = coach.querySelector('[data-coach-prev]');
+    const steps = [...scope.querySelectorAll('[data-coach-step]')]
+      .sort((a, b) => Number(a.dataset.coachStep) - Number(b.dataset.coachStep));
+    if (!panel || !steps.length) return;
+
+    let index = 0;
+    let lastFocused = null;
+
+    // Точки счётчика плюс текстовый дубль «шаг N из M»: порядок шагов не может
+    // передаваться одним цветом точки. Текст — именно текстовый узел: селектор
+    // .coach-mark__dots > * красит любого потомка-элемента как точку
+    const counter = document.createTextNode('');
+    if (dots) {
+      steps.forEach(() => dots.appendChild(document.createElement('span')));
+      dots.appendChild(counter);
+    }
+
+    function place() {
+      const frame = coach.getBoundingClientRect();
+      const target = steps[index].getBoundingClientRect();
+      const x = target.left - frame.left - PAD;
+      const y = target.top - frame.top - PAD;
+      coach.style.setProperty('--coach-mark-spot-x', Math.round(x) + 'px');
+      coach.style.setProperty('--coach-mark-spot-y', Math.round(y) + 'px');
+      coach.style.setProperty('--coach-mark-spot-w', Math.round(target.width + PAD * 2) + 'px');
+      coach.style.setProperty('--coach-mark-spot-h', Math.round(target.height + PAD * 2) + 'px');
+
+      // Панель встаёт под целью и не выезжает за кадр
+      const maxTop = Math.max(0, frame.height - panel.offsetHeight - GAP);
+      const maxLeft = Math.max(GAP, frame.width - panel.offsetWidth - GAP);
+      panel.style.top = Math.round(Math.min(Math.max(y + target.height + PAD * 2 + GAP, 0), maxTop)) + 'px';
+      panel.style.left = Math.round(Math.min(Math.max(x, GAP), maxLeft)) + 'px';
+    }
+
+    function render() {
+      const step = steps[index];
+      if (title) title.textContent = step.dataset.coachTitle || '';
+      if (text) text.textContent = step.dataset.coachText || '';
+      if (dots) {
+        [...dots.querySelectorAll('span')].forEach((dot, i) => {
+          if (i === index) dot.setAttribute('aria-current', 'step');
+          else dot.removeAttribute('aria-current');
+        });
+        counter.textContent = 'шаг ' + (index + 1) + ' из ' + steps.length;
+      }
+      if (prevBtn) prevBtn.disabled = index === 0;
+      if (nextBtn) nextBtn.textContent = index === steps.length - 1 ? 'Готово' : 'Далее';
+      place();
+    }
+
+    function setOpen(open) {
+      if (open === coach.classList.contains('is-open')) return;
+      if (open) {
+        lastFocused = document.activeElement;
+        index = 0;
+        render();
+      }
+      coach.classList.toggle('is-open', open);
+      // Фон тура помечается inert: за пределы панели фокус не уходит
+      if (background) background.inert = open;
+      if (open) panel.querySelector('button:not([disabled])')?.focus();
+      else (lastFocused || opener)?.focus?.();
+    }
+
+    // Ловушка фокуса внутри панели: за inert-фоном остаётся остальная страница
+    panel.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab') return;
+      const items = [...panel.querySelectorAll('button:not([disabled])')];
+      if (!items.length) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    });
+
+    opener?.addEventListener('click', () => setOpen(true));
+    nextBtn?.addEventListener('click', () => {
+      if (index < steps.length - 1) {
+        index += 1;
+        render();
+      } else {
+        setOpen(false);
+      }
+    });
+    prevBtn?.addEventListener('click', () => {
+      if (index > 0) {
+        index -= 1;
+        render();
+      }
+    });
+    coach.querySelector('[data-coach-skip]')?.addEventListener('click', () => setOpen(false));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && coach.classList.contains('is-open')) setOpen(false);
+    });
+  });
+})();
+
+// ===== Password Toggle =====
+// Показ пароля меняет только представление значения, поэтому состояние несёт
+// нативный aria-pressed, а класса у кнопки нет. Доступное имя за состоянием НЕ
+// меняется: иначе AT объявит смену имени вместо смены состояния. Иконку
+// переключает CSS по [data-icon] — JS её не трогает.
+(function initPasswordToggles() {
+  document.querySelectorAll('.input-password-toggle[aria-controls]').forEach(btn => {
+    const field = document.getElementById(btn.getAttribute('aria-controls'));
+    if (!field) return;
+    btn.addEventListener('click', () => {
+      const shown = btn.getAttribute('aria-pressed') !== 'true';
+      btn.setAttribute('aria-pressed', String(shown));
+      field.type = shown ? 'text' : 'password';
+    });
   });
 })();
 

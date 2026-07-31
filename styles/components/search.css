@@ -318,6 +318,60 @@
   border-top: none;
 }
 
+/* ==================== Подвал списка подсказок ====================
+   Постоянное действие над ВСЕМ списком (очистить историю, показать все).
+   Прижат к низу .search-dropdown и не уезжает вместе со списком: position:
+   sticky внутри прокручиваемой выпадашки, поэтому под ним нужна непрозрачная
+   подложка — иначе пункты просвечивают.
+   Кнопка входит в клавиатурный контракт listbox отдельным табстопом ПОСЛЕ
+   списка; фокус на ней держит .search-input:focus-within, поэтому выпадашка
+   при переходе Tab не закрывается. */
+.search-dropdown-footer {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-surface);
+  border-top: var(--border-w) solid var(--color-border-subtle);
+}
+
+.search-dropdown-action {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  /* 24px — мелкая цель нажатия WCAG SC 2.5.8 (§5.3), не величина шкалы */
+  min-height: 24px;
+  padding: var(--space-1) var(--space-2);
+  font-family: inherit;
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  /* PURPOSE: feedback — отклик на наведение и фокус, без движения */
+  transition: background var(--duration-press) var(--ease-out),
+              color var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .search-dropdown-action:hover {
+    background: var(--color-surface-hover);
+    color: var(--color-text);
+  }
+}
+.search-dropdown-action:focus-visible {
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--shadow-focus);
+  color: var(--color-text);
+}
+@media (max-width: 767px) {
+  .search-dropdown-action { min-height: var(--touch-target-min); }
+}
+
 /* ==================== Reduced motion ====================
    Мягче, а не «в ноль» (RULES.md §6). Оптовый выключатель
    `transition: none !important` на поле, иконке, крестике, выпадашке и её

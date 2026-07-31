@@ -1,0 +1,413 @@
+/* [BLOCK:component.doc-prose]
+ * Типографика длинного документа, пришедшего разметкой извне: markdown-отчёт,
+ * ответ модели, справочная статья. Оформляет дерево «h1-h6, p, ul, ol, table,
+ * pre, blockquote» внутри одного контейнера — мера строки, вертикальный ритм,
+ * предсказуемые отступы между блоками.
+ * ВНИМАНИЕ при правке шапки: последовательность «звёздочка + слэш» внутри
+ * блочного комментария закрывает его досрочно и убивает ВЕСЬ файл (правил в
+ * CSSOM остаётся ноль). Перечисления тегов писать через запятую, не слэшем.
+ * Случай применения: тело ответа ассистента (.chat-message__body), досье
+ * расследования, справочный раздел страницы.
+ * Модуль: css-lab/components. Зависимости: base/variables.css, base/reset.css
+ * (кегли заголовков приходят оттуда), base/motion.css.
+ * Композиции: __table-wrap оборачивает .table-responsive + .table.table--compact,
+ * сноски в тексте — .cite-ref, кнопка копирования — собственный __copy.
+ *
+ * ИМЯ БЛОКА. Намеренно НЕ .prose: класс занят Tailwind Typography у потребителей
+ * библиотеки, совпадение дало бы третью типографическую систему на одном узле.
+ *
+ * ДВИЖЕНИЕ. PURPOSE отсутствует по гейту ui-motion-craft §0: документ читают,
+ * а не переключают, — движения в поле чтения нет. Единственный переход в файле
+ * принадлежит кнопке копирования (цвет, без геометрии); press-feedback приходит
+ * из base/motion.css. Подтверждение копирования несёт смена подписи и
+ * role="status" в разметке, а не анимация.
+ */
+
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
+/* ====================== Контейнер документа ====================== */
+/* Мера строки — единственная ширина, которую компонент задаёт сам. Колонку
+   может сузить и .page-shell--narrow: max-width не спорит, побеждает меньшая */
+.doc-prose {
+  max-width: var(--max-prose-w);
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  line-height: var(--lh-relaxed);
+  letter-spacing: var(--tracking-normal);
+  color: var(--color-text);
+  overflow-wrap: break-word;
+}
+
+/* ====================== Вертикальный ритм ======================
+   Кегли заголовков компонент НЕ переопределяет — h1-h6 приходят из
+   base/reset.css на шкале --fs-*. Здесь только расстояния между блоками:
+   верхний отступ заголовка крупнее нижнего, чтобы заголовок принадлежал
+   следующему за ним тексту, а не предыдущему */
+.doc-prose > * {
+  margin-block: 0 var(--space-4);
+}
+.doc-prose > *:last-child {
+  margin-block-end: 0;
+}
+
+.doc-prose h1,
+.doc-prose h2,
+.doc-prose h3,
+.doc-prose h4,
+.doc-prose h5,
+.doc-prose h6 {
+  margin-block: var(--space-8) var(--space-3);
+  line-height: var(--lh-snug);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-text);
+}
+.doc-prose > :is(h1, h2, h3, h4, h5, h6):first-child {
+  margin-block-start: 0;
+}
+
+/* h2 — граница смыслового раздела: тонкая линия сверху вместо крупного отступа */
+.doc-prose h2 {
+  padding-block-start: var(--space-4);
+  border-block-start: var(--border-w) solid var(--color-border-subtle);
+}
+.doc-prose > h2:first-child {
+  padding-block-start: 0;
+  border-block-start: 0;
+}
+
+/* ====================== Вводный абзац ====================== */
+.doc-prose__lead {
+  font-size: var(--fs-md);
+  line-height: var(--lh-normal);
+  color: var(--color-text-secondary);
+}
+
+/* ====================== Смысловой раздел ======================
+   Обёртка «заголовок + его блоки»: даёт якорю запас под липкой шапкой,
+   чтобы переход по оглавлению не заводил заголовок под неё */
+.doc-prose__section {
+  margin-block-end: var(--space-8);
+  scroll-margin-block-start: calc(var(--header-h) + var(--space-4));
+}
+.doc-prose__section:last-child {
+  margin-block-end: 0;
+}
+
+/* ====================== Списки ======================
+   base/reset.css гасит list-style у ВСЕХ ul/ol — для интерфейсных списков
+   (меню, полосы фильтров) это верно, а для документа нет: номер пункта здесь
+   несёт ИНФОРМАЦИЮ, на него ссылаются по тексту («см. п. 3»). Маркеры и
+   нумерация возвращаются явными list-style-type, а не revert: revert отдаёт
+   вид на откуп браузеру, и уровни вложенности разъезжаются между движками */
+.doc-prose ul,
+.doc-prose ol {
+  padding-inline-start: var(--space-6);
+}
+.doc-prose ul { list-style-type: disc; }
+.doc-prose ol { list-style-type: decimal; }
+/* Второй и третий уровни различаются формой маркера, а не отступом:
+   при переносе длинного пункта отступ читается хуже формы */
+.doc-prose ul ul { list-style-type: circle; }
+.doc-prose ul ul ul { list-style-type: square; }
+.doc-prose ol ol { list-style-type: lower-alpha; }
+.doc-prose ol ol ol { list-style-type: lower-roman; }
+/* Маркер стоит снаружи текстового блока — вторая строка пункта выравнивается
+   по первой, а не подтекает под номер */
+.doc-prose li {
+  margin-block-end: var(--space-2);
+  list-style-position: outside;
+}
+.doc-prose li:last-child {
+  margin-block-end: 0;
+}
+/* Вложенный список принадлежит своему пункту — верхний отступ его отрывал */
+.doc-prose li > ul,
+.doc-prose li > ol {
+  margin-block: var(--space-2) 0;
+}
+.doc-prose dt {
+  font-weight: var(--fw-semi);
+}
+.doc-prose dd {
+  margin-inline-start: var(--space-6);
+  margin-block-end: var(--space-2);
+  color: var(--color-text-secondary);
+}
+
+/* ====================== Цитата ====================== */
+.doc-prose blockquote {
+  padding: var(--space-2) var(--space-4);
+  border-inline-start: var(--border-w-thick) solid var(--color-accent-border);
+  color: var(--color-text-secondary);
+}
+.doc-prose blockquote > *:last-child {
+  margin-block-end: 0;
+}
+
+/* ====================== Ссылки ====================== */
+.doc-prose a {
+  color: var(--color-accent);
+}
+.doc-prose a:focus-visible {
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--shadow-focus);
+  border-radius: var(--radius-sm);
+}
+@media (hover: hover) and (pointer: fine) {
+  .doc-prose a:hover {
+    color: var(--color-accent);
+    text-decoration-thickness: var(--border-w-strong);
+  }
+}
+/* Внешняя ссылка обязана предупреждать о новой вкладке (WCAG 3.2.5) видимым
+   маркером, а не только атрибутом title. Маркер — форма, не цвет */
+.doc-prose a[target="_blank"]::after {
+  content: "\2197"; /* ↗ — стрелка «наружу», глиф, а не цветовой признак */
+  display: inline-block;
+  margin-inline-start: var(--space-1);
+  font-size: var(--fs-xs);
+  vertical-align: baseline;
+  text-decoration: none;
+}
+
+/* ====================== Строчная разметка ====================== */
+.doc-prose strong {
+  font-weight: var(--fw-semi);
+  color: var(--color-text);
+}
+.doc-prose mark {
+  padding: 0 var(--space-1);
+  background: var(--color-highlight);
+  color: var(--color-highlight-text);
+  border-radius: var(--radius-sm);
+}
+/* Строчный код: кегль в em — он обязан следовать кеглю строки, в которой
+   стоит (в h3 и в подписи это разные величины), см. RULES §5.7 */
+.doc-prose :not(pre) > code {
+  padding: 0 var(--space-1);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  background: var(--color-surface-sunken);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+}
+
+.doc-prose hr {
+  height: 0;
+  margin-block: var(--space-6);
+  border: 0;
+  border-block-start: var(--border-w) solid var(--color-border-subtle);
+}
+
+/* ====================== Иллюстрация и подпись ====================== */
+.doc-prose__figure {
+  margin-block: var(--space-6);
+}
+.doc-prose__figure img,
+.doc-prose__figure svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  filter: var(--media-dim);
+}
+.doc-prose__caption {
+  margin-block-start: var(--space-2);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  color: var(--color-text-muted);
+}
+
+/* ====================== Широкая таблица ======================
+   Композиция: обёртка получает .table-responsive (свой скролл и градиенты
+   краёв), внутри — .table.table--compact с табличной семантикой. Обёртке
+   разметка обязана дать tabindex="0" и доступное имя, иначе горизонтальный
+   скролл недостижим с клавиатуры (SC 2.1.1) */
+.doc-prose__table-wrap {
+  max-width: 100%;
+  margin-block: var(--space-4);
+}
+.doc-prose__table-wrap:focus-visible {
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--shadow-focus);
+  border-radius: var(--radius-sm);
+}
+
+/* ====================== Блок кода ====================== */
+.doc-prose__code {
+  position: relative;
+  margin-block: var(--space-4);
+  padding: var(--space-4);
+  padding-inline-end: var(--space-16);
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  color: var(--color-text);
+  background: var(--color-surface-sunken);
+  border: var(--border-w) solid var(--color-border-subtle);
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+.doc-prose__code:focus-visible {
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--shadow-focus);
+}
+
+/* ====================== Кнопка копирования ======================
+   Видима ВСЕГДА: opacity:0 до :hover недоступен на сенсорном экране.
+   Ширина зафиксирована в ch — подтверждение («Скопировано») длиннее подписи
+   и без резерва двигало бы раскладку блока */
+.doc-prose__copy {
+  position: absolute;
+  inset-block-start: var(--space-2);
+  inset-inline-end: var(--space-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  /* 24px — минимальная цель нажатия SC 2.5.8 (RULES §5.3, прецедент
+     .picklist__toggle); визуальный кегль при этом остаётся мелким */
+  min-width: 12ch;
+  min-height: 24px;
+  padding: var(--space-1) var(--space-2);
+  font-family: var(--font-sans);
+  font-size: var(--fs-xs);
+  color: var(--color-text-secondary);
+  background: var(--color-surface);
+  border: var(--border-w) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  /* PURPOSE: feedback. Свойства перечислены поимённо (RULES §5): собственного
+     движения геометрии нет — кнопка стоит в поле чтения. var(--transition-press)
+     первым — это единственный transform здесь, и он не свой, а общий отклик
+     нажатия из base/motion.css: без него шорткат стирает его (ловушка каскада
+     описана в шапке того файла) */
+  transition:
+    var(--transition-press),
+    background-color var(--duration-press) var(--ease-out),
+    border-color var(--duration-press) var(--ease-out),
+    color var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .doc-prose__copy:hover {
+    color: var(--color-text);
+    background: var(--color-surface);
+    border-color: var(--color-border);
+  }
+}
+.doc-prose__copy:focus-visible {
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--shadow-focus);
+}
+/* Подтверждение копирования: класс ставит и снимает JS. Цвет не единственный
+   носитель — подпись кнопки меняется разметкой на «Скопировано» */
+.doc-prose__copy.is-copied {
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent-border);
+}
+@media (max-width: 767px) {
+  .doc-prose__copy {
+    min-height: var(--touch-target-min);
+  }
+}
+
+/* ====================== Выключная формула ======================
+   Кегли берутся из шкалы --fs-*: множители 0.92em/1.18em/1.35em прототипа
+   не переносятся — они рвали ритм абзаца. Формула шире меры строки
+   прокручивается сама, а не растягивает колонку */
+.doc-prose__math {
+  position: relative;
+  margin-block: var(--space-6);
+  padding: var(--space-4);
+  padding-inline-end: var(--space-16);
+  font-size: var(--fs-md);
+  line-height: var(--lh-normal);
+  text-align: center;
+  background: var(--color-surface-sunken);
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+.doc-prose__math:focus-visible {
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--shadow-focus);
+}
+/* Номер формулы и служебные подписи — мелкий кегль той же шкалы */
+.doc-prose__math small {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+/* Ошибка разбора формулы (MathJax mjx-merror / [data-mjx-error]) — цветом
+   ошибки библиотеки, а не собственным красным движка */
+.doc-prose__math mjx-merror,
+.doc-prose__math [data-mjx-error] {
+  color: var(--color-error);
+  background: transparent;
+}
+
+/* ====================== Сноски документа ======================
+   Список источников в конце документа; ссылки на него внутри текста — .cite-ref */
+.doc-prose__footnotes {
+  margin-block-start: var(--space-8);
+  padding-block-start: var(--space-4);
+  border-block-start: var(--border-w) solid var(--color-border-subtle);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  color: var(--color-text-secondary);
+}
+.doc-prose__footnotes ol,
+.doc-prose__footnotes ul {
+  margin-block: 0;
+}
+.doc-prose__footnotes li {
+  margin-block-end: var(--space-1);
+  scroll-margin-block-start: calc(var(--header-h) + var(--space-4));
+}
+
+/* ====================== Вариант --compact ======================
+   Плотный документ для карточки и шторки: сокращаются расстояния между
+   блоками, кегль НЕ меняется — читаемость от плотности не зависит */
+.doc-prose--compact > * {
+  margin-block-end: var(--space-3);
+}
+.doc-prose--compact :is(h1, h2, h3, h4, h5, h6) {
+  margin-block: var(--space-4) var(--space-2);
+}
+.doc-prose--compact h2 {
+  padding-block-start: var(--space-3);
+}
+.doc-prose--compact .doc-prose__section {
+  margin-block-end: var(--space-4);
+}
+.doc-prose--compact .doc-prose__figure,
+.doc-prose--compact .doc-prose__math {
+  margin-block: var(--space-4);
+}
+.doc-prose--compact .doc-prose__footnotes {
+  margin-block-start: var(--space-4);
+}
+
+/* ====================== Узкий экран ====================== */
+@media (max-width: 767px) {
+  .doc-prose__code,
+  .doc-prose__math {
+    padding: var(--space-3);
+    /* Кнопка копирования на узком экране уходит под контент, а не наезжает
+       на него: запас справа заменяется запасом снизу */
+    padding-inline-end: var(--space-3);
+    padding-block-end: var(--space-12);
+  }
+  .doc-prose__copy {
+    inset-block-start: auto;
+    inset-block-end: var(--space-2);
+  }
+}
+
+} /* @layer components */
+/* </BLOCK:component.doc-prose> */

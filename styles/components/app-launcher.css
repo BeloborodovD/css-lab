@@ -1,0 +1,295 @@
+/* [BLOCK:component.app-launcher]
+ * Лаунчер корпоративных сервисов в шапке: кнопка-решётка и поповер с секциями
+ * и сеткой плиток «иконка + название + описание».
+ * Модуль: css-lab/components. Зависимости: base/variables.css, base/motion.css,
+ * components/drawer.css (мобильный лист: геометрия .drawer--sheet и полоска
+ * .drawer__grabber — собственного нижнего листа компонент НЕ заводит).
+ *
+ * Структура: .app-launcher
+ *              > .app-launcher__trigger > .app-launcher__icon
+ *              > .app-launcher__popover
+ *                  > .app-launcher__section
+ *                      > .app-launcher__section-title
+ *                      > .app-launcher__grid
+ *                          > .app-launcher__item
+ *                              > .app-launcher__item-icon
+ *                              > .app-launcher__item-label
+ *                              > .app-launcher__item-desc
+ *                              > .app-launcher__external
+ *
+ * Открытие — класс .is-open на контейнере (ставит JS), синхронно с
+ * aria-expanded на триггере. Закрытая панель уходит из Tab-порядка и из
+ * a11y-дерева через visibility: hidden; атрибут [hidden] сохраняет штатное
+ * display: none — правило вида [hidden] { display: block } здесь ЗАПРЕЩЕНО
+ * (см. наряд ORD-26), поэтому анимацию выхода держит именно visibility.
+ *
+ * Плитка отличается от .dropdown-item тем, что несёт иконку, название И
+ * описание — списком пунктов это не выражается, поэтому у лаунчера своя сетка.
+ * Декоративная анимация иконки-решётки (масштаб квадратиков) не переносится:
+ * гейт частоты провален — кнопка шапки видна на каждом экране.
+ */
+
+/* Слой каскада — порядок объявлен одной строкой @layer в styles/core.css */
+@layer components {
+
+.app-launcher {
+  position: relative;
+  display: inline-flex;
+}
+
+/* ===== Триггер ========================================================== */
+.app-launcher__trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  padding: 0;
+  color: var(--color-text);
+  background: transparent;
+  border: var(--border-w) solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font: inherit;
+  /* PURPOSE: state indication — фон подтверждает наведение и открытость.
+     var(--transition-press) первым: триггер это <button>, а свой `transition` —
+     шорткат, он стирает отклик нажатия из base/motion.css (ловушка каскада
+     описана в шапке того файла) */
+  transition:
+    var(--transition-press),
+    background-color var(--duration-press) var(--ease-out),
+    border-color var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .app-launcher__trigger:hover { background: var(--color-surface-elevated-hover); }
+}
+.app-launcher__trigger[aria-expanded="true"] {
+  background: var(--color-surface-elevated-hover);
+  border-color: var(--color-border-subtle);
+}
+.app-launcher__trigger:focus-visible {
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--shadow-focus);
+}
+
+.app-launcher__icon {
+  width: var(--space-5);
+  height: var(--space-5);
+  flex-shrink: 0;
+  color: currentColor;
+}
+
+/* ===== Поповер ==========================================================
+   Поверхность взята у поповеров шапки (user-menu, presence-strip,
+   notification-badge): elevated-подложка, тонкая граница, --shadow-lg. */
+.app-launcher__popover {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  z-index: var(--z-dropdown);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: max-content;
+  max-width: min(92vw, 72ch);
+  max-height: 70vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--space-4);
+  background: var(--color-surface-elevated);
+  border: var(--border-w) solid var(--color-border-subtle);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  transform-origin: var(--transform-origin, top right); /* раскрывается от триггера */
+  opacity: 0;
+  transform: scale(0.96);
+  visibility: hidden; /* закрытая панель вне Tab-порядка и a11y-дерева */
+  pointer-events: none;
+  /* PURPOSE: spatial consistency — панель приходит от кнопки, а не ниоткуда.
+     Базовое состояние = выход: он быстрее входа (асимметрия таймингов). */
+  transition:
+    opacity var(--duration-exit) var(--ease-out),
+    transform var(--duration-exit) var(--ease-out),
+    visibility 0s linear var(--duration-exit);
+}
+.app-launcher.is-open .app-launcher__popover {
+  opacity: 1;
+  transform: scale(1);
+  visibility: visible;
+  pointer-events: auto;
+  transition:
+    opacity var(--duration-dropdown) var(--ease-out),
+    transform var(--duration-dropdown) var(--ease-out),
+    visibility 0s;
+}
+
+/* ===== Секции =========================================================== */
+.app-launcher__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.app-launcher__section-title {
+  margin: 0;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-muted);
+}
+
+/* ===== Сетка плиток =====================================================
+   Число колонок задают брейкпоинты, а не минимальная ширина трека: литерал
+   в minmax() пришлось бы изобретать вне шкалы. */
+.app-launcher__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 768px) {
+  .app-launcher__grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ===== Плитка сервиса =================================================== */
+.app-launcher__item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  align-items: start;
+  gap: var(--space-1) var(--space-3);
+  padding: var(--space-3);
+  color: var(--color-text);
+  background: transparent;
+  border: var(--border-w) solid transparent;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  text-align: left;
+  cursor: pointer;
+  /* PURPOSE: state indication — плитка подсвечивается под указателем и фокусом.
+     var(--transition-press) первым: плитка бывает и <button> (та же ловушка
+     каскада, см. шапку base/motion.css); на варианте-ссылке сегмент
+     безвреден — правило :active из motion.css к <a> не применяется */
+  transition:
+    var(--transition-press),
+    background-color var(--duration-press) var(--ease-out),
+    border-color var(--duration-press) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .app-launcher__item:hover {
+    background: var(--color-surface-elevated-hover);
+    border-color: var(--color-border-subtle);
+  }
+}
+.app-launcher__item:focus-visible {
+  outline: var(--border-w-strong) solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--shadow-focus);
+}
+
+.app-launcher__item-icon {
+  grid-row: 1 / span 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  flex-shrink: 0;
+  color: var(--color-text);
+  background: var(--color-accent-soft);
+  border-radius: var(--radius-sm);
+}
+.app-launcher__item-icon svg {
+  width: var(--space-5);
+  height: var(--space-5);
+}
+
+.app-launcher__item-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--color-text);
+  line-height: var(--lh-snug);
+}
+
+/* Кегль ниже --fs-xs не применяется: шкала начинается с него */
+.app-launcher__item-desc {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  line-height: var(--lh-snug);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Видимый маркер «откроется в новой вкладке» (WCAG 3.2.5): не только title */
+.app-launcher__external {
+  flex-shrink: 0;
+  width: var(--space-3);
+  height: var(--space-3);
+  color: var(--color-text-muted);
+}
+
+/* ===== Вариант «нижний лист» ============================================
+ * Собственного листа компонент не изобретает: геометрия повторяет
+ * .drawer--sheet (лист принадлежит низу экрана, входит и уходит вниз,
+ * смещение процентное), полоска-захват берётся готовым .drawer__grabber
+ * и кладётся первым узлом внутрь панели. Вариант выбирает вёрстка по
+ * брейкпоинту — это модификатор, а не состояние.
+ */
+.app-launcher--sheet .app-launcher__popover {
+  position: fixed;
+  top: auto;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: auto;
+  max-width: none;
+  max-height: 85vh;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+  transform: translateY(100%);
+  transform-origin: bottom center;
+  /* Лист уходит вниз тем же путём, которым пришёл; кривая шторок */
+  transition:
+    opacity var(--duration-modal-exit) var(--ease-drawer),
+    transform var(--duration-modal-exit) var(--ease-drawer),
+    visibility 0s linear var(--duration-modal-exit);
+}
+.app-launcher--sheet.is-open .app-launcher__popover {
+  transform: translateY(0);
+  transition:
+    opacity var(--duration-modal) var(--ease-drawer),
+    transform var(--duration-modal) var(--ease-drawer),
+    visibility 0s;
+}
+.app-launcher--sheet .app-launcher__grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* ===== Узкий экран ====================================================== */
+@media (max-width: 767px) {
+  .app-launcher__trigger { min-width: var(--touch-target-min); min-height: var(--touch-target-min); }
+  .app-launcher__item { min-height: var(--touch-target-min); }
+}
+
+/* Reduced motion: мягче, а не ноль — сдвиг и масштаб снимаются, кроссфейд
+   по непрозрачности остаётся: он и есть носитель смены состояния */
+@media (prefers-reduced-motion: reduce) {
+  .app-launcher__popover,
+  .app-launcher--sheet .app-launcher__popover,
+  .app-launcher.is-open .app-launcher__popover,
+  .app-launcher--sheet.is-open .app-launcher__popover {
+    transform: none;
+  }
+}
+
+} /* @layer components */
+/* </BLOCK:component.app-launcher> */

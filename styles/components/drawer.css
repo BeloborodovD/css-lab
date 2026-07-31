@@ -86,7 +86,10 @@
   border: none;
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: background-color var(--duration-press) var(--ease-out);
+  /* var(--transition-press) первым — крестик это <button>, свой шорткат иначе
+     стирает отклик нажатия из base/motion.css (ловушка в шапке того файла) */
+  transition: var(--transition-press),
+              background-color var(--duration-press) var(--ease-out);
 }
 @media (hover: hover) and (pointer: fine) {
   .drawer__close:hover { background: var(--color-surface-hover); }

@@ -68,6 +68,49 @@
   background: var(--color-surface-hover);
 }
 
+/* ==================== Встроенная лента ====================
+   .log-inline — лента событий ВНУТРИ чужого контента (тело ответа ассистента,
+   карточка задачи): без панели .log-controls и обвязки просмотрщика,
+   с уменьшенными вертикальными отступами, чтобы записи не спорили с
+   типографикой окружающего текста. Моноширинная метка времени, бейдж уровня
+   текстом и раскрытие деталей остаются прежними — это тот же компонент.
+   Список НЕ делается aria-atomic live-областью: иначе скринридер
+   переобъявляет всю ленту на каждый дописанный шаг. */
+.log-inline {
+  display: flex;
+  flex-direction: column;
+}
+.log-inline .log-entry {
+  gap: var(--space-2);
+  padding: var(--space-1) 0;
+}
+.log-inline .log-entry:last-child {
+  border-bottom: none;
+}
+/* Колонки метки времени и уровня перестают быть фиксированными: внутри чужого
+   контейнера ширина ленты произвольная, 180px+80px её распирали */
+.log-inline .log-entry-timestamp,
+.log-inline .log-entry-level {
+  min-width: auto;
+}
+.log-inline .log-entry-details {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: var(--border-w) solid var(--color-border-subtle);
+}
+
+/* Выполняющаяся запись: место иконки уровня занимает .spinner-xs
+   (композиция — своей анимации компонент не пишет), текст приглушается до
+   вторичного, потому что результат ещё не известен. Состояние ставит и
+   снимает тот же код, который дописывает ленту. */
+.log-entry.is-running .log-entry-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.log-entry.is-running .log-entry-message {
+  color: var(--color-text-secondary);
+}
+
 .log-entry-toggle {
   flex-shrink: 0;
   padding: 2px;

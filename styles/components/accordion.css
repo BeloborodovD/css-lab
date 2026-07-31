@@ -35,7 +35,11 @@
   border: none;
   cursor: pointer;
   text-align: left;
-  transition: background-color var(--duration-press) var(--ease-out);
+  /* var(--transition-press) первым — заголовок секции это <button>, свой
+     шорткат иначе стирает отклик нажатия из base/motion.css (ловушка
+     каскада описана в его шапке) */
+  transition: var(--transition-press),
+              background-color var(--duration-press) var(--ease-out);
 }
 @media (hover: hover) and (pointer: fine) {
   .accordion__header:hover { background: var(--color-surface-hover); }
@@ -105,6 +109,31 @@
   font-size: var(--fs-sm);
   color: var(--color-text-secondary);
   line-height: var(--lh-relaxed);
+}
+
+/* ===== Модификатор --plain: раскрытие без анимации высоты =================
+   Требование собственного avoid_when этого паспорта: внутри секции лежит
+   таблица или виртуализированный список с собственным скроллом — 0fr→1fr на
+   таком содержимом дёргается, потому что каждый кадр пересчитывает раскладку
+   вложенного скролл-контейнера. Здесь движения нет СОЗНАТЕЛЬНО, а не по
+   недосмотру: связь причины и следствия несёт поворот шеврона, он остаётся.
+   Панель именно выключается из потока: visibility+opacity оставили бы
+   свёрнутой секции полную высоту таблицы — для сворачиваемой секции это
+   дефект, а не «мягкое» скрытие.
+   Контракт для потребителя не меняется: те же .is-open и aria-expanded. */
+.accordion--plain .accordion__panel {
+  display: none;
+  grid-template-rows: none;
+  transition: none;
+}
+.accordion--plain .accordion__item.is-open > .accordion__panel {
+  display: block;
+}
+/* Базовое visibility: hidden у внутренней обёртки здесь не нужно — скрытую
+   панель и без него не видит ни глаз, ни скринридер */
+.accordion--plain .accordion__panel-inner {
+  visibility: visible;
+  transition: none;
 }
 
 /* Reduced motion: мгновенное раскрытие, шеврон без поворота */

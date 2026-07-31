@@ -55,6 +55,70 @@ PATTERNS = [
 # </BLOCK:motion-lint.patterns>
 
 
+# [BLOCK:motion-lint.press-feedback]
+# Отдельная проверка, а не строка в PATTERNS: ей мало факта совпадения — нужно
+# разобрать КАЖДОЕ объявление transition и понять, на нажимаемом ли оно элементе.
+# Ловит регрессию, найденную глазами на шаге 03: `transition` — шорткат, он
+# сбрасывает список целиком, а компонент лежит в слое `components` и бьёт
+# правило нажатия из `base/motion.css` (слой `tokens`). В итоге
+# `:active { transform: scale(0.97) }` применяется, но отыгрывает мгновенно.
+# Лечение одно: список начинается с var(--transition-press).
+
+# Селектор нажимаемого элемента: настоящая кнопка, роль кнопки, явный маркер
+# либо принятые в библиотеке имена собственных кнопок компонентов.
+PRESSABLE_SELECTOR = re.compile(
+    r"""(?:^|[\s,>+~])(?:
+          button\b
+        | \[role=['"]?button
+        | \[data-pressable
+        | \.btn\b
+        | [.\w-]*(?:__|-)(?:trigger|toggle|close|remove|copy|action|btn|button)s?\b
+        | \.(?:tab|chip-choice|chip-remove|dropdown-item|page-btn)\b
+    )""",
+    re.VERBOSE | re.IGNORECASE,
+)
+
+# Объявление transition вместе с предшествующим ему куском правила (селектор).
+TRANSITION_DECL = re.compile(r"([^{}]*)\{([^{}]*?transition\s*:\s*([^;}]+))", re.DOTALL)
+
+
+# [FUNC:motion_lint.find_press_feedback_loss_v1]
+def find_press_feedback_loss(text: str, path) -> list:
+    """Ищет transition на нажимаемом элементе без сегмента отклика нажатия.
+
+    Работает по тексту правила целиком, поэтому надёжен при Write и при Edit,
+    захватившем селектор; точечная правка одной строки `transition:` без
+    открывающей скобки правила не проверяется — это ограничение, а не гарантия.
+    """
+    posix = path.as_posix()
+    # Токены движения сами объявляют сегмент; страницы и слои темы кнопок не заводят.
+    if path.name == "motion.css" or "/styles/base/" in posix:
+        return []
+    if path.suffix.lower() not in {".css", ".scss", ".sass", ".less"}:
+        return []
+
+    # Комментарии выбрасываются до разбора: слово button в пояснении рядом с
+    # правилом — не селектор, а ложная тревога, и блокировать из-за него нельзя.
+    text = re.sub(r"/\*.*?\*/", " ", text, flags=re.DOTALL)
+
+    bad = []
+    for selector, _body, value in TRANSITION_DECL.findall(text):
+        selector = selector.split("}")[-1].strip()
+        if not selector or selector.startswith("@"):
+            continue
+        if not PRESSABLE_SELECTOR.search(selector):
+            continue
+        # Отклик уже внесён — либо токеном, либо руками через transform.
+        if "--transition-press" in value or re.search(r"\btransform\b", value):
+            continue
+        # `transition: none` ловится отдельным правилом свода, здесь не дублируем.
+        if value.strip() in {"none", "inherit", "initial", "unset", "revert"}:
+            continue
+        bad.append(" ".join(selector.split())[:80])
+    return bad
+# </FUNC:motion_lint.find_press_feedback_loss_v1>
+
+
 # [FUNC:motion_lint.extract_written_text_v1]
 def extract_written_text(tool_input: dict) -> str:
     """Собирает текст, который агент только что записал в файл."""
@@ -88,6 +152,18 @@ def main() -> None:
         sys.exit(0)
 
     found = [(name, fix) for pattern, name, fix in PATTERNS if pattern.search(text)]
+
+    press_loss = find_press_feedback_loss(text, path)
+    if press_loss:
+        found.append((
+            "потерян отклик нажатия (" + "; ".join(press_loss) + ")",
+            "`transition` — шорткат: он сбрасывает список целиком, а компонент лежит в "
+            "слое components и бьёт правило нажатия из base/motion.css (слой tokens). "
+            "Масштаб :active останется, но отыграет мгновенно. Начать список с "
+            "var(--transition-press): transition: var(--transition-press), color … . "
+            "Подробности — в шапке styles/base/motion.css.",
+        ))
+
     if not found:
         sys.exit(0)
 

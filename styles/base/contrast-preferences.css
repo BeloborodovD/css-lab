@@ -30,6 +30,12 @@
      цвета берутся из var() текущей темы) */
   :root {
     --color-border: #a8a29e;
+    /* Граница органа управления обязана УСИЛИТЬСЯ, а не сравняться с общей:
+       #a8a29e даёт на белом 2.52:1, то есть ниже штатных 3.41:1 у
+       --color-border-control. Отдельная пара ступеней stone-600/700:
+       #57534e = 7.63:1 на #ffffff, #44403c = 10.27:1 (наведение). */
+    --color-border-control: #57534e;
+    --color-border-control-hover: #44403c;
     --shadow-focus: 0 0 0 2px var(--color-surface), 0 0 0 5px var(--color-accent);
   }
 
@@ -41,6 +47,12 @@
     --color-text-muted: #d4d4d8;       /* 12.0:1 */
     --color-border: #52525b;
     --color-border-strong: #71717a;
+    /* Та же логика в тёмной: #71717a здесь уже занят общей усиленной
+       границей, контролу нужна ступень выше — #a1a1aa = 7.58:1 на
+       --color-surface-sunken #0d0d0e (штатно 4.02:1), наведение
+       #d4d4d8 = 13.1:1 */
+    --color-border-control: #a1a1aa;
+    --color-border-control-hover: #d4d4d8;
     --shadow-focus: 0 0 0 2px var(--color-surface), 0 0 0 5px var(--color-accent);
     --surface-glass: var(--color-surface);
     --surface-glass-border: var(--color-border);
@@ -64,6 +76,8 @@
       --color-text-muted: #d4d4d8;
       --color-border: #52525b;
       --color-border-strong: #71717a;
+      --color-border-control: #a1a1aa;
+      --color-border-control-hover: #d4d4d8;
       --shadow-focus: 0 0 0 2px var(--color-surface), 0 0 0 5px var(--color-accent);
       --surface-glass: var(--color-surface);
       --surface-glass-border: var(--color-border);

@@ -214,16 +214,30 @@
 @media (hover: hover) and (pointer: fine) {
   .user-menu__item:hover { background: var(--color-surface-hover); }
 }
+/* Фокус пункта — кольцо, а не фон. Фон --color-surface-hover даёт на
+   --color-surface 1.07:1: в светлой теме он один индикатором быть не может
+   (SC 1.4.11 / 2.4.11 / 2.4.13 требуют 3:1). Пара «прозрачный outline +
+   box-shadow» — та же, что у .user-menu__trigger: тень система вырезает в
+   forced-colors, прозрачный контур перекрашивает в Highlight.
+   В тёмной теме дефект был не виден: .dark :focus-visible (themes, слой
+   позже components) дописывал кольцо за компонент — теперь оно своё */
 .user-menu__item:focus-visible {
   background: var(--color-surface-hover);
   outline: var(--border-w-strong) solid transparent;
   outline-offset: 2px;
+  box-shadow: var(--shadow-focus);
 }
 .user-menu__item--danger { color: var(--color-error); }
 @media (hover: hover) and (pointer: fine) {
   .user-menu__item--danger:hover { background: var(--color-error-soft); }
 }
-.user-menu__item--danger:focus-visible { background: var(--color-error-soft); }
+/* Деструктивный пункт: кольцо в цвете ошибки, как у .btn-danger:focus-visible.
+   Прозрачный outline приходит от правила выше — оно матчится тем же
+   селектором и здесь не повторяется */
+.user-menu__item--danger:focus-visible {
+  background: var(--color-error-soft);
+  box-shadow: var(--shadow-focus-error);
+}
 
 .user-menu__icon {
   display: inline-flex;

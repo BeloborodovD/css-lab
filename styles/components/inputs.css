@@ -14,7 +14,10 @@
   line-height: var(--lh-snug);
   color: var(--color-text);
   background: var(--color-surface);
-  border: var(--border-w) solid var(--color-border);
+  /* Граница органа управления, а не общая --color-border: рамка поля —
+     единственный носитель его формы, SC 1.4.11 требует ≥3:1 (см. обоснование
+     у объявления токена в base/variables.css) */
+  border: var(--border-w) solid var(--color-border-control);
   border-radius: var(--radius-sm);
   /* PURPOSE: feedback — рамка и фокус-кольцо отвечают на действие мгновенно */
   transition: border-color var(--duration-press) var(--ease-out),
@@ -27,8 +30,10 @@
   color: var(--color-text-muted);
 }
 
+/* Наведение усиливает границу: --color-border-strong для контрола СЛАБЕЕ
+   покоя (1.55:1 против 3.41:1) и гасил бы её вместо подчёркивания */
 .input:hover:not(:focus):not(:disabled) {
-  border-color: var(--color-border-strong);
+  border-color: var(--color-border-control-hover);
 }
 
 .input:focus {
@@ -227,7 +232,7 @@
   font-size: var(--fs-base);
   color: var(--color-text);
   background: var(--color-surface);
-  border: var(--border-w) solid var(--color-border);
+  border: var(--border-w) solid var(--color-border-control);
   border-radius: var(--radius-sm);
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
   background-position: right 10px center;
@@ -239,7 +244,7 @@
               box-shadow var(--duration-press) var(--ease-out);
 }
 .select:hover:not(:focus):not(:disabled) {
-  border-color: var(--color-border-strong);
+  border-color: var(--color-border-control-hover);
 }
 .select:focus {
   outline: var(--border-w-strong) solid transparent;
@@ -445,7 +450,9 @@
   .search-bar-stack .btn {
     border-radius: var(--radius-sm);
     width: 100%;
-    border-left: var(--border-w) solid var(--color-border);
+    /* Возврат левой кромки кнопке: та же граница контрола, что у трёх
+       остальных сторон .btn — иначе одна сторона рамки светлее прочих */
+    border-left: var(--border-w) solid var(--color-border-control);
   }
 }
 
@@ -472,7 +479,9 @@
 [data-theme="dark"] .select,
 [data-theme="dark"] .textarea {
   background: var(--color-surface-sunken);
-  border-color: var(--color-border);
+  /* Тёмная заливка поля — sunken #0d0d0e, и общая --color-border даёт на ней
+     1.36:1. Граница контрола (#71717a, 4.02:1) держит гейт SC 1.4.11 */
+  border-color: var(--color-border-control);
   color: var(--color-text);
 }
 .dark .input::placeholder,

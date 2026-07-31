@@ -59,6 +59,23 @@
   --color-border-strong:    #d6d3d1;  /* stone-300 — focus, акцент */
   --color-border-subtle:    #f5f5f4;  /* stone-100 — almost invisible (table rows) */
 
+  /* Граница ОРГАНА УПРАВЛЕНИЯ: поле ввода, селект, textarea, кнопка-контур.
+     Отдельная роль, а не усиленный --color-border. У того роль другая —
+     разделители и рамки поверхностей (карточка, панель, строка таблицы):
+     это декор, ему разрешено быть тише 3:1, и поднятие его до контрольного
+     значения сделало бы графитовой всю сетку страницы.
+     Здесь же граница — единственный носитель формы контрола, и SC 1.4.11
+     требует ≥3:1 к каждой соседней поверхности:
+       #908a85 (середина stone-400/500) на --color-surface #ffffff — 3.41:1
+       на --color-bg #fafaf9 (страница вокруг поля/кнопки)       — 3.26:1
+       на #f5f5f4 (surface-sunken/-hover: .btn-secondary, hover)  — 3.13:1
+     Наведение обязано усиливать границу, а не гасить: --color-border-strong
+     (#d6d3d1 = 1.55:1) для контрола СЛАБЕЕ покоя, поэтому у роли своя
+     ступень наведения. Обе усиливаются в prefers-contrast: more
+     (base/contrast-preferences.css), см. там же тёмное зеркало. */
+  --color-border-control:       #908a85;  /* 3.41:1 на #ffffff */
+  --color-border-control-hover: #78716c;  /* stone-500 — 4.80:1 на #ffffff */
+
   /* Text hierarchy. Глубокие near-blacks вместо чистого #000.
      Контрасты на --color-bg=#fafaf9:
      #18181b = 17.1:1 (AAA) — zinc-900, premium near-black
@@ -496,6 +513,19 @@
   --dark-color-border-strong:    #3f3f46;  /* zinc-700 */
   --dark-color-border-subtle:    #222225;
 
+  /* Граница органа управления в тёмной теме (роль описана у светлой пары).
+     Поле ввода в dark стоит на --color-surface-sunken #0d0d0e, кнопка — на
+     --color-surface #1c1c1f, и та же кнопка встречается в модалке (#27272c):
+       #71717a (zinc-500) на #0d0d0e — 4.02:1
+                          на #1c1c1f — 3.52:1
+                          на #18181b — 3.71:1
+                          на #27272c — 3.08:1
+     Ни --dark-color-border (#2a2a2e, 1.36:1 на #0d0d0e), ни -border-strong
+     (#3f3f46, 1.86:1) гейт 3:1 не проходят — отсюда отдельная ступень.
+     Наведение светлее: zinc-400 #a1a1aa — 7.58:1 на #0d0d0e. */
+  --dark-color-border-control:       #71717a;  /* zinc-500 */
+  --dark-color-border-control-hover: #a1a1aa;  /* zinc-400 */
+
   /* Text. Off-white premium-style на zinc-900 (#18181b):
      #f4f4f5 = 16.1:1 (AAA) — off-white, без halation на OLED
      #d4d4d8 = 12.0:1 (AAA) — zinc-300
@@ -675,6 +705,9 @@
   --color-border-strong:    var(--dark-color-border-strong);
   --color-border-subtle:    var(--dark-color-border-subtle);
 
+  --color-border-control:       var(--dark-color-border-control);
+  --color-border-control-hover: var(--dark-color-border-control-hover);
+
   --color-text:             var(--dark-color-text);
   --color-text-secondary:   var(--dark-color-text-secondary);
   --color-text-muted:       var(--dark-color-text-muted);
@@ -833,6 +866,9 @@
     --color-border:           var(--dark-color-border);
     --color-border-strong:    var(--dark-color-border-strong);
     --color-border-subtle:    var(--dark-color-border-subtle);
+
+    --color-border-control:       var(--dark-color-border-control);
+    --color-border-control-hover: var(--dark-color-border-control-hover);
 
     --color-text:             var(--dark-color-text);
     --color-text-secondary:   var(--dark-color-text-secondary);

@@ -20,7 +20,10 @@
   line-height: var(--lh-tight);
   color: var(--color-text);
   background: var(--color-surface);
-  border: var(--border-w) solid var(--color-border);
+  /* Граница органа управления, а не общая --color-border: у кнопки-контура
+     рамка — единственная граница управляющего элемента, SC 1.4.11 требует
+     ≥3:1 (обоснование токена — base/variables.css) */
+  border: var(--border-w) solid var(--color-border-control);
   border-radius: var(--radius-sm);
   cursor: pointer;
   white-space: nowrap;
@@ -36,9 +39,11 @@
               box-shadow var(--duration-press) var(--ease-out);
 }
 
+/* Наведение усиливает границу: --color-border-strong для органа управления
+   СЛАБЕЕ покоя (1.55:1 против 3.41:1) и гасил бы рамку вместо подчёркивания */
 .btn:hover {
   background: var(--color-surface-hover);
-  border-color: var(--color-border-strong);
+  border-color: var(--color-border-control-hover);
 }
 
 .btn:active {
@@ -152,12 +157,12 @@
    ещё до объявления — восемь мёртвых мест на трёх страницах */
 .btn-secondary {
   background: var(--color-surface-sunken);
-  border-color: var(--color-border);
+  border-color: var(--color-border-control);
   color: var(--color-text-secondary);
 }
 .btn-secondary:hover {
   background: var(--color-surface-hover);
-  border-color: var(--color-border-strong);
+  border-color: var(--color-border-control-hover);
   color: var(--color-text);
 }
 .btn-secondary:active {
@@ -330,7 +335,9 @@
     border-radius: 0 0 var(--radius-sm) var(--radius-sm);
   }
   .btn-group-stack-mobile .btn:not(:last-child) {
-    border-right: var(--border-w) solid var(--color-border);
+    /* Кромка между соседними кнопками группы — та же граница контрола,
+       что и внешняя рамка: разной их видеть нельзя */
+    border-right: var(--border-w) solid var(--color-border-control);
     border-bottom: none;
   }
 }
@@ -339,13 +346,15 @@
 .dark .btn,
 [data-theme="dark"] .btn {
   background: var(--color-surface);
-  border-color: var(--color-border);
+  /* Та же роль, что в светлой теме: общая --color-border даёт на тёмной
+     поверхности 1.36:1, граница контрола — 3.52:1 */
+  border-color: var(--color-border-control);
   color: var(--color-text);
 }
 .dark .btn:hover,
 [data-theme="dark"] .btn:hover {
   background: var(--color-surface-hover);
-  border-color: var(--color-border-strong);
+  border-color: var(--color-border-control-hover);
 }
 /* Filled-варианты идут ПОСЛЕ .dark .btn/.dark .btn:hover и повторяют
    background/border: иначе (0,2,0)/(0,3,0) перебивают заливку и
@@ -370,13 +379,13 @@
 .dark .btn-secondary,
 [data-theme="dark"] .btn-secondary {
   background: var(--color-surface-sunken);
-  border-color: var(--color-border);
+  border-color: var(--color-border-control);
   color: var(--color-text-secondary);
 }
 .dark .btn-secondary:hover,
 [data-theme="dark"] .btn-secondary:hover {
   background: var(--color-surface-hover);
-  border-color: var(--color-border-strong);
+  border-color: var(--color-border-control-hover);
   color: var(--color-text);
 }
 /* on-accent слои в dark инвертированы темой (--color-on-accent-*),
